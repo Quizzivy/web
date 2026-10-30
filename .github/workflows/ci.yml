@@ -18,7 +18,8 @@ concurrency:
   cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 # packages: read lets the workflow token install @quizzivy/sdk from GitHub
-# Packages (web/.npmrc); the package must grant this repository read access.
+# Packages (web/.npmrc, .github/actions/web); the package must grant this
+# repository read access.
 permissions:
   contents: read
   packages: read

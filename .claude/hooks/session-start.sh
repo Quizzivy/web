@@ -23,6 +23,8 @@ if [ -f node_modules/.modules.yaml ]; then
 elif [ -z "${NODE_AUTH_TOKEN:-}" ]; then
   echo "web dependencies: skipped, NODE_AUTH_TOKEN is not set (README.md, \"Install\")"
 else
+  line='//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}'
+  grep -qxF "$line" ~/.npmrc 2>/dev/null || echo "$line" >> ~/.npmrc
   pnpm install --frozen-lockfile && echo "web dependencies: ok" || echo "web dependencies: FAILED"
 fi
 echo "$(date -u +%FT%TZ) session start hook ends"

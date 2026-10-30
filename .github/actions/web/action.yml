@@ -13,6 +13,8 @@ inputs:
       A token that may read the @quizzivy packages on GitHub Packages, where
       web/.npmrc fetches @quizzivy/sdk from. The workflow token, with
       packages: read, once the package grants this repository read access.
+      It reaches pnpm through the runner's ~/.npmrc, the only place pnpm
+      expands it.
     required: true
 
 runs:
@@ -27,6 +29,11 @@ runs:
         node-version: ${{ inputs.node }}
         cache: pnpm
         cache-dependency-path: web/pnpm-lock.yaml
+
+    # The line names the variable, not its value, so the token is never
+    # written to disk.
+    - shell: bash
+      run: echo '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' >> ~/.npmrc
 
     - shell: bash
       working-directory: web

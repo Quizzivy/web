@@ -13,7 +13,7 @@ help: ## Show this help
 doctor: ## Check prerequisites
 	@command -v node >/dev/null && echo "  node     $$(node --version)" || echo "  node     MISSING"
 	@command -v pnpm >/dev/null && echo "  pnpm     $$(pnpm --version)" || echo "  pnpm     MISSING"
-	@{ [ -n "$$NODE_AUTH_TOKEN" ] || grep -q 'npm.pkg.github.com/:_authToken' ~/.npmrc 2>/dev/null; } \
+	@grep -q '^//npm.pkg.github.com/:_authToken=' ~/.npmrc 2>/dev/null \
 		&& echo "  registry token for @quizzivy/sdk: set" \
 		|| echo "  registry token for @quizzivy/sdk: MISSING -> README.md, \"Install\""
 

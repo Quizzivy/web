@@ -117,6 +117,11 @@ jobs:
             exit 1
           fi
 
+      # npm and pnpm read GitHub Packages' token from ~/.npmrc; the line names
+      # the variable, so the token itself is never written to disk.
+      - name: Registry credentials
+        run: echo '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' >> ~/.npmrc
+
       # The API deploys first (Quizzivy/api), and its deploy makes the SDK it
       # serves `latest` (D-081). A web that pins a newer SDK than `latest`
       # would call operations production does not have yet, so it waits.

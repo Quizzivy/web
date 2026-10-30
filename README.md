@@ -15,12 +15,16 @@ the design deck it is built to, in `docs/design/`. It talks to the API in
 ## Install
 
 `@quizzivy/sdk` comes from GitHub Packages, which needs a token even to read.
-Create a GitHub token with `read:packages` and either export it as
-`NODE_AUTH_TOKEN` (what `web/.npmrc` reads) or add it to `~/.npmrc`:
+Create a GitHub token with `read:packages` and add it to your user-level
+`~/.npmrc`:
 
 ```ini
 //npm.pkg.github.com/:_authToken=<token>
 ```
+
+`//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}` there works too, with the
+token exported as `NODE_AUTH_TOKEN`. Not in `web/.npmrc`: pnpm does not expand
+variables in a committed `.npmrc`'s credentials, so the install gets a 403.
 
 Then:
 

@@ -1,0 +1,368 @@
+import assert from 'node:assert/strict';
+import { execFileSync } from 'node:child_process';
+import { mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
+import { test } from 'node:test';
+
+import {
+  JOBS,
+  SETS,
+  artifactLookup,
+  freshnessOf,
+  hashOf,
+  inSet,
+  isFresh,
+  newest,
+  outcomesOf,
+  parseTree,
+  plan,
+  sparsePatterns,
+  trusted,
+} from '../plan.mjs';
+
+const git = (args, input) => execFileSync('git', args, { encoding: 'utf8', maxBuffer: 1 << 28, input });
+const tracked = parseTree(git(['ls-tree', '-r', '-z', 'HEAD']));
+const paths = tracked.map((entry) => entry.path);
+
+const rulesOf = (set) => sparsePatterns(set).filter((pattern) => pattern !== '/*');
+const nested = {
+  base: 'none',
+  include: ['web/', 'web/src/features/join/code.ts'],
+  exclude: ['web/src/'],
+};
+const entry = (path, sha = 'a'.repeat(40)) => ({ mode: '100644', sha, path });
+const at = (run, time) => (run === null ? null : { run, at: time });
+const passes = (run) => async (name) => (name.startsWith('ci-pass-') ? at(run, 100) : null);
+const sameRepo = { id: 7, repository_id: 1, head_repository_id: 1 };
+const artifact = (created_at, over = {}) => ({ expired: false, created_at, workflow_run: sameRepo, ...over });
+
+test('a rule is a plain path that git and inSet read the same way', () => {
+  for (const [name, set] of Object.entries(SETS)) {
+    for (const rule of [...set.include, ...set.exclude]) {
+      assert.match(rule, /^[A-Za-z0-9._][A-Za-z0-9._/-]*$/, `${name}: ${rule}`);
+    }
+    const both = set.include.filter((rule) => set.exclude.includes(rule));
+    assert.deepEqual(both, [], `${name} both includes and excludes a rule`);
+  }
+});
+
+test('every rule still names something in the repository', () => {
+  for (const [name, set] of Object.entries(SETS)) {
+    for (const pattern of rulesOf(set)) {
+      const rule = pattern.replace(/^!?\//, '');
+      const hit = paths.some((path) => (rule.endsWith('/') ? path.startsWith(rule) : path === rule));
+      assert.ok(hit, `${name}: ${rule} matches no tracked file`);
+    }
+  }
+});
+
+test('every job reads a set that exists', () => {
+  for (const job of JOBS) assert.ok(SETS[job.set], job.id);
+  assert.equal(new Set(JOBS.map((job) => job.id)).size, JOBS.length);
+});
+
+test('the longest rule decides, and the base decides where none matches', () => {
+  assert.equal(inSet(SETS.web, 'web/src/main.tsx'), true);
+  assert.equal(inSet(SETS.web, 'web/package.json'), true);
+  assert.equal(inSet(SETS.web, 'web/pnpm-lock.yaml'), true);
+  assert.equal(inSet(SETS.web, 'web/.npmrc'), true);
+  assert.equal(inSet(SETS.web, 'api-ref'), false);
+  assert.equal(inSet(SETS.web, 'docs/design/deck/index.html'), false);
+  assert.equal(inSet(SETS.web, 'AGENTS.md'), false);
+  assert.equal(inSet(SETS.web, '.github/workflows/slow-tail.yml'), false);
+  assert.equal(inSet(SETS.code, 'api-ref'), true);
+  assert.equal(inSet(SETS.code, 'web/src/main.tsx'), true);
+  assert.equal(inSet(SETS.code, '.github/workflows/deploy.yml'), false);
+  assert.equal(inSet(SETS.code, 'web/README.md'), true);
+  assert.equal(inSet(SETS.deck, 'docs/design/deck/index.html'), true);
+  assert.equal(inSet(SETS.deck, 'scripts/check-design-deck.mjs'), true);
+  assert.equal(inSet(SETS.deck, 'web/src/main.tsx'), false);
+  assert.equal(inSet(nested, 'web/package.json'), true);
+  assert.equal(inSet(nested, 'web/src/main.tsx'), false);
+  assert.equal(inSet(nested, 'web/src/features/join/code.ts'), true);
+  assert.equal(inSet(nested, 'scripts/check-design-deck.mjs'), false);
+});
+
+test('every set reads the workflow, its actions and these scripts', () => {
+  for (const [name, set] of Object.entries(SETS)) {
+    for (const path of ['.github/workflows/ci.yml', '.github/actions/web/action.yml', 'scripts/ci/plan.mjs']) {
+      assert.equal(inSet(set, path), true, `${name}: ${path}`);
+    }
+  }
+});
+
+// The live E2E starts Quizzivy/api at the commit api-ref names, so a bump of
+// that commit is a change to what it tests; the other web jobs never see it.
+test('only the live E2E reads api-ref, and api-ref names one commit', () => {
+  assert.ok(paths.includes('api-ref'), 'api-ref is no longer tracked');
+  const live = SETS[JOBS.find((job) => job.id === 'e2e-live').set];
+  assert.equal(inSet(live, 'api-ref'), true);
+  for (const job of JOBS.filter((job) => job.id !== 'e2e-live')) {
+    assert.equal(inSet(SETS[job.set], 'api-ref'), false, job.id);
+  }
+  const ref = readFileSync(new URL('../../../api-ref', import.meta.url), 'utf8');
+  assert.match(ref, /^[0-9a-f]{40}\n$/, 'api-ref holds a full commit id: a branch name would move under an unchanged hash');
+});
+
+test('the web jobs read the app, its lockfile and its registry settings', () => {
+  const web = SETS[JOBS.find((job) => job.id === 'web-check').set];
+  for (const path of ['web/package.json', 'web/pnpm-lock.yaml', 'web/pnpm-workspace.yaml', 'web/.npmrc', 'web/playwright.config.ts']) {
+    assert.ok(paths.includes(path), `${path} is no longer tracked`);
+    assert.equal(inSet(web, path), true, path);
+  }
+});
+
+test('git checks out exactly the paths inSet selects', () => {
+  const dir = mkdtempSync(join(tmpdir(), 'ci-plan-'));
+  try {
+    for (const [name, set] of Object.entries({ ...SETS, nested })) {
+      const rules = join(dir, `${name}.rules`);
+      writeFileSync(rules, sparsePatterns(set).join('\n') + '\n');
+      const byGit = git(['sparse-checkout', 'check-rules', '--no-cone', '-z', '--rules-file', rules], paths.join('\0') + '\0')
+        .split('\0')
+        .filter(Boolean)
+        .sort();
+      const byRule = paths.filter((path) => inSet(set, path)).sort();
+      assert.deepEqual(byGit, byRule, name);
+      assert.ok(byRule.length > 0, `${name} selects nothing`);
+    }
+  } finally {
+    rmSync(dir, { recursive: true, force: true });
+  }
+});
+
+test('a hash moves only when a file of the set changes', () => {
+  const before = [entry('web/src/a.ts'), entry('api-ref'), entry('docs/design/deck/a.html'), entry('README.md')];
+  const change = (path) => before.map((e) => (e.path === path ? entry(path, 'b'.repeat(40)) : e));
+
+  assert.equal(hashOf(SETS.web, change('README.md')), hashOf(SETS.web, before));
+  assert.equal(hashOf(SETS.web, change('api-ref')), hashOf(SETS.web, before));
+  assert.equal(hashOf(SETS.web, change('docs/design/deck/a.html')), hashOf(SETS.web, before));
+  assert.notEqual(hashOf(SETS.web, change('web/src/a.ts')), hashOf(SETS.web, before));
+  assert.notEqual(hashOf(SETS.code, change('api-ref')), hashOf(SETS.code, before));
+  assert.notEqual(hashOf(SETS.deck, change('docs/design/deck/a.html')), hashOf(SETS.deck, before));
+  assert.equal(hashOf(SETS.deck, change('web/src/a.ts')), hashOf(SETS.deck, before));
+  assert.equal(hashOf(SETS.code, change('README.md')), hashOf(SETS.code, before));
+  assert.notEqual(hashOf(SETS.code, [...before, entry('web/src/b.ts')]), hashOf(SETS.code, before));
+  assert.notEqual(
+    hashOf(SETS.code, before.map((e) => (e.path === 'web/src/a.ts' ? { ...e, mode: '100755' } : e))),
+    hashOf(SETS.code, before),
+  );
+});
+
+test('the local scripts under scripts/dev move no hash, and no job reads them', () => {
+  for (const [name, set] of Object.entries(SETS)) {
+    assert.equal(inSet(set, 'scripts/dev/heavy.sh'), false, name);
+  }
+  const text = readFileSync(new URL('../../../.github/workflows/ci.yml', import.meta.url), 'utf8');
+  assert.ok(!text.includes('scripts/dev'), 'ci.yml reads scripts/dev');
+  for (const action of ['record', 'web']) {
+    const body = readFileSync(new URL(`../../../.github/actions/${action}/action.yml`, import.meta.url), 'utf8');
+    assert.ok(!body.includes('scripts/dev'), `${action} reads scripts/dev`);
+  }
+});
+
+test('a renamed file changes the hash although its content does not', () => {
+  assert.notEqual(hashOf(SETS.web, [entry('web/src/a.ts')]), hashOf(SETS.web, [entry('web/src/b.ts')]));
+});
+
+test('the workflow, the gate and the plan name the same jobs', () => {
+  const text = readFileSync(new URL('../../../.github/workflows/ci.yml', import.meta.url), 'utf8');
+  const jobs = text.slice(text.indexOf('\njobs:\n'));
+  const ids = [...jobs.matchAll(/^  ([a-z0-9-]+):$/gm)].map((match) => match[1]);
+  const needs = jobs.match(/^  result:\n(?:    .*\n)*?    needs: \[(.*)\]$/m)[1].split(', ');
+  const planned = JOBS.map((job) => job.id);
+  assert.deepEqual(ids, ['plan', ...planned, 'result', 'sonar']);
+  assert.deepEqual(needs, ['plan', ...planned]);
+  for (const id of planned) {
+    const body = jobs.slice(jobs.indexOf(`\n  ${id}:\n`), jobs.indexOf('\n\n  #', jobs.indexOf(`\n  ${id}:\n`)));
+    const key = /^[a-z0-9]+$/.test(id) ? `jobs.${id}` : `jobs['${id}']`;
+    const entry = `fromJSON(needs.plan.outputs.plan).${key}`;
+    assert.ok(body.includes(`if: ${entry}.run\n`), `${id} does not obey its own plan entry`);
+    assert.ok(body.includes(`JOB: \${{ toJSON(${entry}) }}\n`), `${id} reads another job's entry`);
+    assert.ok(body.includes('sparse-checkout: ${{ fromJSON(env.JOB).sparse }}\n'), `${id} does not check out its set`);
+    assert.match(
+      body,
+      /uses: \.\/\.github\/actions\/record\n {8}if: always\(\)\n {8}with:\n {10}marker: \$\{\{ fromJSON\(env\.JOB\)\.outcomes\[(0|strategy\.job-index)\]\[job\.status\] \}\}$/,
+      `${id} does not end by recording its outcome`,
+    );
+  }
+});
+
+test('a job names a pass and a failure per shard, keyed by job status', () => {
+  assert.deepEqual(outcomesOf({ id: 'deck' }, 'abc'), [{ success: 'ci-pass-deck-abc', failure: 'ci-fail-deck-abc' }]);
+  assert.deepEqual(outcomesOf({ id: 'web-unit', shards: 2 }, 'abc'), [
+    { success: 'ci-pass-web-unit-1of2-abc', failure: 'ci-fail-web-unit-1of2-abc' },
+    { success: 'ci-pass-web-unit-2of2-abc', failure: 'ci-fail-web-unit-2of2-abc' },
+  ]);
+  assert.equal(outcomesOf({ id: 'deck' }, 'abc')[0].cancelled, undefined);
+});
+
+test('evidence from a fork or from an expired artifact is not trusted', () => {
+  assert.equal(trusted({ expired: false, workflow_run: sameRepo }), true);
+  assert.equal(trusted({ expired: true, workflow_run: sameRepo }), false);
+  assert.equal(trusted({ expired: false, workflow_run: { ...sameRepo, head_repository_id: 2 } }), false);
+  assert.equal(trusted({ expired: false, workflow_run: null }), false);
+  assert.equal(trusted({ expired: false, workflow_run: { id: 7 } }), false);
+  assert.equal(trusted({ workflow_run: sameRepo }), false);
+});
+
+test('the newest trusted artifact is the one that speaks', () => {
+  assert.equal(newest([]), null);
+  assert.deepEqual(
+    newest([
+      artifact('2026-10-01T00:00:00Z', { workflow_run: { ...sameRepo, id: 1 } }),
+      artifact('2026-10-03T00:00:00Z', { workflow_run: { ...sameRepo, id: 3 } }),
+      artifact('2026-10-02T00:00:00Z', { workflow_run: { ...sameRepo, id: 2 } }),
+    ]),
+    { run: 3, at: Date.parse('2026-10-03T00:00:00Z') },
+  );
+  assert.deepEqual(
+    newest([
+      artifact('2026-10-03T00:00:00Z', { workflow_run: { ...sameRepo, id: 9, head_repository_id: 2 } }),
+      artifact('2026-10-04T00:00:00Z', { expired: true }),
+      artifact('2026-10-01T00:00:00Z'),
+    ]),
+    { run: 7, at: Date.parse('2026-10-01T00:00:00Z') },
+  );
+  assert.equal(newest([artifact('not a date')]), null);
+});
+
+test('the lookup asks for one name and answers with its newest trusted artifact', async () => {
+  const asked = [];
+  const request = async (url, init) => {
+    asked.push({ url, authorization: init.headers.authorization });
+    return {
+      ok: true,
+      json: async () => ({
+        artifacts: [
+          artifact('2026-10-03T00:00:00Z', { workflow_run: { ...sameRepo, id: 9, head_repository_id: 2 } }),
+          artifact('2026-10-02T00:00:00Z', { workflow_run: { ...sameRepo, id: 5 } }),
+        ],
+      }),
+    };
+  };
+  const lookup = artifactLookup({ api: 'https://api.example', repository: 'o/r', token: 't', fetch: request });
+  assert.deepEqual(await lookup('ci-pass-deck-a b'), { run: 5, at: Date.parse('2026-10-02T00:00:00Z') });
+  assert.deepEqual(asked, [
+    { url: 'https://api.example/repos/o/r/actions/artifacts?per_page=100&name=ci-pass-deck-a%20b', authorization: 'Bearer t' },
+  ]);
+
+  const refused = artifactLookup({ api: 'a', repository: 'o/r', token: 't', fetch: async () => ({ ok: false, status: 503 }) });
+  await assert.rejects(refused('x'), /503/);
+});
+
+test('a re-run and a push to main ignore earlier proof', () => {
+  assert.equal(isFresh({ event: 'pull_request', ref: 'refs/pull/1/merge', attempt: 1 }), false);
+  assert.equal(isFresh({ event: 'push', ref: 'refs/heads/develop', attempt: 1 }), false);
+  assert.equal(isFresh({ event: 'push', ref: 'refs/heads/work/redesign-r3', attempt: 1 }), false);
+  assert.equal(isFresh({ event: 'push', ref: 'refs/heads/main', attempt: 1 }), true);
+  assert.equal(isFresh({ event: 'pull_request', ref: 'refs/heads/main', attempt: 1 }), false);
+  assert.equal(isFresh({ event: 'pull_request', ref: 'refs/pull/1/merge', attempt: 2 }), true);
+  assert.equal(isFresh({ event: 'pull_request', ref: 'refs/pull/1/merge', attempt: Number.NaN }), true);
+});
+
+test('freshness is read from the run attempt, the event and the ref GitHub sets', () => {
+  const env = { GITHUB_EVENT_NAME: 'pull_request', GITHUB_REF: 'refs/pull/1/merge', GITHUB_RUN_ATTEMPT: '1' };
+  assert.equal(freshnessOf(env), false);
+  assert.equal(freshnessOf({ ...env, GITHUB_RUN_ATTEMPT: '2' }), true);
+  assert.equal(freshnessOf({ ...env, GITHUB_RUN_ATTEMPT: undefined }), true);
+  assert.equal(freshnessOf({ ...env, GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/main' }), true);
+  assert.equal(freshnessOf({ ...env, GITHUB_EVENT_NAME: 'push', GITHUB_REF: 'refs/heads/develop' }), false);
+});
+
+const withShards = [...JOBS, { id: 'sharded', set: 'web', shards: 3 }];
+
+test('a job is skipped only when every shard has a pass', async () => {
+  const all = await plan({ entries: tracked, fresh: false, lookup: passes(42) });
+  for (const job of JOBS) {
+    assert.equal(all.jobs[job.id].run, false, job.id);
+    assert.equal(all.jobs[job.id].proof, 42, job.id);
+  }
+
+  const none = await plan({ entries: tracked, fresh: false, lookup: passes(null) });
+  for (const job of JOBS) assert.equal(none.jobs[job.id].run, true, job.id);
+
+  const oneShard = await plan({
+    entries: tracked,
+    fresh: false,
+    of: withShards,
+    lookup: async (name) => (name.startsWith('ci-pass-') && !name.includes('-3of3-') ? at(42, 100) : null),
+  });
+  assert.equal(oneShard.jobs.sharded.run, true);
+  assert.equal(oneShard.jobs.sharded.proof, null);
+  assert.equal(oneShard.jobs.e2e.run, false);
+});
+
+test('a failure after a pass withdraws it, and a pass after a failure restores it', async () => {
+  const outcome = (pass, fail) => async (name) => at(name.startsWith('ci-pass-') ? 42 : 43, name.startsWith('ci-pass-') ? pass : fail);
+
+  const failedSince = await plan({ entries: tracked, fresh: false, lookup: outcome(100, 200) });
+  for (const job of JOBS) assert.equal(failedSince.jobs[job.id].run, true, job.id);
+
+  const passedSince = await plan({ entries: tracked, fresh: false, lookup: outcome(200, 100) });
+  for (const job of JOBS) {
+    assert.equal(passedSince.jobs[job.id].run, false, job.id);
+    assert.equal(passedSince.jobs[job.id].proof, 42, job.id);
+  }
+
+  const together = await plan({ entries: tracked, fresh: false, lookup: outcome(100, 100) });
+  for (const job of JOBS) assert.equal(together.jobs[job.id].run, true, job.id);
+
+  const oneShardFailed = await plan({
+    entries: tracked,
+    fresh: false,
+    of: withShards,
+    lookup: async (name) => {
+      if (name.startsWith('ci-pass-')) return at(42, 100);
+      return name.includes('-1of3-') ? at(43, 200) : null;
+    },
+  });
+  assert.equal(oneShardFailed.jobs.sharded.run, true);
+  assert.equal(oneShardFailed.jobs.e2e.run, false);
+});
+
+test('a lookup that fails runs the job, whichever marker it was for', async () => {
+  const broken = async () => {
+    throw new Error('503');
+  };
+  const result = await plan({ entries: tracked, fresh: false, lookup: broken });
+  for (const job of JOBS) assert.equal(result.jobs[job.id].run, true, job.id);
+
+  const failureUnknown = await plan({
+    entries: tracked,
+    fresh: false,
+    lookup: async (name) => (name.startsWith('ci-pass-') ? at(42, 100) : broken()),
+  });
+  for (const job of JOBS) assert.equal(failureUnknown.jobs[job.id].run, true, job.id);
+});
+
+test('a fresh run looks nothing up and runs everything', async () => {
+  let calls = 0;
+  const result = await plan({
+    entries: tracked,
+    fresh: true,
+    lookup: async () => {
+      calls += 1;
+      return at(42, 100);
+    },
+  });
+  assert.equal(calls, 0);
+  for (const job of JOBS) assert.equal(result.jobs[job.id].run, true, job.id);
+});
+
+test('jobs on one set share a hash and a checkout, and name their own markers', async () => {
+  const result = await plan({ entries: tracked, fresh: false, lookup: passes(null), of: withShards });
+  assert.equal(result.jobs['web-check'].hash, result.jobs.e2e.hash);
+  assert.equal(result.jobs['web-check'].sparse, result.jobs.e2e.sparse);
+  assert.notEqual(result.jobs['web-check'].outcomes[0].success, result.jobs.e2e.outcomes[0].success);
+  assert.notEqual(result.jobs.e2e.hash, result.jobs['e2e-live'].hash);
+  assert.deepEqual(result.jobs['web-unit'].shards, [1, 2, 3]);
+  assert.deepEqual(result.jobs.sharded.shards, [1, 2, 3]);
+  assert.equal(result.jobs.sharded.outcomes.length, 3);
+  assert.match(result.jobs.deck.sparse, /^\/docs\/design\/$/m);
+  assert.doesNotMatch(result.jobs.deck.sparse, /^\/\*$/m);
+  const names = Object.values(result.jobs).flatMap((job) => job.outcomes.flatMap((o) => [o.success, o.failure]));
+  assert.equal(new Set(names).size, names.length);
+});

@@ -1,41 +1,37 @@
 name: Deploy
 
-# Merging release/* into main is what ships. This runs AFTER CI concludes on
-# main rather than on the push itself, so a merge that breaks something is not
-# deployed while its own test run is still red.
+# Merging release/* into main is what ships the web. This runs AFTER CI
+# concludes on main rather than on the push itself, so a merge that breaks
+# something is not deployed while its own test run is still red. The API
+# deploys from Quizzivy/api, and first: the web job checks that production
+# already serves the SDK this build pins.
 #
-# It is a separate workflow, not a job inside CI, for one reason worth stating:
-# a deploy that fails for an infrastructure reason -- an expired token, a Fly
-# region hiccup -- can be re-run on its own from workflow_dispatch, without
-# paying for twenty minutes of tests that already passed on the same commit.
+# Until production switches over from SekiroKenjii/Quizzivy, the repository
+# variable WEB_DEPLOY is unset and nothing deploys from here. Set it to `pages`
+# to deploy to Cloudflare Pages.
+#
+# It is a separate workflow, not a job inside CI, so a deploy that fails for an
+# infrastructure reason -- an expired token -- can be re-run on its own from
+# workflow_dispatch, without paying for the tests that already passed.
 on:
   workflow_run:
     workflows: [CI]
     types: [completed]
     branches: [main]
   workflow_dispatch:
-    inputs:
-      target:
-        description: What to deploy
-        type: choice
-        default: all
-        options: [all, api, web]
 
-# Never cancel a deploy in flight. A cancelled `flyctl deploy` can leave the app
-# mid-rollout, and a cancelled release_command can leave migrations half applied
-# -- both far worse than one queued run waiting its turn.
+# Never cancel a deploy in flight: one queued run waiting its turn is better
+# than a half-uploaded site.
 concurrency:
   group: deploy-production
   cancel-in-progress: false
 
 permissions:
   contents: read
+  packages: read
 
 env:
   NODE_VERSION: "24"
-  # 11.12.0 is a release pnpm itself refuses to install
-  # (ERR_PNPM_BROKEN_PNPM_RELEASE): its @pnpm/exe build shipped without a
-  # binary -- 16KB unpacked against 18MB for a real one.
   PNPM_VERSION: "11.25.0"
   # Where the SPA is told to find the API. Baked into the bundle at build time,
   # so it is a build input rather than runtime configuration.
@@ -45,7 +41,7 @@ env:
   WRANGLER_VERSION: 3.90.0
 
 jobs:
-  # The commit CI validated, resolved once so both jobs deploy the same thing.
+  # The commit CI validated, resolved once.
   #
   # workflow_run does NOT check out the triggering commit by default -- it
   # checks out the default branch's tip. On a quiet repo those are the same
@@ -60,9 +56,7 @@ jobs:
     if: ${{ github.event_name == 'workflow_dispatch' || (github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.event == 'push') }}
     outputs:
       sha: ${{ steps.pick.outputs.sha }}
-      api: ${{ steps.pick.outputs.api }}
       web: ${{ steps.pick.outputs.web }}
-      host: ${{ steps.pick.outputs.host }}
     steps:
       # A CI run that is no longer the tip of main deploys nothing. Re-running
       # an old run to green completes it again, and without this check that
@@ -71,361 +65,37 @@ jobs:
         env:
           TRIGGER: ${{ github.event_name }}
           GH_TOKEN: ${{ github.token }}
-          API_HOST: ${{ vars.API_HOST }}
+          WEB_DEPLOY: ${{ vars.WEB_DEPLOY }}
+          SHA: ${{ github.event.workflow_run.head_sha || github.sha }}
         run: |
-          # Where the API runs: the repository variable API_HOST, `fly` until
-          # someone sets it to `vps`. Anything else stops here rather than
-          # deploying nowhere, or to the wrong place.
-          host="${API_HOST:-fly}"
-          case "$host" in
-            fly|vps) ;;
-            *) echo "::error::API_HOST must be fly or vps, not '$host'"; exit 1 ;;
+          web=true
+          case "${WEB_DEPLOY:-}" in
+            pages) ;;
+            "") echo "::notice::WEB_DEPLOY is unset: production still deploys from SekiroKenjii/Quizzivy, so nothing is deployed"; web=false ;;
+            *) echo "::error::WEB_DEPLOY must be pages or unset, not '$WEB_DEPLOY'"; exit 1 ;;
           esac
-          sha="${{ github.event.workflow_run.head_sha || github.sha }}"
-          target="${{ inputs.target || 'all' }}"
-          api="${{ inputs.target == 'web' && 'false' || 'true' }}"
-          web="${{ inputs.target == 'api' && 'false' || 'true' }}"
           if [ "$TRIGGER" = workflow_run ]; then
             tip="$(gh api "repos/$GITHUB_REPOSITORY/git/ref/heads/main" --jq .object.sha)"
-            if [ "$sha" != "$tip" ]; then
-              echo "::notice::$sha is not the tip of main ($tip); nothing is deployed"
-              api=false; web=false
+            if [ "$SHA" != "$tip" ]; then
+              echo "::notice::$SHA is not the tip of main ($tip); nothing is deployed"
+              web=false
             fi
           fi
-          echo "sha=$sha" >> "$GITHUB_OUTPUT"
-          echo "api=$api" >> "$GITHUB_OUTPUT"
+          echo "sha=$SHA" >> "$GITHUB_OUTPUT"
           echo "web=$web" >> "$GITHUB_OUTPUT"
-          echo "host=$host" >> "$GITHUB_OUTPUT"
-          echo "Deploying $target at $sha (api=$api on $host, web=$web)"
-
-  # ------------------------------------------------------------------- api
-  api:
-    name: API → Fly
-    needs: resolve
-    if: needs.resolve.outputs.api == 'true' && needs.resolve.outputs.host == 'fly'
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.resolve.outputs.sha }}
-
-      # Fail before touching production rather than half way through it. A
-      # missing token otherwise surfaces as an auth error from flyctl after the
-      # image has already been built.
-      - name: Check the token is present
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: |
-          if [ -z "$FLY_API_TOKEN" ]; then
-            echo "::error::FLY_API_TOKEN is not set. Create a deploy token with"
-            echo "::error::  fly tokens create deploy -a quizzivy-api"
-            echo "::error::then add it with: gh secret set FLY_API_TOKEN"
-            exit 1
-          fi
-
-      - uses: superfly/flyctl-actions/setup-flyctl@ed8efb33836e8b2096c7fd3ba1c8afe303ebbff1 # 1.6
-
-      # Ask, before building anything, whether the configuration this app will
-      # boot with is one it accepts.
-      #
-      # config.Load has two all-or-nothing groups -- Google and object storage --
-      # and refuses a partial set by exiting 1. Both have now shipped partial,
-      # and each cost a full build, a migration, a rollout and a health check to
-      # discover, with the cause visible only in the app's own stderr. The names
-      # are knowable up front: fly.toml is in this checkout and `secrets list`
-      # prints the rest.
-      #
-      # Names only, never values. A secret set to the wrong string still gets
-      # through here, and that is a different failure with a different symptom.
-      - name: Preflight the production configuration
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: |
-          secrets=$(flyctl secrets list -a quizzivy-api --json | jq -r '.[] | (.Name // .name)')
-          have=$( {
-            sed -n '/^\[env\]/,/^\[[a-z]/p' fly.toml | grep -oE '^ *[A-Z0-9_]+' | tr -d ' '
-            echo "$secrets"
-          } | sort -u )
-          echo "configured names:"; echo "$have" | sed 's/^/  /'
-
-          fail=0
-          has() { echo "$have" | grep -qx "$1"; }
-          need() { has "$1" || { echo "::error::$1 is required and is not set"; fail=1; }; }
-
-          # Configured as a set or not at all, never in between.
-          group() {
-            label=$1; shift
-            present=0; total=0; missing=
-            for name in "$@"; do
-              total=$((total + 1))
-              if has "$name"; then present=$((present + 1)); else missing="$missing $name"; fi
-            done
-            if [ "$present" -ne 0 ] && [ "$present" -ne "$total" ]; then
-              echo "::error::$label is $present of $total configured — the app refuses this and exits. Missing:$missing"
-              fail=1
-            fi
-          }
-
-          need DATABASE_URL
-          need JWT_SIGNING_KEY
-          need JOIN_CODE_KEY
-          need SECRETS_KEY
-          need CORS_ALLOWED_ORIGINS
-
-          # loadGoogle takes the client id from either name, so the group is
-          # satisfied by whichever is present.
-          if has GOOGLE_CLIENT_ID || has VITE_GOOGLE_CLIENT_ID; then
-            for name in GOOGLE_CLIENT_SECRET GOOGLE_REDIRECT_URI; do
-              has "$name" || { echo "::error::google sign-in is partly configured; $name is missing"; fail=1; }
-            done
-          fi
-
-          group "object storage" S3_ENDPOINT S3_BUCKET S3_ACCESS_KEY_ID S3_SECRET_ACCESS_KEY
-          group "Word import storage" IMPORT_S3_BUCKET IMPORT_WORK_DIR
-          # Production sends through Resend or does not start: loadEmail
-          # refuses the sink there, so all three are required, not optional.
-          need RESEND_API_KEY
-          need EMAIL_FROM
-          need APP_URL
-          if has EMAIL_SINK_DIR; then
-            echo "::error::EMAIL_SINK_DIR is set. The app refuses it in production: it writes every message, links included, to disk instead of sending it"
-            fail=1
-          fi
-
-          # The processing switch says a worker process runs beside the API.
-          # deployment_test.go checks that against fly.toml's [processes]; as a
-          # secret it would skip that check and queue runs nothing claims (#138).
-          if echo "$secrets" | grep -qx IMPORT_PROCESSING_ENABLED; then
-            echo "::error::IMPORT_PROCESSING_ENABLED is a Fly secret. Set it in fly.toml [env] beside the worker process, and unset the secret"
-            fail=1
-          fi
-
-          # R2_* are read by `make verify-r2` and by nothing else. Setting those
-          # instead of the S3_* names is what docs/setup/dns.md used to instruct,
-          # and it looks like storage is configured when none of it reaches the
-          # server.
-          if has R2_ACCESS_KEY_ID && ! has S3_ACCESS_KEY_ID; then
-            echo "::error::R2_ACCESS_KEY_ID is set but S3_ACCESS_KEY_ID is not. The server reads the S3_* names and derives nothing from R2_*; see docs/setup/dns.md"
-            fail=1
-          fi
-
-          [ "$fail" -eq 0 ] || exit 1
-          echo "configuration is complete"
-
-      # --remote-only builds on Fly's builders, so this runner needs no Docker
-      # layer cache and the image is built next to where it will run.
-      #
-      # fly.toml's release_command applies migrations before the new version
-      # takes traffic and rolls the deploy back if they fail, which is why the
-      # schema change and the code that needs it ship as one action.
-      #
-      # --ha=false: when a process group has no machine yet, flyctl creates
-      # one and, by default, a stopped standby beside it. For the worker group
-      # (no services) that standby would be started by the next step and run
-      # as a second import worker -- a second 1 GB Machine and a second idle
-      # poller keeping Neon awake. The flag affects only groups with no
-      # machine; existing groups keep their count.
-      - name: Deploy
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: flyctl deploy --remote-only --ha=false --wait-timeout 10m
-
-      # `flyctl deploy` updated the config of a machine that was already
-      # stopped, logged "reached stopped state" followed by "is now in a good
-      # state", and exited 0. Nothing was started and no smoke check ran, so the
-      # deploy reported success on a version that had never executed.
-      #
-      # A machine is left stopped by the PREVIOUS deploy failing, which makes
-      # this the exact path a recovery deploy takes -- the one run where the
-      # difference matters most.
-      #
-      # A standby machine is stopped on purpose, so it is never started here.
-      # Every process group in fly.toml must end with a started machine: the
-      # app alone passing would hide a worker that never came up.
-      - name: Make sure every process group is actually running
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: |
-          flyctl machines list -a quizzivy-api
-          stopped=$(flyctl machines list -a quizzivy-api --json \
-            | jq -r '.[] | select(.state != "started" and ((.config.standbys // []) | length) == 0) | .id')
-          for id in $stopped; do
-            echo "starting $id"
-            flyctl machine start "$id" -a quizzivy-api
-          done
-          # Started is not serving. Give the process a moment to bind before the
-          # health check below decides.
-          sleep 10
-          flyctl machines list -a quizzivy-api
-          groups=$(sed -n '/^\[processes\]/,/^\[/p' fly.toml | grep -oE '^ *[a-z0-9_-]+ *=' | tr -d ' =')
-          [ -n "$groups" ] || groups=app
-          fail=0
-          for group in $groups; do
-            running=$(flyctl machines list -a quizzivy-api --json \
-              | jq --arg g "$group" '[.[] | select(.state == "started" and (.config.metadata.fly_process_group // "app") == $g)] | length')
-            echo "$group machines started: $running"
-            [ "$running" -ge 1 ] || { echo "::error::no $group machine is running"; fail=1; }
-          done
-          [ "$fail" -eq 0 ] || exit 1
-
-      # Fly reports a deploy as successful once health checks pass; this asks
-      # the app the one question the health check exists to answer.
-      - name: Verify the API answers
-        run: |
-          for attempt in 1 2 3 4 5; do
-            body=$(curl -fsS --max-time 10 "$API_ORIGIN/healthz") && break
-            echo "attempt $attempt failed; retrying in 6s"; sleep 6
-          done
-          echo "$body"
-          echo "$body" | grep -q '"database":"ok"' || {
-            echo "::error::/healthz did not report database:ok"; exit 1; }
-
-      # What Fly's own failure output does not give you.
-      #
-      # A crash-on-boot is reported as "the app appears to be crashing" followed
-      # by "here's the last lines below" and then nothing at all -- the machine
-      # died before Fly attached to its log stream. The actual cause was one
-      # line on the app's stderr, and finding it took reproducing the production
-      # environment locally. This prints that line in the run that failed.
-      #
-      # Names only from `secrets list`: Fly does not print values, and the
-      # question a boot failure raises is almost always which name is missing.
-      - name: Why it crashed
-        if: failure()
-        env:
-          FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
-        run: |
-          echo "::group::app logs"
-          flyctl logs -a quizzivy-api --no-tail | tail -80 || echo "(no logs available)"
-          echo "::endgroup::"
-          echo "::group::configured secret names (values are never printed)"
-          flyctl secrets list -a quizzivy-api || true
-          echo "::endgroup::"
-          echo "::group::env baked into fly.toml"
-          flyctl config env -a quizzivy-api || true
-          echo "::endgroup::"
-
-  # ------------------------------------------------------------- api (vps)
-  # The same release on the VPS (infra: github.com/Quizzivy/infra, docs/vps.md).
-  # The image is built here and pushed to ghcr.io; the box pulls it, runs the
-  # migrations as a one-shot container, replaces api and worker, and rolls back
-  # on a failed health check. The key below can run `deploy <sha>` and
-  # nothing else: the box forces its command, so a leaked key cannot get a shell.
-  #
-  # Needs: secrets VPS_HOST, VPS_SSH_KEY (private half of the deploy key) and
-  # VPS_KNOWN_HOSTS (the box's host key line, from `ssh-keyscan -t ed25519`).
-  # The box's compose.env must name this image repository in API_IMAGE_REPO and
-  # `docker login ghcr.io` there must hold a token with read:packages.
-  api-vps:
-    name: API → VPS
-    needs: resolve
-    if: needs.resolve.outputs.api == 'true' && needs.resolve.outputs.host == 'vps'
-    runs-on: ubuntu-latest
-    timeout-minutes: 30
-    permissions:
-      contents: read
-      packages: write
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          ref: ${{ needs.resolve.outputs.sha }}
-
-      - name: Check the credentials are present
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
-          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
-        run: |
-          missing=
-          [ -n "$VPS_HOST" ]        || missing="$missing VPS_HOST"
-          [ -n "$VPS_SSH_KEY" ]     || missing="$missing VPS_SSH_KEY"
-          [ -n "$VPS_KNOWN_HOSTS" ] || missing="$missing VPS_KNOWN_HOSTS"
-          if [ -n "$missing" ]; then
-            echo "::error::secrets not set:$missing (see docs/setup/deploy.md)"
-            exit 1
-          fi
-
-      # Tagged with the commit, so a deploy names exactly one build. A re-run
-      # of the same commit finds the image already pushed and builds nothing.
-      - name: Build and push the image
-        env:
-          TOKEN: ${{ github.token }}
-          SHA: ${{ needs.resolve.outputs.sha }}
-          OWNER: ${{ github.repository_owner }}
-        run: |
-          image="ghcr.io/${OWNER,,}/quizzivy-api:$SHA"
-          echo "$TOKEN" | docker login ghcr.io -u "$GITHUB_ACTOR" --password-stdin
-          if docker manifest inspect "$image" >/dev/null 2>&1; then
-            echo "$image is already published"
-          else
-            docker build --tag "$image" .
-            docker push "$image"
-          fi
-          echo "image: $image" >> "$GITHUB_STEP_SUMMARY"
-
-      # StrictHostKeyChecking stays on: the host key comes from the secret, so
-      # a different machine answering on that address is refused.
-      - name: Deploy
-        env:
-          VPS_HOST: ${{ secrets.VPS_HOST }}
-          VPS_SSH_KEY: ${{ secrets.VPS_SSH_KEY }}
-          VPS_KNOWN_HOSTS: ${{ secrets.VPS_KNOWN_HOSTS }}
-          SHA: ${{ needs.resolve.outputs.sha }}
-        run: |
-          install -d -m 700 ~/.ssh
-          printf '%s\n' "$VPS_SSH_KEY" > ~/.ssh/deploy_key
-          chmod 600 ~/.ssh/deploy_key
-          printf '%s\n' "$VPS_KNOWN_HOSTS" > ~/.ssh/known_hosts
-          # The box streams the deploy log and exits with the deploy's status.
-          ssh -i ~/.ssh/deploy_key -o BatchMode=yes -o StrictHostKeyChecking=yes \
-            -o ServerAliveInterval=15 "deploy@$VPS_HOST" deploy "$SHA"
-
-      # The box already waited for its own /healthz; this asks through
-      # Cloudflare, the path users take.
-      - name: Verify the API answers
-        run: |
-          for attempt in 1 2 3 4 5; do
-            body=$(curl -fsS --max-time 10 "$API_ORIGIN/healthz") && break
-            echo "attempt $attempt failed; retrying in 6s"; sleep 6
-          done
-          echo "$body"
-          echo "$body" | grep -q '"database":"ok"' || {
-            echo "::error::/healthz did not report database:ok"; exit 1; }
-
-  # ------------------------------------------------------------------- sdk
-  # @quizzivy/sdk at this release's version, once the API that serves its
-  # contract is live and never before, so no client adopts a contract
-  # production lacks (D-081), and only from main: a dispatch from another ref
-  # deploys it but does not publish it. The workflow skips a version already published
-  # or a contract unchanged since the last one, and runs only in the Quizzivy
-  # org, which owns the package scope.
-  sdk:
-    name: SDK → GitHub Packages
-    needs: [resolve, api, api-vps]
-    if: ${{ !cancelled() && github.repository_owner == 'Quizzivy' && (github.event_name == 'workflow_run' || github.ref == 'refs/heads/main') && needs.resolve.outputs.api == 'true' && contains(fromJSON('["success","skipped"]'), needs.api.result) && contains(fromJSON('["success","skipped"]'), needs.api-vps.result) && (needs.api.result == 'success' || needs.api-vps.result == 'success') }}
-    permissions:
-      contents: read
-      packages: write
-    uses: ./.github/workflows/sdk-publish.yml
-    with:
-      ref: ${{ needs.resolve.outputs.sha }}
+          echo "Deploying $SHA: web=$web"
 
   # ------------------------------------------------------------------- web
-  # After the API, deliberately. The SPA is the half that calls the other, so
-  # the window between the two deploys is old-SPA-against-new-API rather than
-  # the reverse. That is safe while a release only adds to the contract. A
-  # release that tightens a request or adds a refusal (v0.7.0 did both) needs
-  # a server message an older tab can show as it is, and a line in the release
-  # notes for tabs loaded before the deploy.
   web:
     name: Web → Cloudflare Pages
-    needs: [resolve, api, api-vps]
-    if: ${{ !cancelled() && needs.resolve.outputs.web == 'true' && contains(fromJSON('["success","skipped"]'), needs.api.result) && contains(fromJSON('["success","skipped"]'), needs.api-vps.result) }}
+    needs: resolve
+    if: needs.resolve.outputs.web == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v7
         with:
           ref: ${{ needs.resolve.outputs.sha }}
+          persist-credentials: false
 
       - name: Check the credentials are present
         env:
@@ -443,9 +113,30 @@ jobs:
           [ -n "$VITE_GOOGLE_CLIENT_ID" ] || missing="$missing VITE_GOOGLE_CLIENT_ID(variable)"
           if [ -n "$missing" ]; then
             echo "::error::not configured:$missing"
-            echo "::error::see docs/setup/deploy.md"
+            echo "::error::see docs/deploy.md"
             exit 1
           fi
+
+      # The API deploys first (Quizzivy/api), and its deploy makes the SDK it
+      # serves `latest` (D-081). A web that pins a newer SDK than `latest`
+      # would call operations production does not have yet, so it waits.
+      - name: Check the API already serves this SDK
+        working-directory: web
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
+        run: |
+          pinned=$(node -p "require('./package.json').dependencies['@quizzivy/sdk']")
+          if ! [[ $pinned =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "::error::web/package.json pins @quizzivy/sdk '$pinned'; a release pins the X.Y.Z the owner tagged in Quizzivy/sdk."
+            exit 1
+          fi
+          latest=$(npm view @quizzivy/sdk dist-tags.latest)
+          older=$(printf '%s\n%s\n' "$pinned" "$latest" | sort -V | head -1)
+          if [ "$older" != "$pinned" ]; then
+            echo "::error::the web pins @quizzivy/sdk $pinned and the API in production serves $latest: deploy Quizzivy/api first."
+            exit 1
+          fi
+          echo "web pins $pinned; production serves $latest"
 
       - uses: pnpm/action-setup@0977fd99725f1db4007ccb2928dbb4e90d06cc86 # v6.0.10
         with:
@@ -459,6 +150,8 @@ jobs:
 
       - name: Install
         working-directory: web
+        env:
+          NODE_AUTH_TOKEN: ${{ github.token }}
         run: pnpm install --frozen-lockfile
 
       # VITE_ values are inlined at build time, so this is the step that decides

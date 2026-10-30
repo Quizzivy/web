@@ -2,14 +2,6 @@
   "version": "0.0.1",
   "configurations": [
     {
-      "name": "api",
-      "runtimeExecutable": "make",
-      "runtimeArgs": [
-        "dev-api"
-      ],
-      "port": 8080
-    },
-    {
       "name": "web",
       "runtimeExecutable": "pnpm",
       "runtimeArgs": [

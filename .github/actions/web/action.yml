@@ -8,6 +8,12 @@ inputs:
   pnpm:
     description: The pnpm version.
     required: true
+  token:
+    description: >-
+      A token that may read the @quizzivy packages on GitHub Packages, where
+      web/.npmrc fetches @quizzivy/sdk from. The workflow token, with
+      packages: read, once the package grants this repository read access.
+    required: true
 
 runs:
   using: composite
@@ -24,4 +30,6 @@ runs:
 
     - shell: bash
       working-directory: web
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.token }}
       run: pnpm install --frozen-lockfile

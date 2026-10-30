@@ -208,7 +208,13 @@ Defaults taken on 2026-10-12, with the v2 export (DG-196 to DG-202):
 ## Updating the deck
 
 A new export from Claude Design (project `49cb45cb-7a21-441e-bb39-4261e0f38372`) replaces the
-files in `deck/` byte for byte:
+files in `deck/` byte for byte.
+
+The deck's `github.md` still says `repo: SekiroKenjii/Quizzivy`, because Claude Design wrote it
+before the web moved to `Quizzivy/web`. The path, `web/src`, is the same here. Point the Claude
+Design project at `Quizzivy/web` before its next sync, and let that sync rewrite the line; do not
+edit `github.md` by hand, since the manifest pins it.
+
 
 1. Copy the pages, `support.js`, `qz-controls.js`, `github.md`, the SVGs and `brand/` over the
    old ones. Do not import `screenshots/`, `uploads/` or `.thumbnail` (see below).

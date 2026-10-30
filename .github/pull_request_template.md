@@ -29,16 +29,13 @@ Deck comparison, one row per screen changed:
 | Screen | Deck page | Widths checked | Light | Dark | Differences |
 -->
 
-## New or changed operations
+## The contract
 
-<!--
-From R2 (Phase R). Delete if the contract did not change.
--->
+<!-- Delete if web/package.json's @quizzivy/sdk pin did not change. -->
 
-- [ ] Every new or changed operation declares `x-permission`
-      (`docs/plan/70-redesign-overview.md` §4)
-- [ ] A second-teacher test proves the caller cannot reach another teacher's
-      data (owner, share grant or class membership)
+- [ ] The contract change merged in Quizzivy/sdk: <sdk PR link>
+- [ ] `@quizzivy/sdk` pins the version that PR published (`make sdk VERSION=…`),
+      the same version as the Quizzivy/api PR: <api PR link>
 
 ## New dependencies
 
@@ -49,36 +46,3 @@ what was considered instead.
 -->
 
 None
-
----
-
-<!--
-DELETE whichever of the two blocks below does not apply.
-Leaving an unticked block is a request for changes.
--->
-
-## This PR touches the database
-
-- [ ] Migration file named here: `_____.sql`
-- [ ] `-- +goose Down` written and verified (`up` → `down` → `up` is clean)
-- [ ] DDL reviewed against spec §13, `docs/plan/20-data-model.md`, and the Neon
-      `postgres-best-practices` skill
-- [ ] Any deviation from `20-data-model.md` is recorded there with a `D-nn` entry
-- [ ] `CREATE INDEX CONCURRENTLY` (if any) is in a `-- +goose NO TRANSACTION` file
-- [ ] `EXPLAIN (ANALYZE, BUFFERS)` pasted below for any query touching
-      `attempts`, `attempt_answers` or `attempt_events` (spec §13.8)
-
-## This PR adds a public (unauthenticated) endpoint
-
-Spec §6.5 and §14. Both boxes, in this PR — not a follow-up.
-
-- [ ] **Rate limited** — per-IP and, where a shared secret is involved, per-key.
-      Returns `429` with `Retry-After`. Test names the limits it asserts.
-- [ ] **Leak reviewed** — the response body was read field by field. It reveals
-      nothing about which classes, students or tests exist. Distinct failure
-      modes return distinct codes but identical detail. Paste the exact response
-      shape below.
-
-```json
-
-```

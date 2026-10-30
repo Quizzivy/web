@@ -4,10 +4,11 @@ import { defineConfig, devices } from "@playwright/test";
 
 /**
  * EMAIL_SINK_DIR is the directory the API's email sink writes to, which the
- * live specs read set-password links from. It is the variable the API reads,
- * resolved against the repository root as `make dev-api` resolves it, and
- * `tmp/email-sink` there when unset, the Makefile's default. Setting it here
- * hands the one resolved path to every worker.
+ * live specs read set-password links from. The API runs from Quizzivy/api,
+ * whose `make dev-api` uses its own `tmp/email-sink` when the variable is
+ * unset, so set it to one absolute path for both (docs/ci.md). A relative
+ * value resolves against this repository's root. Setting it here hands the one
+ * resolved path to every worker.
  */
 const EMAIL_SINK_DIR = path.resolve(
   fileURLToPath(new URL("..", import.meta.url)),

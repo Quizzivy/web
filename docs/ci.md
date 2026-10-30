@@ -21,7 +21,15 @@ in its `docs/setup/ci.md`).
 
 Every job that installs the web reads `@quizzivy/sdk` from GitHub Packages with
 the workflow token (`packages: read`). The package must grant this repository
-read access (its Package settings, "Manage Actions access").
+read access (its Package settings, "Manage Actions access"). The token reaches
+pnpm through the runner's `~/.npmrc`: pnpm does not expand variables in a
+committed `.npmrc`'s credentials.
+
+Before the install, `scripts/ci/sdk-lock.mjs` compares the lockfile's
+`@quizzivy/sdk` entry with what the registry serves. GitHub Packages serves the
+tarball from its own download URL, which pnpm cannot derive, so an entry edited
+without a registry token fails the install with a bare 404. The check prints the
+`resolution:` line the lockfile needs instead.
 
 ## How a job is skipped
 

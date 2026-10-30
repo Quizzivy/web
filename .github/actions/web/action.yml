@@ -35,6 +35,13 @@ runs:
     - shell: bash
       run: echo '//npm.pkg.github.com/:_authToken=${NODE_AUTH_TOKEN}' >> ~/.npmrc
 
+    # Names the line the lockfile needs when its SDK entry is not what the
+    # registry serves, where the install would only say 404.
+    - shell: bash
+      env:
+        NODE_AUTH_TOKEN: ${{ inputs.token }}
+      run: node scripts/ci/sdk-lock.mjs
+
     - shell: bash
       working-directory: web
       env:

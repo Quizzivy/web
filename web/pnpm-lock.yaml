@@ -788,7 +788,7 @@ packages:
     hasBin: true
 
   '@quizzivy/sdk@0.13.2':
-    resolution: {integrity: sha512-B34jgbJkdJZ2djzvxwRCmvYoNOp17oM2Fmiz/15fCGcq0uq6n6iwi5QJaBnscp+l6trf5fb2lx4eS/+jLC66oQ==}
+    resolution: {integrity: sha512-B34jgbJkdJZ2djzvxwRCmvYoNOp17oM2Fmiz/15fCGcq0uq6n6iwi5QJaBnscp+l6trf5fb2lx4eS/+jLC66oQ==, tarball: https://npm.pkg.github.com/download/@quizzivy/sdk/0.13.2/98317c25c37e4823f7ca3bb545f677bd73b96516}
 
   '@radix-ui/number@1.1.3':
     resolution: {integrity: sha512-Road2bidD0uu/1BGDOWNdPI06g0lIRy6IF9GZcIrDK2KGItfor8IQwQa+yM2ERgHM1MmHxaxpTzk0/Jp42lNfA==}

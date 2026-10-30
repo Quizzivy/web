@@ -5,3 +5,7 @@
 allowBuilds:
   esbuild: true
   msw: true
+# Our own contract package is exempt from pnpm 11's release-age wait: a
+# contract change is pinned here the hour Quizzivy/sdk publishes it.
+minimumReleaseAgeExclude:
+  - "@quizzivy/*"

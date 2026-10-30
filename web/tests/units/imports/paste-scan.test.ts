@@ -1,5 +1,4 @@
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   PASTE_EXAMPLE,
@@ -8,6 +7,7 @@ import {
   pastedTitle,
   scanPastedText,
 } from "@/features/imports/paste";
+import { sdkFile } from "@tests/support/sdk";
 
 interface CountCase {
   name: string;
@@ -20,10 +20,7 @@ interface CountCase {
 }
 
 const CASES = JSON.parse(
-  readFileSync(
-    resolve(import.meta.dirname, "../../../../api/testdata/pasted-text-counts.json"),
-    "utf8",
-  ),
+  readFileSync(sdkFile("testdata/pasted-text-counts.json"), "utf8"),
 ) as CountCase[];
 
 describe("the quick count of pasted text, against the server's fixture", () => {

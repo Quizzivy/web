@@ -29,6 +29,7 @@ variables in a committed `.npmrc`'s credentials, so the install gets a 403.
 Then:
 
 ```bash
+cp .env.example .env   # the VITE_ values; .env.production overrides them for builds
 make doctor
 make install
 make dev-web     # :5173, against the API on :8080: run `make dev-api` in Quizzivy/api

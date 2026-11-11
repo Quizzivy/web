@@ -1,15 +1,15 @@
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { parse } from "yaml";
 
+import { sdkFile } from "./sdk";
+
 /**
- * Loads api/openapi.yaml and provides the structural helpers the contract tests
+ * Loads the pinned contract (`@quizzivy/sdk/openapi.yaml`) and provides the structural helpers the contract tests
  * use. Kept separate from the tests so the helpers can themselves be tested
  * against synthetic documents — a checker nobody checks is decoration.
  */
 
-// tests/support -> tests -> web -> repo root.
-export const SPEC_PATH = resolve(import.meta.dirname, "../../../api/openapi.yaml");
+export const SPEC_PATH = sdkFile("openapi.yaml");
 
 /**
  * An OpenAPI document is an arbitrary JSON tree. Typing it fully would be its

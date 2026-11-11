@@ -1,14 +1,12 @@
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import { parse } from "yaml";
 
 import { newPasswordSchema } from "@/features/auth/changePasswordSchema";
 import { passwordRules, passwordStrength } from "@/lib/password";
+import { sdkFile } from "@tests/support/sdk";
 
-const contract = parse(
-  readFileSync(resolve(import.meta.dirname, "../../../../api/openapi.yaml"), "utf8"),
-) as {
+const contract = parse(readFileSync(sdkFile("openapi.yaml"), "utf8")) as {
   paths: Record<string, Record<string, unknown>>;
 };
 

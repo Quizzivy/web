@@ -4,7 +4,10 @@ name: Slow tail
 # run nightly against develop, on any pull request into main (the release gate)
 # and on demand. This workflow is not a `needs` of CI result and no branch rule
 # requires it, so a failure here is read by whoever owns the schedule, not by
-# the merge that happened to be open. docs/setup/ci.md, "The slow tail".
+# the merge that happened to be open. docs/ci.md, "The slow tail".
+#
+# The API comes from Quizzivy/api at the commit api-ref names in the copy of
+# this repository under test, as in CI's E2E (live API).
 #
 # GitHub starts a schedule, and offers a manual run, only from the copy of this
 # file on the default branch, which is main, so both begin with the first
@@ -27,11 +30,13 @@ concurrency:
 
 permissions:
   contents: read
+  packages: read
 
 env:
   NODE_VERSION: "24"
   PNPM_VERSION: "11.25.0"
   GO_VERSION: "1.27"
+  API_REPOSITORY: Quizzivy/api
 
 jobs:
   e2e-slow:
@@ -41,7 +46,7 @@ jobs:
 
     services:
       postgres:
-        image: mirror.gcr.io/library/postgres:18  # see server-test in ci.yml
+        image: mirror.gcr.io/library/postgres:18  # see e2e-live in ci.yml
         env:
           POSTGRES_PASSWORD: postgres
           POSTGRES_USER: postgres
@@ -72,17 +77,33 @@ jobs:
         with:
           ref: ${{ github.event_name == 'schedule' && 'develop' || inputs.ref || github.sha }}
 
+      - name: Read the API commit
+        id: api
+        run: |
+          ref=$(tr -d '[:space:]' < api-ref)
+          [[ $ref =~ ^[0-9a-f]{40}$ ]] || { echo "::error::api-ref holds '$ref', not a commit id"; exit 1; }
+          echo "ref=$ref" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v7
+        with:
+          repository: ${{ env.API_REPOSITORY }}
+          ref: ${{ steps.api.outputs.ref }}
+          path: api-checkout
+          persist-credentials: false
+
       - uses: actions/setup-go@v7
         with:
           go-version: ${{ env.GO_VERSION }}
-          cache-dependency-path: server/go.sum
+          cache-dependency-path: api-checkout/server/go.sum
 
-      - uses: ./.github/actions/db-tools
+      - uses: ./api-checkout/.github/actions/db-tools
 
       - name: Provision roles and database
+        working-directory: api-checkout
         run: ./scripts/provision-db.sh
 
       - name: Apply migrations and seed
+        working-directory: api-checkout
         run: |
           goose -dir migrations postgres "$MIGRATE_URL" up
           for f in seed/*.sql; do psql "$MIGRATE_URL" -v ON_ERROR_STOP=1 -f "$f"; done
@@ -91,7 +112,7 @@ jobs:
       # assignments, and the API answers 501 to media without a bucket.
       - name: Start the API
         run: |
-          go -C server build -o "$RUNNER_TEMP/api" ./cmd/api
+          go -C api-checkout/server build -o "$RUNNER_TEMP/api" ./cmd/api
           "$RUNNER_TEMP/api" > "$RUNNER_TEMP/api.log" 2>&1 &
           for _ in $(seq 1 40); do
             curl -fsS http://localhost:8080/healthz >/dev/null && exit 0
@@ -103,6 +124,7 @@ jobs:
         with:
           node: ${{ env.NODE_VERSION }}
           pnpm: ${{ env.PNPM_VERSION }}
+          token: ${{ github.token }}
 
       - name: Install Chromium
         working-directory: web

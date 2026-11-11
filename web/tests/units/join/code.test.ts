@@ -1,5 +1,4 @@
 import { readFileSync } from "node:fs";
-import { resolve } from "node:path";
 import { describe, expect, it } from "vitest";
 import {
   ALPHABET,
@@ -12,6 +11,17 @@ import {
   isComplete,
   normalize,
 } from "@/features/join/code";
+import { sdkFile } from "@tests/support/sdk";
+
+/** The rules the server enforces, as the pinned SDK states them (D-082 (ii)). */
+const CATALOG = JSON.parse(
+  readFileSync(sdkFile("catalogs/join-code.json"), "utf8"),
+) as {
+  alphabet: string;
+  length: number;
+  groupSize: number;
+  separator: string;
+};
 
 /**
  * §6.1: a code is accepted "with or without the dash and in any case". A
@@ -21,16 +31,17 @@ import {
 
 describe("the join code alphabet", () => {
   it("matches the server's, character for character", () => {
-    const go = readFileSync(
-      resolve(
-        import.meta.dirname,
-        "../../../../server/internal/modules/classes/domain/joincode.go",
-      ),
-      "utf8",
-    );
-    const declared = /const Alphabet = "([^"]+)"/.exec(go);
-    expect(declared, "server Alphabet constant not found").not.toBeNull();
-    expect(ALPHABET).toBe(declared?.[1]);
+    expect(ALPHABET).toBe(CATALOG.alphabet);
+  });
+
+  it("has the server's length and grouping", () => {
+    expect(CODE_LENGTH).toBe(CATALOG.length);
+    const code = CATALOG.alphabet.slice(0, CATALOG.length);
+    const groups: string[] = [];
+    for (let at = 0; at < code.length; at += CATALOG.groupSize) {
+      groups.push(code.slice(at, at + CATALOG.groupSize));
+    }
+    expect(format(code)).toBe(groups.join(CATALOG.separator));
   });
 
   it("excludes the characters that read as each other", () => {

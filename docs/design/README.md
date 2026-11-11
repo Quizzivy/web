@@ -246,7 +246,7 @@ that builds the screens reads the page as it reads the deck.
 2. Regenerate the manifest with the command above and run `node scripts/check-design-deck.mjs`.
 3. Add a line to the log below, and a note to each `gaps.md` row the page answers.
 
-To view one, start the server above and open
+To view one, start the server above and open, for example,
 <http://localhost:5175/proposals/R7%20Question%20Sets.dc.html>.
 
 ## Not imported
@@ -364,6 +364,15 @@ To view one, start the server above and open
   and the error line the deck leaves out. Frames at 1280 and 360, light and dark, Vietnamese and
   English. No exported page changes. It is a proposal until Thuong approves it, and its seven
   questions for him are on the page.
+
+- 2026-11-12 — Second proposal page: `proposals/R7 Access Modes.dc.html`, for the rest of DG-90
+  (R7; `docs/plan/77-r7.md`, T-R7.18 and the editor part of T-R7.19). It draws what the owner, a
+  Can-edit recipient and a Can-use recipient see in the test builder, test detail, the Shared
+  content dialog, the question editor and the assignment wizard's test step: the owner line and
+  the access pill, the sentence under the heading, the read-only builder, and the three notices of
+  co-editing (someone saved first, saved as a copy, sharing stopped). Frames at 1280 and 360,
+  light and dark, Vietnamese and English. No exported page changes. It is a proposal until Thuong
+  approves it, and its five questions for him are on the page.
 
 ## The brand
 

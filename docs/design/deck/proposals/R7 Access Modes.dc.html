@@ -1,0 +1,719 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.96 .02 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.3 .05 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] a{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
+[data-qz] a:hover{color:var(--muted-fg)}
+[data-qz] button,[data-qz] input,[data-qz] textarea{font:inherit;color:inherit}
+[data-qz] input::placeholder,[data-qz] textarea::placeholder{color:var(--muted-fg)}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · Teacher › Tests and Question bank · Design proposal · 12 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">What a recipient sees in a shared test</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">R7 lets a teacher open a test or a question that belongs to someone else, with Can edit or Can use. The deck says this in a toast and draws none of it. This page draws the five places it shows: the test builder, test detail, the Shared content dialog, the question editor and the assignment wizard's test step, for the owner, a Can-edit recipient and a Can-use recipient. It follows the question sets page: the same owner line, the same pill, the same sentence under the heading.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">How does a recipient know?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The owner and the access sit under the title on every screen.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The owner's initials and name, then Shared with me's pill. It is the line the question sets page uses.</li>
+      <li><span style="color:var(--fg)">One sentence under the heading says what the access means here.</span> For Can edit it is the deck's own: "Changes you make are saved to Đức's copy."</li>
+      <li>The owner's screens do not change, except that a refused save now names who saved first.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What is read-only?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Everything that would change the test is left out, not greyed.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>Can use has no drag grips, no row menus, no add buttons and no toolbar. Fields sit on the muted ground and keep their text at full contrast, because reading them is the point.</li>
+      <li><span style="color:var(--fg)">There is no save line</span>, since nothing is saved.</li>
+      <li>What a Can-use recipient can do is in the title bar: Preview, Make a copy and Assign.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">When two people edit?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Three moments, each with its own notice.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li><span style="color:var(--fg)">Someone saved first:</span> a warning band names them and the time, with Reload.</li>
+      <li><span style="color:var(--fg)">The question is used elsewhere:</span> the change is saved as a new copy and a toast says why.</li>
+      <li><span style="color:var(--fg)">Sharing stopped:</span> the builder gives way to one block with a way back to Shared with me.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick the screen, the access and the state in the bar above. The parts R7 does not change are drawn plainly: the outline, the question's fields and the version list are the deck's, cut to what is needed to show a mode, and the student preview is a hatched block. The shell is the page-width design's: a 248px sidebar from 1024, a drawer below that, and 28 or 14px gutters.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;height:{{ f.oh }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;transform:scale({{ f.s }});transform-origin:0 0;display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.side }}" hint-placeholder-val="{{ true }}">
+              <aside style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column">
+                <div style="height:56px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:28px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../brand/quizzivy-logo-horizontal-on-dark.svg" alt="Quizzivy" style="height:28px;width:auto"></sc-if></div>
+                <nav style="padding:12px 10px;display:flex;flex-direction:column;gap:14px">
+                  <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3">
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ true }}"><span style="padding:4px 10px 6px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</span></sc-if>
+                      <sc-for list="{{ g.items }}" as="n" hint-placeholder-count="4"><span style="height:36px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};font-weight:{{ n.weight }};color:{{ n.fg }}"><i class="icon-{{ n.icon }}" style="font-size:16px"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center">{{ n.count }}</span></sc-if></span></sc-for>
+                    </div>
+                  </sc-for>
+                </nav>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;position:relative">
+              <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span><span style="font-size:15px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ crumbLast }}</span></sc-if>
+                <sc-if value="{{ f.notPhone }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ crumbs }}" as="c" hint-placeholder-count="2"><sc-if value="{{ c.sep }}" hint-placeholder-val="{{ false }}"><i class="icon-chevron-right" style="font-size:13px;color:var(--muted-fg)"></i></sc-if><span style="font-size:13px;font-weight:{{ c.weight }};color:{{ c.fg }};white-space:nowrap">{{ c.label }}</span></sc-for></sc-if>
+                <span style="flex:1"></span>
+                <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+              </div>
+
+              <div style="flex:1;min-height:0;overflow-y:auto;padding:{{ f.pad }}">
+
+                <sc-if value="{{ pg.hasBlock }}" hint-placeholder-val="{{ false }}">
+                  <div role="alert" style="border:1px dashed var(--border);border-radius:12px;background:var(--card);padding:{{ f.notePad }};display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+                    <span style="width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:var(--muted);color:var(--muted-fg)"><i class="icon-user-x" style="font-size:22px"></i></span>
+                    <h1 style="margin:4px 0 0;font-size:16px;font-weight:600;letter-spacing:-0.01em;text-wrap:balance">{{ bl.title }}</h1>
+                    <p style="margin:0;max-width:46ch;font-size:14px;line-height:1.5;color:var(--muted-fg);text-wrap:pretty">{{ bl.body }}</p>
+                    <button type="button" style="margin-top:6px;height:{{ f.btnH }};padding:0 14px;border-radius:9px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap" style-hover="background:var(--hover)"><i class="icon-arrow-left" style="font-size:15px"></i>{{ bl.act }}</button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ pg.hasPage }}" hint-placeholder-val="{{ true }}">
+                <section aria-label="{{ hd.title }}" style="display:flex;flex-direction:column;gap:14px">
+
+                  <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                    <div style="min-width:0;flex:1 1 300px;display:flex;flex-direction:column;gap:4px">
+                      <sc-if value="{{ hd.hasBack }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;min-height:{{ f.linkH }};font-size:13px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:14px"></i>{{ hd.back }}</span></sc-if>
+                      <div style="display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap">
+                        <h1 style="margin:0;min-width:0;font-size:{{ hd.titleSize }};font-weight:600;letter-spacing:-0.02em;line-height:1.3;overflow-wrap:anywhere">{{ hd.title }}</h1>
+                        <sc-if value="{{ hd.hasStatus }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:500;flex:none;border:{{ hd.stBorder }};background:{{ hd.stBg }};color:{{ hd.stFg }}"><sc-if value="{{ hd.stDot }}" hint-placeholder-val="{{ false }}"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:var(--success)"></span></sc-if>{{ hd.status }}</span></sc-if>
+                        <sc-if value="{{ hd.hasSave }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:var(--muted-fg);display:flex;align-items:center;gap:5px;white-space:nowrap;flex:none"><i class="icon-check" style="font-size:14px"></i>{{ hd.save }}</span></sc-if>
+                      </div>
+                      <sc-if value="{{ hd.hasLine }}" hint-placeholder-val="{{ false }}">
+                        <p style="margin:0;color:var(--muted-fg);font-size:13.5px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px">
+                          <sc-if value="{{ hd.hasOwner }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:7px;color:var(--fg)"><span style="width:22px;height:22px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:9px;font-weight:600">{{ hd.ownerIni }}</span>{{ hd.ownerName }}</span><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ hd.pillBg }};color:{{ hd.pillFg }}"><i class="icon-{{ hd.pillIcon }}" style="font-size:12px"></i>{{ hd.pill }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></sc-if>
+                          <sc-if value="{{ hd.hasMeta }}" hint-placeholder-val="{{ false }}"><span>{{ hd.meta }}</span></sc-if>
+                        </p>
+                      </sc-if>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                      <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ hd.pinActions }}" hint-placeholder-val="{{ true }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">2</span></sc-if></sc-if>
+                      <sc-for list="{{ hd.actions }}" as="a" hint-placeholder-count="3"><button type="button" onClick="{{ a.go }}" aria-label="{{ a.aria }}" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};min-width:{{ f.btnH }};padding:{{ a.pad }};border-radius:8px;border:{{ a.border }};background:{{ a.bg }};color:{{ a.fg }};cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap;box-shadow:{{ a.shadow }}" style-hover="opacity:.9"><sc-if value="{{ a.hasIcon }}" hint-placeholder-val="{{ true }}"><i class="icon-{{ a.icon }}" style="font-size:15px;color:{{ a.iconFg }}"></i></sc-if><sc-if value="{{ a.hasLabel }}" hint-placeholder-val="{{ true }}">{{ a.label }}</sc-if></button></sc-for>
+                    </div>
+                  </header>
+
+                  <sc-if value="{{ bn.on }}" hint-placeholder-val="{{ false }}">
+                    <div role="{{ bn.role }}" style="display:flex;gap:10px 12px;align-items:center;flex-wrap:wrap;padding:12px 14px;border-radius:10px;background:{{ bn.bg }};font-size:13px;line-height:1.55"><i class="icon-{{ bn.icon }}" style="font-size:16px;flex:none;color:{{ bn.iconFg }}"></i><span style="flex:1 1 260px;min-width:0;text-wrap:pretty"><b style="font-weight:600">{{ bn.lead }}</b> {{ bn.rest }}</span><sc-if value="{{ bn.hasAct2 }}" hint-placeholder-val="{{ false }}"><button type="button" style="height:{{ f.smH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--fg);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap">{{ bn.act2 }}</button></sc-if><sc-if value="{{ bn.hasAct }}" hint-placeholder-val="{{ false }}"><button type="button" style="height:{{ f.smH }};padding:0 12px;border-radius:8px;border:0;background:var(--primary);color:var(--primary-fg);font-size:13px;font-weight:500;cursor:pointer;white-space:nowrap">{{ bn.act }}</button></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">3</span></sc-if></div>
+                  </sc-if>
+
+                  <sc-if value="{{ wz.on }}" hint-placeholder-val="{{ false }}">
+                    <ol style="list-style:none;margin:0;padding:0;display:grid;grid-template-columns:{{ f.stepCols }};gap:8px">
+                      <sc-for list="{{ wz.steps }}" as="stp" hint-placeholder-count="4"><li style="min-width:0;display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:10px;border:1px solid {{ stp.border }};background:{{ stp.bg }}"><span style="width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:{{ stp.numBg }};color:{{ stp.numFg }}">{{ stp.num }}</span><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ stp.label }}</span><span style="display:block;font-size:12px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ stp.value }}</span></span></li></sc-for>
+                    </ol>
+                  </sc-if>
+
+                  <div style="display:flex;gap:14px;align-items:flex-start;flex-wrap:{{ f.wrap }}">
+
+                    <sc-if value="{{ ol.on }}" hint-placeholder-val="{{ true }}">
+                      <aside aria-label="{{ tx.builder_outline }}" style="flex:{{ f.olFlex }};min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                        <div style="display:flex;justify-content:space-between;align-items:center;gap:8px;padding:12px 14px;border-bottom:1px solid var(--border)"><span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600">{{ tx.builder_outline }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">4</span></sc-if></span><span style="font-size:12px;color:var(--muted-fg);white-space:nowrap;font-variant-numeric:tabular-nums">{{ ol.summary }}</span></div>
+                        <div style="padding:6px;display:flex;flex-direction:column;gap:6px">
+                          <sc-for list="{{ ol.sections }}" as="sec" hint-placeholder-count="2">
+                            <div>
+                              <div style="display:flex;align-items:center;gap:2px;padding:2px 4px 2px {{ ol.padL }};border-radius:7px;min-height:{{ f.olRow }}">
+                                <sc-if value="{{ ol.canEdit }}" hint-placeholder-val="{{ true }}"><span style="width:20px;height:24px;flex:none;display:grid;place-items:center;color:var(--muted-fg);opacity:.55"><i class="icon-grip-vertical" style="font-size:14px"></i></span></sc-if>
+                                <span style="flex:1;min-width:0;display:flex;align-items:center;gap:5px;padding:4px 2px;font-size:12.5px;font-weight:600"><i class="icon-chevron-down" style="font-size:13px;color:var(--muted-fg);flex:none"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sec.title }}</span><span style="margin-left:auto;padding-left:6px;font-weight:500;color:var(--muted-fg);font-size:12px;white-space:nowrap">{{ sec.summary }}</span></span>
+                                <sc-if value="{{ ol.canEdit }}" hint-placeholder-val="{{ true }}"><span style="width:24px;height:24px;flex:none;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-ellipsis" style="font-size:15px"></i></span></sc-if>
+                              </div>
+                              <sc-if value="{{ sec.hasShared }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ sec.openShared }}" style="display:flex;align-items:center;gap:6px;width:calc(100% - 26px);min-height:{{ f.olRow }};margin:0 0 4px 26px;padding:4px 6px;border:0;border-radius:6px;background:transparent;cursor:pointer;text-align:left;font-size:12px;color:var(--muted-fg);line-height:1.45" style-hover="background:var(--muted)"><i class="icon-{{ sec.sharedIcon }}" style="font-size:13px;flex:none"></i><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ sec.shared }}</span></button></sc-if>
+                              <div style="display:flex;flex-direction:column;gap:1px;margin-left:14px;padding-left:4px;border-left:1px solid var(--border)">
+                                <sc-for list="{{ sec.items }}" as="q" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:4px;padding:3px 4px 3px {{ ol.rowPadL }};border-radius:7px;font-size:13px;min-height:{{ f.olRow }};background:{{ q.bg }}"><sc-if value="{{ ol.canEdit }}" hint-placeholder-val="{{ true }}"><span style="width:20px;height:24px;flex:none;display:grid;place-items:center;color:var(--muted-fg);opacity:.45"><i class="icon-grip-vertical" style="font-size:13px"></i></span></sc-if><span style="width:18px;flex:none;font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ q.no }}</span><i class="icon-{{ q.icon }}" style="font-size:14px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0;padding:3px 4px;font-weight:{{ q.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.title }}</span><span style="flex:none;font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums;padding-right:4px;white-space:nowrap">{{ q.pts }}</span></div></sc-for>
+                              </div>
+                            </div>
+                          </sc-for>
+                        </div>
+                        <sc-if value="{{ ol.canEdit }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;flex-direction:column;gap:2px;padding:8px;border-top:1px solid var(--border)">
+                            <span style="display:flex;align-items:center;gap:8px;min-height:{{ f.olBtn }};padding:0 10px;border-radius:7px;font-size:13px;font-weight:500;white-space:nowrap;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)"><i class="icon-plus" style="font-size:15px"></i>{{ tx.builder_addQuestion }}</span>
+                            <span style="display:flex;align-items:center;gap:8px;min-height:{{ f.olBtn }};padding:0 10px;border-radius:7px;font-size:13px;font-weight:500;white-space:nowrap;color:var(--muted-fg)"><i class="icon-library" style="font-size:15px"></i>{{ tx.builder_fromQuestionBank }}</span>
+                            <span style="display:flex;align-items:center;gap:8px;min-height:{{ f.olBtn }};padding:0 10px;border-radius:7px;font-size:13px;font-weight:500;white-space:nowrap;color:var(--muted-fg)"><i class="icon-folder-plus" style="font-size:15px"></i>{{ tx.builder_addSection }}</span>
+                          </div>
+                        </sc-if>
+                      </aside>
+                    </sc-if>
+
+                    <section style="flex:{{ f.mainFlex }};min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+
+                      <sc-if value="{{ qp.on }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:flex;align-items:center;gap:10px;padding:12px 16px;border-bottom:1px solid var(--border);flex-wrap:wrap">
+                          <span style="font-size:13px;font-weight:600">{{ qp.head }}</span>
+                          <span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.smH }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:{{ qp.fieldBg }};font-size:12.5px;white-space:nowrap"><i class="icon-{{ qp.icon }}" style="font-size:13px"></i>{{ qp.type }}<sc-if value="{{ qp.canEdit }}" hint-placeholder-val="{{ true }}"><i class="icon-chevron-down" style="font-size:13px;color:var(--muted-fg)"></i></sc-if></span>
+                          <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ qp.pin }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">4</span></sc-if></sc-if>
+                          <span style="margin-left:auto;display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted-fg)">{{ tx.questionEditor_points }}<span style="width:48px;height:{{ f.smH }};display:grid;place-items:center;border:1px solid var(--border);border-radius:7px;font-size:13px;background:{{ qp.fieldBg }};color:var(--fg)">1</span></span>
+                          <sc-if value="{{ qp.canEdit }}" hint-placeholder-val="{{ true }}"><span style="width:{{ f.smH }};height:{{ f.smH }};display:grid;place-items:center"><i class="icon-ellipsis" style="font-size:16px"></i></span></sc-if>
+                        </div>
+                        <div style="padding:18px 16px;display:flex;flex-direction:column;gap:18px">
+                          <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                            <span style="font-size:12.5px;font-weight:500">{{ tx.questionEditor_prompt }}</span>
+                            <div style="border:1px solid var(--border);border-radius:10px;background:{{ qp.fieldBg }};overflow:hidden">
+                              <sc-if value="{{ qp.canEdit }}" hint-placeholder-val="{{ true }}"><div aria-hidden="true" style="display:flex;align-items:center;gap:2px;padding:5px 6px;border-bottom:1px solid var(--border);background:var(--sidebar);overflow:hidden"><sc-for list="{{ qp.tools }}" as="tl" hint-placeholder-count="8"><span style="width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:6px;color:var(--muted-fg)"><i class="icon-{{ tl }}" style="font-size:15px"></i></span></sc-for></div></sc-if>
+                              <div style="padding:12px 16px;font-size:14.5px;line-height:1.6;overflow-wrap:anywhere">{{ qp.prompt }}</div>
+                            </div>
+                          </div>
+                          <div style="display:flex;flex-direction:column;gap:8px">
+                            <span style="font-size:12.5px;font-weight:500">{{ tx.questionEditor_options }}</span>
+                            <sc-for list="{{ qp.options }}" as="op" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;min-height:{{ f.optH }};padding:4px 10px 4px 4px;border:1px solid {{ op.border }};border-radius:9px;background:{{ op.bg }}"><span style="width:32px;height:32px;flex:none;display:grid;place-items:center"><span style="width:18px;height:18px;flex:none;border-radius:50%;border:2px solid {{ op.ring }};display:grid;place-items:center"><span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ op.dot }}"></span></span></span><span style="width:18px;flex:none;font-size:12.5px;color:var(--muted-fg);font-weight:600">{{ op.letter }}</span><span style="flex:1;min-width:0;font-size:14px">{{ op.text }}</span><sc-if value="{{ op.correct }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:500;color:var(--success-ink);white-space:nowrap">{{ tx.questionEditor_correct }}</span></sc-if></div></sc-for>
+                            <sc-if value="{{ qp.canEdit }}" hint-placeholder-val="{{ true }}"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;min-height:{{ f.smH }};padding:0 10px;border-radius:7px;border:1px dashed var(--border);font-size:12.5px;font-weight:500;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i>{{ tx.questionEditor_addOption }}</span></sc-if>
+                          </div>
+                          <div style="display:flex;flex-direction:column;gap:6px;min-width:0">
+                            <span style="font-size:12.5px;font-weight:500">{{ tx.questionEditor_explanation }}</span>
+                            <div style="border:1px solid var(--border);border-radius:10px;background:{{ qp.fieldBg }};padding:10px 16px;font-size:14px;line-height:1.6;overflow-wrap:anywhere">{{ qp.explanation }}</div>
+                          </div>
+                        </div>
+                      </sc-if>
+
+                      <sc-if value="{{ pv.on }}" hint-placeholder-val="{{ false }}">
+                        <div style="padding:12px 16px;border-bottom:1px solid var(--border)"><h2 style="margin:0;font-size:15px;font-weight:600;letter-spacing:-0.01em">{{ tx.tests_detail_preview_title }}</h2><p style="margin:2px 0 0;font-size:12.5px;color:var(--muted-fg)">{{ pv.sub }}</p></div>
+                        <div style="background:var(--sidebar);padding:16px"><div style="height:{{ f.pvH }};border-radius:10px;background:repeating-linear-gradient(135deg,var(--muted) 0 8px,transparent 8px 16px);display:grid;place-items:center;font-family:ui-monospace,Menlo,monospace;font-size:12px;color:var(--muted-fg);text-align:center;padding:12px">Student preview · as built</div></div>
+                      </sc-if>
+
+                      <sc-if value="{{ wz.on }}" hint-placeholder-val="{{ false }}">
+                        <div style="padding:16px;display:flex;flex-direction:column;gap:12px">
+                          <div style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600">{{ tx.assignments_wizard_testTitle }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></div>
+                          <label style="display:flex;align-items:center;gap:8px;height:{{ f.inH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg)"><i class="icon-search" style="font-size:15px;color:var(--muted-fg)"></i><input size="1" placeholder="{{ tx.assignments_wizard_searchTests }}" style="border:0;outline:0;background:transparent;flex:1;min-width:0;font-size:13.5px"></label>
+                          <sc-for list="{{ wz.tests }}" as="pt" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:10px;border:1px solid {{ pt.border }};background:{{ pt.bg }}"><span style="width:18px;height:18px;flex:none;border-radius:50%;border:2px solid {{ pt.ring }};display:grid;place-items:center"><span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ pt.dot }}"></span></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;overflow-wrap:anywhere">{{ pt.title }}</span><span style="display:flex;flex-wrap:wrap;align-items:center;gap:2px 6px;font-size:12.5px;color:var(--muted-fg)"><span>{{ pt.meta }}</span><sc-if value="{{ pt.shared }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true">·</span><span style="display:inline-flex;align-items:center;gap:5px"><i class="icon-users-round" style="font-size:12px"></i>{{ pt.sharedBy }}</span></sc-if></span></span></div></sc-for>
+                          <div style="display:flex;justify-content:flex-end"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500">{{ tx.assignments_wizard_continue }}</span></div>
+                        </div>
+                      </sc-if>
+                    </section>
+
+                    <sc-if value="{{ sc.on }}" hint-placeholder-val="{{ false }}">
+                      <aside aria-label="{{ sc.title }}" style="flex:{{ f.sideFlex }};min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:14px;display:flex;flex-direction:column;gap:10px">
+                        <sc-if value="{{ sc.isVersions }}" hint-placeholder-val="{{ false }}"><h2 style="margin:0;display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600">{{ sc.title }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ sc.pin }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">4</span></sc-if></sc-if></h2></sc-if>
+                        <sc-if value="{{ sc.isVersions }}" hint-placeholder-val="{{ false }}">
+                          <div style="display:flex;align-items:center;gap:10px;padding:9px 10px;border-radius:9px;border:1px dashed var(--border)"><i class="icon-pencil-line" style="font-size:15px;color:var(--muted-fg)"></i><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500">{{ tx.tests_detail_history_draft }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ sc.draftMeta }}</span></span><sc-if value="{{ sc.canEdit }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;height:{{ f.verBtn }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12px;font-weight:500;white-space:nowrap">{{ tx.tests_detail_history_edit }}</span></sc-if></div>
+                          <sc-for list="{{ sc.versions }}" as="v" hint-placeholder-count="2">
+                            <div style="display:flex;flex-direction:column;gap:6px;padding:8px;border-radius:10px;background:{{ v.bg }};border:1px solid {{ v.border }}">
+                              <span style="display:flex;align-items:baseline;justify-content:space-between;gap:10px"><span style="display:flex;align-items:center;gap:6px;flex-wrap:wrap;font-size:13.5px;font-weight:600">{{ v.name }}<sc-if value="{{ v.isDefault }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:20px;padding:0 7px;border-radius:6px;border:1px solid var(--border);background:var(--card);font-size:11px;font-weight:600">{{ tx.tests_defaultVersion }}</span></sc-if></span><span style="font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ v.stats }}</span></span>
+                              <span style="font-size:12px;color:var(--muted-fg);line-height:1.45">{{ v.meta }}</span>
+                              <sc-if value="{{ v.hasUse }}" hint-placeholder-val="{{ true }}"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:5px;height:20px;padding:0 7px;border-radius:6px;font-size:11px;font-weight:500;background:var(--muted);color:var(--muted-fg)"><i class="icon-clipboard-list" style="font-size:11px"></i>{{ v.use }}</span></sc-if>
+                              <sc-if value="{{ sc.canEdit }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:4px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;height:{{ f.verBtn }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12px;font-weight:500;white-space:nowrap">{{ tx.tests_detail_history_restore }}</span><sc-if value="{{ v.notDefault }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;height:{{ f.verBtn }};padding:0 10px;border-radius:7px;font-size:12px;font-weight:500;white-space:nowrap">{{ tx.tests_detail_history_makeDefault }}</span><sc-if value="{{ sc.canDelete }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;height:{{ f.verBtn }};padding:0 10px;border-radius:7px;font-size:12px;font-weight:500;white-space:nowrap;color:var(--danger-ink)">{{ tx.tests_detail_history_delete }}</span></sc-if></sc-if></div></sc-if>
+                            </div>
+                          </sc-for>
+                        </sc-if>
+                        <sc-if value="{{ sc.isProps }}" hint-placeholder-val="{{ false }}">
+                          <sc-for list="{{ sc.props }}" as="pr" hint-placeholder-count="2"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ pr.label }}</span><span style="position:relative;display:flex;align-items:center;height:{{ f.fieldH }};border:1px solid var(--border);border-radius:8px;padding:0 32px 0 12px;font-size:13.5px;background:{{ qp.fieldBg }}">{{ pr.value }}<sc-if value="{{ qp.canEdit }}" hint-placeholder-val="{{ true }}"><i class="icon-chevrons-up-down" style="position:absolute;right:10px;font-size:14px;color:var(--muted-fg)"></i></sc-if></span></div></sc-for>
+                          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.questionEditor_tags }}</span><span style="display:flex;gap:5px;flex-wrap:wrap"><sc-for list="{{ sc.tags }}" as="tg" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;border:1px solid var(--border);background:var(--muted);font-size:12px;font-weight:500;white-space:nowrap;line-height:1">{{ tg }}</span></sc-for></span></div>
+                        </sc-if>
+                      </aside>
+                    </sc-if>
+                  </div>
+                </section>
+                </sc-if>
+              </div>
+
+              <sc-if value="{{ toast.on }}" hint-placeholder-val="{{ false }}">
+                <div role="status" style="position:absolute;right:16px;bottom:16px;z-index:5;display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);font-size:13.5px;max-width:min(420px,calc(100% - 32px))"><i class="icon-circle-check" style="font-size:16px;margin-top:2px;flex:none;color:var(--success)"></i><span style="text-wrap:pretty">{{ toast.text }}</span></div>
+              </sc-if>
+            </div>
+
+            <sc-if value="{{ dg.on }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;background:var(--overlay);z-index:8"></div>
+              <div role="dialog" aria-label="{{ dg.title }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(560px,calc(100% - 24px));max-height:calc(100% - 32px);background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:9;padding:18px;display:flex;flex-direction:column;gap:12px;overflow-y:auto">
+                <div style="display:flex;gap:10px;align-items:flex-start"><div style="flex:1;min-width:0"><div style="font-size:15px;font-weight:600;overflow-wrap:anywhere">{{ dg.title }}</div><div style="font-size:13px;color:var(--muted-fg);margin-top:4px;text-wrap:pretty">{{ dg.desc }}</div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></div>
+                <div role="group" aria-label="{{ tx.builder_sharedDialog_kind }}" aria-disabled="true" style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ dg.kinds }}" as="o" hint-placeholder-count="3"><span style="flex:1;border-radius:7px;height:{{ f.segH }};font-size:13px;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}"><i class="icon-{{ o.icon }}" style="font-size:14px"></i>{{ o.label }}</span></sc-for></div>
+                <sc-if value="{{ dg.isPassage }}" hint-placeholder-val="{{ true }}">
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.builder_sharedDialog_titleLabel }}</span><span style="display:flex;align-items:center;min-height:{{ f.fieldH }};border:1px solid var(--border);border-radius:8px;padding:6px 10px;font-size:13.5px;background:var(--sidebar)">{{ dg.name }}</span></div>
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.builder_sharedPassage }}</span><div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;line-height:1.7;background:var(--sidebar);text-wrap:pretty">{{ dg.p1 }}<span style="display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;margin:0 4px;padding:0 6px;border-radius:6px;border:1.5px dashed var(--ring);background:var(--muted);font-size:12px;font-weight:600;color:var(--muted-fg)">1</span>{{ dg.p2 }}<span style="display:inline-flex;align-items:center;justify-content:center;min-width:26px;height:22px;margin:0 4px;padding:0 6px;border-radius:6px;border:1.5px dashed var(--ring);background:var(--muted);font-size:12px;font-weight:600;color:var(--muted-fg)">2</span>{{ dg.p3 }}</div></div>
+                  <div style="display:flex;flex-direction:column;gap:6px"><sc-for list="{{ dg.gaps }}" as="g" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:8px"><span style="min-width:34px;height:24px;padding:0 8px;border-radius:6px;border:1.5px dashed var(--ring);background:var(--muted);font-size:12px;font-weight:600;color:var(--muted-fg);display:inline-flex;align-items:center;justify-content:center">{{ g.n }}</span><span style="flex:1;min-width:0;display:flex;align-items:center;min-height:{{ f.selH }};border:1px solid var(--border);border-radius:7px;padding:4px 8px;font-size:12.5px;background:var(--sidebar)"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ g.q }}</span></span></div></sc-for></div>
+                </sc-if>
+                <sc-if value="{{ dg.isAudio }}" hint-placeholder-val="{{ false }}">
+                  <div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:10px;background:var(--sidebar)"><i class="icon-audio-lines" style="font-size:17px"></i><span style="flex:1;min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dg.file }}</span><span style="font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ dg.len }}</span></div>
+                  <div style="display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap"><span style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500">{{ tx.questionEditor_questionMedia_plays }}<span style="display:inline-flex;align-items:center;min-width:44px;height:{{ f.selH }};border:1px solid var(--border);border-radius:7px;padding:0 10px;font-size:12.5px;font-weight:400;background:var(--sidebar)">2</span></span><sc-for list="{{ dg.switches }}" as="sw" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500"><span role="switch" aria-checked="{{ sw.on }}" aria-disabled="true" aria-label="{{ sw.label }}" style="width:34px;height:20px;flex:none;border-radius:999px;padding:2px;background:{{ sw.track }};display:flex;justify-content:{{ sw.side }};opacity:.6"><span style="width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span>{{ sw.label }}</span></sc-for></div>
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.questionEditor_questionMedia_transcript }}</span><div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;line-height:1.6;background:var(--sidebar);text-wrap:pretty">{{ dg.transcript }}</div></div>
+                </sc-if>
+                <div style="display:flex;justify-content:flex-end;gap:8px;padding-top:4px"><button type="button" onClick="{{ dg.close }}" style="height:{{ f.btnH }};min-width:{{ f.closeW }};padding:0 16px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13.5px;font-weight:500">{{ tx.common_close }}</button></div>
+              </div>
+            </sc-if>
+
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:1px;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame, and a number shows only where its part is on screen for the access chosen.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Who can do what" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Who can do what on a shared test</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The screens offer what R7's plan allows (<code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">77-r7.md</code>, T-R7.4 to T-R7.7 and T-R7.18). A control a reader cannot use is not drawn for them.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:760px">
+      <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr) minmax(0,1fr) minmax(0,1fr);gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Action</span><span>Owner</span><span>Can edit</span><span>Can use</span></div>
+      <sc-for list="{{ matrix }}" as="m" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,.8fr) minmax(0,1fr) minmax(0,1fr);gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:500">{{ m.action }}</span><span style="color:{{ m.c1 }}">{{ m.owner }}</span><span style="color:{{ m.c2 }}">{{ m.edit }}</span><span style="color:{{ m.c3 }}">{{ m.use }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="State table" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which notice shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each is in the frames: pick the screen and the access, then the state.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:760px">
+      <div style="display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr) minmax(0,1.8fr);gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where and who</span><span>When</span><span>What shows</span></div>
+      <sc-for list="{{ states }}" as="r" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,.8fr) minmax(0,1fr) minmax(0,1.8fr);gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:500">{{ r.where }}</span><span style="color:var(--muted-fg)">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Every line, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames above use these exact strings. "New" keys are proposed names for R7's locale files. "As today" keys are in <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">vi.json</code> and <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">en.json</code> now and do not change. A placeholder is written {name}; the locale files write it with two braces. The two access words and "Make a copy" are the question sets page's.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:920px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Key</span><span>Tiếng Việt</span><span>English</span><span>Status</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ c.key }}</code><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. R7's plan does not settle any of them.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="5"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}</span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">Default drawn:</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What this means for R7's tasks</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Nothing here needs an operation R7's plan does not already have.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.3fr) 80px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Drawn here</span><span>Where it is built</span><span>Task</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.3fr) 80px;gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="text-wrap:pretty">{{ h.what }}</span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.where }}</code><span>{{ h.task }}</span></div></sc-for>
+    </div>
+  </div>
+  <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">Read for this page: the deck's Teacher page (Test builder, Test detail, Question editor, New assignment, the share dialog and Shared with me), the question sets proposal beside this file, <code style="font-family:ui-monospace,Menlo,monospace">docs/plan/77-r7.md</code> (the decisions at its head, T-R7.4 to T-R7.7, T-R7.17 to T-R7.19 and its open items), <code style="font-family:ui-monospace,Menlo,monospace">docs/design/gaps.md</code> (DG-90) and the product's locale files at <code style="font-family:ui-monospace,Menlo,monospace">develop</code> @ bc20eec4.</p>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// [key, where, Vietnamese, English, status]. "Shell" rows are not listed in the Copy table.
+const STR = [
+  ['shell.teaching', 'Shell', 'Giảng dạy', 'Teaching', 'As today'],
+  ['shell.content', 'Shell', 'Nội dung', 'Content', 'As today'],
+  ['shell.dashboard', 'Shell', 'Tổng quan', 'Dashboard', 'As today'],
+  ['shell.messages', 'Shell', 'Tin nhắn', 'Messages', 'New'],
+  ['shell.assignments', 'Shell', 'Bài giao', 'Assignments', 'As today'],
+  ['shell.grading', 'Shell', 'Chấm bài', 'Grading', 'As today'],
+  ['shell.classes', 'Shell', 'Lớp học', 'Classes', 'As today'],
+  ['shell.students', 'Shell', 'Học viên', 'Students', 'As today'],
+  ['shell.tests', 'Shell', 'Đề thi', 'Tests', 'As today'],
+  ['shell.shared', 'Shell', 'Được chia sẻ với tôi', 'Shared with me', 'New'],
+  ['shell.bank', 'Shell', 'Ngân hàng câu hỏi', 'Question bank', 'As today'],
+  ['shell.media', 'Shell', 'Thư viện media', 'Media', 'As today'],
+
+  ['sharing.canUse', 'Access', 'Có thể dùng', 'Can use', 'New'],
+  ['sharing.canEdit', 'Access', 'Có thể sửa', 'Can edit', 'New'],
+  ['tests.makeCopy', 'Access', 'Tạo bản sao', 'Make a copy', 'New'],
+  ['builder.access.editLead', 'Builder', 'Thay đổi của bạn được lưu vào bản của {name}.', 'Changes you make are saved to {name}’s copy.', 'New'],
+  ['builder.access.editRest', 'Builder', 'Câu hỏi bạn thêm vào đề cũng nằm trong ngân hàng của {name}.', 'Questions you add also go into {name}’s bank.', 'New'],
+  ['builder.access.useLead', 'Builder', 'Bạn xem được đề này nhưng không sửa được.', 'You can open this test but not change it.', 'New'],
+  ['builder.access.useRest', 'Builder', 'Giao đề cho lớp của bạn, hoặc tạo bản sao để sửa.', 'Assign it to your classes, or make a copy to edit.', 'New'],
+  ['builder.staleBy.title', 'Builder', '{name} đã thay đổi đề này lúc {time}.', '{name} changed this test at {time}.', 'New'],
+  ['builder.staleBy.body', 'Builder', 'Tải lại để xem thay đổi của họ. Thay đổi chưa lưu ở đây sẽ mất.', 'Reload to see their changes. Unsaved changes here will be lost.', 'New'],
+  ['builder.reload', 'Builder', 'Tải lại', 'Reload', 'As today'],
+  ['builder.revoked.title', 'Builder', '{name} đã dừng chia sẻ đề này với bạn', '{name} stopped sharing this test with you', 'New'],
+  ['builder.revoked.body', 'Builder', 'Thay đổi sau lần lưu gần nhất chưa được lưu. Bài giao bạn đã tạo từ đề này vẫn hoạt động bình thường.', 'Changes after the last save were not saved. Assignments you already made from this test keep working.', 'New'],
+  ['sets.backToShared', 'Builder', 'Về Được chia sẻ với tôi', 'Back to Shared with me', 'New'],
+  ['builder.forked', 'Toast', 'Đã lưu thành một bản sao mới của câu hỏi này, vì {name} đang dùng câu gốc ở nơi khác.', 'Saved as a new copy of this question, because {name} uses the original elsewhere.', 'New'],
+  ['builder.draft', 'Builder', 'Bản nháp', 'Draft', 'As today'],
+  ['builder.saved', 'Builder', 'Đã lưu {time}', 'Saved {time}', 'As today'],
+  ['ai.entry.check', 'Builder', 'Kiểm tra AI', 'AI check', 'As today'],
+  ['ai.entry.generate', 'Builder', 'Tạo câu hỏi', 'Generate', 'As today'],
+  ['builder.preview', 'Builder', 'Xem trước', 'Preview', 'As today'],
+  ['builder.publish', 'Builder', 'Phát hành', 'Publish', 'As today'],
+  ['builder.assign', 'Builder', 'Giao bài', 'Assign', 'As today'],
+  ['builder.outline', 'Builder', 'Dàn bài', 'Outline', 'As today'],
+  ['builder.outlineSummary', 'Builder', '{questions} câu · {points} điểm', '{questions} questions · {points} pts', 'As today'],
+  ['builder.sectionSummary', 'Builder', '{questions} · {points}đ', '{questions} · {points} pts', 'As today'],
+  ['builder.points_other', 'Builder', '{count}đ', '{count} pts', 'As today'],
+  ['builder.addQuestion', 'Builder', 'Thêm câu hỏi', 'Add question', 'As today'],
+  ['builder.fromQuestionBank', 'Builder', 'Từ ngân hàng câu hỏi', 'From question bank', 'As today'],
+  ['builder.addSection', 'Builder', 'Thêm phần', 'Add section', 'As today'],
+  ['builder.editor.questionNumber', 'Question', 'Câu {number}', 'Question {number}', 'As today'],
+  ['builder.editor.question', 'Question', 'Câu hỏi', 'Question', 'As today'],
+  ['questionEditor.points', 'Question', 'Điểm', 'Points', 'As today'],
+  ['questionEditor.prompt', 'Question', 'Nội dung câu hỏi', 'Prompt', 'As today'],
+  ['questionEditor.options', 'Question', 'Lựa chọn', 'Options', 'As today'],
+  ['questionEditor.correct', 'Question', 'Đáp án đúng', 'Correct', 'As today'],
+  ['questionEditor.addOption', 'Question', 'Thêm lựa chọn', 'Add option', 'As today'],
+  ['questionEditor.explanation', 'Question', 'Giải thích', 'Explanation', 'As today'],
+
+  ['teacherShell.nav.tests', 'Test detail', 'Đề thi', 'Tests', 'As today'],
+  ['status.test.published', 'Test detail', 'Đã phát hành', 'Published', 'As today'],
+  ['ai.entry.variant', 'Test detail', 'Tạo biến thể', 'Make a variant', 'As today'],
+  ['tests.shared', 'Test detail', 'Đã chia sẻ · {count}', 'Shared · {count}', 'New'],
+  ['tests.detail.openBuilder', 'Test detail', 'Mở trình soạn đề', 'Open builder', 'As today'],
+  ['tests.detail.assign', 'Test detail', 'Giao bài', 'Assign', 'As today'],
+  ['tests.detail.banner.title', 'Test detail', 'Bản nháp có thay đổi chưa phát hành.', 'The draft has changes that are not published.', 'As today'],
+  ['tests.detail.banner.body', 'Test detail', 'Bài giao mới vẫn nhận phiên bản {current} cho tới khi bạn phát hành bản nháp thành phiên bản {next}.', 'New assignments get version {current} until you publish the draft as version {next}.', 'As today'],
+  ['tests.detail.banner.review', 'Test detail', 'Xem bản nháp', 'Review draft', 'As today'],
+  ['tests.detail.banner.publish', 'Test detail', 'Phát hành phiên bản {n}', 'Publish version {n}', 'As today'],
+  ['tests.detail.preview.title', 'Test detail', 'Xem như học viên', 'Student preview', 'As today'],
+  ['tests.detail.preview.current', 'Test detail', 'Phiên bản {n} · mặc định cho bài giao mới', 'Version {n} · the default for new assignments', 'As today'],
+  ['tests.detail.versionHistory', 'Test detail', 'Lịch sử phiên bản', 'Version history', 'As today'],
+  ['tests.detail.history.draft', 'Test detail', 'Bản nháp', 'Draft', 'As today'],
+  ['tests.detail.history.draftAhead', 'Test detail', 'Có thay đổi chưa phát hành · sửa {when}', 'Unpublished changes · edited {when}', 'As today'],
+  ['tests.detail.history.edit', 'Test detail', 'Sửa', 'Edit', 'As today'],
+  ['tests.detail.history.version', 'Test detail', 'Phiên bản {n}', 'Version {n}', 'As today'],
+  ['tests.defaultVersion', 'Test detail', 'Mặc định', 'Default', 'As today'],
+  ['tests.detail.history.stats', 'Test detail', '{questions} câu · {points} điểm', '{questions} q · {points} pts', 'As today'],
+  ['tests.detail.history.inUse_other', 'Test detail', 'Đang dùng · {count} bài giao', 'In use · {count} assignments', 'As today'],
+  ['tests.detail.history.restore', 'Test detail', 'Khôi phục thành bản nháp', 'Restore as draft', 'As today'],
+  ['tests.detail.history.makeDefault', 'Test detail', 'Đặt làm mặc định', 'Make default', 'As today'],
+  ['tests.detail.history.delete', 'Test detail', 'Xoá', 'Delete', 'As today'],
+  ['tests.assigned.live_other', 'Test detail', '{count} đang mở', '{count} live', 'As today'],
+
+  ['builder.sharedDialog.title', 'Shared content', 'Nội dung dùng chung của “{group}”', 'Shared content for “{group}”', 'As today'],
+  ['builder.sharedDialog.description', 'Shared content', 'Bài đọc hoặc bản ghi âm hiện bên cạnh mọi câu hỏi trong nhóm này. Học viên xem nội dung này bên cạnh các câu hỏi khi làm bài.', 'A passage or recording shown beside every question in this group. Students see it beside the questions while they answer.', 'As today'],
+  ['builder.sharedDialog.kind', 'Shared content', 'Loại nội dung dùng chung', 'Kind of shared content', 'As today'],
+  ['builder.sharedDialog.none', 'Shared content', 'Không có', 'None', 'As today'],
+  ['builder.sharedPassage', 'Shared content', 'Bài đọc', 'Passage', 'As today'],
+  ['builder.sharedAudio', 'Shared content', 'Bài nghe', 'Audio', 'As today'],
+  ['builder.sharedDialog.titleLabel', 'Shared content', 'Tiêu đề', 'Title', 'As today'],
+  ['builder.sharedGaps_other', 'Shared content', '{count} chỗ trống', '{count} gaps', 'As today'],
+  ['builder.sharedPlays_other', 'Shared content', '{count} lượt nghe', '{count} plays', 'As today'],
+  ['questionEditor.questionMedia.plays', 'Shared content', 'Số lần nghe', 'Plays', 'As today'],
+  ['questionEditor.questionMedia.allowPause', 'Shared content', 'Cho học sinh tạm dừng', 'Students can pause', 'As today'],
+  ['questionEditor.questionMedia.showTranscript', 'Shared content', 'Hiện lời thoại sau khi nộp', 'Show transcript after submitting', 'As today'],
+  ['questionEditor.questionMedia.transcript', 'Shared content', 'Lời thoại', 'Transcript', 'As today'],
+  ['common.close', 'Shared content', 'Đóng', 'Close', 'As today'],
+
+  ['questionEditor.editTitle', 'Question editor', 'Sửa câu hỏi', 'Edit question', 'As today'],
+  ['questionEditor.viewTitle', 'Question editor', 'Xem câu hỏi', 'View question', 'New'],
+  ['questionEditor.access.editRest', 'Question editor', 'Nếu {name} đang dùng câu này ở nơi khác, thay đổi của bạn được lưu thành một bản sao mới.', 'If {name} uses this question elsewhere, your change is saved as a new copy.', 'New'],
+  ['questionEditor.access.useLead', 'Question editor', 'Bạn xem được câu hỏi này nhưng không sửa được.', 'You can open this question but not change it.', 'New'],
+  ['questionEditor.access.useRest', 'Question editor', 'Tạo bản sao để có câu hỏi của riêng bạn.', 'Make a copy to have your own.', 'New'],
+  ['questionEditor.staleBy.title', 'Question editor', '{name} đã thay đổi câu hỏi này lúc {time}.', '{name} changed this question at {time}.', 'New'],
+  ['questionEditor.usedIn_other', 'Question editor', 'Đang dùng trong {count} đề. Lưu thay đổi chỉ ảnh hưởng các đề về sau.', 'Used in {count} tests. Saving changes future tests only.', 'As today'],
+  ['common.saveChanges', 'Question editor', 'Lưu thay đổi', 'Save changes', 'As today'],
+  ['builder.editor.more', 'Question editor', 'Thao tác với câu hỏi', 'Question actions', 'As today'],
+  ['questionEditor.level', 'Question editor', 'Trình độ', 'Level', 'As today'],
+  ['questionEditor.skill', 'Question editor', 'Kỹ năng', 'Skill', 'As today'],
+  ['questionEditor.tags', 'Question editor', 'Thẻ', 'Tags', 'As today'],
+
+  ['assignments.new', 'Wizard', 'Giao bài mới', 'New assignment', 'As today'],
+  ['assignments.wizard.steps.test', 'Wizard', 'Đề thi', 'Test', 'As today'],
+  ['assignments.wizard.steps.students', 'Wizard', 'Học viên', 'Students', 'As today'],
+  ['assignments.wizard.steps.schedule', 'Wizard', 'Lịch', 'Schedule', 'As today'],
+  ['assignments.wizard.steps.rules', 'Wizard', 'Quy định', 'Rules', 'As today'],
+  ['assignments.wizard.testTitle', 'Wizard', 'Đề nào?', 'Which test?', 'As today'],
+  ['assignments.wizard.searchTests', 'Wizard', 'Tìm đề đã phát hành', 'Search published tests', 'As today'],
+  ['assignments.wizard.sharedBy', 'Wizard', 'Được chia sẻ bởi {name}', 'Shared by {name}', 'New'],
+  ['assignments.wizard.continue', 'Wizard', 'Tiếp tục', 'Continue', 'As today']
+];
+const K = Object.fromEntries(STR.map(r => [r[0], r]));
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+const DUC = ['Phan Minh Đức', 'ĐP', 'Đức'];
+const TEST = 'Mid-term Reading Mock';
+const SET = 'Collocations · B1';
+// Vietnamese, English, icon (the deck's B_ICON)
+const TY = { single: ['Một đáp án', 'Single choice', 'circle-dot'], multi: ['Nhiều đáp án', 'Multiple choice', 'square-check'], tf: ['Đúng/Sai', 'True / False', 'circle-check'], fill: ['Điền từ', 'Fill in the blank', 'text-cursor-input'], short: ['Trả lời ngắn', 'Short answer', 'align-left'] };
+// section title, questions [type, title]
+const OUTLINE = [
+  ['Grammar and vocabulary', [['single', 'Choose the correct form: She ___ in Hanoi since 2019.'], ['fill', 'Write the missing word: “I look forward ___ hearing from you.”'], ['multi', 'Which words collocate with “make”? Select all.'], ['tf', 'True or False: we say “do a mistake”.']]],
+  ['Reading passage 1', [['single', 'What is the writer’s main point?'], ['single', 'Choose the word for gap 1.'], ['single', 'Choose the word for gap 2.']]]
+];
+const NOTES = {
+  builder: ['A recipient sees whose test it is and what they may do, as Shared with me’s pill. The owner’s title bar has no such line.', 'The buttons follow the access. Can edit: Preview and Publish, the second only with the publish permission. Can use: Preview, Make a copy and Assign. A recipient has no Share, Archive or Delete, and no AI buttons.', 'One band under the title bar. For a recipient it says what the access means; when a save is refused it turns into the warning that names who saved first, with Reload.', 'Can use is read-only: no drag grips, no row menus, no add buttons, no toolbar and no save line. Fields sit on the muted ground with their text at full contrast. The shared-content line still opens its dialog.'],
+  detail: ['The same owner line as the builder. A recipient’s line leaves out how many assignments are live, because those are the owner’s.', 'Can edit: Make a copy, Open builder and Assign. Can use: the same three, and the builder opens read-only. Neither has Share or Make a variant.', 'The unpublished-changes band shows to the owner and to Can edit, whose Publish needs the publish permission. Can use does not see it.', 'Can edit keeps Restore as draft and Make default. Deleting a version stays the owner’s. Can use reads the history with no buttons.'],
+  shared: ['What a Can-use recipient gets from the outline’s shared-content line: every field shown and inert, the kind switch, the gaps and what each is bound to, the play limit and both switches. There is no Save, and the one button reads Close.'],
+  editor: ['The same owner line, here for a question opened from a shared set.', 'Can edit keeps Save changes. Can use has Make a copy, which copies this one question to their bank.', 'For Can edit the second sentence says when a change becomes a new copy. A refused save turns the band into the warning that names who saved first.', 'Can use reads the question on the muted ground. The line that says how many tests use the question is not drawn for a recipient: those are the owner’s tests.'],
+  wizard: ['The list holds the teacher’s own tests and the ones shared with them. A shared test says who shared it in the line under its title, after the same facts as any other test.']
+};
+const MATRIX = [
+  ['Open the builder', 'Yes', 'Yes', 'Yes, read-only'],
+  ['Change the title, sections and questions', 'Yes', 'Yes, saved to the owner’s copy', 'No'],
+  ['Add a question', 'Yes', 'Yes, it goes into the owner’s bank', 'No'],
+  ['Preview as a student', 'Yes', 'Yes', 'Yes'],
+  ['Publish a version', 'Yes', 'With the publish permission', 'No'],
+  ['Restore a version as draft, make it default', 'Yes', 'Yes', 'No'],
+  ['Delete a version', 'Yes', 'No', 'No'],
+  ['Assign to their own classes', 'Yes', 'Yes', 'Yes'],
+  ['Make a copy', 'Duplicate, as today', 'Yes', 'Yes'],
+  ['Share, archive, delete the test', 'Yes', 'No', 'No'],
+  ['AI check, Generate, Make a variant', 'Yes', 'No', 'No']
+];
+const STATES = [
+  ['Builder and question editor · owner, Can edit', 'A save is refused because someone saved first', 'The band under the heading turns into a warning that names them and the time, with Reload. The save line goes, and nothing more is saved until the reload.'],
+  ['Builder and question editor · Can edit', 'The owner uses the question in another test or set', 'The change is saved as a new copy in the owner’s bank. A toast says why, and the outline and the fields carry on with the copy.'],
+  ['Builder · Can edit', 'A save answers 404: the owner stopped sharing', 'One block in place of the builder: who stopped sharing, that the last changes were not saved, that assignments keep working, and a way back to Shared with me. Nothing more is sent.'],
+  ['Builder · Can use', 'Always', 'Read-only, as drawn. No save is ever sent, so none of the three notices above can appear.'],
+  ['Shared content · Can use', 'The shared-content line is opened', 'The dialog as a read-only view, with Close. A Can-edit recipient and the owner get the dialog as it is built today.'],
+  ['Test detail · Can use', 'The draft is ahead of the default version', 'No band and no version buttons. The preview and the history are still there to read.'],
+  ['Wizard · everyone', 'A test is shared with the teacher', 'It is in the list with “Shared by” and the owner’s name.']
+];
+const QUESTIONS = [
+  ['Q1', 'Do recipients get the AI buttons?', 'AI check, Generate and Make a variant spend the caller’s own credits, and Generate would add questions to the owner’s bank. R7’s plan does not say.', 'No, for both kinds of access. A recipient who wants them makes a copy first.'],
+  ['Q2 · T-R7.18', 'May a Can-edit recipient delete a version?', 'The plan removes Delete, Archive and Share from a Can-edit recipient’s test. It lists Restore as draft, Make default and the version’s Delete as hidden only for Can use.', 'No. Deleting stays the owner’s; Restore as draft and Make default stay with Can edit.'],
+  ['Q3 · T-R7.18', 'Does a Can-edit recipient get Make a copy in the builder?', 'The plan puts Make a copy in the builder’s title bar for Can use. A Can-edit recipient can already copy from Shared with me and from test detail.', 'Not in the builder, where their job is editing. Yes on test detail.'],
+  ['Q4', 'Does a recipient see how many assignments are live?', 'Test detail’s line and its version rows count assignments. For a recipient these would be the owner’s classes.', 'The heading’s count is left out for a recipient. A version’s “In use” stays, since it explains why a version is kept.'],
+  ['Q5 · DG-20', 'Is the sentence right with a given name?', 'The deck writes “saved to Đức’s copy” with the given name alone. In Vietnamese a teacher may expect the full name or a title.', '“… vào bản của Đức.”, the given name, as the deck does.']
+];
+const HANDOFF = [
+  ['The owner line and the pill in the title bar, the band under it in its three forms', 'tests/components/AccessBanner.tsx', 'T-R7.18'],
+  ['The read-only builder: outline without grips, menus or add buttons; fields without a toolbar; no save line', 'tests/pages/teacher/TestBuilderPage.tsx', 'T-R7.18'],
+  ['The block for sharing stopped', 'tests/components/AccessRemovedNotice.tsx', 'T-R7.18'],
+  ['Test detail’s buttons, band and version actions by access', 'tests/pages/teacher/TestDetailPage.tsx', 'T-R7.18'],
+  ['The Shared content dialog as a read-only view', 'tests/components/SharedContentDialog.tsx', 'T-R7.18'],
+  ['The question editor for a recipient, and its two notices', 'question-bank/pages/teacher/QuestionEditorPage.tsx', 'T-R7.19'],
+  ['“Shared by” in the wizard’s test step', 'assignments (the wizard’s test step)', 'T-R7.18'],
+  ['The Vietnamese and English lines above', 'lib/i18n/locales/vi.json, en.json', 'each task']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', screen: 'builder', access: 'edit', variant: { builder: 'ready', detail: 'ready', shared: 'passage', editor: 'ready', wizard: 'ready' }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+  go(screen, variant) {
+    this.setState(st => ({ screen, variant: variant ? { ...st.variant, [screen]: variant } : st.variant }));
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const T = (key, pr) => { const r = K[key]; return r ? fmt(r[vi ? 2 : 3], pr) : '[' + key + ']'; };
+    const tx = {}; STR.forEach(r => { tx[r[0].replace(/\./g, '_')] = r[vi ? 2 : 3]; });
+    const noop = () => {};
+
+    const scr = s.screen;
+    const onBuilder = scr === 'builder' || scr === 'shared', onDetail = scr === 'detail', onEditor = scr === 'editor', onWizard = scr === 'wizard';
+    const access = scr === 'shared' ? 'use' : onWizard ? 'owner' : s.access;
+    const owner = access === 'owner', canEdit = access === 'edit', canUse = access === 'use', edits = !canUse;
+    const allowed = { builder: owner ? ['ready', 'stale'] : canEdit ? ['ready', 'stale', 'forked', 'stopped'] : ['ready'], editor: canEdit ? ['ready', 'stale', 'forked'] : ['ready'], detail: ['ready'], shared: ['passage', 'audio'], wizard: ['ready'] }[scr];
+    const vr = allowed.includes(s.variant[scr]) ? s.variant[scr] : allowed[0];
+    const audio = scr === 'shared' && vr === 'audio';
+    const stale = vr === 'stale', forked = vr === 'forked', stopped = vr === 'stopped';
+    const other = DUC[0];
+
+    const btn = (label, icon, o) => { const x = o || {}; return { label, icon: icon || '', hasIcon: !!icon, go: x.go || noop, aria: x.aria || label, hasLabel: !x.iconOnly, pad: x.iconOnly ? '0' : '0 14px', border: x.primary ? '0' : '1px solid var(--border)', bg: x.primary ? 'var(--primary)' : 'var(--card)', fg: x.primary ? 'var(--primary-fg)' : 'var(--fg)', shadow: x.primary ? 'none' : 'var(--shadow)', iconFg: x.accent ? 'var(--accent-ink)' : 'inherit' }; };
+    const copyBtn = btn(T('tests.makeCopy'), 'copy');
+    const pill = { hasOwner: !owner, ownerIni: DUC[1], ownerName: DUC[0], pill: canEdit ? T('sharing.canEdit') : T('sharing.canUse'), pillIcon: canEdit ? 'pencil' : 'eye', pillBg: canEdit ? 'var(--accent-soft)' : 'var(--muted)', pillFg: canEdit ? 'var(--accent-ink)' : 'var(--muted-fg)' };
+    const stats = T('tests.detail.history.stats', { questions: 7, points: 7 });
+
+    let hd;
+    if (onBuilder) {
+      hd = { ...pill, hasBack: false, title: TEST, titleSize: '22px', hasStatus: true, status: T('builder.draft'), stBorder: '1px solid var(--border)', stBg: 'transparent', stFg: 'var(--muted-fg)', stDot: false,
+        hasSave: edits && !stale, save: T('builder.saved', { time: '10:42' }), hasLine: !owner, hasMeta: false, meta: '', pinActions: true,
+        actions: owner ? [btn(T('ai.entry.check'), 'scan-search', { accent: 1 }), btn(T('ai.entry.generate'), 'sparkles', { accent: 1 }), btn(T('builder.preview'), 'eye'), btn(T('builder.publish'), '', { primary: 1 })]
+          : canEdit ? [btn(T('builder.preview'), 'eye'), btn(T('builder.publish'), '', { primary: 1 })]
+          : [btn(T('builder.preview'), 'eye'), copyBtn, btn(T('builder.assign'), 'clipboard-list', { primary: 1 })] };
+    } else if (onDetail) {
+      hd = { ...pill, hasBack: true, back: T('teacherShell.nav.tests'), title: TEST, titleSize: '24px', hasStatus: true, status: T('status.test.published'), stBorder: '0', stBg: 'var(--success-soft)', stFg: 'var(--success-ink)', stDot: true,
+        hasSave: false, save: '', hasLine: true, hasMeta: true, meta: owner ? stats + ' · ' + T('tests.assigned.live_other', { count: 2 }) : stats, pinActions: true,
+        actions: owner ? [btn(T('ai.entry.variant'), 'sparkles', { accent: 1 }), btn(T('tests.shared', { count: 1 }), 'users-round'), btn(T('tests.detail.openBuilder'), 'pencil', { go: () => this.go('builder') }), btn(T('tests.detail.assign'), 'clipboard-list', { primary: 1 })]
+          : [copyBtn, btn(T('tests.detail.openBuilder'), canEdit ? 'pencil' : 'eye', { go: () => this.go('builder') }), btn(T('tests.detail.assign'), 'clipboard-list', { primary: 1 })] };
+    } else if (onEditor) {
+      hd = { ...pill, hasBack: true, back: owner ? tx.shell_bank : SET, title: canUse ? T('questionEditor.viewTitle') : T('questionEditor.editTitle'), titleSize: '24px', hasStatus: false, status: '', stBorder: '0', stBg: 'transparent', stFg: 'inherit', stDot: false,
+        hasSave: false, save: '', hasLine: !owner, hasMeta: false, meta: '', pinActions: !owner,
+        actions: owner ? [btn('', 'ellipsis', { iconOnly: 1, aria: T('builder.editor.more') }), btn(T('common.saveChanges'), '', { primary: 1 })] : canEdit ? [btn(T('common.saveChanges'), '', { primary: 1 })] : [copyBtn] };
+    } else {
+      hd = { hasOwner: false, hasBack: false, title: T('assignments.new'), titleSize: '24px', hasStatus: false, status: '', stBorder: '0', stBg: 'transparent', stFg: 'inherit', stDot: false, hasSave: false, save: '', hasLine: false, hasMeta: false, meta: '', pinActions: false, actions: [] };
+    }
+
+    const info = { on: true, role: 'note', bg: 'var(--muted)', icon: 'info', iconFg: 'var(--muted-fg)', hasAct: false, act: '', hasAct2: false, act2: '' };
+    const warn = { on: true, role: 'alert', bg: 'var(--warning-soft)', icon: 'triangle-alert', iconFg: 'var(--warning-ink)', hasAct2: false, act2: '' };
+    let bn = { on: false };
+    if (onBuilder) {
+      if (stale) bn = { ...warn, lead: T('builder.staleBy.title', { name: other, time: '10:47' }), rest: T('builder.staleBy.body'), hasAct: true, act: T('builder.reload') };
+      else if (canEdit) bn = { ...info, lead: T('builder.access.editLead', { name: DUC[2] }), rest: T('builder.access.editRest', { name: DUC[2] }) };
+      else if (canUse) bn = { ...info, lead: T('builder.access.useLead'), rest: T('builder.access.useRest') };
+    } else if (onEditor) {
+      if (stale) bn = { ...warn, lead: T('questionEditor.staleBy.title', { name: other, time: '10:47' }), rest: T('builder.staleBy.body'), hasAct: true, act: T('builder.reload') };
+      else if (canEdit) bn = { ...info, lead: T('builder.access.editLead', { name: DUC[2] }), rest: T('questionEditor.access.editRest', { name: DUC[2] }) };
+      else if (canUse) bn = { ...info, lead: T('questionEditor.access.useLead'), rest: T('questionEditor.access.useRest') };
+      else bn = { ...info, icon: 'file-text', lead: '', rest: T('questionEditor.usedIn_other', { count: 3 }) };
+    } else if (onDetail && edits) {
+      bn = { ...warn, role: 'note', icon: 'pencil-line', lead: T('tests.detail.banner.title'), rest: T('tests.detail.banner.body', { current: 2, next: 3 }), hasAct: true, act: T('tests.detail.banner.publish', { n: 3 }), hasAct2: true, act2: T('tests.detail.banner.review') };
+    }
+
+    const pts = n => T('builder.points_other', { count: n });
+    let no = 0;
+    const secs = OUTLINE.map((sec, si) => {
+      const items = sec[1].map(q => { no += 1; const on = no === 1; return { no: String(no), icon: TY[q[0]][2], title: q[1], pts: pts(1), bg: on ? 'var(--muted)' : 'transparent', weight: on ? 500 : 400 }; });
+      const shared = si === 1;
+      return { title: shared && audio ? 'Listening part 1' : sec[0], summary: T('builder.sectionSummary', { questions: items.length, points: items.length }), items, hasShared: shared, sharedIcon: audio ? 'audio-lines' : 'book-open-text',
+        shared: audio ? T('builder.sharedAudio') + ' · part-1-asking-the-way.mp3 · ' + T('builder.sharedPlays_other', { count: 2 }) : T('builder.sharedPassage') + ' · Why cities need green space · ' + T('builder.sharedGaps_other', { count: 2 }),
+        openShared: () => this.go('shared') };
+    });
+    const ol = { on: onBuilder, canEdit: edits, padL: edits ? '2px' : '8px', rowPadL: edits ? '2px' : '6px', summary: T('builder.outlineSummary', { questions: 7, points: 7 }), sections: secs };
+
+    const ro = canUse;
+    const optsSrc = onEditor ? [['do', 0], ['make', 1], ['have', 0], ['give', 0]] : [['lives', 0], ['has lived', 1], ['is living', 0], ['lived', 0]];
+    const qp = { on: onBuilder || onEditor, canEdit: edits, pin: onEditor && !owner, head: onEditor ? T('builder.editor.question') : T('builder.editor.questionNumber', { number: 1 }), type: TY.single[li], icon: TY.single[2],
+      fieldBg: ro ? 'var(--sidebar)' : 'var(--bg)', tools: ['bold', 'italic', 'underline', 'heading', 'list', 'list-ordered', 'link', 'image', 'table'],
+      prompt: onEditor ? 'Choose the verb that collocates: ___ a mistake.' : 'Choose the correct form: She ___ in Hanoi since 2019.',
+      explanation: onEditor ? 'Ta nói “make a mistake”, không nói “do a mistake”.' : '“Since 2019” đi với thì hiện tại hoàn thành.',
+      options: optsSrc.map((o, i) => ({ letter: 'ABCD'[i], text: o[0], correct: !!o[1], border: o[1] ? 'var(--success)' : 'var(--border)', bg: o[1] ? 'var(--success-soft)' : ro ? 'var(--sidebar)' : 'var(--bg)', ring: o[1] ? 'var(--success)' : 'var(--ring)', dot: o[1] ? 'var(--success)' : 'transparent' })) };
+
+    const pv = { on: onDetail, sub: T('tests.detail.preview.current', { n: 2 }) };
+    const ver = (n, def, q, when, use) => ({ name: T('tests.detail.history.version', { n }), isDefault: def, notDefault: !def, stats: T('tests.detail.history.stats', { questions: q, points: q }), meta: when + ' · ' + DUC[0], hasUse: !!use, use: use ? T('tests.detail.history.inUse_other', { count: use }) : '', bg: def ? 'var(--muted)' : 'transparent', border: def ? 'var(--border)' : 'transparent' });
+    const sc = onDetail ? { on: true, title: T('tests.detail.versionHistory'), pin: true, isVersions: true, isProps: false, canEdit: edits, canDelete: owner, draftMeta: T('tests.detail.history.draftAhead', { when: vi ? '2 giờ trước' : '2 h ago' }), versions: [ver(2, true, 7, vi ? '12 thg 10' : '12 Oct', 2), ver(1, false, 6, vi ? '28 thg 9' : '28 Sep', 0)] }
+      : onEditor ? { on: true, title: T('questionEditor.level') + ', ' + T('questionEditor.skill') + ', ' + T('questionEditor.tags'), pin: false, isVersions: false, isProps: true, props: [{ label: T('questionEditor.level'), value: 'B1' }, { label: T('questionEditor.skill'), value: vi ? 'Từ vựng' : 'Vocabulary' }], tags: ['collocations', 'make / do'] }
+      : { on: false };
+
+    const radio = on => ({ border: on ? 'var(--primary)' : 'var(--border)', bg: on ? 'var(--muted)' : 'var(--card)', ring: on ? 'var(--primary)' : 'var(--ring)', dot: on ? 'var(--primary)' : 'transparent' });
+    const st = (q, v) => T('tests.detail.history.stats', { questions: q, points: q }) + ' · v' + v;
+    const wz = { on: onWizard,
+      steps: [[tx.assignments_wizard_steps_test, TEST, 1], [tx.assignments_wizard_steps_students, '—'], [tx.assignments_wizard_steps_schedule, '—'], [tx.assignments_wizard_steps_rules, '—']].map((x, i) => ({ num: String(i + 1), label: x[0], value: x[1], border: x[2] ? 'var(--primary)' : 'var(--border)', bg: x[2] ? 'var(--muted)' : 'var(--card)', numBg: x[2] ? 'var(--primary)' : 'var(--muted)', numFg: x[2] ? 'var(--primary-fg)' : 'var(--muted-fg)' })),
+      tests: [['Unit 4 · Review', st(20, 3), ''], [TEST, st(7, 2), DUC[0], 1], ['Vocab Quiz: Travel', st(10, 1), ''], ['Kids Starters · Animals quiz', st(12, 1), 'Nguyễn Thu Trang']].map(x => ({ title: x[0], meta: x[1], shared: !!x[2], sharedBy: x[2] ? T('assignments.wizard.sharedBy', { name: x[2] }) : '', ...radio(!!x[3]) })) };
+
+    const kinds = [['none', T('builder.sharedDialog.none'), 'ban'], ['passage', T('builder.sharedPassage'), 'book-open-text'], ['audio', T('builder.sharedAudio'), 'audio-lines']];
+    const dg = scr !== 'shared' ? { on: false } : {
+      on: true, title: T('builder.sharedDialog.title', { group: audio ? 'Listening part 1' : 'Reading passage 1' }), desc: T('builder.sharedDialog.description'),
+      kinds: kinds.map(k => { const on = k[0] === (audio ? 'audio' : 'passage'); return { label: k[1], icon: k[2], bg: on ? 'var(--card)' : 'transparent', fg: 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; }),
+      isPassage: !audio, isAudio: audio, name: 'Why cities need green space',
+      p1: 'Cities that plant trees along their streets see', p2: 'summers and more people walking. Public parks also raise the', p3: 'of the homes around them, which is one reason councils now protect them.',
+      gaps: [['1', 2], ['2', 3]].map(g => ({ n: g[0], q: T('builder.editor.questionNumber', { number: 4 + g[1] }) + ' · ' + OUTLINE[1][1][g[1] - 1][1] })),
+      file: 'part-1-asking-the-way.mp3', len: '2:14',
+      switches: [[T('questionEditor.questionMedia.allowPause'), 1], [T('questionEditor.questionMedia.showTranscript'), 0]].map(x => ({ label: x[0], on: !!x[1], track: x[1] ? 'var(--primary)' : 'var(--border)', side: x[1] ? 'flex-end' : 'flex-start' })),
+      transcript: 'Excuse me, how do I get to the post office? Go straight on, then turn left at the bank. It’s opposite the park.',
+      close: () => this.go('builder')
+    };
+
+    const bl = stopped ? { title: T('builder.revoked.title', { name: DUC[0] }), body: T('builder.revoked.body'), act: T('sets.backToShared') } : null;
+    const pg = { hasBlock: !!bl, hasPage: !bl };
+    const toast = { on: forked, text: T('builder.forked', { name: DUC[2] }) };
+
+    const item = (label, icon, o) => { const x = o || {}; return { label, icon, bg: x.on ? 'var(--hover)' : 'transparent', weight: x.on ? 500 : 400, fg: x.on ? 'var(--fg)' : 'var(--muted-fg)', hasCount: !!x.count, count: x.count || '', countBg: x.urgent ? 'var(--accent-c)' : 'var(--muted)', countFg: x.urgent ? '#1b2123' : 'var(--muted-fg)' }; };
+    const nav = [
+      { hasLabel: false, label: '', items: [item(tx.shell_dashboard, 'layout-dashboard'), item(tx.shell_messages, 'message-square', { count: '3', urgent: 1 })] },
+      { hasLabel: true, label: tx.shell_teaching, items: [item(tx.shell_assignments, 'clipboard-list', { count: '3', on: onWizard }), item(tx.shell_grading, 'square-pen', { count: '18', urgent: 1 }), item(tx.shell_classes, 'graduation-cap'), item(tx.shell_students, 'users')] },
+      { hasLabel: true, label: tx.shell_content, items: [item(tx.shell_tests, 'file-text', { on: onBuilder || onDetail }), item(tx.shell_shared, 'users-round', { count: '5' }), item(tx.shell_bank, 'library', { on: onEditor }), item(tx.shell_media, 'audio-lines')] }
+    ];
+    const trail = onWizard ? [tx.shell_teaching, tx.shell_assignments, T('assignments.new')] : onEditor ? [tx.shell_content, tx.shell_bank, hd.title] : [tx.shell_content, tx.shell_tests, TEST];
+    const crumbs = trail.map((label, i) => ({ label, sep: i > 0, weight: i === trail.length - 1 ? 500 : 400, fg: i === trail.length - 1 ? 'var(--fg)' : 'var(--muted-fg)' }));
+
+    const W = s.stageW || 1280;
+    const names = { builder: 'Builder', detail: 'Test detail', shared: 'Shared content', editor: 'Question editor', wizard: 'Wizard' };
+    const mk = (w, h, sc0, phone, sub) => ({
+      w, h, s: sc0, ow: Math.floor(w * sc0), oh: Math.floor(h * sc0), title: String(w), sub, screen: names[scr] + ' · ' + w,
+      side: !phone, phone, notPhone: !phone, pins: s.anno && !phone,
+      barPad: phone ? '0 14px' : '0 28px', pad: phone ? '16px 14px 72px' : '24px 28px 72px', notePad: phone ? '28px 18px' : '40px 24px',
+      btnH: phone ? '44px' : '36px', smH: phone ? '44px' : '30px', inH: phone ? '44px' : '36px', linkH: phone ? '44px' : '20px', olRow: phone ? '44px' : '32px', olBtn: phone ? '44px' : '32px', optH: phone ? '48px' : '42px',
+      verBtn: phone ? '44px' : '28px', fieldH: phone ? '44px' : '38px', selH: phone ? '44px' : '32px', segH: phone ? '40px' : '30px', closeW: phone ? '100%' : '0',
+      wrap: phone ? 'wrap' : 'nowrap', olFlex: phone ? '1 1 100%' : '0 0 304px', mainFlex: phone ? '1 1 100%' : '1 1 0', sideFlex: phone ? '1 1 100%' : onDetail ? '0 0 316px' : '0 0 264px',
+      pvH: phone ? '260px' : '430px', stepCols: phone ? 'repeat(2,minmax(0,1fr))' : 'repeat(4,minmax(0,1fr))'
+    });
+    const frames = [mk(1280, onDetail ? 900 : 800, Math.min(1, W / 1280), false, 'sidebar open, 976px content'), mk(360, 780, Math.min(1, W / 360), true, 'sidebar in the drawer, 332px content')];
+
+    const stateNames = { ready: 'Ready', stale: 'Someone saved first', forked: 'Saved as a copy', stopped: 'Sharing stopped', passage: 'Passage', audio: 'Recording' };
+    const hasAccess = scr === 'builder' || onDetail || onEditor;
+    const ctl = [{ label: 'Screen', opts: this.seg([['builder', 'Builder'], ['detail', 'Test detail'], ['shared', 'Shared content'], ['editor', 'Question editor'], ['wizard', 'Wizard']], scr, v => this.go(v)) }]
+      .concat(hasAccess ? [{ label: 'Access', opts: this.seg([['owner', 'Owner'], ['edit', 'Can edit'], ['use', 'Can use']], s.access, v => this.setState({ access: v })) }] : [])
+      .concat(allowed.length > 1 ? [{ label: 'State', opts: this.seg(allowed.map(v => [v, stateNames[v]]), vr, v => this.go(scr, v)) }] : [])
+      .concat([
+        { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+        { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+      ]);
+
+    const tone = { New: 'var(--accent-ink)', 'As today': 'var(--muted-fg)' };
+    const ink = v => (v === 'No' ? 'var(--muted-fg)' : 'var(--fg)');
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, noop,
+      chips: ['R7 · v0.14.0', 'DG-90', 'Plan: T-R7.18, T-R7.19', 'Deck of record: Teacher › Test builder, Test detail, Question editor, New assignment'],
+      ctl, reset: () => this.setState({ lang: 'vi', theme: null, screen: 'builder', access: 'edit', variant: { builder: 'ready', detail: 'ready', shared: 'passage', editor: 'ready', wizard: 'ready' } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      stageRef: this.stageRef, frames, nav, crumbs, crumbLast: trail[trail.length - 1],
+      pg, bl: bl || {}, hd, bn, ol, qp, pv, sc, wz, dg, toast,
+      notesTitle: 'What is new on “' + names[scr] + '”', notes: NOTES[scr].map((text, i) => ({ n: String(i + 1), text })),
+      matrix: MATRIX.map(m => ({ action: m[0], owner: m[1], edit: m[2], use: m[3], c1: ink(m[1]), c2: ink(m[2]), c3: ink(m[3]) })),
+      states: STATES.map(r => ({ where: r[0], when: r[1], what: r[2] })),
+      copyRows: STR.filter(r => r[1] !== 'Shell').map(r => ({ where: r[1], key: r[0], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3] })),
+      handoff: HANDOFF.map(h => ({ what: h[0], where: h[1], task: h[2] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

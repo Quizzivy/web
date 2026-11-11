@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.96 .02 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.3 .05 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] a{color:var(--fg);text-decoration:underline;text-underline-offset:3px}
+[data-qz] a:hover{color:var(--muted-fg)}
+[data-qz] button,[data-qz] input,[data-qz] textarea{font:inherit;color:inherit}
+[data-qz] input::placeholder,[data-qz] textarea::placeholder{color:var(--muted-fg)}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · Teacher › Question bank · Design proposal · 11 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Question sets in the bank</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">R7 lets a teacher share questions as a set, and the deck draws no set. This page draws the four places a set shows: the bank, the Add to set dialog, the set's own page for its owner and for a recipient, and the share dialog with the two states the deck leaves out. Every part comes from the deck: the bank's filter aside and bulk bar, the form dialog, Shared with me's access pill and the share dialog. The frames are in Vietnamese first, with English one click away.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Where does a set live?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">In the bank's filter aside, as the first group, and on a page of its own.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>A set is a named list of questions from the owner's bank (DG-90). It is a place to go, so its rows are links and carry no checkbox.</li>
+      <li><span style="color:var(--fg)">Below 1024 the group sits in the Filters sheet</span>, where the aside's other groups already go.</li>
+      <li>The set page is the bank's table with the set's name above it, so a teacher who knows the bank knows the page.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">How is a set made and shared?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">From a selection in the bank. "Share…" names the set first.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The bulk bar gains "Add to set": pick one of your sets, or name a new one.</li>
+      <li><span style="color:var(--fg)">"Share…" keeps the place the deck gives it.</span> It asks for a name, creates the set and opens the deck's share dialog on it.</li>
+      <li>The header's "Share" button goes. The deck shared "All my questions" from it, and a set holds at most 500 questions the owner chose.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What does a recipient see?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The same page, with the owner, the access pill and one sentence.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The pill is Shared with me's: a pencil on the accent tint for Can edit, an eye on the muted tint for Can use.</li>
+      <li><span style="color:var(--fg)">The header's buttons follow the access</span>, so nothing is offered that the server refuses.</li>
+      <li>The "Used" column counts the owner's tests, so a recipient does not see it.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Use the bar above to pick the screen, its state, the access, the language and the theme. Inside the frames a set's row opens its page, "Add to set" and "Share…" open their dialog, and the set page's share button opens the share dialog. The shell is drawn plainly so the page stands out: a 248px sidebar from 1024, a drawer below that, and 28 or 14px gutters, as the page-width design sets them. From 768 to 1023 the page is the 360 layout with the table's Type and Level columns back.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;height:{{ f.oh }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;transform:scale({{ f.s }});transform-origin:0 0;display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.side }}" hint-placeholder-val="{{ true }}">
+              <aside style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column">
+                <div style="height:56px;flex:none;display:flex;align-items:center;padding:0 16px;border-bottom:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:28px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../brand/quizzivy-logo-horizontal-on-dark.svg" alt="Quizzivy" style="height:28px;width:auto"></sc-if></div>
+                <nav style="padding:12px 10px;display:flex;flex-direction:column;gap:14px">
+                  <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3">
+                    <div style="display:flex;flex-direction:column;gap:2px">
+                      <sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ true }}"><span style="padding:4px 10px 6px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</span></sc-if>
+                      <sc-for list="{{ g.items }}" as="n" hint-placeholder-count="4"><span style="height:36px;display:flex;align-items:center;gap:10px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};font-weight:{{ n.weight }};color:{{ n.fg }}"><i class="icon-{{ n.icon }}" style="font-size:16px"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center">{{ n.count }}</span></sc-if></span></sc-for>
+                    </div>
+                  </sc-for>
+                </nav>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column;position:relative">
+              <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span><span style="font-size:15px;font-weight:600;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ crumbLast }}</span></sc-if>
+                <sc-if value="{{ f.notPhone }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ crumbs }}" as="c" hint-placeholder-count="2"><sc-if value="{{ c.sep }}" hint-placeholder-val="{{ false }}"><i class="icon-chevron-right" style="font-size:13px;color:var(--muted-fg)"></i></sc-if><span style="font-size:13px;font-weight:{{ c.weight }};color:{{ c.fg }};white-space:nowrap">{{ c.label }}</span></sc-for></sc-if>
+                <span style="flex:1"></span>
+                <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+              </div>
+
+              <div style="flex:1;min-height:0;overflow-y:auto;padding:{{ f.pad }}">
+
+                <sc-if value="{{ pg.hasBlock }}" hint-placeholder-val="{{ false }}">
+                  <div style="border:1px dashed var(--border);border-radius:12px;background:var(--card);padding:{{ f.notePad }};display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px">
+                    <span style="width:44px;height:44px;border-radius:12px;display:grid;place-items:center;background:{{ bl.tileBg }};color:{{ bl.tileFg }}"><i class="icon-{{ bl.icon }}" style="font-size:22px"></i></span>
+                    <h1 style="margin:4px 0 0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ bl.title }}</h1>
+                    <sc-if value="{{ bl.hasBody }}" hint-placeholder-val="{{ true }}"><p style="margin:0;max-width:46ch;font-size:14px;line-height:1.5;color:var(--muted-fg);text-wrap:pretty">{{ bl.body }}</p></sc-if>
+                    <button type="button" style="margin-top:6px;height:{{ f.btnH }};padding:0 14px;border-radius:9px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap" style-hover="background:var(--hover)"><i class="icon-{{ bl.actIcon }}" style="font-size:15px"></i>{{ bl.act }}</button>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ pg.hasPage }}" hint-placeholder-val="{{ true }}">
+                <section aria-label="{{ pg.title }}" style="display:flex;flex-direction:column;gap:16px">
+
+                  <sc-if value="{{ pg.headLoading }}" hint-placeholder-val="{{ false }}">
+                    <div aria-hidden="true" style="display:flex;flex-direction:column;gap:10px;padding:4px 0"><span style="width:min(280px,70%);height:26px;border-radius:7px;background:var(--muted)"></span><span style="width:min(200px,50%);height:14px;border-radius:6px;background:var(--muted)"></span></div>
+                  </sc-if>
+
+                  <sc-if value="{{ pg.headReady }}" hint-placeholder-val="{{ true }}">
+                  <header style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                    <div style="min-width:0;display:flex;flex-direction:column;gap:4px">
+                      <h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em;overflow-wrap:anywhere">{{ pg.title }}</h1>
+                      <p style="margin:0;color:var(--muted-fg);font-size:14px;display:flex;flex-wrap:wrap;align-items:center;gap:6px 8px">
+                        <sc-if value="{{ pg.hasOwner }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:7px;color:var(--fg)"><span style="width:22px;height:22px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:9px;font-weight:600">{{ pg.ownerIni }}</span>{{ pg.ownerName }}</span><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ pg.pillBg }};color:{{ pg.pillFg }}"><i class="icon-{{ pg.pillIcon }}" style="font-size:12px"></i>{{ pg.pill }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></sc-if>
+                        <span>{{ pg.sub }}</span>
+                      </p>
+                      <sc-if value="{{ pg.hasDesc }}" hint-placeholder-val="{{ false }}"><p style="margin:2px 0 0;max-width:64ch;font-size:13.5px;text-wrap:pretty">{{ pg.desc }}</p></sc-if>
+                    </div>
+                    <div style="display:flex;gap:8px;flex-wrap:wrap;align-items:center">
+                      <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pg.pinActions }}</span></sc-if>
+                      <sc-for list="{{ pg.actions }}" as="a" hint-placeholder-count="3"><button type="button" onClick="{{ a.go }}" aria-label="{{ a.aria }}" style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};min-width:{{ f.btnH }};padding:{{ a.pad }};border-radius:8px;border:{{ a.border }};background:{{ a.bg }};color:{{ a.fg }};cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap;box-shadow:{{ a.shadow }}" style-hover="opacity:.9"><i class="icon-{{ a.icon }}" style="font-size:15px;color:{{ a.iconFg }}"></i><sc-if value="{{ a.hasLabel }}" hint-placeholder-val="{{ true }}">{{ a.label }}</sc-if></button></sc-for>
+                    </div>
+                  </header>
+                  </sc-if>
+
+                  <sc-if value="{{ pg.hasBanner }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--muted);font-size:13px;line-height:1.55"><i class="icon-info" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;text-wrap:pretty"><b style="font-weight:600">{{ pg.bannerLead }}</b> {{ pg.bannerRest }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">3</span></sc-if></div>
+                  </sc-if>
+
+                  <div style="display:flex;gap:14px;align-items:flex-start">
+                    <sc-if value="{{ f.sheetOpen }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:6"></div></sc-if>
+                    <sc-if value="{{ f.asideOn }}" hint-placeholder-val="{{ true }}">
+                    <aside aria-label="{{ tx.bank_filters }}" style="width:{{ f.bfW }};flex:none;display:flex;flex-direction:column;gap:18px;position:{{ f.bfPos }};top:0;right:0;bottom:{{ f.bfBottom }};z-index:{{ f.bfZ }};background:{{ f.bfBg }};padding:{{ f.bfPad }};border-left:{{ f.bfBorder }};box-shadow:{{ f.bfShadow }};overflow-y:{{ f.bfOverflow }}">
+                      <sc-if value="{{ f.sheetOpen }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:15px;font-weight:600">{{ tx.bank_filters }}</span><span style="width:44px;height:44px;margin-right:-10px;display:grid;place-items:center;border-radius:7px"><i class="icon-x" style="font-size:17px"></i></span></div></sc-if>
+                      <div>
+                        <div style="display:flex;align-items:center;gap:8px;margin-bottom:6px"><span style="font-size:12.5px;font-weight:600">{{ tx.bank_sets_title }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></div>
+                        <sc-for list="{{ bk.sets }}" as="st" hint-placeholder-count="4"><button type="button" onClick="{{ st.open }}" title="{{ st.tip }}" style="width:calc(100% + 12px);margin:0 -6px;display:flex;align-items:center;gap:9px;min-height:{{ f.rowMin }};padding:5px 6px;border:0;border-radius:6px;background:transparent;cursor:pointer;font-size:13px;text-align:left" style-hover="background:var(--hover)"><i class="icon-library" style="font-size:14px;flex:none;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ st.name }}</span><sc-if value="{{ st.shared }}" hint-placeholder-val="{{ false }}"><i class="icon-users-round" role="img" aria-label="{{ st.tip }}" style="font-size:12px;flex:none;color:var(--muted-fg)"></i></sc-if><span style="font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ st.count }}</span></button></sc-for>
+                        <sc-if value="{{ bk.setsMore }}" hint-placeholder-val="{{ true }}"><button type="button" style="margin-top:2px;min-height:{{ f.rowMin }};border:0;background:transparent;padding:0;font-size:12.5px;color:var(--muted-fg);cursor:pointer;text-decoration:underline;text-underline-offset:3px" style-hover="color:var(--fg)">{{ bk.setsMoreLabel }}</button></sc-if>
+                        <sc-if value="{{ bk.setsEmpty }}" hint-placeholder-val="{{ false }}"><p style="margin:0;font-size:12.5px;line-height:1.5;color:var(--muted-fg);text-wrap:pretty">{{ tx.bank_sets_empty }}</p></sc-if>
+                      </div>
+                      <sc-for list="{{ bk.filters }}" as="bf" hint-placeholder-count="3">
+                        <div><div style="font-size:12.5px;font-weight:600;margin-bottom:6px">{{ bf.label }}</div>
+                          <sc-for list="{{ bf.opts }}" as="o" hint-placeholder-count="4"><label style="display:flex;align-items:center;gap:9px;min-height:{{ f.rowMin }};padding:5px 2px;font-size:13px;cursor:pointer"><span style="width:16px;height:16px;flex:none;border-radius:4px;border:1px solid {{ o.border }};background:{{ o.bg }};display:grid;place-items:center;color:var(--primary-fg)"><sc-if value="{{ o.on }}" hint-placeholder-val="{{ false }}"><i class="icon-check" style="font-size:11px"></i></sc-if></span><span style="flex:1">{{ o.label }}</span><span style="font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ o.count }}</span></label></sc-for>
+                        </div>
+                      </sc-for>
+                      <div><div style="font-size:12.5px;font-weight:600;margin-bottom:6px">{{ tx.bank_tagFilter }}</div><label style="display:flex;align-items:center;gap:7px;height:{{ f.inH }};padding:0 8px;border:1px solid var(--border);border-radius:8px;background:var(--card);cursor:text"><i class="icon-search" style="font-size:14px;color:var(--muted-fg)"></i><input size="1" placeholder="{{ tx.bank_tagSearch }}" style="flex:1;min-width:0;border:0;outline:0;background:transparent;font-size:13px"></label></div>
+                    </aside>
+                    </sc-if>
+
+                    <div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:10px">
+                      <sc-if value="{{ ls.hasTools }}" hint-placeholder-val="{{ true }}">
+                        <div style="display:flex;gap:8px;flex-wrap:wrap">
+                          <label style="flex:1 1 200px;display:flex;align-items:center;gap:8px;height:{{ f.inH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--card)"><i class="icon-search" style="font-size:15px;color:var(--muted-fg)"></i><input size="1" placeholder="{{ tx.bank_searchPlaceholder }}" style="border:0;outline:0;background:transparent;flex:1;min-width:0;font-size:13px"></label>
+                          <sc-if value="{{ f.filterBtn }}" hint-placeholder-val="{{ false }}"><button type="button" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.inH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13px"><i class="icon-sliders-horizontal" style="font-size:14px"></i>{{ tx.bank_filters }}<span style="font-size:11.5px;background:var(--primary);color:var(--primary-fg);border-radius:999px;padding:0 6px">2</span></button></sc-if>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ ls.selAny }}" hint-placeholder-val="{{ false }}">
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:8px 10px 8px 14px;border-radius:10px;background:var(--primary);color:var(--primary-fg)"><span style="font-size:13px;font-weight:500;margin-right:auto;white-space:nowrap">{{ ls.selLabel }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ ls.pinBulk }}</span></sc-if><sc-for list="{{ ls.actions }}" as="ba" hint-placeholder-count="3"><button type="button" onClick="{{ ba.go }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.smH }};padding:0 10px;border-radius:7px;border:1px solid rgba(127,127,127,.35);background:transparent;color:inherit;cursor:pointer;font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-{{ ba.icon }}" style="font-size:14px"></i>{{ ba.label }}</button></sc-for><span aria-label="{{ tx.common_clearSelection }}" role="img" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px"><i class="icon-x" style="font-size:15px"></i></span></div>
+                      </sc-if>
+                      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                        <sc-if value="{{ ls.ready }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:grid;grid-template-columns:{{ f.cols }};gap:12px;padding:{{ f.headPad }};height:40px;align-items:center;font-size:12.5px;color:var(--muted-fg);font-weight:500;background:var(--muted)"><span style="width:16px;height:16px;border-radius:4px;border:1px solid {{ ls.allBorder }};background:{{ ls.allBg }};display:grid;place-items:center;color:var(--primary-fg)"><sc-if value="{{ ls.selAny }}" hint-placeholder-val="{{ false }}"><i class="icon-minus" style="font-size:11px"></i></sc-if></span><span>{{ tx.bank_prompt }}</span><sc-if value="{{ f.cType }}" hint-placeholder-val="{{ true }}"><span>{{ tx.bank_type }}</span></sc-if><sc-if value="{{ f.cLevel }}" hint-placeholder-val="{{ true }}"><span>{{ tx.bank_levelFilter }}</span></sc-if><sc-if value="{{ f.cUsed }}" hint-placeholder-val="{{ true }}"><span>{{ tx.bank_used }}</span></sc-if><sc-if value="{{ f.cUpd }}" hint-placeholder-val="{{ true }}"><span>{{ tx.common_updated }}</span></sc-if></div>
+                          <sc-for list="{{ ls.rows }}" as="q" hint-placeholder-count="6">
+                            <div style="display:grid;grid-template-columns:{{ f.cols }};gap:12px;padding:{{ f.rowPad }};align-items:center;border-top:1px solid var(--border);font-size:13.5px">
+                              <span style="width:16px;height:16px;flex:none;border-radius:4px;border:1px solid {{ q.cbBorder }};background:{{ q.cbBg }};display:grid;place-items:center;color:var(--primary-fg)"><sc-if value="{{ q.on }}" hint-placeholder-val="{{ false }}"><i class="icon-check" style="font-size:11px"></i></sc-if></span>
+                              <span style="min-width:0"><span style="display:block;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.prompt }}</span><sc-if value="{{ f.inline }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-fg);margin-top:2px"><i class="icon-{{ q.icon }}" style="font-size:12px"></i>{{ q.inline }}</span></sc-if><span style="display:flex;gap:5px;margin-top:3px;flex-wrap:wrap"><sc-for list="{{ q.tags }}" as="tg" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;border:1px solid var(--border);background:var(--muted);font-size:12px;font-weight:500;white-space:nowrap;line-height:1">{{ tg }}</span></sc-for></span></span>
+                              <sc-if value="{{ f.cType }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:7px;font-size:13px;min-width:0"><i class="icon-{{ q.icon }}" style="font-size:14px;color:var(--muted-fg)"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ q.type }}</span></span></sc-if>
+                              <sc-if value="{{ f.cLevel }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px">{{ q.level }}</span></sc-if>
+                              <sc-if value="{{ f.cUsed }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ q.used }}</span></sc-if>
+                              <sc-if value="{{ f.cUpd }}" hint-placeholder-val="{{ true }}"><span style="font-size:13px;color:var(--muted-fg);white-space:nowrap">{{ q.updated }}</span></sc-if>
+                            </div>
+                          </sc-for>
+                        </sc-if>
+                        <sc-if value="{{ ls.loading }}" hint-placeholder-val="{{ false }}">
+                          <div aria-hidden="true"><div style="height:40px;background:var(--muted)"></div><sc-for list="{{ ls.skel }}" as="k" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:12px;padding:{{ f.rowPad }};border-top:1px solid var(--border)"><span style="width:16px;height:16px;flex:none;border-radius:4px;background:var(--muted)"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px"><span style="width:{{ k.w }};height:13px;border-radius:6px;background:var(--muted)"></span><span style="width:96px;height:18px;border-radius:999px;background:var(--muted)"></span></span></div></sc-for></div>
+                        </sc-if>
+                        <sc-if value="{{ ls.hasNote }}" hint-placeholder-val="{{ false }}">
+                          <div style="padding:{{ f.notePad }};display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px"><span style="font-size:14px;font-weight:500">{{ ls.note }}</span><sc-if value="{{ ls.hasHint }}" hint-placeholder-val="{{ false }}"><span style="max-width:46ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ ls.hint }}</span><button type="button" onClick="{{ ls.goBank }}" style="margin-top:6px;height:{{ f.btnH }};padding:0 14px;border-radius:9px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap" style-hover="background:var(--hover)"><i class="icon-library" style="font-size:15px"></i>{{ ls.noteAction }}</button></sc-if></div>
+                        </sc-if>
+                        <sc-if value="{{ ls.ready }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:{{ f.rowPad }};border-top:1px solid var(--border);font-size:13px;color:var(--muted-fg)">
+                            <span style="font-variant-numeric:tabular-nums;white-space:nowrap">{{ ls.range }}</span>
+                            <span style="display:flex;align-items:center;gap:16px;flex-wrap:wrap">
+                              <sc-if value="{{ f.notPhone }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px;white-space:nowrap;color:var(--fg);font-weight:500">{{ tx.pager_rowsPerPage }}<span style="position:relative;display:inline-flex;align-items:center;height:32px;padding:0 28px 0 10px;border:1px solid var(--border);border-radius:7px;background:var(--card);font-size:13px;font-weight:400">8<i class="icon-chevrons-up-down" style="position:absolute;right:8px;font-size:13px;color:var(--muted-fg)"></i></span></span></sc-if>
+                              <span style="white-space:nowrap;color:var(--fg);font-weight:500;font-variant-numeric:tabular-nums">{{ ls.pageOf }}</span>
+                              <span style="display:flex;gap:6px"><span style="width:{{ f.pgBtn }};height:{{ f.pgBtn }};flex:none;display:grid;place-items:center;border:1px solid var(--border);border-radius:7px;background:var(--card);opacity:.45"><i class="icon-chevron-left" style="font-size:15px"></i></span><span style="width:{{ f.pgBtn }};height:{{ f.pgBtn }};flex:none;display:grid;place-items:center;border:1px solid var(--border);border-radius:7px;background:var(--card);color:var(--fg)"><i class="icon-chevron-right" style="font-size:15px"></i></span></span>
+                            </span>
+                          </div>
+                        </sc-if>
+                      </div>
+                    </div>
+                  </div>
+                </section>
+                </sc-if>
+              </div>
+            </div>
+
+            <sc-if value="{{ dlgOpen }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:8"></div></sc-if>
+
+            <sc-if value="{{ ad.open }}" hint-placeholder-val="{{ false }}">
+              <div role="dialog" aria-label="{{ ad.title }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,calc(100% - 24px));max-height:86%;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:9">
+                <div style="padding:18px 14px 4px 18px;display:flex;gap:12px;align-items:flex-start">
+                  <span style="width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--muted)"><i class="icon-{{ ad.icon }}" style="font-size:18px"></i></span>
+                  <div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600;line-height:1.35">{{ ad.title }}</div><div style="font-size:13px;color:var(--muted-fg);margin-top:3px;line-height:1.5;text-wrap:pretty">{{ ad.desc }}</div></div>
+                  <button type="button" onClick="{{ ad.close }}" aria-label="{{ tx.common_close }}" style="width:{{ f.xBtn }};height:{{ f.xBtn }};flex:none;display:grid;place-items:center;border:0;border-radius:7px;background:transparent;cursor:pointer;color:var(--muted-fg)" style-hover="background:var(--hover);color:var(--fg)"><i class="icon-x" style="font-size:16px"></i></button>
+                </div>
+                <div style="padding:14px 18px 16px;display:flex;flex-direction:column;gap:14px;overflow-y:auto">
+                  <sc-if value="{{ ad.hasSeg }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:8px"><div role="group" aria-label="{{ tx.sets_add_setLabel }}" style="flex:1;display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ ad.seg }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="flex:1;border:0;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:12.5px;cursor:pointer;white-space:nowrap;font-weight:500;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></div></sc-if>
+                  <sc-if value="{{ ad.isExisting }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.sets_add_setLabel }}</span><span style="position:relative;display:flex;align-items:center;height:{{ f.fieldH }};border:1px solid {{ ad.selBorder }};border-radius:8px;padding:0 32px 0 12px;font-size:13.5px;background:var(--bg)"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ad.selected }}</span><i class="icon-chevrons-up-down" style="position:absolute;right:10px;font-size:14px;color:var(--muted-fg)"></i></span><sc-if value="{{ ad.hasErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="font-size:12px;color:var(--danger-ink)">{{ ad.err }}</span></sc-if><sc-if value="{{ ad.hasNote }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg)">{{ tx.sets_add_dupNote }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">2</span></sc-if></span></sc-if></div>
+                  </sc-if>
+                  <sc-if value="{{ ad.isNew }}" hint-placeholder-val="{{ false }}">
+                    <label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.sets_nameLabel }}</span><input value="{{ ad.name }}" onChange="{{ noop }}" placeholder="{{ tx.sets_namePlaceholder }}" style="height:{{ f.fieldH }};border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg);outline:0"></label>
+                    <sc-if value="{{ ad.hasDescField }}" hint-placeholder-val="{{ false }}"><label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.sets_descLabel }}<span style="font-weight:400;color:var(--muted-fg)"> {{ tx.formDialog_optional }}</span></span><textarea rows="2" placeholder="{{ tx.sets_descPlaceholder }}" style="resize:vertical;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13.5px;line-height:1.5;background:var(--bg);outline:0"></textarea></label></sc-if>
+                  </sc-if>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border);flex-wrap:wrap">
+                  <button type="button" onClick="{{ ad.close }}" style="flex:{{ f.dlgBtnFlex }};height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap" style-hover="background:var(--muted)">{{ tx.common_cancel }}</button>
+                  <button type="button" onClick="{{ ad.submitGo }}" style="flex:{{ f.dlgBtnFlex }};height:{{ f.btnH }};padding:0 16px;border-radius:8px;border:0;background:var(--primary);color:var(--primary-fg);cursor:pointer;font-size:13.5px;font-weight:500;white-space:nowrap;opacity:{{ ad.submitOp }}">{{ ad.submit }}</button>
+                </div>
+              </div>
+            </sc-if>
+
+            <sc-if value="{{ sd.open }}" hint-placeholder-val="{{ false }}">
+              <div role="dialog" aria-label="{{ sd.title }}" style="position:absolute;left:50%;top:8%;transform:translateX(-50%);width:min(520px,calc(100% - 24px));max-height:84%;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:9;display:flex;flex-direction:column">
+                <div style="display:flex;align-items:flex-start;gap:12px;padding:18px 18px 12px"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-library" style="font-size:17px"></i></span><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600;overflow-wrap:anywhere">{{ sd.title }}</div><div style="font-size:13px;color:var(--muted-fg);margin-top:2px">{{ sd.sub }}</div></div><button type="button" onClick="{{ sd.close }}" aria-label="{{ tx.common_close }}" style="width:{{ f.xBtn }};height:{{ f.xBtn }};flex:none;display:grid;place-items:center;border:0;border-radius:7px;background:transparent;cursor:pointer" style-hover="background:var(--hover)"><i class="icon-x" style="font-size:17px"></i></button></div>
+                <div style="flex:1;min-height:0;overflow-y:auto;padding:0 18px 16px;display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;gap:8px;align-items:flex-start;flex-wrap:wrap">
+                    <div style="flex:1 1 200px;min-width:0;display:flex;flex-wrap:wrap;align-items:center;gap:5px;min-height:{{ f.pickH }};padding:5px 8px;border:1px solid var(--border);border-radius:9px;background:var(--bg)">
+                      <sc-for list="{{ sd.adds }}" as="a" hint-placeholder-count="0"><span style="display:inline-flex;align-items:center;gap:4px;height:26px;padding:0 6px 0 4px;border-radius:999px;border:1px solid var(--border);background:var(--muted);font-size:12.5px;font-weight:500;white-space:nowrap"><span style="width:18px;height:18px;flex:none;border-radius:50%;background:var(--card);display:grid;place-items:center;font-size:7px;font-weight:600">{{ a.ini }}</span>{{ a.name }}<i class="icon-x" style="font-size:11px;color:var(--muted-fg)"></i></span></sc-for>
+                      <input size="1" role="combobox" aria-expanded="false" aria-label="{{ tx.sharing_addPlaceholder }}" placeholder="{{ sd.ph }}" style="flex:1 1 140px;min-width:120px;height:28px;border:0;outline:0;background:transparent;font-size:13.5px">
+                    </div>
+                    <sc-if value="{{ sd.hasAdds }}" hint-placeholder-val="{{ false }}"><span style="position:relative;display:inline-flex;align-items:center;flex:none;height:{{ f.pickH }};padding:0 28px 0 10px;border:1px solid var(--border);border-radius:7px;background:var(--card);font-size:12.5px;white-space:nowrap">{{ tx.sharing_canUse }}<i class="icon-chevrons-up-down" style="position:absolute;right:8px;font-size:13px;color:var(--muted-fg)"></i></span></sc-if>
+                  </div>
+                  <sc-if value="{{ sd.hasAdds }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-direction:column;gap:8px">
+                      <span style="display:flex;align-items:center;gap:10px;font-size:13px"><span role="switch" aria-checked="true" aria-label="{{ tx.sharing_notify }}" style="width:34px;height:20px;flex:none;border-radius:999px;padding:2px;background:var(--primary);display:flex;justify-content:flex-end"><span style="width:16px;height:16px;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span>{{ tx.sharing_notify }}</span>
+                      <textarea rows="2" value="{{ sd.msg }}" onChange="{{ noop }}" placeholder="{{ tx.sharing_message }}" style="resize:vertical;border:1px solid var(--border);border-radius:9px;padding:8px 10px;font-size:13.5px;background:var(--bg);outline:0;line-height:1.5"></textarea>
+                    </div>
+                  </sc-if>
+                  <div style="display:flex;flex-direction:column;gap:2px">
+                    <span style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600;padding-bottom:4px">{{ tx.sharing_people }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ sd.pinState }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">2</span></sc-if></sc-if></span>
+                    <sc-if value="{{ sd.listReady }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;align-items:center;gap:10px;padding:8px 0"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:12px;font-weight:600">GB</span><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500">{{ sd.me }}</span><span style="display:block;font-size:12px;color:var(--muted-fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">giau.bui@quizzivy.com</span></span><span style="font-size:12.5px;color:var(--muted-fg);padding-right:4px">{{ tx.sharing_owner }}</span></div>
+                      <sc-for list="{{ sd.people }}" as="p" hint-placeholder-count="1"><div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:1px solid var(--border)"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:12px;font-weight:600">{{ p.ini }}</span><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.name }}</span><span style="display:block;font-size:12px;color:var(--muted-fg);overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ p.email }}</span></span><span style="position:relative;display:inline-flex;align-items:center;flex:none;height:{{ f.selH }};padding:0 28px 0 10px;border:1px solid var(--border);border-radius:7px;background:var(--card);font-size:12.5px;white-space:nowrap">{{ p.perm }}<i class="icon-chevrons-up-down" style="position:absolute;right:8px;font-size:13px;color:var(--muted-fg)"></i></span><span role="img" aria-label="{{ p.stop }}" title="{{ p.stop }}" style="width:{{ f.selH }};height:{{ f.selH }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-user-minus" style="font-size:15px"></i></span></div></sc-for>
+                      <sc-if value="{{ sd.nobody }}" hint-placeholder-val="{{ false }}"><div style="padding:8px 0;border-top:1px solid var(--border);font-size:13px;color:var(--muted-fg)">{{ tx.sharing_nobody }}</div></sc-if>
+                    </sc-if>
+                    <sc-if value="{{ sd.loading }}" hint-placeholder-val="{{ false }}">
+                      <div aria-hidden="true"><sc-for list="{{ sd.skel }}" as="k" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;padding:8px 0;border-top:{{ k.top }}"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted)"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px"><span style="width:{{ k.w }};height:12px;border-radius:6px;background:var(--muted)"></span><span style="width:60%;height:10px;border-radius:6px;background:var(--muted)"></span></span><span style="width:96px;height:{{ f.selH }};flex:none;border-radius:7px;background:var(--muted)"></span></div></sc-for></div>
+                    </sc-if>
+                    <sc-if value="{{ sd.error }}" hint-placeholder-val="{{ false }}">
+                      <div role="alert" style="display:flex;flex-wrap:wrap;gap:8px 12px;align-items:center;padding:10px 12px;border-radius:10px;background:var(--danger-soft);color:var(--danger-ink);font-size:13px;line-height:1.45"><i class="icon-circle-alert" style="font-size:16px;flex:none"></i><span style="flex:1 1 180px;min-width:0">{{ tx.sharing_loadFailed }}</span><button type="button" style="height:{{ f.selH }};padding:0 12px;border-radius:7px;border:1px solid currentColor;background:transparent;color:inherit;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap">{{ tx.common_retry }}</button></div>
+                    </sc-if>
+                  </div>
+                  <div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px">
+                    <div style="padding:10px 12px;border-radius:9px;background:var(--muted);font-size:12.5px;line-height:1.5"><b style="font-weight:600;display:block;margin-bottom:2px">{{ tx.sharing_canUse }}</b><span style="color:var(--muted-fg)">{{ tx.sharing_useHelpSet }}</span></div>
+                    <div style="padding:10px 12px;border-radius:9px;background:var(--muted);font-size:12.5px;line-height:1.5"><b style="font-weight:600;display:flex;align-items:center;gap:8px;margin-bottom:2px">{{ tx.sharing_canEdit }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></b><span style="color:var(--muted-fg)">{{ tx.sharing_editHelpSet }}</span></div>
+                  </div>
+                  <span style="font-size:12px;color:var(--muted-fg);line-height:1.5">{{ tx.sharing_footnote }}</span>
+                </div>
+                <div style="display:flex;justify-content:flex-end;gap:8px;padding:12px 18px;border-top:1px solid var(--border);flex-wrap:wrap">
+                  <sc-if value="{{ sd.hasAdds }}" hint-placeholder-val="{{ false }}"><button type="button" style="flex:{{ f.dlgBtnFlex }};height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);cursor:pointer;font-size:13.5px;font-weight:500">{{ tx.common_cancel }}</button></sc-if>
+                  <button type="button" onClick="{{ sd.close }}" style="flex:{{ f.dlgBtnFlex }};height:{{ f.btnH }};padding:0 16px;border-radius:8px;border:0;background:var(--primary);color:var(--primary-fg);cursor:pointer;font-size:13.5px;font-weight:600">{{ sd.primary }}</button>
+                </div>
+              </div>
+            </sc-if>
+
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:1px;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is the deck's own drawing of the bank, the form dialog or the share dialog.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Who can do what" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Who can do what on a set</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The set page offers exactly what R7's operations allow (<code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">77-r7.md</code>, T-R7.2 and T-R7.19). A control a role cannot use is not drawn for it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:760px">
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Action</span><span>Owner</span><span>Can edit</span><span>Can use</span></div>
+      <sc-for list="{{ matrix }}" as="m" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:500">{{ m.action }}</span><span style="color:{{ m.c1 }}">{{ m.owner }}</span><span style="color:{{ m.c2 }}">{{ m.edit }}</span><span style="color:{{ m.c3 }}">{{ m.use }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="State table" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each state is one sentence and at most one action, drawn with the empty-state block the Grading finish states approved. Every one of them is in the frames: pick the screen, then the state.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:760px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1fr) minmax(0,1.8fr);gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>When</span><span>What shows</span></div>
+      <sc-for list="{{ states }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1fr) minmax(0,1.8fr);gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:500">{{ r.where }}</span><span style="color:var(--muted-fg)">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Other cases" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Confirms, the Rename dialog and toasts</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">These are the deck's confirm and form dialogs and its toast, with the set's words. They follow the language and theme chosen above.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(320px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ cases }}" as="c" hint-placeholder-count="4">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ c.cap }}</strong> · {{ c.who }}</figcaption>
+        <div data-screen-label="{{ c.cap }}" role="group" aria-label="{{ c.title }}" style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column">
+          <div style="padding:18px 18px 4px;display:flex;gap:12px;align-items:flex-start"><span style="width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:{{ c.tileBg }};color:{{ c.tileFg }}"><i class="icon-{{ c.icon }}" style="font-size:18px"></i></span><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600;line-height:1.35;overflow-wrap:anywhere">{{ c.title }}</div><sc-if value="{{ c.hasBody }}" hint-placeholder-val="{{ true }}"><div style="font-size:13px;color:var(--muted-fg);margin-top:3px;line-height:1.5;text-wrap:pretty">{{ c.body }}</div></sc-if></div></div>
+          <sc-if value="{{ c.isForm }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 18px 4px;display:flex;flex-direction:column;gap:14px"><label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.sets_nameLabel }}</span><input value="{{ c.name }}" onChange="{{ noop }}" style="height:38px;border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg);outline:0"></label><label style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.sets_descLabel }}<span style="font-weight:400;color:var(--muted-fg)"> {{ tx.formDialog_optional }}</span></span><textarea rows="2" value="{{ c.desc }}" onChange="{{ noop }}" style="resize:vertical;border:1px solid var(--border);border-radius:8px;padding:9px 12px;font-size:13.5px;line-height:1.5;background:var(--bg);outline:0"></textarea></label></div></sc-if>
+          <div style="display:flex;justify-content:flex-end;gap:8px;padding:14px 18px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;height:36px;padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap">{{ tx.common_cancel }}</span><span style="display:inline-flex;align-items:center;height:36px;padding:0 16px;border-radius:8px;background:{{ c.btnBg }};color:{{ c.btnFg }};font-size:13.5px;font-weight:500;white-space:nowrap">{{ c.confirm }}</span></div>
+        </div>
+      </figure>
+    </sc-for>
+    <figure style="margin:0;display:flex;flex-direction:column;gap:8px">
+      <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">Toasts</strong> · one at a time, bottom right</figcaption>
+      <div data-screen-label="Toasts" style="display:flex;flex-direction:column;gap:8px">
+        <sc-for list="{{ toasts }}" as="t" hint-placeholder-count="5"><div style="display:flex;align-items:flex-start;gap:10px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);font-size:13.5px"><i class="icon-circle-check" style="font-size:16px;margin-top:2px;color:var(--success)"></i><span style="text-wrap:pretty">{{ t }}</span></div></sc-for>
+      </div>
+    </figure>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Every line, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames above use these exact strings. "New" keys are proposed names for R7's locale files, and "As today" keys are in <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">vi.json</code> and <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">en.json</code> now and do not change. A placeholder is written {count}; the locale files write it with two braces. English for the share dialog is the deck's own.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:920px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Key</span><span>Tiếng Việt</span><span>English</span><span>Status</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1fr) minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ c.key }}</code><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. An answer that differs changes the frames named.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}</span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">Default drawn:</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What this means for R7's tasks</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Nothing here needs an operation R7's plan does not already have. The access modes in the builder, test detail, the wizard and the question editor (T-R7.18) are a separate page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.3fr) 80px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Drawn here</span><span>Where it is built</span><span>Task</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="6"><div style="display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.3fr) 80px;gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="text-wrap:pretty">{{ h.what }}</span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.where }}</code><span>{{ h.task }}</span></div></sc-for>
+    </div>
+  </div>
+  <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">Read for this page: the deck's Teacher page (Question bank, the form dialog, the share dialog, Shared with me), the Grading finish states and page-width designs, <code style="font-family:ui-monospace,Menlo,monospace">docs/plan/77-r7.md</code> (T-R7.2, T-R7.3, T-R7.16, T-R7.17, T-R7.19 and its open items), <code style="font-family:ui-monospace,Menlo,monospace">docs/design/gaps.md</code> (DG-22, DG-36, DG-83, DG-90) and the product's locale files at <code style="font-family:ui-monospace,Menlo,monospace">develop</code> @ 387f587c.</p>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// [key, where, Vietnamese, English, status]. "Shell" rows are not listed in the Copy table.
+const STR = [
+  ['shell.teaching', 'Shell', 'Giảng dạy', 'Teaching', 'As today'],
+  ['shell.content', 'Shell', 'Nội dung', 'Content', 'As today'],
+  ['shell.dashboard', 'Shell', 'Tổng quan', 'Dashboard', 'As today'],
+  ['shell.messages', 'Shell', 'Tin nhắn', 'Messages', 'New'],
+  ['shell.assignments', 'Shell', 'Bài giao', 'Assignments', 'As today'],
+  ['shell.grading', 'Shell', 'Chấm bài', 'Grading', 'As today'],
+  ['shell.classes', 'Shell', 'Lớp học', 'Classes', 'As today'],
+  ['shell.students', 'Shell', 'Học viên', 'Students', 'As today'],
+  ['shell.tests', 'Shell', 'Đề thi', 'Tests', 'As today'],
+  ['shell.shared', 'Shell', 'Được chia sẻ với tôi', 'Shared with me', 'New'],
+  ['shell.media', 'Shell', 'Thư viện media', 'Media', 'As today'],
+
+  ['nav.questionBank', 'Bank', 'Ngân hàng câu hỏi', 'Question bank', 'As today'],
+  ['bank.description_other', 'Bank', '{total} câu hỏi dùng lại được cho mọi đề thi.', '{total} questions you can reuse across tests.', 'As today'],
+  ['ai.entry.cleanup', 'Bank', 'Dọn dẹp', 'Clean up', 'As today'],
+  ['ai.entry.generate', 'Bank', 'Tạo câu hỏi', 'Generate', 'As today'],
+  ['bank.newQuestion', 'Bank', 'Câu hỏi mới', 'New question', 'As today'],
+  ['bank.searchPlaceholder', 'Bank', 'Tìm trong nội dung câu hỏi — gõ không dấu cũng được', 'Search the question text — accents optional', 'As today'],
+  ['bank.filters', 'Bank', 'Bộ lọc', 'Filters', 'As today'],
+  ['bank.sets.title', 'Bank, aside', 'Bộ câu hỏi', 'Question sets', 'New'],
+  ['bank.sets.empty', 'Bank, aside', 'Chưa có bộ nào. Chọn câu hỏi rồi bấm “Thêm vào bộ” để tạo bộ đầu tiên.', 'No sets yet. Select questions, then “Add to set” to make your first one.', 'New'],
+  ['bank.sets.showAll', 'Bank, aside', 'Xem tất cả {count} bộ', 'Show all {count} sets', 'New'],
+  ['bank.sets.sharedWith', 'Bank, aside', 'Đang chia sẻ với {count} giáo viên', 'Shared with {count} teachers', 'New'],
+  ['bank.typeFilter', 'Bank, aside', 'Loại câu', 'Type', 'As today'],
+  ['bank.levelFilter', 'Bank, aside', 'Trình độ', 'Level', 'As today'],
+  ['bank.skillFilter', 'Bank, aside', 'Kỹ năng', 'Skill', 'As today'],
+  ['bank.tagFilter', 'Bank, aside', 'Thẻ', 'Tags', 'As today'],
+  ['bank.tagSearch', 'Bank, aside', 'Tìm thẻ', 'Search tags', 'As today'],
+  ['bulkBar.selected', 'Bulk bar', 'Đã chọn {count}', '{count} selected', 'As today'],
+  ['common.clearSelection', 'Bulk bar', 'Bỏ chọn', 'Clear selection', 'As today'],
+  ['bank.bulkShare', 'Bulk bar', 'Chia sẻ…', 'Share…', 'New'],
+  ['bank.addToTest', 'Bulk bar', 'Thêm vào đề thi', 'Add to test', 'As today'],
+  ['bank.addToSet', 'Bulk bar', 'Thêm vào bộ', 'Add to set', 'New'],
+  ['bank.bulkTag', 'Bulk bar', 'Gắn thẻ', 'Add tag', 'As today'],
+  ['bank.delete', 'Bulk bar', 'Xoá', 'Delete', 'As today'],
+  ['sets.removeFromSet', 'Bulk bar, set page', 'Gỡ khỏi bộ', 'Remove from set', 'New'],
+  ['bank.prompt', 'Table', 'Câu hỏi', 'Question', 'As today'],
+  ['bank.type', 'Table', 'Loại', 'Type', 'As today'],
+  ['bank.used', 'Table', 'Đã dùng', 'Used', 'As today'],
+  ['common.updated', 'Table', 'Cập nhật', 'Updated', 'As today'],
+  ['bank.usedTests_one', 'Table', '{count} đề', '{count} test', 'As today'],
+  ['bank.usedTests_other', 'Table', '{count} đề', '{count} tests', 'As today'],
+  ['pager.range', 'Table', '{from}–{to} trên {total} {noun}', '{from}–{to} of {total} {noun}', 'As today'],
+  ['bank.questionsNoun_other', 'Table', 'câu hỏi', 'questions', 'As today'],
+  ['pager.rowsPerPage', 'Table', 'Số dòng mỗi trang', 'Rows per page', 'As today'],
+  ['pager.pageOf', 'Table', 'Trang {page} trên {pages}', 'Page {page} of {pages}', 'As today'],
+
+  ['sets.add.title', 'Add to set', 'Thêm {count} câu vào bộ', 'Add {count} questions to a set', 'New'],
+  ['sets.add.desc', 'Add to set', 'Bộ câu hỏi là một danh sách câu trong ngân hàng mà bạn đặt tên, để dùng lại và chia sẻ với giáo viên khác.', 'A question set is a named list of questions from your bank that you can reuse and share with other teachers.', 'New'],
+  ['sets.add.existing', 'Add to set', 'Bộ đã có', 'Existing set', 'New'],
+  ['sets.add.new', 'Add to set', 'Bộ mới', 'New set', 'New'],
+  ['sets.add.setLabel', 'Add to set', 'Bộ câu hỏi', 'Question set', 'New'],
+  ['sets.add.option', 'Add to set', '{name} · {count} câu', '{name} · {count} questions', 'New'],
+  ['sets.add.dupNote', 'Add to set', 'Câu đã có trong bộ sẽ được bỏ qua.', 'Questions already in the set are skipped.', 'New'],
+  ['sets.add.full', 'Add to set', 'Bộ này đang có {count} câu. Một bộ chứa tối đa 500 câu hỏi.', 'This set has {count} questions. A set holds up to 500.', 'New'],
+  ['sets.nameLabel', 'Add to set', 'Tên bộ', 'Set name', 'New'],
+  ['sets.namePlaceholder', 'Add to set', 'Ví dụ: Collocations · B1', 'For example: Collocations · B1', 'New'],
+  ['sets.descLabel', 'Add to set', 'Mô tả', 'Description', 'New'],
+  ['sets.descPlaceholder', 'Add to set', 'Bộ này dùng cho lớp hoặc mục đích nào?', 'Which class or purpose is this set for?', 'New'],
+  ['formDialog.optional', 'Add to set', '(không bắt buộc)', '(optional)', 'As today'],
+  ['sets.add.submit', 'Add to set', 'Thêm vào bộ', 'Add to set', 'New'],
+  ['sets.add.create', 'Add to set', 'Tạo bộ', 'Create set', 'New'],
+  ['sets.shareSel.title', 'Share…', 'Chia sẻ {count} câu đã chọn', 'Share {count} selected questions', 'New'],
+  ['sets.shareSel.desc', 'Share…', 'Đặt tên cho các câu này thành một bộ, rồi chọn giáo viên để chia sẻ. Sau đó bạn vẫn thêm bớt câu trong bộ được.', 'Name these questions as a set, then choose the teachers to share it with. You can add and remove its questions later.', 'New'],
+  ['sets.shareSel.submit', 'Share…', 'Tạo bộ và chia sẻ', 'Create set and share', 'New'],
+  ['common.cancel', 'Dialogs', 'Huỷ', 'Cancel', 'As today'],
+  ['common.close', 'Dialogs', 'Đóng', 'Close', 'As today'],
+  ['common.retry', 'States', 'Thử lại', 'Retry', 'As today'],
+
+  ['sets.count', 'Set page', '{count} câu hỏi', '{count} questions', 'New'],
+  ['sets.updated', 'Set page', 'Cập nhật {when}', 'Updated {when}', 'New'],
+  ['sets.share', 'Set page', 'Chia sẻ', 'Share', 'New'],
+  ['sets.shared', 'Set page', 'Đã chia sẻ · {count}', 'Shared · {count}', 'New'],
+  ['sets.copy', 'Set page', 'Tạo bản sao', 'Make a copy', 'New'],
+  ['sets.rename', 'Set page', 'Đổi tên', 'Rename', 'New'],
+  ['sets.delete', 'Set page', 'Xoá bộ', 'Delete set', 'New'],
+  ['sets.more', 'Set page', 'Thao tác khác', 'More actions', 'New'],
+  ['sharing.canUse', 'Access', 'Có thể dùng', 'Can use', 'New'],
+  ['sharing.canEdit', 'Access', 'Có thể sửa', 'Can edit', 'New'],
+  ['sharing.owner', 'Access', 'Chủ sở hữu', 'Owner', 'New'],
+  ['sharing.ownerDisabled', 'Access', 'Tài khoản đã vô hiệu hoá', 'Account disabled', 'New'],
+  ['sets.editLead', 'Set page', 'Thay đổi của bạn được lưu vào bản của {name}.', 'Changes you make are saved to {name}’s copy.', 'New'],
+  ['sets.editRest', 'Set page', 'Bạn sửa được câu hỏi và gỡ câu khỏi bộ. Chỉ {name} thêm được câu mới.', 'You can edit the questions and remove them from the set. Only {name} can add questions.', 'New'],
+  ['sets.useLead', 'Set page', 'Bạn xem được bộ này nhưng không sửa được.', 'You can open this set but not change it.', 'New'],
+  ['sets.useRest', 'Set page', 'Thêm câu vào đề thi của bạn, hoặc tạo bản sao để sửa.', 'Add its questions to your tests, or make a copy to edit.', 'New'],
+  ['sets.empty', 'States', 'Bộ này chưa có câu hỏi nào.', 'This set has no questions yet.', 'New'],
+  ['sets.emptyOwnerHint', 'States', 'Chọn câu trong ngân hàng rồi bấm “Thêm vào bộ”.', 'Select questions in the bank, then “Add to set”.', 'New'],
+  ['sets.openBank', 'States', 'Mở ngân hàng câu hỏi', 'Open the question bank', 'New'],
+  ['sets.loadFailed', 'States', 'Không tải được bộ câu hỏi', 'Could not load the question set', 'New'],
+  ['sets.goneTitle', 'States', 'Không mở được bộ câu hỏi này', 'This question set can’t be opened', 'New'],
+  ['sets.goneBodyOwner', 'States', 'Bộ có thể đã bị xoá.', 'It may have been deleted.', 'New'],
+  ['sets.goneBody', 'States', 'Bộ có thể đã bị xoá, hoặc chủ sở hữu đã dừng chia sẻ với bạn.', 'It may have been deleted, or its owner stopped sharing it with you.', 'New'],
+  ['sets.backToShared', 'States', 'Về Được chia sẻ với tôi', 'Back to Shared with me', 'New'],
+  ['sets.backToBank', 'States', 'Về ngân hàng câu hỏi', 'Back to the question bank', 'New'],
+
+  ['sets.renameTitle', 'Rename', 'Đổi tên bộ câu hỏi', 'Rename question set', 'New'],
+  ['common.save', 'Rename', 'Lưu', 'Save', 'As today'],
+  ['sets.deleteTitle', 'Delete set', 'Xoá bộ “{name}”?', 'Delete “{name}”?', 'New'],
+  ['sets.deleteBody', 'Delete set', 'Các câu hỏi vẫn ở trong ngân hàng của bạn, và đề thi đang dùng những câu này không bị ảnh hưởng. Giáo viên được chia sẻ sẽ không mở được bộ này nữa.', 'The questions stay in your bank, and tests that use these questions are not affected. Teachers you shared it with can no longer open the set.', 'New'],
+  ['sets.removeTitle', 'Remove from set', 'Gỡ {count} câu khỏi bộ?', 'Remove {count} questions from the set?', 'New'],
+  ['sets.removeBodyOwner', 'Remove from set', 'Các câu này vẫn ở trong ngân hàng của bạn. Đề thi đang dùng chúng không bị ảnh hưởng.', 'They stay in your bank. Tests that use them are not affected.', 'New'],
+  ['sets.removeBody', 'Remove from set', 'Các câu này vẫn ở trong ngân hàng của {name}. Chỉ {name} thêm lại được.', 'They stay in {name}’s bank. Only {name} can add them back.', 'New'],
+  ['sets.copyTitle', 'Make a copy', 'Tạo bản sao của “{name}”?', 'Make a copy of “{name}”?', 'New'],
+  ['sets.copyBody', 'Make a copy', 'Bản sao là của bạn: chỉ bạn thấy, và bạn sửa tuỳ ý. Bản gốc của {owner} không thay đổi.', 'The copy is yours: only you can see it, and you can change it freely. {owner}’s original does not change.', 'New'],
+  ['toast.sets.added', 'Toast', 'Đã thêm {count} câu vào “{name}”', '{count} questions added to “{name}”', 'New'],
+  ['toast.sets.created', 'Toast', 'Đã tạo bộ “{name}” với {count} câu', 'Set “{name}” created with {count} questions', 'New'],
+  ['toast.sets.removed', 'Toast', 'Đã gỡ {count} câu khỏi bộ', '{count} questions removed from the set', 'New'],
+  ['toast.sets.deleted', 'Toast', 'Đã xoá bộ “{name}”', 'Set “{name}” deleted', 'New'],
+  ['toast.sets.copied', 'Toast', 'Đã sao chép vào Ngân hàng câu hỏi của bạn', 'Copied to your Question bank', 'New'],
+  ['toast.sets.copiedToTest', 'Toast', 'Đã sao chép {count} câu vào ngân hàng của bạn và thêm vào {test}', '{count} questions copied to your bank and added to {test}', 'New'],
+
+  ['sharing.title', 'Share dialog', 'Chia sẻ “{name}”', 'Share “{name}”', 'New'],
+  ['sharing.onlyYou', 'Share dialog', 'Chỉ bạn thấy cho đến khi bạn chia sẻ.', 'Only you can see it until you share it.', 'New'],
+  ['sharing.addPlaceholder', 'Share dialog', 'Thêm giáo viên theo tên hoặc email', 'Add teachers by name or email', 'New'],
+  ['sharing.addMore', 'Share dialog', 'Thêm nữa', 'Add more', 'New'],
+  ['sharing.notify', 'Share dialog', 'Gửi thông báo', 'Send a notification', 'New'],
+  ['sharing.message', 'Share dialog', 'Thêm lời nhắn (không bắt buộc)', 'Add a message (optional)', 'New'],
+  ['sharing.people', 'Share dialog', 'Người có quyền truy cập', 'People with access', 'New'],
+  ['sharing.you', 'Share dialog', '{name} (bạn)', '{name} (you)', 'New'],
+  ['sharing.nobody', 'Share dialog', 'Chưa chia sẻ với ai.', 'Not shared with anyone yet.', 'New'],
+  ['sharing.stop', 'Share dialog', 'Dừng chia sẻ với {name}', 'Stop sharing with {name}', 'New'],
+  ['sharing.useHelpSet', 'Share dialog', 'Mở bộ, thêm câu vào đề thi của họ và tạo bản sao riêng.', 'Open it, add its questions to their tests and make their own copy.', 'New'],
+  ['sharing.editHelpSet', 'Share dialog', 'Thêm vào đó, sửa câu hỏi và gỡ câu khỏi bộ. Bạn thấy thay đổi của họ.', 'Also edit its questions and remove them from the set. You see their changes.', 'New'],
+  ['sharing.footnote', 'Share dialog', 'Họ không chia sẻ tiếp và không xoá được. Kết quả của học viên vẫn nằm trong lớp của họ.', 'They can’t share it further or delete it. Their students’ results stay in their own classes.', 'New'],
+  ['sharing.loadFailed', 'Share dialog', 'Không tải được danh sách người có quyền truy cập.', 'Could not load who has access.', 'New'],
+  ['sharing.share', 'Share dialog', 'Chia sẻ', 'Share', 'New'],
+  ['sharing.done', 'Share dialog', 'Xong', 'Done', 'New'],
+  ['toast.sharing.shared', 'Toast', 'Đã chia sẻ với {count} giáo viên. Họ sẽ nhận được thông báo.', 'Shared with {count} teachers. They’ll get a notification.', 'New'],
+  ['toast.sharing.forbidden', 'Toast', 'Bạn không còn quyền chia sẻ bộ này.', 'You can no longer share this set.', 'New']
+];
+const K = Object.fromEntries(STR.map(r => [r[0], r]));
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+const DUC = ['Phan Minh Đức', 'ĐP', 'duc.phan@quizzivy.com', 'Đức'];
+const TRANG = ['Nguyễn Thu Trang', 'TN', 'trang.nguyen@quizzivy.com'];
+const YEN = ['Đỗ Hải Yến', 'YĐ', 'yen.do@quizzivy.com'];
+// name, questions, teachers it is shared with
+const SETS = [['Present perfect · A2', 24, 2], ['Prepositions after verbs', 36, 0], ['Travel vocabulary', 40, 1], ['True or false · Reading B2', 18, 0], ['Grammar review · all levels', 498, 0]];
+const SET_TOTAL = 7;
+const FRESH = 'Reported speech · B1';
+const THEIRS = 'Collocations · B1';
+// Vietnamese, English, icon (the deck's B_ICON)
+const TY = { single: ['Một đáp án', 'Single choice', 'circle-dot'], multi: ['Nhiều đáp án', 'Multiple choice', 'square-check'], tf: ['Đúng/Sai', 'True / False', 'circle-check'], fill: ['Điền từ', 'Fill in the blank', 'text-cursor-input'], short: ['Trả lời ngắn', 'Short answer', 'align-left'], essay: ['Bài luận', 'Essay', 'align-left'] };
+const AGO = { h5: ['5 giờ trước', '5 h ago'], d2: ['2 ngày trước', '2 d ago'], d3: ['3 ngày trước', '3 d ago'], d4: ['4 ngày trước', '4 d ago'], w1: ['1 tuần trước', '1 w ago'], w2: ['2 tuần trước', '2 w ago'], w3: ['3 tuần trước', '3 w ago'] };
+// prompt, type, level, tests that use it, updated, tags
+const BANK_Q = [
+  ['Choose the correct form: She ___ in Hanoi since 2019.', 'single', 'A2', 4, 'd2', ['grammar', 'present perfect']],
+  ['Listen and choose: where is the post office?', 'single', 'B1', 2, 'w1', ['listening', 'map']],
+  ['Complete the sentence with ONE word from the passage.', 'fill', 'B2', 6, 'd3', ['reading']],
+  ['Which of the following are means of transport? Select all.', 'multi', 'A1', 3, 'w2', ['vocabulary', 'travel']],
+  ['Describe a place you visited recently. You should say…', 'essay', 'B1', 1, 'h5', ['speaking', 'part 2']],
+  ['True or False: The author supports car-free zones.', 'tf', 'B2', 2, 'd4', ['reading']],
+  ['Write the missing word: “I look forward ___ hearing from you.”', 'fill', 'B1', 5, 'w1', ['grammar', 'prepositions']],
+  ['Summarise the chart in at least 150 words.', 'essay', 'B2', 1, 'w3', ['writing', 'task 1']]
+];
+const SET_MINE = [
+  ['Choose the correct form: She ___ in Hanoi since 2019.', 'single', 'A2', 4, 'd2', ['grammar', 'present perfect']],
+  ['Write the missing word: “I have ___ finished my homework.”', 'fill', 'A2', 2, 'd2', ['present perfect']],
+  ['Which sentences use the present perfect correctly? Select all.', 'multi', 'A2', 3, 'd3', ['present perfect']],
+  ['True or False: “I have seen him yesterday” is correct.', 'tf', 'A2', 1, 'd4', ['present perfect', 'common errors']],
+  ['Complete: They ___ (not / visit) Hue yet.', 'fill', 'A2', 2, 'w1', ['present perfect']],
+  ['Choose the best answer: How long ___ you known Lan?', 'single', 'A2', 5, 'w1', ['present perfect', 'for / since']],
+  ['Rewrite using “for” or “since”: I moved here in 2020.', 'short', 'A2', 1, 'w2', ['for / since']],
+  ['Write five sentences about things you have never done.', 'essay', 'A2', 0, 'w3', ['writing']]
+];
+const SET_DUC = [
+  ['Choose the verb that collocates: ___ a decision.', 'single', 'B1', 0, 'd2', ['collocations', 'make / do']],
+  ['Complete the collocation: heavy ___ (weather).', 'fill', 'B1', 0, 'd2', ['collocations']],
+  ['Which words collocate with “make”? Select all.', 'multi', 'B1', 0, 'd3', ['collocations', 'make / do']],
+  ['True or False: we say “do a mistake”.', 'tf', 'B1', 0, 'd3', ['common errors']],
+  ['Write the missing word: “pay ___ to the instructions”.', 'fill', 'B1', 0, 'd4', ['collocations']],
+  ['Choose the best answer: She ___ her best in the interview.', 'single', 'B1', 0, 'w1', ['make / do']],
+  ['Give two adjectives that collocate with “rain”.', 'short', 'B1', 0, 'w1', ['collocations']],
+  ['Write a short paragraph using five collocations from the list.', 'essay', 'B1', 0, 'w2', ['writing']]
+];
+const NOTES = {
+  bank: ['“Sets” is a new first group in the filter aside, and below 1024 in the Filters sheet. A row is a link to the set’s page: its name, a people mark when it is shared, and how many questions it holds. Five sets show, and “Show all” opens the rest in place.', 'The bulk bar gains “Add to set”. “Share…” keeps the place the deck gives it and now names a set before the share dialog opens.', 'The header has no “Share” button. The deck shared “All my questions” from it, which a set cannot be.'],
+  add: ['One form dialog: a two-way switch, then your sets or a name for a new one. With no set yet the switch is not drawn and the dialog asks for a name. “Share…” opens it with the name field only, and its button creates the set and opens the share dialog.', 'Adding twice is safe. Questions already in the set are skipped, and the dialog says so before the teacher confirms.'],
+  set: ['A recipient sees whose set it is and what they may do with it, as Shared with me’s pill. The owner sees a description instead.', 'The header follows the access. Owner: the share button, Make a copy, and Rename and Delete set under “…”. Can edit: Rename and Make a copy. Can use: Make a copy.', 'One sentence tells a recipient what their access means on this page.', 'With rows selected: “Add to test” for everyone, and “Remove from set” for the owner and Can edit. A recipient’s “Add to test” copies the questions to their own bank first.'],
+  share: ['The deck’s share dialog with the set’s tile. The two tiles say what each access means for a set: Can edit changes the questions and removes them, and does not add. Once a set is shared, the line under the title gives its size, since “Only you can see it” is no longer true.', 'The two states the deck does not draw: rows of the same height while the list loads, and one line with Retry when it fails. A 403 closes the dialog with a toast.']
+};
+const MATRIX = [
+  ['Open the set and its questions', 'Yes', 'Yes', 'Yes, read-only'],
+  ['Edit a question', 'Yes', 'Yes, saved to the owner’s copy', 'No'],
+  ['Rename, change the description', 'Yes', 'Yes', 'No'],
+  ['Add questions', 'Yes, from the bank’s bulk bar', 'No', 'No'],
+  ['Remove from set', 'Yes', 'Yes', 'No'],
+  ['Add to test', 'Yes', 'Yes, as a copy in their bank', 'Yes, as a copy in their bank'],
+  ['Make a copy', 'Yes', 'Yes', 'Yes'],
+  ['Share, change access, stop sharing', 'Yes', 'No', 'No'],
+  ['Delete set', 'Yes', 'No', 'No']
+];
+const STATES = [
+  ['Bank, Sets group', 'No set yet', 'One sentence that says how to make the first set. No button: a set starts from a selection.'],
+  ['Bank, Sets group', 'More than five sets', 'The five updated last, then “Show all {n} sets”, which opens the rest in place.'],
+  ['Add to set', 'No set yet', 'No switch. The dialog opens on the name field, and its button reads “Create set”.'],
+  ['Add to set', 'The chosen set would pass 500', 'An error under the field, and the button dimmed and inert.'],
+  ['Set page', 'Loading', 'Two bars for the heading and eight rows of bars in the table’s card.'],
+  ['Set page', 'No questions', '“This set has no questions yet.” The owner also gets how to add them and “Open the question bank”.'],
+  ['Set page', 'The load failed', 'The block with a warning tile, “Could not load the question set” and Retry.'],
+  ['Set page', '404: deleted, or sharing stopped', 'The block with one text for both, since the server answers the same. Its button goes back to where the reader came from.'],
+  ['Share dialog', 'Loading', 'Three rows of bars under “People with access”. The picker is live.'],
+  ['Share dialog', 'The load failed', 'One line in the danger tint with Retry. The picker is live.'],
+  ['Share dialog', '403', 'The dialog closes and a toast says the teacher can no longer share the set.']
+];
+const QUESTIONS = [
+  ['Q1 · O-R7.4', 'May a Can-edit recipient add questions to a set?', 'The deck’s share dialog says Can edit may “add and remove questions”. R7’s plan lets a recipient remove and edit, and leaves adding to the owner, because an added question would have to land in the owner’s bank.', 'Remove and edit only. The share dialog’s tile, the set page’s sentence and the table above say so.'],
+  ['Q2 · DG-90', 'Does the bank’s header lose its “Share” button?', 'The deck draws “Share” in the header for “All my questions (1,284)”. Under DG-90 a set is a named selection of at most 500, so there is nothing for that button to share.', 'Yes. Sharing starts from “Share…” in the bulk bar or from a set’s page.'],
+  ['Q3', 'Do sets sit first in the filter aside?', 'A set is a place to go, and the other groups narrow the list. First keeps it in view; last keeps the filters where teachers know them.', 'First, above Type.'],
+  ['Q4', 'Does a set have a description on screen?', 'The contract carries an optional description. R7’s screens do not mention it.', 'Yes: one line under the name for the owner, edited in the Rename dialog and offered when a set is made.'],
+  ['Q5 · T-R7.19', 'May a Can-edit recipient use “Add to test”?', 'The plan lists the bulk “Add to test” for a Can-use recipient only. A Can-edit recipient needs the questions in their own tests just as much.', 'Yes, with the same copy to their bank first.'],
+  ['Q6 · DG-20', 'Are these the Vietnamese words?', 'New to the glossary: “Bộ câu hỏi” (question set), “Có thể dùng” and “Có thể sửa” (Can use, Can edit), “Tạo bản sao” (Make a copy, against “Nhân bản” for Duplicate), “Dừng chia sẻ” (Stop sharing) and “Được chia sẻ với tôi” (Shared with me).', 'As listed in the table above.'],
+  ['Q7 · T-R7.2', 'What if a selection holds questions that belong to a passage or cloze group?', 'A set takes standalone questions only. If the bank lists a group’s questions, the dialog needs a line that says how many are left out.', 'Not drawn. The page assumes the bank’s selection holds standalone questions.']
+];
+const HANDOFF = [
+  ['The Sets group in the aside and the sheet, its empty line and “Show all”', 'question-bank/components/SetFacet.tsx', 'T-R7.19'],
+  ['“Add to set” and “Share…” in the bulk bar; no “Share” in the bank’s header', 'question-bank/pages/teacher/QuestionBankPage.tsx', 'T-R7.19'],
+  ['The Add to set dialog in its four forms', 'question-bank/components/AddToSetDialog.tsx', 'T-R7.19'],
+  ['The set page for the three kinds of access, its five states, the Rename dialog and the three confirms', 'question-bank/pages/teacher/QuestionSetPage.tsx', 'T-R7.19'],
+  ['The share dialog’s tiles for a set, its skeleton, its error line and the 403 toast', 'sharing/components/ShareDialog.tsx', 'T-R7.16'],
+  ['The Vietnamese and English lines above', 'lib/i18n/locales/vi.json, en.json', 'each task']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', screen: 'bank', variant: { bank: 'list', add: 'pick', set: 'ready', share: 'ready' }, access: 'owner', anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+  go(screen, variant, more) {
+    this.setState(st => ({ screen, variant: variant ? { ...st.variant, [screen]: variant } : st.variant, ...(more || {}) }));
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const T = (key, pr) => { const r = K[key]; return r ? fmt(r[vi ? 2 : 3], pr) : '[' + key + ']'; };
+    const num = n => Number(n).toLocaleString(vi ? 'vi-VN' : 'en-US');
+    const tx = {}; STR.forEach(r => { tx[r[0].replace(/\./g, '_')] = r[vi ? 2 : 3]; });
+    const noop = () => {};
+
+    const scr = s.screen, vr = s.variant[scr];
+    const onBank = scr === 'bank' || scr === 'add';
+    const access = scr === 'set' ? s.access : 'owner';
+    const owner = access === 'owner', canEdit = access === 'edit';
+    const fresh = scr === 'share' && (vr === 'nobody' || vr === 'adding');
+    const setName = !owner ? THEIRS : fresh ? FRESH : SETS[0][0];
+    const setCount = !owner ? 48 : fresh ? 3 : SETS[0][1];
+    const view = onBank ? 'ready' : scr === 'share' ? 'ready' : vr;
+    const listReady = view === 'ready' || view === 'selected';
+
+    const btn = (label, icon, go, o) => { const x = o || {}; return { label, icon, go: go || noop, aria: x.aria || label, hasLabel: !x.iconOnly, pad: x.iconOnly ? '0' : '0 14px', border: x.primary ? '0' : '1px solid var(--border)', bg: x.primary ? 'var(--primary)' : 'var(--card)', fg: x.primary ? 'var(--primary-fg)' : 'var(--fg)', shadow: x.primary ? 'none' : 'var(--shadow)', iconFg: x.accent ? 'var(--accent-ink)' : 'inherit' }; };
+
+    let pg;
+    if (onBank) {
+      pg = { title: T('nav.questionBank'), sub: T('bank.description_other', { total: num(1284) }), hasOwner: false, hasDesc: false, hasBanner: false, pinActions: '3',
+        actions: [btn(T('ai.entry.cleanup'), 'wand-sparkles', null, { accent: 1 }), btn(T('ai.entry.generate'), 'sparkles', null, { accent: 1 }), btn(T('bank.newQuestion'), 'plus', null, { primary: 1 })] };
+    } else {
+      const shareBtn = fresh ? btn(T('sets.share'), 'user-plus', () => this.go('share', 'nobody')) : btn(T('sets.shared', { count: 2 }), 'users-round', () => this.go('share', 'ready'));
+      pg = { title: setName, sub: T('sets.count', { count: view === 'empty' ? 0 : setCount }) + ' · ' + T('sets.updated', { when: AGO.d2[li] }),
+        hasOwner: !owner, ownerIni: DUC[1], ownerName: DUC[0],
+        pill: canEdit ? T('sharing.canEdit') : T('sharing.canUse'), pillIcon: canEdit ? 'pencil' : 'eye', pillBg: canEdit ? 'var(--accent-soft)' : 'var(--muted)', pillFg: canEdit ? 'var(--accent-ink)' : 'var(--muted-fg)',
+        hasDesc: owner && !fresh, desc: vi ? 'Ôn thì hiện tại hoàn thành cho các lớp A2, dùng trước bài kiểm tra giữa khoá.' : 'Present perfect review for the A2 classes, used before the mid-course test.',
+        hasBanner: !owner, bannerLead: canEdit ? T('sets.editLead', { name: DUC[3] }) : T('sets.useLead'), bannerRest: canEdit ? T('sets.editRest', { name: DUC[3] }) : T('sets.useRest'), pinActions: '2',
+        actions: owner ? [shareBtn, btn(T('sets.copy'), 'copy'), btn('', 'ellipsis', null, { iconOnly: 1, aria: T('sets.more') })] : canEdit ? [btn(T('sets.rename'), 'pencil'), btn(T('sets.copy'), 'copy')] : [btn(T('sets.copy'), 'copy')] };
+    }
+    const bl = view === 'gone' ? { icon: 'search-x', tileBg: 'var(--muted)', tileFg: 'var(--muted-fg)', title: T('sets.goneTitle'), hasBody: true, body: owner ? T('sets.goneBodyOwner') : T('sets.goneBody'), act: owner ? T('sets.backToBank') : T('sets.backToShared'), actIcon: 'arrow-left' }
+      : view === 'error' ? { icon: 'triangle-alert', tileBg: 'var(--warning-soft)', tileFg: 'var(--warning-ink)', title: T('sets.loadFailed'), hasBody: false, body: '', act: T('common.retry'), actIcon: 'rotate-cw' } : null;
+    pg.hasBlock = !!bl; pg.hasPage = !bl; pg.headLoading = view === 'loading'; pg.headReady = !bl && view !== 'loading';
+
+    const sets = scr === 'bank' && vr === 'empty' ? [] : SETS;
+    const facet = (label, opts) => ({ label, opts: opts.map(o => ({ label: o[0], count: num(o[1]), on: !!o[2], bg: o[2] ? 'var(--primary)' : 'var(--card)', border: o[2] ? 'var(--primary)' : 'var(--ring)' })) });
+    const bk = {
+      sets: sets.map(x => ({ name: x[0], count: num(x[1]), shared: x[2] > 0, tip: x[2] ? T('bank.sets.sharedWith', { count: x[2] }) : x[0], open: () => this.go('set', 'ready', { access: 'owner' }) })),
+      setsMore: sets.length > 0, setsMoreLabel: T('bank.sets.showAll', { count: SET_TOTAL }), setsEmpty: sets.length === 0,
+      filters: [
+        facet(T('bank.typeFilter'), [[TY.single[li], 412, 1], [TY.multi[li], 168], [TY.fill[li], 305, 1], [TY.short[li], 97], [TY.essay[li], 88]]),
+        facet(T('bank.levelFilter'), [['A1–A2', 356], ['B1', 488], ['B2', 351], ['C1', 89]]),
+        facet(T('bank.skillFilter'), (vi ? ['Ngữ pháp', 'Từ vựng', 'Đọc', 'Nghe', 'Viết'] : ['Grammar', 'Vocabulary', 'Reading', 'Listening', 'Writing']).map((x, i) => [x, [402, 318, 231, 245, 88][i]]))
+      ]
+    };
+
+    const src = onBank ? BANK_Q : !owner ? SET_DUC : fresh ? [BANK_Q[0], BANK_Q[2], BANK_Q[6]] : SET_MINE;
+    const sel = onBank ? (scr === 'add' || vr === 'list' ? [0, 2, 6] : []) : view === 'selected' ? [1, 4] : [];
+    const total = onBank ? 1284 : setCount;
+    const ls = {
+      hasTools: listReady, ready: listReady, loading: view === 'loading', skel: [72, 58, 80, 64, 76, 52, 68, 60].map(w => ({ w: w + '%' })),
+      selAny: sel.length > 0, selLabel: T('bulkBar.selected', { count: sel.length }), pinBulk: onBank ? '2' : '4',
+      allBg: sel.length ? 'var(--primary)' : 'var(--card)', allBorder: sel.length ? 'var(--primary)' : 'var(--ring)',
+      actions: onBank
+        ? [{ label: T('bank.bulkShare'), icon: 'user-plus', go: () => this.go('add', 'share') }, { label: T('bank.addToTest'), icon: 'file-plus', go: noop }, { label: T('bank.addToSet'), icon: 'list-plus', go: () => this.go('add', 'pick') }, { label: T('bank.bulkTag'), icon: 'tag', go: noop }, { label: T('bank.delete'), icon: 'trash-2', go: noop }]
+        : [{ label: T('bank.addToTest'), icon: 'file-plus', go: noop }].concat(access === 'use' ? [] : [{ label: T('sets.removeFromSet'), icon: 'list-x', go: noop }]),
+      rows: src.map((r, i) => { const on = sel.includes(i); return { prompt: r[0], type: TY[r[1]][li], icon: TY[r[1]][2], level: r[2], used: T(r[3] === 1 ? 'bank.usedTests_one' : 'bank.usedTests_other', { count: r[3] }), updated: AGO[r[4]][li], inline: TY[r[1]][li] + ' · ' + r[2], tags: r[5], on, cbBg: on ? 'var(--primary)' : 'var(--card)', cbBorder: on ? 'var(--primary)' : 'var(--ring)' }; }),
+      hasNote: view === 'empty', note: T('sets.empty'), hasHint: owner, hint: T('sets.emptyOwnerHint'), noteAction: T('sets.openBank'), goBank: () => this.go('bank', 'list'),
+      range: T('pager.range', { from: 1, to: Math.min(8, total), total: num(total), noun: T('bank.questionsNoun_other') }), pageOf: T('pager.pageOf', { page: 1, pages: num(Math.ceil(total / 8)) })
+    };
+
+    const opt = x => T('sets.add.option', { name: x[0], count: x[1] });
+    const ad = scr !== 'add' ? { open: false } : {
+      open: true, icon: vr === 'share' ? 'user-plus' : 'list-plus',
+      title: vr === 'share' ? T('sets.shareSel.title', { count: 3 }) : T('sets.add.title', { count: 3 }), desc: vr === 'share' ? T('sets.shareSel.desc') : T('sets.add.desc'),
+      hasSeg: vr !== 'share', seg: this.seg([['pick', T('sets.add.existing')], ['new', T('sets.add.new')]], vr === 'new' ? 'new' : 'pick', v => this.go('add', v)),
+      isExisting: vr === 'pick' || vr === 'full', isNew: vr === 'new' || vr === 'share',
+      selected: vr === 'full' ? opt(SETS[4]) : opt(SETS[0]), selBorder: vr === 'full' ? 'var(--danger)' : 'var(--border)', hasErr: vr === 'full', err: T('sets.add.full', { count: SETS[4][1] }), hasNote: vr === 'pick',
+      name: vr === 'share' ? FRESH : 'Phrasal verbs · B1', hasDescField: vr === 'new',
+      submit: vr === 'share' ? T('sets.shareSel.submit') : vr === 'new' ? T('sets.add.create') : T('sets.add.submit'), submitOp: vr === 'full' ? 0.5 : 1,
+      close: () => this.go('bank', 'list'), submitGo: vr === 'share' ? () => this.go('share', 'adding') : vr === 'full' ? noop : () => this.go('bank', 'list')
+    };
+
+    const person = (x, perm) => ({ name: x[0], ini: x[1], email: x[2], perm: perm === 'edit' ? T('sharing.canEdit') : T('sharing.canUse'), stop: T('sharing.stop', { name: x[0] }) });
+    const sd = scr !== 'share' ? { open: false } : {
+      open: true, title: T('sharing.title', { name: setName }), sub: fresh ? T('sharing.onlyYou') : T('sets.count', { count: setCount }),
+      adds: vr === 'adding' ? [{ name: YEN[0], ini: YEN[1] }] : [], hasAdds: vr === 'adding', ph: vr === 'adding' ? T('sharing.addMore') : T('sharing.addPlaceholder'),
+      msg: vr === 'adding' ? (vi ? 'Mình gom mấy câu tường thuật cho lớp B1, bạn dùng thử nhé.' : 'A few reported speech questions for B1. Try them with your class.') : '',
+      me: T('sharing.you', { name: 'Giàu Bùi' }),
+      listReady: vr !== 'loading' && vr !== 'error', people: vr === 'ready' ? [person(DUC, 'edit'), person(TRANG, 'use')] : [], nobody: fresh,
+      loading: vr === 'loading', skel: [['58%', '0'], ['46%', '1px solid var(--border)'], ['52%', '1px solid var(--border)']].map(k => ({ w: k[0], top: k[1] })), error: vr === 'error', pinState: vr === 'loading' || vr === 'error',
+      primary: vr === 'adding' ? T('sharing.share') : T('sharing.done'), close: () => this.go('set', 'ready', { access: 'owner' })
+    };
+
+    const item = (label, icon, o) => { const x = o || {}; return { label, icon, bg: x.on ? 'var(--hover)' : 'transparent', weight: x.on ? 500 : 400, fg: x.on ? 'var(--fg)' : 'var(--muted-fg)', hasCount: !!x.count, count: x.count || '', countBg: x.urgent ? 'var(--accent-c)' : 'var(--muted)', countFg: x.urgent ? '#1b2123' : 'var(--muted-fg)' }; };
+    const nav = [
+      { hasLabel: false, label: '', items: [item(tx.shell_dashboard, 'layout-dashboard'), item(tx.shell_messages, 'message-square', { count: '3', urgent: 1 })] },
+      { hasLabel: true, label: tx.shell_teaching, items: [item(tx.shell_assignments, 'clipboard-list', { count: '3' }), item(tx.shell_grading, 'square-pen', { count: '18', urgent: 1 }), item(tx.shell_classes, 'graduation-cap'), item(tx.shell_students, 'users')] },
+      { hasLabel: true, label: tx.shell_content, items: [item(tx.shell_tests, 'file-text'), item(tx.shell_shared, 'users-round', { count: '5' }), item(T('nav.questionBank'), 'library', { on: 1 }), item(tx.shell_media, 'audio-lines')] }
+    ];
+    const trail = [tx.shell_content, T('nav.questionBank')].concat(onBank ? [] : [bl || view === 'loading' ? tx.bank_sets_title : setName]);
+    const crumbs = trail.map((label, i) => ({ label, sep: i > 0, weight: i === trail.length - 1 ? 500 : 400, fg: i === trail.length - 1 ? 'var(--fg)' : 'var(--muted-fg)' }));
+
+    const W = s.stageW || 1280;
+    const names = { bank: 'Bank', add: 'Add to set', set: 'Set page', share: 'Share dialog' };
+    const mk = (w, h, sc, phone, sub) => {
+      const sheetOpen = phone && scr === 'bank' && (vr === 'sheet' || vr === 'empty');
+      const used = !phone && (onBank || owner);
+      return {
+        w, h, s: sc, ow: Math.floor(w * sc), oh: Math.floor(h * sc), title: String(w), sub, screen: names[scr] + ' · ' + w,
+        side: !phone, phone, notPhone: !phone, pins: s.anno && !phone,
+        barPad: phone ? '0 14px' : '0 28px', pad: phone ? '16px 14px 72px' : '24px 28px 72px',
+        btnH: phone ? '44px' : '36px', smH: phone ? '44px' : '30px', inH: phone ? '44px' : '34px', rowMin: phone ? '44px' : '30px', pgBtn: phone ? '44px' : '32px', xBtn: phone ? '44px' : '30px',
+        segH: phone ? '40px' : '30px', fieldH: phone ? '44px' : '38px', pickH: phone ? '44px' : '40px', selH: phone ? '44px' : '32px', dlgBtnFlex: phone ? '1 1 120px' : '0 0 auto',
+        rowPad: phone ? '12px 14px' : '10px 16px', headPad: phone ? '0 14px' : '0 16px', notePad: phone ? '28px 18px' : '40px 24px',
+        cols: phone ? '16px minmax(0,1fr)' : used ? '16px minmax(220px,3fr) 140px 70px 80px 90px' : '16px minmax(220px,3fr) 140px 70px 90px',
+        inline: phone, cType: !phone, cLevel: !phone, cUsed: used, cUpd: !phone, filterBtn: phone && onBank,
+        asideOn: onBank && (!phone || sheetOpen), sheetOpen,
+        bfW: phone ? 'min(320px,100%)' : '220px', bfPos: phone ? 'absolute' : 'static', bfBottom: phone ? '0' : 'auto', bfZ: phone ? '7' : 'auto', bfBg: phone ? 'var(--card)' : 'transparent', bfPad: phone ? '8px 18px 18px' : '0', bfBorder: phone ? '1px solid var(--border)' : '0', bfShadow: phone ? 'var(--shadow-lg)' : 'none', bfOverflow: phone ? 'auto' : 'visible'
+      };
+    };
+    const frames = [mk(1280, 1064, Math.min(1, W / 1280), false, 'sidebar open, 976px content'), mk(360, 780, Math.min(1, W / 360), true, 'sidebar in the drawer, 332px content')];
+
+    const variants = {
+      bank: [['list', 'Rows selected'], ['sheet', 'No selection, Filters open at 360'], ['empty', 'No sets yet']],
+      add: [['pick', 'Existing set'], ['new', 'New set'], ['share', 'Share…'], ['full', 'Set is full']],
+      set: [['ready', 'Ready'], ['selected', 'Rows selected'], ['loading', 'Loading'], ['empty', 'Empty'], ['error', 'Error'], ['gone', 'Not found']],
+      share: [['ready', 'Shared'], ['nobody', 'Not shared yet'], ['adding', 'Adding a teacher'], ['loading', 'Loading'], ['error', 'Error']]
+    };
+    const ctl = [
+      { label: 'Screen', opts: this.seg([['bank', 'Bank'], ['add', 'Add to set'], ['set', 'Set page'], ['share', 'Share dialog']], scr, v => this.go(v)) },
+      { label: 'State', opts: this.seg(variants[scr], vr, v => this.go(scr, v)) }
+    ].concat(scr === 'set' ? [{ label: 'Access', opts: this.seg([['owner', 'Owner'], ['edit', 'Can edit'], ['use', 'Can use']], s.access, v => this.setState({ access: v })) }] : []).concat([
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ]);
+
+    const danger = { tileBg: 'var(--danger-soft)', tileFg: 'var(--danger-ink)', btnBg: 'var(--danger)', btnFg: '#fff' };
+    const plain = { tileBg: 'var(--muted)', tileFg: 'var(--fg)', btnBg: 'var(--primary)', btnFg: 'var(--primary-fg)' };
+    const cases = [
+      { cap: 'Delete set', who: 'owner, from “…”', icon: 'trash-2', title: T('sets.deleteTitle', { name: SETS[0][0] }), hasBody: true, body: T('sets.deleteBody'), confirm: T('sets.delete'), ...danger },
+      { cap: 'Remove from set', who: 'owner', icon: 'list-x', title: T('sets.removeTitle', { count: 2 }), hasBody: true, body: T('sets.removeBodyOwner'), confirm: T('sets.removeFromSet'), ...danger },
+      { cap: 'Remove from set', who: 'Can edit', icon: 'list-x', title: T('sets.removeTitle', { count: 2 }), hasBody: true, body: T('sets.removeBody', { name: DUC[3] }), confirm: T('sets.removeFromSet'), ...danger },
+      { cap: 'Make a copy', who: 'a recipient', icon: 'copy', title: T('sets.copyTitle', { name: THEIRS }), hasBody: true, body: T('sets.copyBody', { owner: DUC[0] }), confirm: T('sets.copy'), ...plain },
+      { cap: 'Rename', who: 'owner and Can edit', icon: 'pencil', title: T('sets.renameTitle'), hasBody: false, body: '', isForm: true, name: SETS[0][0], desc: vi ? 'Ôn thì hiện tại hoàn thành cho các lớp A2, dùng trước bài kiểm tra giữa khoá.' : 'Present perfect review for the A2 classes, used before the mid-course test.', confirm: T('common.save'), ...plain }
+    ];
+    const toasts = [
+      T('toast.sets.added', { count: 3, name: SETS[0][0] }), T('toast.sets.created', { name: 'Phrasal verbs · B1', count: 3 }), T('toast.sets.removed', { count: 2 }), T('toast.sets.deleted', { name: SETS[0][0] }),
+      T('toast.sets.copied'), T('toast.sets.copiedToTest', { count: 2, test: 'Unit 4 · Review' }), T('toast.sharing.shared', { count: 2 }), T('toast.sharing.forbidden')
+    ];
+    const tone = { New: 'var(--accent-ink)', 'As today': 'var(--muted-fg)' };
+    const ink = v => (v === 'No' ? 'var(--muted-fg)' : 'var(--fg)');
+
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, noop,
+      chips: ['R7 · v0.14.0', 'DG-90, DG-83, DG-36', 'Plan: T-R7.19, T-R7.16', 'Deck of record: Teacher › Question bank, share dialog, Shared with me'],
+      ctl, reset: () => this.setState({ lang: 'vi', theme: null, screen: 'bank', variant: { bank: 'list', add: 'pick', set: 'ready', share: 'ready' }, access: 'owner' }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      stageRef: this.stageRef, frames, nav, crumbs, crumbLast: trail[trail.length - 1],
+      pg, bl: bl || {}, bk, ls, ad, sd, dlgOpen: ad.open || sd.open,
+      notesTitle: 'What is new on “' + names[scr] + '”', notes: NOTES[scr].map((text, i) => ({ n: String(i + 1), text })),
+      matrix: MATRIX.map(m => ({ action: m[0], owner: m[1], edit: m[2], use: m[3], c1: ink(m[1]), c2: ink(m[2]), c3: ink(m[3]) })),
+      states: STATES.map(r => ({ where: r[0], when: r[1], what: r[2] })),
+      cases, toasts,
+      copyRows: STR.filter(r => r[1] !== 'Shell').map(r => ({ where: r[1], key: r[0], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3] })),
+      handoff: HANDOFF.map(h => ({ what: h[0], where: h[1], task: h[2] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

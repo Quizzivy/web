@@ -4,6 +4,8 @@
 consoles, the front door and the public site, and in `page-width-proposal/` three later answers
 from the design team (the page width, the cloze, Grading's finish states). **It is the single
 source of truth for the UI.**
+`deck/proposals/` holds pages written in this repository for screens the deck does not draw yet.
+A proposal is not the design of record until Thuong approves it (see "Proposals").
 It replaced the earlier hand-built mockups (`docs/design/mockups`, removed with T-R0.1) and every
 rule that came with them. Where the product deliberately departs from the deck, the departure is
 listed below, and the reason is in the plan (`docs/plan/70-redesign-overview.md`).
@@ -226,6 +228,27 @@ edit `github.md` by hand, since the manifest pins it.
    script builds (its target holds a quote or a `$`) is not read as a file reference.
 4. Add a line to the log below, and say in the PR which screens changed.
 
+## Proposals
+
+`deck/proposals/` holds pages written in this repository, not exported from Claude Design. A
+proposal draws what `gaps.md` says the deck does not: one page for one topic, laid out as the
+pages in `page-width-proposal/` are (cover, decisions, frames, state table, copy, open questions,
+handoff), with the deck's tokens, typeface, icons and brand files. It loads `../support.js` and
+the deck's SVGs by relative path, so nothing is copied. Its frames are in Vietnamese first, with
+the English strings beside them.
+
+A proposal is not the design of record until Thuong approves it. Until then its `gaps.md` rows
+stay Open and carry a note that names the page. On approval they become Answered, and the release
+that builds the screens reads the page as it reads the deck.
+
+1. Add or change the page under `deck/proposals/`. Never edit the seven exported pages or
+   `page-width-proposal/`: the next export replaces them.
+2. Regenerate the manifest with the command above and run `node scripts/check-design-deck.mjs`.
+3. Add a line to the log below, and a note to each `gaps.md` row the page answers.
+
+To view one, start the server above and open
+<http://localhost:5175/proposals/R7%20Question%20Sets.dc.html>.
+
 ## Not imported
 
 - `screenshots/` holds Claude Design's own before-and-after captures at about 924px, several of
@@ -332,6 +355,15 @@ edit `github.md` by hand, since the manifest pins it.
   draws the empty queue (all graded, or papers still to finish) and the "Ready to finish" card at
   1280, 768 and 360, light and dark: Review on the row with Finish inside its check, the card
   folded below the panes while answers wait, rows grouped by assignment, and every English line.
+
+- 2026-11-11 — First proposal page, written in this repository: `proposals/R7 Question
+  Sets.dc.html`, for DG-90 (R7; `docs/plan/77-r7.md`, T-R7.19 and T-R7.16). It draws the Sets
+  group in the bank's filter aside and Filters sheet, "Add to set" and "Share…" in the bulk bar,
+  the Add to set dialog, the set page for its owner, a Can-edit and a Can-use recipient with its
+  loading, empty, error and not-found states, and the share dialog for a set with the skeleton
+  and the error line the deck leaves out. Frames at 1280 and 360, light and dark, Vietnamese and
+  English. No exported page changes. It is a proposal until Thuong approves it, and its seven
+  questions for him are on the page.
 
 ## The brand
 

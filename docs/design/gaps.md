@@ -48,6 +48,10 @@ team answers. E1 also reversed DG-186's Q8 default and changed DG-211.
 DG-205 and DG-206 were decided on 2026-10-12: the owner asked for one page width, and the design team's
 page-width design (`deck/page-width-proposal/`, imported from `c1472f4c`) is the approved answer.
 
+The first proposal page was added on 2026-11-11: `deck/proposals/R7 Question Sets.dc.html`, written
+in this repository for DG-90 (README, "Proposals"). DG-90 carries a note and stays Open until Thuong
+approves the page.
+
 When a new export answers an entry, mark it **Answered** with the export date, and delete the
 "Meanwhile" rule once the product matches the drawing.
 
@@ -272,7 +276,7 @@ redrawn to match. **Answered** — resolved by a later export.
 
 | ID | Gap | Meanwhile | Needed by |
 |---|---|---|---|
-| DG-90 | Sharing entry points are drawn for tests only; Shared with me lists four kinds. Draw sharing for question sets, word lists and courses, and what a "question set" is in the bank. Also: what a Can-use view allows, who is shown as author when a Can-edit recipient publishes, and where the share message appears. The 2026-10-04 "Choose from Media" dialog also speaks of files "other teachers shared with you"; media is not one of the four kinds (DG-112). | Question set = a named selection made from the bank's bulk bar; Can use = read-only + make a copy; the owner stays the author, the publisher is recorded; the message appears in-app and by email. | R7 |
+| DG-90 | Sharing entry points are drawn for tests only; Shared with me lists four kinds. Draw sharing for question sets, word lists and courses, and what a "question set" is in the bank. Also: what a Can-use view allows, who is shown as author when a Can-edit recipient publishes, and where the share message appears. The 2026-10-04 "Choose from Media" dialog also speaks of files "other teachers shared with you"; media is not one of the four kinds (DG-112). **Proposal, 2026-11-11:** `deck/proposals/R7 Question Sets.dc.html` draws the question set as this row's "Meanwhile" defines it: the Sets group in the bank's filter aside, "Add to set" and "Share…" in the bulk bar, the Add to set dialog, the set page for the owner and for a Can-edit and a Can-use recipient, and the share dialog for a set. It is not approved yet, and its seven questions for Thuong are on the page; the access modes in the builder and the editor are not on it. Since the v2 export the deck of record also draws "Share" on a bank selection, on word-list cards and on course cards, so "for tests only" is no longer exact. | Question set = a named selection made from the bank's bulk bar; Can use = read-only + make a copy; the owner stays the author, the publisher is recorded; the message appears in-app and by email. | R7 |
 | DG-91 | Messages: is the attempt-event card in a DM teacher-only? Class-thread attachments render as a "me" bubble. No teacher-to-teacher messaging. | Teacher-only; attachment bubbles follow the sender; no staff DMs. | R7 |
 | DG-96 | Data & privacy has no row for how long messages are kept; no screen shows an address that bounced or complained. | Messages are kept; anonymising an account deletes its direct messages. A suppressed address shows in the Admin user sheet from deck parts. | R7 |
 | DG-97 | Student Grades draws one "Grammar & vocab" tile; skills are tagged separately. The command palette omits Reports. | Skills shown separately; the palette follows the deck. | R9 |

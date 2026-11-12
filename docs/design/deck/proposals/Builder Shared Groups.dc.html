@@ -43,7 +43,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <strong style="font-size:17px;font-weight:600;line-height:1.35">The outline offers a passage, a cloze and a recording by name.</strong>
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
       <li>A teacher thinks “a reading passage with five questions”, not “a shared-context group, then its shared content”. The button and its menu use their words and say in a line what each choice gives.</li>
-      <li><span style="color:var(--fg)">All three make the same thing underneath</span>: a group with its first material in place. The server has no kind to choose; the screen works the name out from what the group holds, as it does today.</li>
+      <li><span style="color:var(--fg)">Each makes the same thing underneath</span>: a group with its first material in place. The server has no kind to choose; the screen works the name out from what the group holds, as it does today.</li>
+      <li>So a pane started one way can become another: a recording can gain a text with gaps, and a passage can gain gaps or a recording.</li>
     </ul>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
@@ -174,31 +175,27 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                     <div style="display:flex;gap:14px;align-items:flex-start">
 
                       <sc-if value="{{ f.showMat }}" hint-placeholder-val="{{ true }}">
-                        <section aria-label="{{ ws.kind }}" style="flex:1 1 0;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                        <section aria-label="{{ ws.kind }}" style="flex:1 1 0;min-width:0;display:flex;flex-direction:column;gap:12px">
 
-                          <sc-if value="{{ mat.isText }}" hint-placeholder-val="{{ true }}">
-                            <div style="display:flex;align-items:center;gap:2px;padding:6px 8px;border-bottom:1px solid var(--border);background:var(--sidebar)"><sc-for list="{{ f.tools }}" as="tl" hint-placeholder-count="6"><span style="width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:6px;color:var(--muted-fg)"><i class="icon-{{ tl }}" style="font-size:15px"></i></span></sc-for><span aria-hidden="true" style="flex:none;width:1px;height:18px;background:var(--border);margin:0 4px"></span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.toolH }};padding:0 10px;border-radius:7px;font-size:12.5px;font-weight:600;white-space:nowrap;border:1px solid {{ mat.gapBtnBorder }};background:{{ mat.gapBtnBg }};color:{{ mat.gapBtnFg }}"><i class="icon-text-cursor-input" style="font-size:14px"></i>{{ tx.makeGap }}</span><span style="flex:1"></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mat.n }}</span></sc-if></sc-if></div>
+                          <sc-if value="{{ mat.isAudioEmpty }}" hint-placeholder-val="{{ false }}"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden"><div style="padding:16px"><div style="border:1px dashed var(--ring);border-radius:10px;padding:{{ f.emptyPad }};display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px"><span style="width:40px;height:40px;border-radius:11px;background:var(--muted);display:grid;place-items:center"><i class="icon-audio-lines" style="font-size:19px"></i></span><span style="font-size:14px;font-weight:600">{{ tx.audioDrop }}</span><span style="font-size:12.5px;color:var(--muted-fg)">{{ tx.audioLimits }}</span><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-upload" style="font-size:15px"></i>{{ tx.chooseFile }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-image" style="font-size:15px"></i>{{ tx.fromMedia }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mat.n }}</span></sc-if></sc-if></div></div></div></div></sc-if>
+
+                          <sc-if value="{{ mat.isAudio }}" hint-placeholder-val="{{ false }}"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden"><div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:14px">
+                              <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-audio-lines" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mat.file }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mat.n }}</span></sc-if></sc-if></span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ mat.fileMeta }}</span></span><span style="display:inline-flex;align-items:center;height:{{ f.smH }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap">{{ tx.replaceFile }}</span></div>
+                              <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--muted)"><span style="width:36px;height:36px;flex:none;border-radius:50%;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center"><i class="icon-play" style="font-size:15px"></i></span><span style="flex:1;height:4px;border-radius:4px;background:var(--border);overflow:hidden"><span style="display:block;width:28%;height:100%;background:var(--accent-c)"></span></span><span style="font-size:12.5px;color:var(--muted-fg);font-variant-numeric:tabular-nums;white-space:nowrap">0:38 / 2:14</span></div>
+                              <sc-if value="{{ mat.audioFull }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:14px"><div style="display:flex;flex-direction:column;gap:10px"><span style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px">{{ tx.plays }}<span style="position:relative;display:inline-flex;align-items:center;min-width:76px;height:{{ f.smH }};border:1px solid var(--border);border-radius:7px;padding:0 28px 0 10px;font-size:13px;background:var(--bg)">2<i class="icon-chevrons-up-down" style="position:absolute;right:8px;font-size:13px;color:var(--muted-fg)"></i></span></span><sc-for list="{{ mat.switches }}" as="sw" hint-placeholder-count="3"><span style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:{{ f.swH }};font-size:13px">{{ sw.label }}<span role="switch" aria-checked="{{ sw.on }}" aria-label="{{ sw.label }}" style="width:34px;height:20px;flex:none;border-radius:999px;padding:2px;background:{{ sw.track }};display:flex;justify-content:{{ sw.side }}"><span style="width:16px;height:16px;border-radius:50%;background:{{ sw.knob }};box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span></span></sc-for></div>
+                              <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.transcript }} <span style="font-weight:400;color:var(--muted-fg)">· {{ tx.transcriptHint }}</span></span><div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;line-height:1.6;background:var(--bg);text-wrap:pretty">{{ mat.transcript }}</div></div></div></sc-if><sc-if value="{{ mat.audioCompact }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;min-height:{{ f.smH }};font-size:13px"><i class="icon-sliders-horizontal" style="font-size:14px;color:var(--muted-fg);flex:none"></i><span style="font-weight:500;white-space:nowrap">{{ tx.audioPolicy }}</span><span style="flex:1;min-width:0;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mat.policySum }}</span><i class="icon-chevron-down" style="font-size:15px;color:var(--muted-fg);flex:none"></i></div></sc-if>
+                            </div></div></sc-if>
+
+                          <sc-if value="{{ mat.hasAddText }}" hint-placeholder-val="{{ false }}"><div style="padding:12px 14px;border-radius:12px;background:var(--muted);display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:600"><i class="icon-text" style="font-size:14px"></i>{{ tx.addText }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.addText.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.addText.n }}</span></sc-if></sc-if></span><span style="font-size:12.5px;line-height:1.5;color:var(--muted-fg);text-wrap:pretty">{{ tx.addTextHint }}</span><div style="display:flex;flex-wrap:wrap;gap:6px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.smH }};padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-plus" style="font-size:13px;color:var(--muted-fg)"></i>{{ tx.addTextBlank }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.smH }};padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-captions" style="font-size:13px;color:var(--muted-fg)"></i>{{ tx.addTextFromTranscript }}</span></div></div></sc-if>
+
+                          <sc-if value="{{ mat.isText }}" hint-placeholder-val="{{ true }}"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden"><div style="display:flex;align-items:center;gap:2px;padding:6px 8px;border-bottom:1px solid var(--border);background:var(--sidebar)"><sc-for list="{{ f.tools }}" as="tl" hint-placeholder-count="6"><span style="width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:6px;color:var(--muted-fg)"><i class="icon-{{ tl }}" style="font-size:15px"></i></span></sc-for><span aria-hidden="true" style="flex:none;width:1px;height:18px;background:var(--border);margin:0 4px"></span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.toolH }};padding:0 10px;border-radius:7px;font-size:12.5px;font-weight:600;white-space:nowrap;border:1px solid {{ mat.gapBtnBorder }};background:{{ mat.gapBtnBg }};color:{{ mat.gapBtnFg }}"><i class="icon-text-cursor-input" style="font-size:14px"></i>{{ tx.makeGap }}</span><span style="flex:1"></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mat.n }}</span></sc-if></sc-if></div>
                             <sc-if value="{{ mat.empty }}" hint-placeholder-val="{{ false }}">
                               <div style="padding:16px 18px;min-height:{{ f.textMin }};display:flex;flex-direction:column;gap:16px"><span style="font-size:15px;line-height:1.7;color:var(--muted-fg)">{{ mat.placeholder }}</span><sc-if value="{{ mat.hasSteps }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 16px;border-radius:10px;background:var(--muted);display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;font-weight:600">{{ tx.stepsTitle }}</span><sc-for list="{{ mat.steps }}" as="st" hint-placeholder-count="3"><span style="display:flex;gap:10px;align-items:flex-start;font-size:13px;line-height:1.5"><span style="width:20px;height:20px;flex:none;border-radius:50%;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;font-size:11px;font-weight:600">{{ st.n }}</span><span style="text-wrap:pretty">{{ st.text }}</span></span></sc-for></div></sc-if></div>
                             </sc-if>
                             <sc-if value="{{ mat.filled }}" hint-placeholder-val="{{ true }}">
                               <div style="padding:14px 18px;min-height:{{ f.textMin }};font-size:15px;line-height:2.1;overflow-wrap:anywhere"><sc-for list="{{ mat.segs }}" as="sg" hint-placeholder-count="5"><sc-if value="{{ sg.isText }}" hint-placeholder-val="{{ true }}"><span>{{ sg.text }}</span></sc-if><sc-if value="{{ sg.isBreak }}" hint-placeholder-val="{{ false }}"><span style="display:block;height:10px"></span></sc-if><sc-if value="{{ sg.isGap }}" hint-placeholder-val="{{ false }}"><button type="button" onClick="{{ sg.go }}" aria-label="{{ sg.aria }}" aria-pressed="{{ sg.open }}" style="display:inline-flex;align-items:center;gap:6px;height:28px;margin:0 2px;padding:0 9px 0 4px;border-radius:8px;border:1px solid {{ sg.border }};background:{{ sg.bg }};color:{{ sg.fg }};cursor:pointer;font-size:14px;font-weight:600;line-height:1;vertical-align:middle"><span style="min-width:20px;height:20px;padding:0 5px;border-radius:6px;background:{{ sg.noBg }};color:{{ sg.noFg }};display:grid;place-items:center;font-size:11.5px;font-weight:700;font-variant-numeric:tabular-nums">{{ sg.no }}</span>{{ sg.word }}</button></sc-if><sc-if value="{{ sg.isSel }}" hint-placeholder-val="{{ false }}"><span style="position:relative;background:var(--info-soft);border-radius:3px;padding:4px 2px">{{ sg.word }}<sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="position:absolute;left:50%;bottom:calc(100% + 5px);transform:translateX(-50%);display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;background:var(--primary);color:var(--primary-fg);box-shadow:var(--shadow-lg);font-size:13px;font-weight:600;line-height:1;white-space:nowrap"><i class="icon-text-cursor-input" style="font-size:14px"></i>{{ tx.makeGap }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sel.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.sel.n }}</span></sc-if></sc-if></span></sc-if></span></sc-if></sc-for></div>
                             </sc-if>
-                            <div style="display:flex;justify-content:space-between;gap:8px;padding:7px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted-fg)"><span>{{ mat.footL }}</span><span style="white-space:nowrap">{{ mat.footR }}</span></div>
-                          </sc-if>
-
-                          <sc-if value="{{ mat.isAudioEmpty }}" hint-placeholder-val="{{ false }}">
-                            <div style="padding:16px"><div style="border:1px dashed var(--ring);border-radius:10px;padding:{{ f.emptyPad }};display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px"><span style="width:40px;height:40px;border-radius:11px;background:var(--muted);display:grid;place-items:center"><i class="icon-audio-lines" style="font-size:19px"></i></span><span style="font-size:14px;font-weight:600">{{ tx.audioDrop }}</span><span style="font-size:12.5px;color:var(--muted-fg)">{{ tx.audioLimits }}</span><div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;justify-content:center"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-upload" style="font-size:15px"></i>{{ tx.chooseFile }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-image" style="font-size:15px"></i>{{ tx.fromMedia }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mat.n }}</span></sc-if></sc-if></div></div></div>
-                          </sc-if>
-
-                          <sc-if value="{{ mat.isAudio }}" hint-placeholder-val="{{ false }}">
-                            <div style="padding:14px 16px 16px;display:flex;flex-direction:column;gap:14px">
-                              <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-audio-lines" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:600"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mat.file }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mat.n }}</span></sc-if></sc-if></span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ mat.fileMeta }}</span></span><span style="display:inline-flex;align-items:center;height:{{ f.smH }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap">{{ tx.replaceFile }}</span></div>
-                              <div style="display:flex;align-items:center;gap:12px;padding:10px 12px;border-radius:10px;background:var(--muted)"><span style="width:36px;height:36px;flex:none;border-radius:50%;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center"><i class="icon-play" style="font-size:15px"></i></span><span style="flex:1;height:4px;border-radius:4px;background:var(--border);overflow:hidden"><span style="display:block;width:28%;height:100%;background:var(--accent-c)"></span></span><span style="font-size:12.5px;color:var(--muted-fg);font-variant-numeric:tabular-nums;white-space:nowrap">0:38 / 2:14</span></div>
-                              <div style="display:flex;flex-direction:column;gap:10px"><span style="display:flex;align-items:center;justify-content:space-between;gap:10px;font-size:13px">{{ tx.plays }}<span style="position:relative;display:inline-flex;align-items:center;min-width:76px;height:{{ f.smH }};border:1px solid var(--border);border-radius:7px;padding:0 28px 0 10px;font-size:13px;background:var(--bg)">2<i class="icon-chevrons-up-down" style="position:absolute;right:8px;font-size:13px;color:var(--muted-fg)"></i></span></span><sc-for list="{{ mat.switches }}" as="sw" hint-placeholder-count="3"><span style="display:flex;align-items:center;justify-content:space-between;gap:10px;min-height:{{ f.swH }};font-size:13px">{{ sw.label }}<span role="switch" aria-checked="{{ sw.on }}" aria-label="{{ sw.label }}" style="width:34px;height:20px;flex:none;border-radius:999px;padding:2px;background:{{ sw.track }};display:flex;justify-content:{{ sw.side }}"><span style="width:16px;height:16px;border-radius:50%;background:{{ sw.knob }};box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span></span></sc-for></div>
-                              <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.transcript }}</span><div style="border:1px solid var(--border);border-radius:8px;padding:10px 12px;font-size:13.5px;line-height:1.6;background:var(--bg);text-wrap:pretty">{{ mat.transcript }}</div></div>
-                            </div>
-                          </sc-if>
+                            <div style="display:flex;justify-content:space-between;gap:8px;padding:7px 14px;border-top:1px solid var(--border);font-size:12px;color:var(--muted-fg)"><span>{{ mat.footL }}</span><span style="white-space:nowrap">{{ mat.footR }}</span></div></div></sc-if>
                         </section>
                       </sc-if>
 
@@ -272,6 +269,19 @@ body{margin:0;-webkit-font-smoothing:antialiased}
   </div>
 </section>
 
+<section data-screen-label="Builds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What a teacher can build with it</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Teachers who saw the first drawing said a recording can have a cloze too, and that there are more combinations than the three it offered. There are, because the model has no kinds: a group holds a text, a recording or both, and any text can have gaps. The menu’s choices are ways to start, and the pane lets one become another. This is what it makes, and the one thing it cannot.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) minmax(0,.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>The teacher wants</span><span>In the pane</span><span>On this page</span></div>
+      <sc-for list="{{ builds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,1.1fr) minmax(0,1.6fr) minmax(0,.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.want }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.how }}</span><span style="font-size:12.5px;font-weight:500;color:{{ r.tone }};text-wrap:pretty">{{ r.state }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
 <section data-screen-label="Today" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What a teacher goes through today</h2>
@@ -338,7 +348,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1 to Q5 and Q7 are decided; Q6 is open. Q7 was decided against its first default, and the frames were redrawn for it.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. The first seven are settled. Q7 was decided against its first default and Q6 was done another way, and the frames were redrawn for both. Q8 came with the teachers’ feedback and is open.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -348,7 +358,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What it would take to build</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">No migration, and every write is one the contract already has: a group made in the new pane opens in today’s builder and the other way round. One read needs a change, the AI’s wrong options for a gap, and that starts in the contract. The rest of the work is in the web. It should be tried with teachers before it is built in full.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">No migration, and every write is one the contract already has: a group made in the new pane opens in today’s builder and the other way round. One read needs a change, the AI’s wrong options for a gap, and that starts in the contract. The rest of the work is in the web. Teachers have seen the drawing; nobody has built anything with it yet.</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:720px">
@@ -386,6 +396,8 @@ const STR = [
   ['addClozeDesc', 'Add menu', 'Đoạn văn có chỗ trống. Bôi đen một từ để tạo chỗ trống.', 'A text with gaps. Select a word to make a gap.', 'New'],
   ['addListening', 'Add menu', 'Bài nghe và câu hỏi', 'A recording with questions', 'New'],
   ['addListeningDesc', 'Add menu', 'Một bản ghi âm, câu hỏi nằm ngay bên cạnh.', 'One recording, with its questions beside it.', 'New'],
+  ['addListenCloze', 'Add menu', 'Bài nghe điền từ', 'A listening gap-fill', 'New'],
+  ['addListenClozeDesc', 'Add menu', 'Bản ghi âm và đoạn văn có chỗ trống. Học viên nghe rồi điền.', 'A recording and a text with gaps. Students listen and fill them in.', 'New'],
   ['addQDesc', 'Add menu', 'Một câu hỏi đứng riêng trong phần này.', 'One question on its own in this section.', 'New'],
   ['kindReading', 'Pane', 'Bài đọc', 'Passage', 'As today'],
   ['kindCloze', 'Pane', 'Bài điền từ', 'Cloze', 'New'],
@@ -402,7 +414,7 @@ const STR = [
   ['makeGap', 'Cloze', 'Tạo chỗ trống', 'Make a gap', 'New'],
   ['stepsTitle', 'Cloze', 'Bài điền từ trong ba bước', 'A cloze in three steps', 'New'],
   ['step1', 'Cloze', 'Dán hoặc nhập đoạn văn.', 'Paste or type the text.', 'New'],
-  ['step2', 'Cloze', 'Bôi đen từ muốn giấu, rồi bấm “Tạo chỗ trống”.', 'Select the word to hide, then press “Make a gap”.', 'New'],
+  ['step2', 'Cloze', 'Bôi đen từ hoặc cụm từ muốn giấu, rồi bấm “Tạo chỗ trống”.', 'Select the word or words to hide, then press “Make a gap”.', 'New'],
   ['step3', 'Cloze', 'Gõ các lựa chọn sai để học viên chọn, hoặc để trống để học viên tự điền.', 'Type the wrong options for students to choose from, or leave them empty and students type the word.', 'New'],
   ['gapsHeading', 'Cloze', 'Chỗ trống', 'Gaps', 'New'],
   ['gapsEmpty', 'Cloze', 'Mỗi chỗ trống bạn tạo sẽ hiện ở đây, kèm đáp án của nó.', 'Each gap you make appears here with its answer.', 'New'],
@@ -442,6 +454,13 @@ const STR = [
   ['audioLimits', 'Recording', 'MP3 hoặc M4A, tối đa 50 MB và 5 phút', 'MP3 or M4A up to 50 MB and 5 minutes', 'As today'],
   ['chooseFile', 'Recording', 'Chọn tệp', 'Choose file', 'As today'],
   ['fromMedia', 'Recording', 'Từ Media', 'From Media', 'As today'],
+  ['addText', 'Recording', 'Thêm đoạn văn', 'Add a text', 'New'],
+  ['addTextHint', 'Recording', 'Học viên thấy đoạn văn này trong lúc nghe. Bôi đen từ trong đó để tạo chỗ trống cho bài nghe điền từ.', 'Students see this text while they listen. Select words in it to make the gaps of a listening gap-fill.', 'New'],
+  ['addTextBlank', 'Recording', 'Đoạn văn trống', 'An empty text', 'New'],
+  ['addTextFromTranscript', 'Recording', 'Dùng lời thoại', 'Use the transcript', 'New'],
+  ['audioPolicy', 'Recording', 'Quy định bài nghe', 'Audio policy', 'As today'],
+  ['audioPolicySum', 'Recording', 'Nghe {count} lần · được tạm dừng', '{count} plays · pausing allowed', 'New'],
+  ['transcriptHint', 'Recording', 'Không bắt buộc. Học viên xem sau khi nộp bài.', 'Optional. Students see it after they submit.', 'As today'],
   ['replaceFile', 'Recording', 'Thay tệp', 'Replace file', 'New'],
   ['plays', 'Recording', 'Số lần nghe', 'Plays', 'As today'],
   ['allowPause', 'Recording', 'Cho học sinh tạm dừng', 'Students can pause', 'As today'],
@@ -473,6 +492,10 @@ const READING = { title: 'Why cities need green space', instr: 'Read the text an
 const CLOZE = { title: 'Green spaces in big cities', instr: 'Choose the best word for each gap.',
   runs: ['Green spaces matter in big cities. Parks give people a place to ', ' after work. Trees also ', ' the air cleaner. Many cities now ', ' roofs with plants, and ', ' streets are closed to cars on Sundays. Experts believe these changes will ', ' city life healthy.'],
   gaps: [['relax', ['relaxing', 'relaxed', 'relaxes'], 1], ['make', ['do', 'take', 'have'], 3], ['cover', ['covering', 'covered', 'covers'], 2], ['some', ['any', 'much', 'every'], 0], ['keep', ['keeps', 'kept', 'keeping'], 1]] };
+// a listening gap-fill: the same recording, with a text to complete; every gap is typed
+const GAPFILL = { instr: 'Listen and complete the conversation.',
+  runs: ['Excuse me, how do I get to the ', '? Go straight on, then turn ', ' at the bank. It’s ', ' the park.'],
+  gaps: [['post office', [], 1], ['left', [], 0], ['opposite', [], 2]] };
 const AI_ITEMS = [
   ['covers', 'Chia theo chủ ngữ số ít, trong khi “cities” là số nhiều.', 'Agrees with a singular subject, but “cities” is plural.', 1],
   ['covering', 'Dạng V-ing, dễ chọn vì “now” đứng ngay trước.', 'An -ing form, tempting right after “now”.', 1],
@@ -485,6 +508,19 @@ const LISTENING = { title: 'Asking the way', instr: 'Listen to the conversation,
   options: [['Next to the bank', 0], ['Opposite the park', 1], ['Behind the school', 0], ['Near the station', 0]],
   explain: 'Người chỉ đường nói: “It’s opposite the park.”' };
 
+// [what the teacher wants, how the pane makes it, where this page stands on it, tone]
+const BUILDS = [
+  ['A passage with comprehension questions', '“Bài đọc và câu hỏi”. Questions of any type as cards beside the text.', 'Drawn', 'ok'],
+  ['A cloze where students choose A–D', '“Bài điền từ”. Each gap with its wrong options, typed in or suggested by the AI.', 'Drawn', 'ok'],
+  ['A cloze where students type the word', 'The same, with the wrong options left empty. Other accepted answers can be added.', 'Drawn', 'ok'],
+  ['A recording with questions', '“Bài nghe và câu hỏi”.', 'Drawn', 'ok'],
+  ['Listen and fill the gaps: a text, notes or a form to complete while listening', '“Bài nghe điền từ”, or a recording and “Thêm đoạn văn”. A gap is typed unless wrong options are added.', 'Drawn, after the teachers’ feedback', 'ok'],
+  ['Listen and read: a recording with its text, and questions on them', 'A recording and “Thêm đoạn văn”, with question cards beside them.', 'The row that adds the text is drawn', 'ok'],
+  ['A passage with gaps and ordinary questions as well', '“Tạo chỗ trống” for the gaps, and “Thêm câu hỏi” from the pane’s menu for the rest. They share one numbering.', 'Not drawn', 'none'],
+  ['A picture, a chart or a table with questions', 'A picture or a table in the text, from the editor’s toolbar, as today.', 'Not drawn; the editor has it', 'none'],
+  ['Two texts to compare, or one task in several parts', 'Several materials in one group, as tabs above the left half. The model takes sixteen.', 'Not drawn', 'none'],
+  ['One list of words for all the gaps to choose from (a word bank)', 'The model cannot store it: every gap has its own options. The nearest thing today is a matching question, which is a list and not a text with gaps.', 'Not possible without a change to the model', 'no']
+];
 const TODAY_LEAD = 'Read from the builder’s code as it is on develop today. The app was not run for this page, so the steps are counted from the code and not timed with a teacher. Every path in the middle column works; the trouble is that the screen does not lead to it.';
 // [what the teacher wants, today, in the redesign]
 const TASKS = [
@@ -493,6 +529,7 @@ const TASKS = [
   ['Make a cloze with three gaps', 'About sixteen clicks and one dialog, in an order the screen does not give. First three questions. Then the group’s “…” menu, “Nội dung dùng chung”, “Bài đọc”, the text. Then the caret at each word and the toolbar’s gap button, an icon whose name is in a tooltip. Then, for each gap, a list to pick “Câu 1”, “Câu 2”, “Câu 3” from. If the gaps are placed before the questions exist, “Lưu” stays off, and the only way out of the dialog throws the passage away.', 'Choose “Bài điền từ”, paste the text, then select a word and press “Tạo chỗ trống”, three times. Three selections and three clicks. Each gap’s question exists at once, and its wrong options are typed in the card that opens.'],
   ['Go from one question to another, and back to the passage', 'A group’s parts are listed in three places: the outline, the pane’s contents column (“Hướng dẫn”, “Ngữ liệu dùng chung”, “Câu hỏi”) and the Shared content dialog. Pressing the group’s row after a question shows the group’s instructions, not its passage. Pressing the content line in the outline opens the dialog. A question is “Câu 2” in the pane and in the gap’s list, and 6 in the outline.', 'One list. The passage does not leave the screen, the questions are cards beside it, the outline’s rows open the same cards, and every number is the question’s number in the test.'],
   ['Add a recording', 'The same dialog: “Bài nghe”, a file from the computer or from Media (a second dialog on top of the first), the number of plays, pausing, skipping, the transcript, “Lưu”. Choosing “Bài nghe” on a group that has a passage asks to replace the passage. In the pane the same settings are under “Quy định bài nghe”, and only after a recording has been put inside a material.', 'Choose “Bài nghe và câu hỏi” and pick the file. The player and the listening rules are the left half of the pane and stay there while the questions are written.'],
+  ['Make a listening gap-fill', 'Not in the Shared content dialog, which takes a passage or a recording and not both. Only in the pane: “Thêm ngữ liệu”, the recording put into the material from the toolbar, the text, then the questions and gaps made and linked as for a cloze.', 'Choose “Bài nghe điền từ”, pick the file, paste the text or press “Dùng lời thoại”, then select each word and press “Tạo chỗ trống”. The gaps are typed, so there is nothing more to fill in.'],
   ['Take out a question that answers a gap', 'Its drag handle, “Chuyển ra khỏi nhóm” and “Xoá câu hỏi” are all off, with a sentence saying the question is linked from the material. The teacher has to open the Shared content dialog, find the gap, remove it there, save, and come back.', 'The gap’s card has “Bỏ chỗ trống”: the word returns to the text and its question goes with it, with “Hoàn tác”.'],
   ['Find what stops the test from saving', 'One unfinished question, or one gap without a question, stops the whole group from saving. The page says “Chưa lưu được” with the reason, for example “Hãy điền mọi lựa chọn.”, and opening another question or group is refused until it is fixed. The reason does not say which question.', 'A gap cannot be without its question. A question that is not finished is marked in the outline as soon as it is so, and the pane’s heading names it and opens it.']
 ];
@@ -512,7 +549,7 @@ const PROBLEMS = [
 ];
 // [the rule today, in the redesign]
 const RULES = [
-  ['A group has no kind. “Passage”, “Audio” or “n materials” is worked out from what it holds.', 'The menu’s three choices make the same group, with createQuestionGroup. The pane’s name is worked out the same way: “Bài nghe” when the group holds a recording and no text, “Bài điền từ” when every question answers a gap, otherwise “Bài đọc”. A cloze may gain ordinary questions and a passage may gain gaps; the toolbar’s “Tạo chỗ trống” and the pane’s “Thêm câu hỏi” are in both.'],
+  ['A group has no kind. “Passage”, “Audio” or “n materials” is worked out from what it holds.', 'The menu’s four choices make the same group, with createQuestionGroup. The pane’s name is worked out the same way: “Bài nghe” when the group holds a recording, whatever else it holds; “Bài điền từ” when it has none and every question answers a gap; otherwise “Bài đọc”. Any pane can gain what another starts with: a text under a recording, a recording above a text, gaps in any text, ordinary questions beside gaps.'],
   ['Every gap is answered by exactly one question or blank of the group, and each of those answers one gap.', '“Tạo chỗ trống” writes the gap, its question and the link between them in one updateQuestionGroup, which already replaces the whole group. There is nothing to link, so no gap can be left over.'],
   ['A gap answered by choosing links to a choice question. A gap answered by typing links to a blank of a fill-in question.', 'A gap with wrong options is a single-choice question. A gap with none is a fill-in question with one blank that accepts the word. Typing the first wrong option, or clearing the last, changes the question’s type and the link in the same write.'],
   ['A question is saved only when it is complete: a prompt, at least two options, every option filled, a correct answer. A group is saved only when each of its questions is.', 'A gap is complete from the moment it is made, so marking five words in a row never leaves the group unsaved. For an ordinary question the rule stays, and the screen says which question and which field.'],
@@ -524,6 +561,7 @@ const RULES = [
   ['A group may hold up to 16 materials, 16 recordings and 200 questions.', 'The limits stay. A group with more than one material shows them as tabs above the text; this is not drawn, and such groups exist only where a teacher made them in today’s pane. A group with no material shows “Bài đọc” or “Bài nghe” to add in its left half.'],
   ['Moving a question from the bank or the test into a group copies it; the original stays (E1).', 'Unchanged, with the messages the builder has today. A question is moved by dragging its card or outline row, or from the card’s menu.'],
   ['The AI suggests wrong options for a stored single or multiple choice question that has a key, from its prompt, its key and its options (suggestAiDistractors). Nothing is saved until the teacher adds one.', 'The gap’s card has the same button and panel. Two things the operation does not do yet. A new gap is a typed question until it has a wrong option, and the operation refuses any question that is not a choice. And it reads the question by itself, while a gap’s sentence is in the passage. So for a question that answers a gap it has to take the accepted word as the key and read the sentence around the gap: a change to the contract and the server, the only one in this proposal. Whether it reaches a question that belongs to a group is to be checked with it.'],
+  ['A material holds a document, and the document can hold a recording as well as text and gaps. The Shared content dialog shows only one of the two, so a recording with a text can be made in today’s pane and nowhere else.', 'The recording’s card and the text are one above the other in the left half, and both are always reachable: “Thêm đoạn văn” under a recording, the toolbar’s recording button above a text. “Dùng lời thoại” copies the transcript into the text; the transcript itself stays what students see after they submit.'],
   ['A recording carries its listening rules: plays, pausing, skipping, the transcript.', 'The same four, in the left half of the pane, with today’s labels and defaults. For a recording the group is made empty and the file is attached when it is chosen.']
 ];
 // what the builder and the bank call things after Q2: [what is named, today, Vietnamese, English]
@@ -531,7 +569,7 @@ const NAMES = [
   ['The list in the bank', '“Nhóm câu hỏi”', 'Bài đọc, điền từ, bài nghe', 'Passages, clozes, recordings'],
   ['One of them, named for what it holds', '“Nhóm câu hỏi”, “nhóm câu dùng chung”, “nhóm câu”', 'Bài đọc · Bài điền từ · Bài nghe', 'Passage · Cloze · Recording'],
   ['Several of different kinds, in a sentence or a count', '“{count} nhóm”', '{count} mục, as the product counts mixed things already', '{count} items'],
-  ['Making one', '“Nhóm mới” in the bank, “Thêm nhóm câu dùng chung” in the builder', 'Bài đọc và câu hỏi · Bài điền từ · Bài nghe và câu hỏi, in the bank as in the builder', 'A passage with questions · A cloze · A recording with questions'],
+  ['Making one', '“Nhóm mới” in the bank, “Thêm nhóm câu dùng chung” in the builder', 'Bài đọc và câu hỏi · Bài điền từ · Bài nghe và câu hỏi · Bài nghe điền từ, in the bank as in the builder', 'A passage with questions · A cloze · A recording with questions · A listening gap-fill'],
   ['A new one’s title', '“Nhóm câu hỏi mới”', 'Bài đọc mới · Bài điền từ mới · Bài nghe mới', 'New passage · New cloze · New recording'],
   ['What it shares', '“Nội dung dùng chung”, “Ngữ liệu dùng chung”, “ngữ liệu”', 'bài đọc, and đoạn văn for its text · bản ghi âm. No word for both', 'passage, and text · recording'],
   ['Its title', '“Tên nhóm câu hỏi”, “Tên ngữ liệu”, “Tiêu đề”', 'Tiêu đề', 'Title'],
@@ -543,10 +581,11 @@ const QUESTIONS = [
   ['Q1 · Gaps', 'Should a gap with no wrong options be one the student types?', 'A group saves only when every question in it is complete, and a choice needs two filled options. A new gap has one, the word. So either the gap is something complete from its first second, or it is “unfinished” and stops the group from saving until a wrong option is typed, or the server learns to keep unfinished questions in a draft.', 'Yes. The card says so in a line under the options, and the text’s footer counts how many gaps are chosen and how many typed.', 'Thuong, 12 Nov 2026'],
   ['Q2 · Names', 'Do “Bài đọc”, “Bài điền từ” and “Bài nghe” replace “nhóm câu dùng chung” and “ngữ liệu” in the builder and in the bank?', 'The question bank lists groups too, under “Nhóm câu hỏi”. If only the builder changes its words, the same thing has two names again.', 'The builder and the bank both use the three names; the table above the questions gives the wording. “Nhóm” stays in the model and the documents.', 'Thuong, 12 Nov 2026'],
   ['Q3 · The dialog', 'Does the Shared content dialog go?', 'It is the deck’s drawing (DG-187), and the group row’s menu has an item for it (DG-186). The pane does all it does. Keeping both keeps two editors for one passage.', 'Yes. The outline’s content line and the row’s menu item go with it; pressing the group opens the pane.', 'Thuong, 12 Nov 2026'],
-  ['Q4 · Adding', 'Two buttons under the outline, or one “Thêm” menu for everything?', 'A question on its own is the most frequent thing added, and one menu would make it two presses. A second button keeps it at one and gives the three a name of their own. It does make the button’s label long.', 'Two buttons: “Thêm câu hỏi” as today, and “Bài đọc, điền từ, bài nghe” with the menu. On a phone they are one “+” that opens a sheet.', 'Thuong, 12 Nov 2026'],
+  ['Q4 · Adding', 'Two buttons under the outline, or one “Thêm” menu for everything?', 'A question on its own is the most frequent thing added, and one menu would make it two presses. A second button keeps it at one and gives the rest a name of their own. It does make the button’s label long.', 'Two buttons: “Thêm câu hỏi” as today, and “Bài đọc, điền từ, bài nghe” with the menu. On a phone they are one “+” that opens a sheet.', 'Thuong, 12 Nov 2026'],
   ['Q5 · The answer’s row', 'Should the word land on a row picked at random?', 'A gap’s question is made from the word, so the word would always be its first option. Options are shuffled for students unless the teacher keeps them in order; where they are kept, every answer of the cloze would be A.', 'Yes, among four rows. The teacher can drag it or mark another row correct.', 'Thuong, 12 Nov 2026'],
-  ['Q6 · Trying it', 'Which five teachers can try this before it is built in full?', 'The complaints reach this page through the owner, and the steps above are counted from code. Whether a teacher now finds the cloze unaided is a thing to watch, not to argue.', 'A test with five teachers on a clickable build of the pane: a passage with four questions, a cloze with five gaps, one gap taken out. The redesign passes if four of the five finish the cloze without help.'],
-  ['Q7 · AI', 'Should the gap’s card offer to suggest wrong options?', 'A gap’s wrong options are the part of a cloze that takes longest to write, and the builder already suggests them for a question on its own. The first drawing left it for later, because it is the one thing here the contract cannot do yet.', 'Yes, in this proposal: step 4 of the cloze. It needs the AI operation to accept a gap’s typed question and to read the sentence around the gap. Drafting whole questions from a passage is not part of this; the builder’s Generate already writes into a passage’s group.', 'Thuong, 12 Nov 2026']
+  ['Q6 · Trying it', 'Which five teachers can try this before it is built in full?', 'The complaints reach this page through the owner, and the steps above are counted from code. Whether a teacher now finds the cloze unaided is a thing to watch, not to argue.', 'The owner showed the frames to teachers. They said they could tell at a glance what to do, and that it is much easier to use than today. They asked for a cloze on a recording, which is now drawn. It was a showing: nobody has built anything with it yet.', 'Thuong, 12 Nov 2026', 'Done another way (Thuong, 12 Nov 2026):'],
+  ['Q7 · AI', 'Should the gap’s card offer to suggest wrong options?', 'A gap’s wrong options are the part of a cloze that takes longest to write, and the builder already suggests them for a question on its own. The first drawing left it for later, because it is the one thing here the contract cannot do yet.', 'Yes, in this proposal: step 4 of the cloze. It needs the AI operation to accept a gap’s typed question and to read the sentence around the gap. Drafting whole questions from a passage is not part of this; the builder’s Generate already writes into a passage’s group.', 'Thuong, 12 Nov 2026'],
+  ['Q8 · Other tasks', 'Which tasks do teachers build that the table of what can be built does not cover?', 'They named the listening gap-fill and said there were more. The table lists what the pane makes and the one thing the model cannot store: a word bank shared by all the gaps. If teachers need that, it is a change to the model and not to this screen.', 'The pane covers the table’s first nine rows. A shared word bank is left out.']
 ];
 // [change, where, size]
 const HANDOFF = [
@@ -554,7 +593,7 @@ const HANDOFF = [
   ['The pane as two halves: the material on the left, the questions as a stack of cards on the right; two tabs below 768. Replaces the contents column', 'BuilderGroupPane, GroupComposer', 'Large'],
   ['A question card: one line when closed, the fields of a question on its own when open', 'GroupComposer, BuilderQuestionEditor', 'Medium'],
   ['“Tạo chỗ trống”: from a selection, the gap, its question and the link as one change of the group; the gap’s card; removal with undo; questions kept in the order of the gaps', 'the content editor’s gap commands, GapBindings (goes), question-groups/model', 'Medium'],
-  ['The recording’s card in the pane, from the dialog’s fields', 'SharedContentDialog (AudioFields)', 'Small'],
+  ['The recording’s card in the pane, from the dialog’s fields; a text under it, with “Thêm đoạn văn” and “Dùng lời thoại”; the rules folded to a line when a text follows', 'SharedContentDialog (AudioFields), MaterialTools', 'Medium'],
   ['AI on a gap, in the web: the card’s button and panel, taken from the question editor', 'OptionsEditor (WithDistractors), AiDistractorsPanel', 'Small'],
   ['AI on a gap, in the contract and the server: suggestAiDistractors accepts a gap’s typed question, takes its word as the key and reads the sentence around the gap', 'Quizzivy/sdk first, then Quizzivy/api', 'Contract'],
   ['The unfinished question named in the pane’s heading and marked in the outline', 'useGroupEditor, OutlineGroupRow', 'Small'],
@@ -565,12 +604,13 @@ const HANDOFF = [
 ];
 const METHOD = [
   ['How this was read.', 'From the web’s code on develop at bc20eec4 (the builder page, the outline, the group pane, the Shared content dialog, the group composer, the gap list, the group and question rules), from the contract’s operations for groups, and, for the AI, from the contract and the server’s handler for wrong options. The app was not run: its package registry needs a token this machine does not have. The complaints are the owner’s account of what teachers tell him; no teacher was interviewed for this page.'],
+  ['What teachers said.', 'The owner showed the frames to teachers on 12 Nov 2026. They said they could tell at a glance what to do and that it is much easier to use than today. They added that a recording can have a cloze too, for example a text to complete while listening, and that there are more such combinations. The listening gap-fill, the text under a recording and the table of what can be built were drawn for that. It was a showing and not a test: how many teachers saw it is not recorded here, and nobody built anything.'],
   ['What it borrows.', 'Canvas New Quizzes marks a blank inside the sentence and shows a stimulus beside the questions attached to it. The student’s side of Quizzivy already works that way; this page makes the teacher’s side match it.'],
   ['What it leaves alone.', 'The builder’s title bar, sections, drag and drop, the question bank picker, preview and publish, every stored shape, and every operation but the AI’s wrong options. A question on its own is edited as it is today.']
 ];
 // notes by screen and step: [the pin’s place, the note]
 const NOTES = {
-  'add:menu': [['addQ', '“Thêm câu hỏi” stays one press, as today, and still says where the question will go.'], ['addMore', 'One button names the three things a teacher builds on shared material. It replaces “Thêm nhóm câu dùng chung”.'], ['menu', 'Each choice says in a line what it gives. All three make what the model has today, a group with its first material in place, so nothing new is stored.']],
+  'add:menu': [['addQ', '“Thêm câu hỏi” stays one press, as today, and still says where the question will go.'], ['addMore', 'One button names what a teacher builds on shared material. It replaces “Thêm nhóm câu dùng chung”.'], ['menu', 'Each choice says in a line what it gives. They are four ways to start the same thing, a group with its first material in place, so nothing new is stored. A pane started one way can become another: a recording can gain a text, a passage can gain gaps.']],
   'passage:empty': [['head', 'The heading says what this is in the teacher’s words and which section it is in. The title is selected, so typing names the passage.'], ['mat', 'The passage is typed in the left half, in the content editor the builder already has. No dialog and no Save button: it saves as the rest of the builder does.'], ['addRow', 'The first question is added here, by type, and opens above this row. The row names the passage, so it is not taken for the outline’s “Thêm câu hỏi”.']],
   'passage:filled': [['head', 'One title for the passage and its group. The line under it is the instructions students see.'], ['mat', 'The passage stays on screen while a question is written, as it will for the student.'], ['card', 'A question opens in place with the fields of a question on its own: type, points, text, options, explanation. The others are a line each, numbered as in the test.'], ['addRow', 'The next question is added at the end of the stack.']],
   'passage:unfinished': [['status', 'As today, the group is saved only when each of its questions is complete. What changes is that the heading names the question and opens it. Today the message gives the reason and not the place.'], ['card', 'The empty option is outlined and the reason is under the options, in the words the product has now. The outline marks the passage’s row.']],
@@ -580,9 +620,10 @@ const NOTES = {
   'cloze:suggest': [['card', 'The gap’s card has “Gợi ý lựa chọn sai”, the button a question on its own has in the builder today. A group’s questions have no AI help now.'], ['ai', 'The panel is the question editor’s: each suggestion with why a learner might pick it, what the call cost, and a close button. Nothing is saved by asking.'], ['aiRow', '“Thêm” puts the word in the next empty row. With its first wrong option the gap becomes one the student chooses, as when an option is typed.'], ['aiNeed', 'The one part that needs the contract to change. Today the operation reads a stored choice question by itself. For a gap it has to take the gap’s word as the key and read the sentence around it.']],
   'cloze:done': [['mat', 'Five gaps, numbered 9 to 13 as the student will see them.'], ['card', 'A finished gap: the word and three wrong options. A closed card shows the word and its wrong options, so the whole set can be checked at a glance.'], ['hint', 'More gaps can be made at any time. The numbers after a new gap move up by themselves.']],
   'audio:empty': [['head', 'The same pane for a recording.'], ['mat', 'The file is chosen in the left half, from the computer or from Media, as today.'], ['addRow', 'Questions can be written before the file is chosen.']],
-  'audio:filled': [['head', 'One title, and the instructions students see.'], ['mat', 'The file, a player and the listening rules are the left half, so the teacher can listen while writing the questions.'], ['card', 'Questions open in place, as for a passage.'], ['addRow', 'The next question is added at the end of the stack.']]
+  'audio:filled': [['head', 'One title, and the instructions students see.'], ['mat', 'The file, a player and the listening rules are the left half, so the teacher can listen while writing the questions.'], ['addText', 'A recording can carry a text that students see while they listen. “Dùng lời thoại” copies the transcript into it, ready for gaps. The transcript itself is still what students see after they submit.'], ['card', 'Questions open in place, as for a passage.'], ['addRow', 'The next question is added at the end of the stack.']],
+  'audio:gapfill': [['head', 'Teachers asked for this when they saw the first drawing: students listen and complete a text. It is still “Bài nghe”: the name follows the recording.'], ['mat', 'The recording and its text are one material, one above the other. The listening rules fold to a line; the text is the editor every passage has, so “Tạo chỗ trống” works the same way.'], ['card', 'A gap here is typed unless wrong options are added, which is what a listening gap-fill wants: select the word, press the button, done. A gap can be several words.'], ['hint', 'The gaps are questions 14 to 16 of the test, in the order they are heard.']]
 };
-const PIN_KEYS = ['addQ', 'addMore', 'menu', 'head', 'status', 'mat', 'sel', 'qEmpty', 'card', 'help', 'ai', 'aiRow', 'aiNeed', 'addRow', 'hint'];
+const PIN_KEYS = ['addQ', 'addMore', 'menu', 'head', 'status', 'mat', 'addText', 'sel', 'qEmpty', 'card', 'help', 'ai', 'aiRow', 'aiNeed', 'addRow', 'hint'];
 const START = { add: 'menu', passage: 'filled', cloze: 'made', audio: 'filled' };
 
 class Component extends DCLogic {
@@ -616,17 +657,23 @@ class Component extends DCLogic {
     const vv = scr === 'add' ? 'filled' : vr;
     const kindKey = view === 'passage' ? 'reading' : view === 'audio' ? 'listening' : 'cloze';
     const fresh = vv === 'empty';
+    // a recording whose text has gaps: students listen and fill them in
+    const gapfill = view === 'audio' && vv === 'gapfill';
+    const gapMode = view === 'cloze' || gapfill;
     const nReading = view === 'passage' && fresh ? 0 : 4;
     const made = view === 'cloze' ? { empty: 0, select: 2, made: 3, suggest: 3, done: 5 }[vv] : 5;
-    const nListening = view === 'audio' && fresh ? 0 : 4;
+    const nListening = view === 'audio' && fresh ? 0 : gapfill ? GAPFILL.gaps.length : 4;
     const firstReading = 5, firstCloze = firstReading + nReading, firstListening = firstCloze + made;
     const total = 4 + nReading + made + nListening;
     const secName = n => (vi ? 'Phần ' + n : 'Section ' + n);
     // a gap made a moment ago has no wrong options yet; with the AI's panel open it has the two that were added
     const asking = view === 'cloze' && vv === 'suggest';
     const wrongOf = i => (view === 'cloze' && i === 2 && vv === 'made' ? [] : asking && i === 2 ? AI_ITEMS.filter(x => x[3]).map(x => x[0]) : CLOZE.gaps[i][1]);
-    const openDefault = view === 'cloze' ? (vv === 'made' || vv === 'suggest' ? 2 : vv === 'done' ? 0 : -1) : -1;
-    const openGap = view === 'cloze' && s.clozeOpen != null && s.clozeOpen < made ? s.clozeOpen : openDefault;
+    // the gaps on screen: their text, how many are made, the first one's number, each one's wrong options
+    const gapSrc = gapfill ? GAPFILL : CLOZE, gapN = gapfill ? nListening : view === 'cloze' ? made : 0, gapFirst = gapfill ? firstListening : firstCloze;
+    const gapWrong = gapfill ? () => [] : wrongOf;
+    const openDefault = gapfill ? 0 : view === 'cloze' ? (vv === 'made' || vv === 'suggest' ? 2 : vv === 'done' ? 0 : -1) : -1;
+    const openGap = gapMode && s.clozeOpen != null && s.clozeOpen < gapN ? s.clozeOpen : openDefault;
     const unfinished = view === 'passage' && vv === 'unfinished';
 
     // outline
@@ -638,9 +685,9 @@ class Component extends DCLogic {
         items: on ? items.map((it, i) => row(first + i, it[0], it[1], i === activeIndex)) : [] };
     };
     const readingGroup = group('reading', nReading ? READING.title : tx.newReading, firstReading, READING.qs.slice(0, nReading).map(q => [TY[q[0]][2], q[1]]), nReading ? 0 : -1, unfinished);
-    const clozeGroup = group('cloze', view === 'cloze' && fresh ? tx.newCloze : CLOZE.title, firstCloze, CLOZE.gaps.slice(0, made).map((g, i) => [wrongOf(i).length ? 'circle-dot' : 'text-cursor-input', g[0]]), openGap);
-    const listeningGroup = group('listening', nListening ? LISTENING.title : tx.newListening, firstListening, LISTENING.qs.slice(0, nListening).map(q => [TY[q[0]][2], q[1]]), nListening ? 0 : -1);
-    const data = view === 'passage' ? READING : view === 'audio' ? LISTENING : CLOZE;
+    const clozeGroup = group('cloze', view === 'cloze' && fresh ? tx.newCloze : CLOZE.title, firstCloze, CLOZE.gaps.slice(0, made).map((g, i) => [wrongOf(i).length ? 'circle-dot' : 'text-cursor-input', g[0]]), view === 'cloze' ? openGap : -1);
+    const listeningGroup = group('listening', nListening ? LISTENING.title : tx.newListening, firstListening, gapfill ? GAPFILL.gaps.map(g => ['text-cursor-input', g[0]]) : LISTENING.qs.slice(0, nListening).map(q => [TY[q[0]][2], q[1]]), gapfill ? openGap : nListening ? 0 : -1);
+    const data = view === 'passage' ? READING : view === 'audio' ? (gapfill ? { ...LISTENING, instr: GAPFILL.instr } : LISTENING) : CLOZE;
     const wsTitle = fresh ? tx[KIND[kindKey][2]] : data.title;
     const range = (a, n) => (n ? a + '–' + (a + n - 1) : '');
     const ol = {
@@ -655,10 +702,10 @@ class Component extends DCLogic {
       ]
     };
 
-    // the menu of the second button, and the phone's sheet
-    const three = [['addReading', 'book-open-text', () => this.go('passage', 'empty')], ['addCloze', 'text-cursor-input', () => this.go('cloze', 'empty')], ['addListening', 'audio-lines', () => this.go('audio', 'empty')]].map(x => ({ label: tx[x[0]], desc: tx[x[0] + 'Desc'], icon: x[1], go: x[2] }));
-    const add = { on: scr === 'add', btnBg: scr === 'add' ? 'var(--muted)' : 'var(--card)', title: fmt(tx.addTitle, { title: secName(2) }), items: three,
-      sheetItems: [{ label: tx.addQuestion, desc: tx.addQDesc, icon: 'circle-dot', go: () => this.go('passage', 'filled') }].concat(three) };
+    // the menu of the second button, and the phone's sheet: each is a way to start the same kind of group
+    const kinds = [['addReading', 'book-open-text', () => this.go('passage', 'empty')], ['addCloze', 'text-cursor-input', () => this.go('cloze', 'empty')], ['addListening', 'audio-lines', () => this.go('audio', 'empty')], ['addListenCloze', 'headphones', () => this.go('audio', 'gapfill')]].map(x => ({ label: tx[x[0]], desc: tx[x[0] + 'Desc'], icon: x[1], go: x[2] }));
+    const add = { on: scr === 'add', btnBg: scr === 'add' ? 'var(--muted)' : 'var(--card)', title: fmt(tx.addTitle, { title: secName(2) }), items: kinds,
+      sheetItems: [{ label: tx.addQuestion, desc: tx.addQDesc, icon: 'circle-dot', go: () => this.go('passage', 'filled') }].concat(kinds) };
 
     // the pane's heading
     const count = view === 'passage' ? nReading : view === 'audio' ? nListening : made;
@@ -672,27 +719,28 @@ class Component extends DCLogic {
     const pickGap = i => () => this.setState({ clozeOpen: i, phoneTab: 'qs' });
     let segs = [];
     if (view === 'passage' && !fresh) segs = [{ isText: true, text: READING.text[0] }, { isBreak: true }, { isText: true, text: READING.text[1] }];
-    if (view === 'cloze' && !fresh) {
-      CLOZE.runs.forEach((run, i) => {
+    if (gapMode && !fresh) {
+      gapSrc.runs.forEach((run, i) => {
         segs.push({ isText: true, text: run });
-        const g = CLOZE.gaps[i]; if (!g) return;
-        if (i < made) {
+        const g = gapSrc.gaps[i]; if (!g) return;
+        if (i < gapN) {
           const open = i === openGap;
-          segs.push({ isGap: true, open, no: String(firstCloze + i), word: g[0], aria: fmt(tx.gapAria, { number: firstCloze + i, word: g[0] }), go: pickGap(i),
+          segs.push({ isGap: true, open, no: String(gapFirst + i), word: g[0], aria: fmt(tx.gapAria, { number: gapFirst + i, word: g[0] }), go: pickGap(i),
             bg: open ? 'var(--primary)' : 'var(--accent-soft)', fg: open ? 'var(--primary-fg)' : 'var(--fg)', border: open ? 'var(--primary)' : 'transparent',
             noBg: open ? 'var(--primary-fg)' : 'var(--primary)', noFg: open ? 'var(--primary)' : 'var(--primary-fg)' });
-        } else if (vv === 'select' && i === made) segs.push({ isSel: true, word: g[0] });
+        } else if (vv === 'select' && i === gapN) segs.push({ isSel: true, word: g[0] });
         else segs.push({ isText: true, text: g[0] });
       });
     }
-    const choice = CLOZE.gaps.slice(0, made).filter((g, i) => wrongOf(i).length).length;
-    const gapParts = [fmt(tx.gapCount, { count: made })].concat(choice ? [fmt(tx.gapChoice, { count: choice })] : [], made - choice ? [fmt(tx.gapTyped, { count: made - choice })] : []);
-    const textLen = fresh ? 0 : view === 'passage' ? words(READING.text.join(' ')) : words(CLOZE.runs.join(' x '));
+    const choice = gapSrc.gaps.slice(0, gapN).filter((g, i) => gapWrong(i).length).length;
+    const gapParts = [fmt(tx.gapCount, { count: gapN })].concat(choice ? [fmt(tx.gapChoice, { count: choice })] : [], gapN - choice ? [fmt(tx.gapTyped, { count: gapN - choice })] : []);
+    const textLen = fresh ? 0 : view === 'passage' ? words(READING.text.join(' ')) : words(gapSrc.runs.join(' x '));
     const selecting = view === 'cloze' && vv === 'select';
-    const mat = { isText: view !== 'audio', isAudio: view === 'audio' && !fresh, isAudioEmpty: view === 'audio' && fresh,
+    const mat = { isText: view !== 'audio' || gapfill, isAudio: view === 'audio' && !fresh, isAudioEmpty: view === 'audio' && fresh,
+      audioFull: view === 'audio' && !fresh && !gapfill, audioCompact: gapfill, hasAddText: view === 'audio' && vv === 'filled', policySum: fmt(tx.audioPolicySum, { count: 2 }),
       gapBtnBg: selecting ? 'var(--primary)' : 'var(--card)', gapBtnFg: selecting ? 'var(--primary-fg)' : 'var(--fg)', gapBtnBorder: selecting ? 'var(--primary)' : 'var(--border)',
       empty: fresh, filled: !fresh, placeholder: view === 'cloze' ? tx.clozePh : tx.passagePh, hasSteps: view === 'cloze', steps: ['step1', 'step2', 'step3'].map((k, i) => ({ n: String(i + 1), text: tx[k] })), segs,
-      footL: view === 'cloze' && made ? gapParts.join(' · ') : '', footR: fmt(tx.words, { count: textLen }),
+      footL: gapMode && gapN ? gapParts.join(' · ') : '', footR: fmt(tx.words, { count: textLen }),
       file: LISTENING.file, fileMeta: 'MP3 · 2:14 · 2.1 MB', transcript: LISTENING.transcript,
       switches: [[tx.allowPause, 1], [tx.allowSeek, 0], [tx.showTranscript, 0]].map(x => ({ label: x[0], on: !!x[1], track: x[1] ? 'var(--primary)' : 'var(--ring)', knob: x[1] ? 'var(--primary-fg)' : '#fff', side: x[1] ? 'flex-end' : 'flex-start' })) };
 
@@ -703,7 +751,7 @@ class Component extends DCLogic {
       ring: o[1] ? 'var(--success)' : 'var(--ring)', dot: o[1] ? 'var(--success)' : 'transparent', focus: o[2] === 'focus' ? '0 0 0 2px var(--focus)' : 'none' }));
     const closedQ = (no, ty, title) => ({ closed: true, open: false, no: String(no), icon: TY[ty][2], plain: true, hasWord: false, title, pts: fmt(tx.pts, { count: 1 }), go: noop, cur: 'default' });
     let cards = [];
-    if (view === 'passage' || view === 'audio') {
+    if ((view === 'passage' || view === 'audio') && !gapfill) {
       const first = view === 'passage' ? firstReading : firstListening, n = view === 'passage' ? nReading : nListening;
       const options = unfinished ? data.options.map((o, i) => (i === 2 ? ['', 0, 'error'] : o)) : data.options;
       cards = data.qs.slice(0, n).map((q, i) => i === 0
@@ -711,25 +759,28 @@ class Component extends DCLogic {
             options: optRows(options), hasError: unfinished, error: tx.optionRequired, hasHelp: false, help: '', hasTools: false, hasAi: false, hasAlso: false, hasAiPanel: false, aiItems: [], aiNote: '', hasExplain: !unfinished, explain: data.explain }
         : closedQ(first + i, q[0], q[1]));
     }
-    if (view === 'cloze') {
-      cards = CLOZE.gaps.slice(0, made).map((g, i) => {
-        const no = firstCloze + i, wrong = wrongOf(i);
+    // the sentence a gap sits in: the end of the run before it and the start of the run after
+    const tail = str => { const m = str.match(/[.?!]\s+(?=[^.?!]*$)/); return m ? str.slice(m.index + m[0].length) : str; };
+    const head = str => { const h = str.match(/^[^.?!]*[.?!]?/)[0]; return h + (/[.?!]$/.test(h) ? '' : ' …'); };
+    if (gapMode) {
+      cards = gapSrc.gaps.slice(0, gapN).map((g, i) => {
+        const no = gapFirst + i, wrong = gapWrong(i);
         if (i !== openGap) return { closed: true, open: false, no: String(no), icon: wrong.length ? 'circle-dot' : 'text-cursor-input', plain: false, hasWord: true, word: g[0], sum: wrong.length ? wrong.join(', ') : tx.typedSum, title: '', pts: fmt(tx.pts, { count: 1 }), go: pickGap(i), cur: 'pointer' };
         const rows = [0, 1, 2, 3].map(() => ['', 0]);
         rows[g[2]] = [g[0], 1];
         let w = 0;
         rows.forEach((r, j) => { if (j !== g[2] && wrong[w]) { rows[j] = [wrong[w], 0]; w += 1; } });
         if (!wrong.length) rows[rows.findIndex(r => !r[0])][2] = 'focus';
-        return { closed: false, open: true, no: String(no), head: fmt(tx.gapHead, { number: no }), hasType: false, headPhone: true, icon: '', type: '', hasContext: true, ctxA: '… ' + CLOZE.runs[i].split('. ').pop(), ctxB: CLOZE.runs[i + 1].split('.')[0] + ' …',
+        return { closed: false, open: true, no: String(no), head: fmt(tx.gapHead, { number: no }), hasType: false, headPhone: true, icon: '', type: '', hasContext: true, ctxA: '… ' + tail(gapSrc.runs[i]), ctxB: head(gapSrc.runs[i + 1]),
           promptFirst: false, promptLast: true, prompt: wrong.length ? tx.gapPromptChoice : tx.gapPromptTyped, options: optRows(rows), hasError: false, error: '', hasHelp: !wrong.length, help: tx.typedHelp, hasTools: true, hasAi: true, hasAlso: !wrong.length,
           hasAiPanel: asking && i === 2, aiItems: AI_ITEMS.map((x, j) => ({ text: x[0], why: x[vi ? 1 : 2], pin: j === 0, label: x[3] ? tx.aiAdded : tx.aiAdd, icon: x[3] ? 'check' : 'plus', fg: x[3] ? 'var(--muted-fg)' : 'var(--fg)' })), aiNote: fmt(tx.aiCredits, { credits: 1, left: 142 }), hasExplain: false, explain: '' };
       });
     }
-    const qs = { heading: view === 'passage' ? tx.qHeadingReading : view === 'audio' ? tx.qHeadingListening : tx.gapsHeading,
-      empty: cards.length === 0, emptyIcon: view === 'cloze' ? 'text-cursor-input' : 'list-plus', emptyText: view === 'cloze' ? tx.gapsEmpty : tx.qEmpty, cards,
-      hasAdd: view !== 'cloze', addLabel: view === 'audio' ? tx.addHereListening : tx.addHereReading,
+    const qs = { heading: gapMode ? tx.gapsHeading : view === 'passage' ? tx.qHeadingReading : tx.qHeadingListening,
+      empty: cards.length === 0, emptyIcon: gapMode ? 'text-cursor-input' : 'list-plus', emptyText: gapMode ? tx.gapsEmpty : tx.qEmpty, cards,
+      hasAdd: !gapMode, addLabel: view === 'audio' ? tx.addHereListening : tx.addHereReading,
       types: ['single', 'multi', 'tf', 'fill', 'short'].map(k => ({ label: TY[k][li], icon: TY[k][2] })).concat([{ label: tx.moreTypes, icon: 'ellipsis' }, { label: tx.fromBank, icon: 'library' }]),
-      hasGapHint: view === 'cloze' && made > 0 };
+      hasGapHint: gapMode && gapN > 0 };
 
     // pins and notes
     const noteList = NOTES[scr + ':' + vr] || [];
@@ -743,13 +794,13 @@ class Component extends DCLogic {
 
     const W = s.stageW || 1280;
     const names = { add: 'Add menu', passage: 'Passage', cloze: 'Cloze', audio: 'Recording' };
-    const tabDefault = fresh || selecting || (view === 'cloze' && vv === 'done') ? 'mat' : 'qs';
+    const tabDefault = fresh || selecting || gapfill || (view === 'cloze' && vv === 'done') ? 'mat' : 'qs';
     const phoneTab = s.phoneTab || tabDefault;
-    const tabs = [['mat', ws.kind, KIND[kindKey][1]], ['qs', view === 'cloze' ? fmt(tx.tabGaps, { count }) : fmt(tx.tabQuestions, { count }), view === 'cloze' ? 'text-cursor-input' : 'list']].map(x => { const sel = x[0] === phoneTab; return { label: x[1], icon: x[2], on: sel, pick: () => this.setState({ phoneTab: x[0] }), bg: sel ? 'var(--card)' : 'transparent', fg: sel ? 'var(--fg)' : 'var(--muted-fg)', ring: sel ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+    const tabs = [['mat', ws.kind, KIND[kindKey][1]], ['qs', gapMode ? fmt(tx.tabGaps, { count }) : fmt(tx.tabQuestions, { count }), gapMode ? 'text-cursor-input' : 'list']].map(x => { const sel = x[0] === phoneTab; return { label: x[1], icon: x[2], on: sel, pick: () => this.setState({ phoneTab: x[0] }), bg: sel ? 'var(--card)' : 'transparent', fg: sel ? 'var(--fg)' : 'var(--muted-fg)', ring: sel ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
     const mk = (w, h, sc, phone, sub) => ({
       w, minH: h, hCss: phone && scr === 'add' ? '800px' : 'auto', s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: names[scr] + ' · ' + w,
       desk: !phone, phone, pins: s.anno && !phone, showMat: !phone || phoneTab === 'mat', showQs: !phone || phoneTab === 'qs', sheet: phone && scr === 'add',
-      tools: phone ? ['bold', 'italic', 'list'] : ['bold', 'italic', 'underline', 'list', 'list-ordered', 'image'], ptsBox: phone ? fmt(tx.pts, { count: 1 }) : '1',
+      tools: phone ? ['bold', 'italic', 'list'] : ['bold', 'italic', 'underline', 'list', 'list-ordered', 'image', 'audio-lines'], ptsBox: phone ? fmt(tx.pts, { count: 1 }) : '1',
       barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px 14px 24px' : '20px 28px 28px', wsTitle: phone ? '18px' : '19px',
       smH: phone ? '40px' : '30px', aiBtnH: phone ? '40px' : '28px', toolH: phone ? '36px' : '28px', btnH: phone ? '44px' : '36px', swH: phone ? '36px' : '24px', fieldH: phone ? '44px' : '38px', rowH: phone ? '48px' : '42px', optH: phone ? '46px' : '40px',
       textMin: phone ? '240px' : '300px', emptyPad: phone ? '24px 16px' : '32px 20px'
@@ -761,7 +812,7 @@ class Component extends DCLogic {
       add: [['menu', 'Menu open']],
       passage: [['empty', 'Just added'], ['filled', 'Four questions'], ['unfinished', 'A question not finished']],
       cloze: [['empty', '1 · Just added'], ['select', '2 · A word selected'], ['made', '3 · Gap made'], ['suggest', '4 · AI suggestions'], ['done', '5 · Five gaps']],
-      audio: [['empty', 'Just added'], ['filled', 'Four questions']]
+      audio: [['empty', 'Just added'], ['filled', 'Four questions'], ['gapfill', 'Listen and fill the gaps']]
     };
     const ctl = [{ label: 'Screen', opts: this.seg([['add', 'Add menu'], ['passage', 'Passage'], ['cloze', 'Cloze'], ['audio', 'Recording']], scr, v => this.go(v)) }]
       .concat(variants[scr].length > 1 ? [{ label: 'Step', opts: this.seg(variants[scr], vr, v => this.go(scr, v)) }] : [])
@@ -774,7 +825,7 @@ class Component extends DCLogic {
     const sevTone = { High: ['var(--danger-soft)', 'var(--danger-ink)'], Medium: ['var(--warning-soft)', 'var(--warning-ink)'], Low: ['var(--muted)', 'var(--muted-fg)'] };
     return {
       theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, testTitle: TEST,
-      chips: ['Teacher › Test builder', 'Shared-context groups', 'No migration', 'One change to the contract, for AI on a gap', 'To try with teachers before it is built'],
+      chips: ['Teacher › Test builder', 'Shared-context groups', 'No migration', 'One change to the contract, for AI on a gap', 'Shown to teachers, not yet tried hands-on'],
       ctl, reset: () => this.setState({ lang: 'vi', theme: null, screen: 'cloze', variant: { ...START }, clozeOpen: null, phoneTab: null }),
       anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
       stageRef: this.stageRef, frames, tabs, rail, crumbs, ol, add, ws, save, mat, qs, pin, openAdd: () => this.go('add'),
@@ -782,9 +833,10 @@ class Component extends DCLogic {
       todayLead: TODAY_LEAD, tasks: TASKS.map(r => ({ task: r[0], today: r[1], next: r[2] })),
       problems: PROBLEMS.map((r, i) => ({ n: String(i + 1), sev: r[0], bg: sevTone[r[0]][0], fg: sevTone[r[0]][1], title: r[1], what: r[2], fix: r[3] })),
       rules: RULES.map(r => ({ rule: r[0], next: r[1] })),
+      builds: BUILDS.map(r => ({ want: r[0], how: r[1], state: r[2], tone: { ok: 'var(--accent-ink)', none: 'var(--muted-fg)', no: 'var(--warning-ink)' }[r[3]] })),
       names: NAMES.map(r => ({ what: r[0], today: r[1], vi: r[2], en: r[3] })),
       copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
-      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:' })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
       handoff: HANDOFF.map(h => ({ what: h[0], where: h[1], size: h[2] })), method: METHOD.map(m => ({ head: m[0], text: m[1] }))
     };
   }

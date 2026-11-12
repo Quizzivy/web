@@ -413,8 +413,15 @@ To view one, start the server above and open, for example,
   now, not later. The page gained that step of the cloze ("4 · AI suggestions"), with the button
   and the panel the question editor has, and says what it needs: `suggestAiDistractors` has to
   accept a gap's typed question and read the sentence around the gap, a change in `Quizzivy/sdk`
-  and `Quizzivy/api`. So the page no longer says that no operation changes. One question is
-  open: who tries it before the build.
+  and `Quizzivy/api`. So the page no longer says that no operation changes.
+  The sixth (who tries it before the build) was done another way: he showed the frames to
+  teachers. They said they could tell at a glance what to do and that it is much easier than
+  today, and added that a recording can have a cloze too, with other combinations besides. The
+  page gained a listening gap-fill (step "Listen and fill the gaps" of the recording, and a
+  fourth choice in the menu, "Bài nghe điền từ"), a row that adds a text under any recording,
+  and a table, "What a teacher can build with it", of ten tasks: six drawn, three the pane makes
+  without a drawing, and one the model cannot store (a word bank shared by all the gaps). One
+  question is open, Q8: which other tasks teachers build.
 
 ## The brand
 

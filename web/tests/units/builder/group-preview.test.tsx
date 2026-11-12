@@ -45,6 +45,67 @@ it("places shared material once before its members and links gaps to their displ
   expect(screen.getByText("Nghe thử không tính lượt làm bài.")).toBeVisible();
 });
 
+it("prints the question's number at a gap the student types, where the gap is the question's only one", () => {
+  const typed = previewQuestions[2]!.id;
+  render(
+    <StudentPreview
+      questions={[
+        previewQuestions[0]!,
+        previewQuestions[1]!,
+        {
+          id: typed,
+          sectionId: previewSection.id,
+          type: "fill_blank",
+          prompt: "Điền từ đúng vào chỗ trống này. [1]",
+          points: 1,
+          promptContent: {
+            format: "semantic_v1",
+            blocks: [
+              {
+                type: "paragraph",
+                content: [
+                  { type: "text", text: "Điền từ đúng vào chỗ trống này. ", marks: [] },
+                  { type: "gap", id: "answer", label: "1" },
+                ],
+              },
+            ],
+          },
+          blanks: [
+            {
+              id: "01935000-0000-7000-8000-000000000077",
+              ordinal: 1,
+              gapId: "answer",
+              caseSensitive: false,
+            },
+          ],
+        },
+      ]}
+      groups={[
+        {
+          ...previewGroup,
+          stimuli: [
+            {
+              ...previewGroup.stimuli[0]!,
+              gaps: [
+                {
+                  kind: "blank",
+                  gapId: "material",
+                  questionId: typed,
+                  blankGapId: "answer",
+                },
+              ],
+            },
+          ],
+        },
+      ]}
+      sections={[previewSection]}
+    />,
+  );
+  expect(
+    screen.getByRole("link", { name: "Chỗ trống 3 — chuyển đến câu 3" }),
+  ).toHaveTextContent(/^3$/);
+});
+
 it("draws the passage and the questions as the engine's panes, with nothing to answer", () => {
   render(
     <StudentPreview

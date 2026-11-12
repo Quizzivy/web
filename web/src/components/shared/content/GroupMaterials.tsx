@@ -20,7 +20,11 @@ export type GroupAudioRenderer = (
  * authorized asset bindings. A material whose title, in NFC, is `omitTitle`
  * draws no heading: the caller has already drawn those words above it.
  * Neither does a material with nothing to read. With `gapCard`, a material
- * that holds a gap is drawn in the deck's cloze card.
+ * that holds a gap is drawn in the deck's cloze card. `renderGap` is handed
+ * what the gap prints: its own label, or, given `numbers`, the number of its
+ * question when the gap is bound to a blank and is the only gap of the group
+ * that question answers. Such a gap stands for the whole question, as a gap
+ * bound to a question does, and its label tells nothing apart.
  */
 export function GroupMaterials({
   group,
@@ -29,10 +33,12 @@ export function GroupMaterials({
   onRetryMedia,
   omitTitle,
   gapCard = false,
+  numbers,
 }: Readonly<{
   group: StudentGroup;
   renderAudio: GroupAudioRenderer;
   renderGap: (gap: MaterialGap, label: string) => ReactNode;
+  numbers?: ReadonlyMap<string, number> | undefined;
   onRetryMedia?: (() => void) | undefined;
   omitTitle?: string | undefined;
   gapCard?: boolean;
@@ -46,6 +52,20 @@ export function GroupMaterials({
     () => new Map(group.recordings.map((recording) => [recording.assetId, recording])),
     [group.recordings],
   );
+  const answered = useMemo(() => {
+    const count = new Map<string, number>();
+    for (const material of group.stimuli)
+      for (const gap of material.gaps)
+        count.set(gap.questionId, (count.get(gap.questionId) ?? 0) + 1);
+    return count;
+  }, [group.stimuli]);
+  const printed = (gap: MaterialGap, label: string) => {
+    const number =
+      gap.kind === "blank" && answered.get(gap.questionId) === 1
+        ? numbers?.get(gap.questionId)
+        : undefined;
+    return number === undefined ? label : String(number);
+  };
   const renderAsset: AssetRenderer = (node) => {
     const asset = assets.get(node.assetId);
     const recording = recordings.get(node.assetId);
@@ -71,7 +91,7 @@ export function GroupMaterials({
             renderGap={(gap) => {
               const binding = gaps.get(gap.id);
               return binding ? (
-                renderGap(binding, gap.label)
+                renderGap(binding, printed(binding, gap.label))
               ) : (
                 <span className="content-gap">{nfc(gap.label)}</span>
               );

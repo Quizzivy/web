@@ -425,9 +425,9 @@ To view one, start the server above and open, for example,
   Teachers then asked how one who has chosen one of the menu's four changes to another, and
   whether that means deleting. It does not: every pane now shows a row for the part it does not
   have ("Thêm bản ghi âm" above a text, "Thêm đoạn văn" under a recording), a part left empty is
-  not kept, and a part with content is removed from its own card's menu. Q9 asks the owner
-  whether that row is enough or the pane should have a switch of kinds; it is the one question
-  open.
+  not kept, and a part with content is removed from its own card's menu. He decided that the
+  row is enough and the pane needs no switch of kinds (Q9). All nine questions on the page are
+  settled; the page itself still waits for his approval.
 
 ## The brand
 

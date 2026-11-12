@@ -401,7 +401,7 @@ To view one, start the server above and open, for example,
   cards on the right, two tabs on a phone; a button under the outline that names a passage, a
   cloze and a recording; and a gap made by selecting a word, with its question made in the same
   write. Frames at 1280 and 360, light and dark, Vietnamese and English; a frame is as tall as
-  its page. No operation and no stored shape changes, and no exported page changes. It is a
+  its page. No stored shape changes, and no exported page changes. It is a
   proposal until Thuong approves it, and its seven questions for him are on the page. He decided
   the first two the same day, as drawn: a gap with no wrong options is one the student types,
   and the builder and the bank both use the three names. The page gained a table of the wording
@@ -409,6 +409,12 @@ To view one, start the server above and open, for example,
   He also decided the third: the Shared content dialog goes, with the group row's shared-content
   line and its menu item, when the page is built. And the fourth and fifth: two buttons under the
   outline, not one menu for everything; and a gap's word on a row picked at random among four.
+  The seventh he decided against the first drawing: the gap's card offers the AI's wrong options
+  now, not later. The page gained that step of the cloze ("4 · AI suggestions"), with the button
+  and the panel the question editor has, and says what it needs: `suggestAiDistractors` has to
+  accept a gap's typed question and read the sentence around the gap, a change in `Quizzivy/sdk`
+  and `Quizzivy/api`. So the page no longer says that no operation changes. One question is
+  open: who tries it before the build.
 
 ## The brand
 

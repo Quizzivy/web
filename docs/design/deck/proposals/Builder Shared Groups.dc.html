@@ -31,7 +31,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · Teacher › Test builder · Redesign proposal · 12 Nov 2026</span>
   </div>
   <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">A passage, a cloze or a recording, with its questions beside it</h1>
-  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">Teachers tell the owner that building questions on shared material is hard: nobody works out a cloze without being shown, and moving around a group and adding to it is confusing. This page redraws that work as one screen that looks like the student’s, with the material on one side, its questions on the other, and a gap made by selecting a word. Below the drawing it reads how the builder works today and names what gets in a teacher’s way. What is stored, and every operation of the server, stay as they are.</p>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">Teachers tell the owner that building questions on shared material is hard: nobody works out a cloze without being shown, and moving around a group and adding to it is confusing. This page redraws that work as one screen that looks like the student’s, with the material on one side, its questions on the other, and a gap made by selecting a word. Below the drawing it reads how the builder works today and names what gets in a teacher’s way. What is stored stays as it is, and so does every operation of the server but one: for the AI to suggest a gap’s wrong options, its operation has to read the gap’s sentence.</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px">
     <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
   </div>
@@ -61,6 +61,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
       <li>The word becomes the correct answer and the gap takes its question’s number. With wrong options typed, students choose; with none, they type the word.</li>
       <li><span style="color:var(--fg)">Nothing is linked by hand.</span> There is no list to pick a question from, so a gap cannot be left without one.</li>
       <li>Canvas New Quizzes makes a blank the same way: the word is marked in the sentence, and each blank then says how it is answered.</li>
+      <li>The gap’s card can ask the AI for wrong options, with the panel the question editor has today. It is the one part that needs the contract to change.</li>
     </ul>
   </div>
 </section>
@@ -224,7 +225,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                                     <sc-for list="{{ c.options }}" as="op" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:8px;min-height:{{ f.optH }};padding:3px 10px 3px 3px;border:1px solid {{ op.border }};border-radius:9px;background:{{ op.bg }};box-shadow:{{ op.focus }}"><span style="width:30px;height:30px;flex:none;display:grid;place-items:center"><span style="width:18px;height:18px;border-radius:50%;border:2px solid {{ op.ring }};display:grid;place-items:center"><span style="width:8px;height:8px;border-radius:50%;background:{{ op.dot }}"></span></span></span><span style="width:14px;flex:none;font-size:12.5px;color:var(--muted-fg);font-weight:600">{{ op.letter }}</span><span style="flex:1;min-width:0;font-size:14px;color:{{ op.fg }}">{{ op.text }}</span><sc-if value="{{ op.correct }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;font-weight:500;color:var(--success-ink);white-space:nowrap">{{ tx.correct }}</span></sc-if></div></sc-for>
                                     <sc-if value="{{ c.hasError }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--danger-ink)"><i class="icon-circle-alert" style="font-size:14px"></i>{{ c.error }}</span></sc-if>
                                     <sc-if value="{{ c.hasHelp }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-start;gap:7px;font-size:12.5px;line-height:1.5;color:var(--muted-fg)"><i class="icon-info" style="font-size:14px;margin-top:2px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ c.help }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.help.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.help.n }}</span></sc-if></sc-if></span></sc-if>
-                                    <sc-if value="{{ c.hasAlso }}" hint-placeholder-val="{{ false }}"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;min-height:{{ f.smH }};padding:0 8px;margin-left:-8px;border-radius:7px;font-size:12.5px;font-weight:500"><i class="icon-plus" style="font-size:13px"></i>{{ tx.alsoAccept }}</span></sc-if>
+                                    <sc-if value="{{ c.hasTools }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:6px 10px;flex-wrap:wrap"><sc-if value="{{ c.hasAi }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.smH }};padding:0 10px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-sparkles" style="font-size:14px;color:var(--accent-ink)"></i>{{ tx.aiSuggest }}</span></sc-if><sc-if value="{{ c.hasAlso }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;min-height:{{ f.smH }};padding:0 8px;border-radius:7px;font-size:12.5px;font-weight:500"><i class="icon-plus" style="font-size:13px"></i>{{ tx.alsoAccept }}</span></sc-if></div></sc-if><sc-if value="{{ c.hasAiPanel }}" hint-placeholder-val="{{ false }}"><div role="region" aria-label="{{ tx.aiTitle }}" style="display:flex;flex-direction:column;gap:8px;padding:12px;border-radius:10px;border:1px solid var(--border);background:var(--accent-soft)"><div style="display:flex;align-items:center;justify-content:space-between;gap:8px"><span style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:600;color:var(--accent-ink)"><i class="icon-sparkles" style="font-size:13px"></i>{{ tx.aiTitle }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.ai.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.ai.n }}</span></sc-if></sc-if></span><span role="img" aria-label="{{ tx.aiClose }}" style="width:26px;height:26px;flex:none;display:grid;place-items:center;border-radius:6px;color:var(--muted-fg)"><i class="icon-x" style="font-size:14px"></i></span></div><sc-for list="{{ c.aiItems }}" as="ai" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;padding:8px 8px 8px 12px;border-radius:8px;border:1px solid var(--border);background:var(--card)"><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;line-height:1.5">{{ ai.text }}</span><span style="display:block;font-size:12px;line-height:1.5;color:var(--muted-fg);text-wrap:pretty">{{ ai.why }}</span></span><sc-if value="{{ ai.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.aiRow.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.aiRow.n }}</span></sc-if></sc-if></sc-if><span style="display:inline-flex;align-items:center;gap:5px;height:{{ f.aiBtnH }};padding:0 10px;flex:none;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap;color:{{ ai.fg }}"><i class="icon-{{ ai.icon }}" style="font-size:13px"></i>{{ ai.label }}</span></div></sc-for><span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-fg)"><i class="icon-coins" style="font-size:13px"></i>{{ c.aiNote }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.aiNeed.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.aiNeed.n }}</span></sc-if></sc-if></span></div></sc-if>
                                   </div>
                                   <sc-if value="{{ c.promptLast }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.prompt }}</span><span style="display:flex;align-items:center;min-height:{{ f.fieldH }};border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.5;background:var(--bg)">{{ c.prompt }}</span></div></sc-if>
                                   <sc-if value="{{ c.hasExplain }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.explanation }}</span><span style="display:flex;align-items:center;min-height:{{ f.fieldH }};border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.5;background:var(--bg)">{{ c.explain }}</span></div></sc-if>
@@ -337,7 +338,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1 to Q5 are decided; the other two are open.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1 to Q5 and Q7 are decided; Q6 is open. Q7 was decided against its first default, and the frames were redrawn for it.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -347,7 +348,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What it would take to build</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">No new operation and no migration: every step is a write the contract already has, and a group made in the new pane opens in today’s builder and the other way round. The work is in the web. It should be tried with teachers before it is built in full.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">No migration, and every write is one the contract already has: a group made in the new pane opens in today’s builder and the other way round. One read needs a change, the AI’s wrong options for a gap, and that starts in the contract. The rest of the work is in the web. It should be tried with teachers before it is built in full.</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:720px">
@@ -409,6 +410,12 @@ const STR = [
   ['wrongPh', 'Cloze', 'Lựa chọn sai', 'Wrong option', 'New'],
   ['typedHelp', 'Cloze', 'Chưa có lựa chọn sai nên học viên sẽ tự điền từ này. Gõ lựa chọn sai nếu muốn học viên chọn A–D.', 'No wrong options yet, so students will type this word. Type wrong options to have them choose from A–D.', 'New'],
   ['alsoAccept', 'Cloze', 'Thêm đáp án cũng đúng', 'Add another accepted answer', 'New'],
+  ['aiSuggest', 'Cloze', 'Gợi ý lựa chọn sai', 'Suggest wrong options', 'As today'],
+  ['aiTitle', 'Cloze', 'Lựa chọn sai gợi ý', 'Suggested wrong options', 'As today'],
+  ['aiAdd', 'Cloze', 'Thêm', 'Add', 'As today'],
+  ['aiAdded', 'Cloze', 'Đã thêm', 'Added', 'As today'],
+  ['aiClose', 'Cloze', 'Đóng gợi ý', 'Close suggestions', 'As today'],
+  ['aiCredits', 'Cloze', 'Đã dùng {credits} tín dụng · còn {left}', 'Used {credits} credits · {left} left', 'As today'],
   ['gapPromptChoice', 'Cloze', 'Chọn từ đúng cho chỗ trống này.', 'Choose the right word for this gap.', 'New'],
   ['gapPromptTyped', 'Cloze', 'Điền từ đúng vào chỗ trống này.', 'Type the right word for this gap.', 'New'],
   ['gapCount', 'Cloze', '{count} chỗ trống', '{count} gaps', 'New'],
@@ -466,6 +473,12 @@ const READING = { title: 'Why cities need green space', instr: 'Read the text an
 const CLOZE = { title: 'Green spaces in big cities', instr: 'Choose the best word for each gap.',
   runs: ['Green spaces matter in big cities. Parks give people a place to ', ' after work. Trees also ', ' the air cleaner. Many cities now ', ' roofs with plants, and ', ' streets are closed to cars on Sundays. Experts believe these changes will ', ' city life healthy.'],
   gaps: [['relax', ['relaxing', 'relaxed', 'relaxes'], 1], ['make', ['do', 'take', 'have'], 3], ['cover', ['covering', 'covered', 'covers'], 2], ['some', ['any', 'much', 'every'], 0], ['keep', ['keeps', 'kept', 'keeping'], 1]] };
+const AI_ITEMS = [
+  ['covers', 'Chia theo chủ ngữ số ít, trong khi “cities” là số nhiều.', 'Agrees with a singular subject, but “cities” is plural.', 1],
+  ['covering', 'Dạng V-ing, dễ chọn vì “now” đứng ngay trước.', 'An -ing form, tempting right after “now”.', 1],
+  ['covered', 'Thì quá khứ, không hợp với “now”.', 'Past tense, which does not fit “now”.', 0],
+  ['hide', 'Gần nghĩa, nhưng không đi với “roofs with plants”.', 'Close in meaning, but it does not go with “roofs with plants”.', 0]
+];
 const LISTENING = { title: 'Asking the way', instr: 'Listen to the conversation, then answer.', file: 'part-1-asking-the-way.mp3',
   transcript: 'Excuse me, how do I get to the post office? Go straight on, then turn left at the bank. It’s opposite the park.',
   qs: [['single', 'Where is the post office?'], ['single', 'Where should the man turn left?'], ['tf', 'True or False: the post office is next to the bank.'], ['short', 'What is opposite the post office?']],
@@ -493,7 +506,7 @@ const PROBLEMS = [
   ['Medium', 'One unfinished part stops everything, and the message does not say where', 'A group is saved whole, and only when every question in it is complete. Until then the page says “Chưa lưu được” and will not open another question. The reason names the rule and not the question.', 'An unfinished gap cannot exist. An unfinished question is named in the pane’s heading, which opens it, and the field is marked on its card.'],
   ['Medium', 'A question that answers a gap is locked, and the key is elsewhere', 'It cannot be dragged, moved out or deleted, and the sentence that says why sends the teacher to another screen. Its type can still be changed to one a gap cannot take; the group then stops saving with “Chỗ trống dạng trắc nghiệm cần liên kết tới một câu trắc nghiệm.”', 'The gap’s card removes the gap and its question together. A gap’s card has no type to get wrong: with wrong options it is a choice, with none it is typed.'],
   ['Medium', 'One thing has several names', 'The group is “nhóm câu dùng chung”, “nhóm câu hỏi” and “nhóm câu”. What it shares is “nội dung dùng chung” in the menu and the dialog, “ngữ liệu dùng chung” and “ngữ liệu” in the pane. “Chỗ trống” is a gap in the passage and also a blank inside a question (“Câu 2 · chỗ trống 1”). “Chuyển vào nhóm…” and “Chuyển sang nhóm…” are two commands. “Xoá nhóm” opens a dialog titled “Xoá nội dung khỏi bản nháp?”. An option is “lựa chọn” in the editor and “phương án” in the setting that keeps the order.', 'The builder says “Bài đọc”, “Bài điền từ”, “Bài nghe” and “Chỗ trống”, one name each. “Liên kết” is gone because nothing is linked by hand.'],
-  ['Medium', 'A question in a group gets a different editor', 'A question on its own has its type in a menu and its points in the heading. The same question inside a group is edited in the question bank’s editor: its type is a strip of tabs, and its points and tags are in a “Cài đặt câu hỏi” column or, on a narrow pane, a dialog.', 'A card in the stack has the fields of a question on its own, in the same places.'],
+  ['Medium', 'A question in a group gets a different editor', 'A question on its own has its type in a menu and its points in the heading. The same question inside a group is edited in the question bank’s editor: its type is a strip of tabs, and its points and tags are in a “Cài đặt câu hỏi” column or, on a narrow pane, a dialog. It has no AI help: “Gợi ý lựa chọn sai” and the written explanation are given to a question on its own only.', 'A card in the stack has the fields of a question on its own, in the same places, and a gap’s card has “Gợi ý lựa chọn sai”.'],
   ['Low', 'Controls that hide, or do not say why', 'The “…” of a group’s row appears on hover, and for an empty group it is the only way to the passage. “Chuyển sang nhóm…” is off unless the test has two groups, with no reason given. After a group or a question is added, the cursor stays where it was.', 'The ways in are buttons that are always there, and adding puts the cursor in the new thing.'],
   ['Low', 'The publish check ticks a line it does not check', '“Mọi nhóm đều có tiêu đề hoặc hướng dẫn” is shown as passed whenever the test has a group.', 'Outside this drawing. The check should list each unfinished card and open it, as it does for questions on their own.']
 ];
@@ -510,6 +523,7 @@ const RULES = [
   ['The group has a title and so has each material; both are required.', 'One title, edited in the pane’s heading and written to both while the group has one material. A new one starts as “Bài đọc mới”, selected, so typing replaces it.'],
   ['A group may hold up to 16 materials, 16 recordings and 200 questions.', 'The limits stay. A group with more than one material shows them as tabs above the text; this is not drawn, and such groups exist only where a teacher made them in today’s pane. A group with no material shows “Bài đọc” or “Bài nghe” to add in its left half.'],
   ['Moving a question from the bank or the test into a group copies it; the original stays (E1).', 'Unchanged, with the messages the builder has today. A question is moved by dragging its card or outline row, or from the card’s menu.'],
+  ['The AI suggests wrong options for a stored single or multiple choice question that has a key, from its prompt, its key and its options (suggestAiDistractors). Nothing is saved until the teacher adds one.', 'The gap’s card has the same button and panel. Two things the operation does not do yet. A new gap is a typed question until it has a wrong option, and the operation refuses any question that is not a choice. And it reads the question by itself, while a gap’s sentence is in the passage. So for a question that answers a gap it has to take the accepted word as the key and read the sentence around the gap: a change to the contract and the server, the only one in this proposal. Whether it reaches a question that belongs to a group is to be checked with it.'],
   ['A recording carries its listening rules: plays, pausing, skipping, the transcript.', 'The same four, in the left half of the pane, with today’s labels and defaults. For a recording the group is made empty and the file is attached when it is chosen.']
 ];
 // what the builder and the bank call things after Q2: [what is named, today, Vietnamese, English]
@@ -532,7 +546,7 @@ const QUESTIONS = [
   ['Q4 · Adding', 'Two buttons under the outline, or one “Thêm” menu for everything?', 'A question on its own is the most frequent thing added, and one menu would make it two presses. A second button keeps it at one and gives the three a name of their own. It does make the button’s label long.', 'Two buttons: “Thêm câu hỏi” as today, and “Bài đọc, điền từ, bài nghe” with the menu. On a phone they are one “+” that opens a sheet.', 'Thuong, 12 Nov 2026'],
   ['Q5 · The answer’s row', 'Should the word land on a row picked at random?', 'A gap’s question is made from the word, so the word would always be its first option. Options are shuffled for students unless the teacher keeps them in order; where they are kept, every answer of the cloze would be A.', 'Yes, among four rows. The teacher can drag it or mark another row correct.', 'Thuong, 12 Nov 2026'],
   ['Q6 · Trying it', 'Which five teachers can try this before it is built in full?', 'The complaints reach this page through the owner, and the steps above are counted from code. Whether a teacher now finds the cloze unaided is a thing to watch, not to argue.', 'A test with five teachers on a clickable build of the pane: a passage with four questions, a cloze with five gaps, one gap taken out. The redesign passes if four of the five finish the cloze without help.'],
-  ['Q7 · Later', 'Should the card offer to suggest wrong options, and the pane to draft questions from the passage?', 'The builder already has AI drafting for questions on their own; a gap’s wrong options are the part of a cloze that takes longest to write.', 'Not in this proposal. The card leaves room for it under the options.']
+  ['Q7 · AI', 'Should the gap’s card offer to suggest wrong options?', 'A gap’s wrong options are the part of a cloze that takes longest to write, and the builder already suggests them for a question on its own. The first drawing left it for later, because it is the one thing here the contract cannot do yet.', 'Yes, in this proposal: step 4 of the cloze. It needs the AI operation to accept a gap’s typed question and to read the sentence around the gap. Drafting whole questions from a passage is not part of this; the builder’s Generate already writes into a passage’s group.', 'Thuong, 12 Nov 2026']
 ];
 // [change, where, size]
 const HANDOFF = [
@@ -541,6 +555,8 @@ const HANDOFF = [
   ['A question card: one line when closed, the fields of a question on its own when open', 'GroupComposer, BuilderQuestionEditor', 'Medium'],
   ['“Tạo chỗ trống”: from a selection, the gap, its question and the link as one change of the group; the gap’s card; removal with undo; questions kept in the order of the gaps', 'the content editor’s gap commands, GapBindings (goes), question-groups/model', 'Medium'],
   ['The recording’s card in the pane, from the dialog’s fields', 'SharedContentDialog (AudioFields)', 'Small'],
+  ['AI on a gap, in the web: the card’s button and panel, taken from the question editor', 'OptionsEditor (WithDistractors), AiDistractorsPanel', 'Small'],
+  ['AI on a gap, in the contract and the server: suggestAiDistractors accepts a gap’s typed question, takes its word as the key and reads the sentence around the gap', 'Quizzivy/sdk first, then Quizzivy/api', 'Contract'],
   ['The unfinished question named in the pane’s heading and marked in the outline', 'useGroupEditor, OutlineGroupRow', 'Small'],
   ['Retire the Shared content dialog, its menu item and the outline’s content line', 'SharedContentDialog, OutlineGroupRow', 'Small'],
   ['The strings above, and the renames of the names table in the builder and the bank: about ninety strings, in both languages', 'the two locale files, under builder and groups', 'Medium'],
@@ -548,9 +564,9 @@ const HANDOFF = [
   ['The deck draws the builder’s group row and the dialog (DG-186, DG-187). The design team redraws them from this page before the code is written', 'Quizzivy Teacher, in Claude Design', 'Design']
 ];
 const METHOD = [
-  ['How this was read.', 'From the web’s code on develop at bc20eec4 (the builder page, the outline, the group pane, the Shared content dialog, the group composer, the gap list, the group and question rules) and from the contract’s operations for groups. The app was not run: its package registry needs a token this machine does not have. The complaints are the owner’s account of what teachers tell him; no teacher was interviewed for this page.'],
+  ['How this was read.', 'From the web’s code on develop at bc20eec4 (the builder page, the outline, the group pane, the Shared content dialog, the group composer, the gap list, the group and question rules), from the contract’s operations for groups, and, for the AI, from the contract and the server’s handler for wrong options. The app was not run: its package registry needs a token this machine does not have. The complaints are the owner’s account of what teachers tell him; no teacher was interviewed for this page.'],
   ['What it borrows.', 'Canvas New Quizzes marks a blank inside the sentence and shows a stimulus beside the questions attached to it. The student’s side of Quizzivy already works that way; this page makes the teacher’s side match it.'],
-  ['What it leaves alone.', 'The builder’s title bar, sections, drag and drop, the question bank picker, preview and publish, and every operation and stored shape. A question on its own is edited as it is today.']
+  ['What it leaves alone.', 'The builder’s title bar, sections, drag and drop, the question bank picker, preview and publish, every stored shape, and every operation but the AI’s wrong options. A question on its own is edited as it is today.']
 ];
 // notes by screen and step: [the pin’s place, the note]
 const NOTES = {
@@ -561,11 +577,12 @@ const NOTES = {
   'cloze:empty': [['head', 'A cloze is the same pane as a passage. Only its start differs.'], ['mat', 'The three steps are written in the empty text and leave when the text is typed. “Tạo chỗ trống” is a named button in the toolbar, not an icon.'], ['qEmpty', 'The gaps will be listed here. Nothing has to be made here first.']],
   'cloze:select': [['head', 'Two gaps are made, and the teacher selects the next word.'], ['sel', '“Tạo chỗ trống” appears at the selection. The toolbar’s button does the same, for the keyboard and for a phone, where the system’s own menu sits above the selected word.'], ['hint', 'The right half keeps saying how the next gap is made.']],
   'cloze:made': [['mat', 'The word is now a gap carrying its question’s number, 11. The footer counts the gaps and how each is answered.'], ['card', 'The gap’s card opens with the word as the correct answer and the cursor in the first empty row. The sentence is quoted, so the card reads alone on a phone.'], ['help', 'A gap is complete from the moment it is made: with no wrong options, students type the word. Typing one turns it into a choice. No unfinished gap can stop the group from saving.'], ['hint', 'A gap and its card are one thing: pressing either shows the other.']],
+  'cloze:suggest': [['card', 'The gap’s card has “Gợi ý lựa chọn sai”, the button a question on its own has in the builder today. A group’s questions have no AI help now.'], ['ai', 'The panel is the question editor’s: each suggestion with why a learner might pick it, what the call cost, and a close button. Nothing is saved by asking.'], ['aiRow', '“Thêm” puts the word in the next empty row. With its first wrong option the gap becomes one the student chooses, as when an option is typed.'], ['aiNeed', 'The one part that needs the contract to change. Today the operation reads a stored choice question by itself. For a gap it has to take the gap’s word as the key and read the sentence around it.']],
   'cloze:done': [['mat', 'Five gaps, numbered 9 to 13 as the student will see them.'], ['card', 'A finished gap: the word and three wrong options. A closed card shows the word and its wrong options, so the whole set can be checked at a glance.'], ['hint', 'More gaps can be made at any time. The numbers after a new gap move up by themselves.']],
   'audio:empty': [['head', 'The same pane for a recording.'], ['mat', 'The file is chosen in the left half, from the computer or from Media, as today.'], ['addRow', 'Questions can be written before the file is chosen.']],
   'audio:filled': [['head', 'One title, and the instructions students see.'], ['mat', 'The file, a player and the listening rules are the left half, so the teacher can listen while writing the questions.'], ['card', 'Questions open in place, as for a passage.'], ['addRow', 'The next question is added at the end of the stack.']]
 };
-const PIN_KEYS = ['addQ', 'addMore', 'menu', 'head', 'status', 'mat', 'sel', 'qEmpty', 'card', 'help', 'addRow', 'hint'];
+const PIN_KEYS = ['addQ', 'addMore', 'menu', 'head', 'status', 'mat', 'sel', 'qEmpty', 'card', 'help', 'ai', 'aiRow', 'aiNeed', 'addRow', 'hint'];
 const START = { add: 'menu', passage: 'filled', cloze: 'made', audio: 'filled' };
 
 class Component extends DCLogic {
@@ -600,14 +617,15 @@ class Component extends DCLogic {
     const kindKey = view === 'passage' ? 'reading' : view === 'audio' ? 'listening' : 'cloze';
     const fresh = vv === 'empty';
     const nReading = view === 'passage' && fresh ? 0 : 4;
-    const made = view === 'cloze' ? { empty: 0, select: 2, made: 3, done: 5 }[vv] : 5;
+    const made = view === 'cloze' ? { empty: 0, select: 2, made: 3, suggest: 3, done: 5 }[vv] : 5;
     const nListening = view === 'audio' && fresh ? 0 : 4;
     const firstReading = 5, firstCloze = firstReading + nReading, firstListening = firstCloze + made;
     const total = 4 + nReading + made + nListening;
     const secName = n => (vi ? 'Phần ' + n : 'Section ' + n);
-    // a gap made a moment ago has no wrong options yet
-    const wrongOf = i => (view === 'cloze' && vv === 'made' && i === 2 ? [] : CLOZE.gaps[i][1]);
-    const openDefault = view === 'cloze' ? (vv === 'made' ? 2 : vv === 'done' ? 0 : -1) : -1;
+    // a gap made a moment ago has no wrong options yet; with the AI's panel open it has the two that were added
+    const asking = view === 'cloze' && vv === 'suggest';
+    const wrongOf = i => (view === 'cloze' && i === 2 && vv === 'made' ? [] : asking && i === 2 ? AI_ITEMS.filter(x => x[3]).map(x => x[0]) : CLOZE.gaps[i][1]);
+    const openDefault = view === 'cloze' ? (vv === 'made' || vv === 'suggest' ? 2 : vv === 'done' ? 0 : -1) : -1;
     const openGap = view === 'cloze' && s.clozeOpen != null && s.clozeOpen < made ? s.clozeOpen : openDefault;
     const unfinished = view === 'passage' && vv === 'unfinished';
 
@@ -690,7 +708,7 @@ class Component extends DCLogic {
       const options = unfinished ? data.options.map((o, i) => (i === 2 ? ['', 0, 'error'] : o)) : data.options;
       cards = data.qs.slice(0, n).map((q, i) => i === 0
         ? { closed: false, open: true, no: String(first), head: fmt(tx.qHead, { number: first }), hasType: true, headPhone: false, icon: TY[q[0]][2], type: TY[q[0]][li], hasContext: false, promptFirst: true, promptLast: false, prompt: q[1],
-            options: optRows(options), hasError: unfinished, error: tx.optionRequired, hasHelp: false, help: '', hasAlso: false, hasExplain: !unfinished, explain: data.explain }
+            options: optRows(options), hasError: unfinished, error: tx.optionRequired, hasHelp: false, help: '', hasTools: false, hasAi: false, hasAlso: false, hasAiPanel: false, aiItems: [], aiNote: '', hasExplain: !unfinished, explain: data.explain }
         : closedQ(first + i, q[0], q[1]));
     }
     if (view === 'cloze') {
@@ -703,7 +721,8 @@ class Component extends DCLogic {
         rows.forEach((r, j) => { if (j !== g[2] && wrong[w]) { rows[j] = [wrong[w], 0]; w += 1; } });
         if (!wrong.length) rows[rows.findIndex(r => !r[0])][2] = 'focus';
         return { closed: false, open: true, no: String(no), head: fmt(tx.gapHead, { number: no }), hasType: false, headPhone: true, icon: '', type: '', hasContext: true, ctxA: '… ' + CLOZE.runs[i].split('. ').pop(), ctxB: CLOZE.runs[i + 1].split('.')[0] + ' …',
-          promptFirst: false, promptLast: true, prompt: wrong.length ? tx.gapPromptChoice : tx.gapPromptTyped, options: optRows(rows), hasError: false, error: '', hasHelp: !wrong.length, help: tx.typedHelp, hasAlso: !wrong.length, hasExplain: false, explain: '' };
+          promptFirst: false, promptLast: true, prompt: wrong.length ? tx.gapPromptChoice : tx.gapPromptTyped, options: optRows(rows), hasError: false, error: '', hasHelp: !wrong.length, help: tx.typedHelp, hasTools: true, hasAi: true, hasAlso: !wrong.length,
+          hasAiPanel: asking && i === 2, aiItems: AI_ITEMS.map((x, j) => ({ text: x[0], why: x[vi ? 1 : 2], pin: j === 0, label: x[3] ? tx.aiAdded : tx.aiAdd, icon: x[3] ? 'check' : 'plus', fg: x[3] ? 'var(--muted-fg)' : 'var(--fg)' })), aiNote: fmt(tx.aiCredits, { credits: 1, left: 142 }), hasExplain: false, explain: '' };
       });
     }
     const qs = { heading: view === 'passage' ? tx.qHeadingReading : view === 'audio' ? tx.qHeadingListening : tx.gapsHeading,
@@ -732,7 +751,7 @@ class Component extends DCLogic {
       desk: !phone, phone, pins: s.anno && !phone, showMat: !phone || phoneTab === 'mat', showQs: !phone || phoneTab === 'qs', sheet: phone && scr === 'add',
       tools: phone ? ['bold', 'italic', 'list'] : ['bold', 'italic', 'underline', 'list', 'list-ordered', 'image'], ptsBox: phone ? fmt(tx.pts, { count: 1 }) : '1',
       barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px 14px 24px' : '20px 28px 28px', wsTitle: phone ? '18px' : '19px',
-      smH: phone ? '40px' : '30px', toolH: phone ? '36px' : '28px', btnH: phone ? '44px' : '36px', swH: phone ? '36px' : '24px', fieldH: phone ? '44px' : '38px', rowH: phone ? '48px' : '42px', optH: phone ? '46px' : '40px',
+      smH: phone ? '40px' : '30px', aiBtnH: phone ? '40px' : '28px', toolH: phone ? '36px' : '28px', btnH: phone ? '44px' : '36px', swH: phone ? '36px' : '24px', fieldH: phone ? '44px' : '38px', rowH: phone ? '48px' : '42px', optH: phone ? '46px' : '40px',
       textMin: phone ? '240px' : '300px', emptyPad: phone ? '24px 16px' : '32px 20px'
     });
     // a frame is as tall as its page, and never shorter than a screen
@@ -741,7 +760,7 @@ class Component extends DCLogic {
     const variants = {
       add: [['menu', 'Menu open']],
       passage: [['empty', 'Just added'], ['filled', 'Four questions'], ['unfinished', 'A question not finished']],
-      cloze: [['empty', '1 · Just added'], ['select', '2 · A word selected'], ['made', '3 · Gap made'], ['done', '4 · Five gaps']],
+      cloze: [['empty', '1 · Just added'], ['select', '2 · A word selected'], ['made', '3 · Gap made'], ['suggest', '4 · AI suggestions'], ['done', '5 · Five gaps']],
       audio: [['empty', 'Just added'], ['filled', 'Four questions']]
     };
     const ctl = [{ label: 'Screen', opts: this.seg([['add', 'Add menu'], ['passage', 'Passage'], ['cloze', 'Cloze'], ['audio', 'Recording']], scr, v => this.go(v)) }]
@@ -755,7 +774,7 @@ class Component extends DCLogic {
     const sevTone = { High: ['var(--danger-soft)', 'var(--danger-ink)'], Medium: ['var(--warning-soft)', 'var(--warning-ink)'], Low: ['var(--muted)', 'var(--muted-fg)'] };
     return {
       theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, testTitle: TEST,
-      chips: ['Teacher › Test builder', 'Shared-context groups', 'No new operation, no migration', 'To try with teachers before it is built'],
+      chips: ['Teacher › Test builder', 'Shared-context groups', 'No migration', 'One change to the contract, for AI on a gap', 'To try with teachers before it is built'],
       ctl, reset: () => this.setState({ lang: 'vi', theme: null, screen: 'cloze', variant: { ...START }, clozeOpen: null, phoneTab: null }),
       anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
       stageRef: this.stageRef, frames, tabs, rail, crumbs, ol, add, ws, save, mat, qs, pin, openAdd: () => this.go('add'),

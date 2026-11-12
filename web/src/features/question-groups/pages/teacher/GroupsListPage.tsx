@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState } from "react";
+import { useMemo, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { useNavigate } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -6,7 +6,12 @@ import type { TFunction } from "i18next";
 import { Archive, Copy, Plus, Trash2, Undo2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Segmented } from "@/components/ui/segmented";
 import { BulkActions } from "@/components/shared/BulkActions";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
@@ -35,7 +40,8 @@ import {
   listGroups,
   type GroupSummary,
 } from "../../api";
-import { emptyGroup } from "../../model";
+import { startBundle, type GroupStart } from "../../kinds";
+import { StartMenuItems } from "../../components/StartMenu";
 import { BankNavigation } from "../../components/BankNavigation";
 
 const QUERY_KEY = ["teacher-groups"] as const;
@@ -123,7 +129,7 @@ function EmptyGroups({
   search: string;
   status: "active" | "archived";
   creating: boolean;
-  onCreate: () => void;
+  onCreate: (start: GroupStart) => void;
 }>) {
   const { t } = useTranslation();
   if (search !== "") return <>{t("groups.empty")}</>;
@@ -131,15 +137,37 @@ function EmptyGroups({
   return (
     <span>
       {t("groups.none")}{" "}
-      <button
-        type="button"
-        disabled={creating}
-        className="text-fg cursor-pointer underline underline-offset-2 disabled:cursor-default disabled:opacity-60"
-        onClick={onCreate}
-      >
-        {t("groups.create")}
-      </button>
+      <StartMenu disabled={creating} onPick={onCreate}>
+        <button
+          type="button"
+          disabled={creating}
+          className="text-fg cursor-pointer underline underline-offset-2 disabled:cursor-default disabled:opacity-60"
+        >
+          {t("groups.create")}
+        </button>
+      </StartMenu>
     </span>
+  );
+}
+
+function StartMenu({
+  disabled,
+  onPick,
+  children,
+}: Readonly<{
+  disabled: boolean;
+  onPick: (start: GroupStart) => void;
+  children: ReactNode;
+}>) {
+  return (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild disabled={disabled}>
+        {children}
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end" className="w-87 rounded-xl p-1.5">
+        <StartMenuItems onPick={onPick} />
+      </DropdownMenuContent>
+    </DropdownMenu>
   );
 }
 
@@ -187,11 +215,13 @@ export default function GroupsListPage() {
   const fail = (cause: unknown) =>
     setError(cause instanceof ApiError ? cause.message : t("common.actionFailed"));
   const create = useMutation({
-    mutationFn: () => createGroup({ bundle: emptyGroup(t("groups.newGroup")) }),
-    onSuccess: (saved) => {
+    mutationFn: (start: GroupStart) => createGroup({ bundle: startBundle(start, t) }),
+    onSuccess: (saved, start) => {
       client.setQueryData(["teacher-group", saved.bundle.group.id], saved);
       void refresh();
-      void navigate(`/teacher/question-bank/groups/${saved.bundle.group.id}`);
+      void navigate(`/teacher/question-bank/groups/${saved.bundle.group.id}`, {
+        state: { start },
+      });
     },
     onError: fail,
   });
@@ -234,16 +264,18 @@ export default function GroupsListPage() {
         title={t("groups.bankTitle")}
         description={t("groups.bankHint")}
         actions={
-          <Button
+          <StartMenu
             disabled={create.isPending}
-            onClick={() => {
+            onPick={(start) => {
               setError(null);
-              create.mutate();
+              create.mutate(start);
             }}
           >
-            <Plus aria-hidden="true" />
-            {t("groups.create")}
-          </Button>
+            <Button disabled={create.isPending}>
+              <Plus aria-hidden="true" />
+              {t("groups.create")}
+            </Button>
+          </StartMenu>
         }
       />
       <BankNavigation />
@@ -326,9 +358,9 @@ export default function GroupsListPage() {
                 search={search}
                 status={status}
                 creating={create.isPending}
-                onCreate={() => {
+                onCreate={(start) => {
                   setError(null);
-                  create.mutate();
+                  create.mutate(start);
                 }}
               />
             ) : null

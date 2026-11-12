@@ -126,6 +126,7 @@ export function ReviewGroup({
         <GroupMaterials
           group={group}
           onRetryMedia={onRetry}
+          numbers={numbers}
           renderAudio={(node) => (
             <p className="text-muted-foreground text-sm">{node.label}</p>
           )}

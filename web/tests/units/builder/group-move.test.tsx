@@ -59,7 +59,7 @@ function stackLines() {
   ) {
     const lines = [
       ...document.querySelectorAll(
-        '[data-outline-row], [aria-label^="Kéo nhóm"], [aria-label^="Kéo để đổi vị trí phần"]',
+        '[data-outline-row], [data-outline-group-grip], [aria-label^="Kéo để đổi vị trí phần"]',
       ),
     ].map((node) =>
       node.hasAttribute("data-outline-row") ? node : node.parentElement!,
@@ -230,7 +230,9 @@ describe("dragging a question across a group's boundary in the outline", () => {
 
     await pickUp(user, screen.getByRole("button", { name: "Kéo để đổi vị trí câu 1" }));
     await user.keyboard("{ArrowDown}");
-    await waitFor(() => expect(screen.getByText("Thả vào nhóm")).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText("Thả vào bài này")).toBeInTheDocument(),
+    );
     const header = container.querySelector(
       "[data-outline-group] [data-outline-drop-into]",
     );
@@ -338,7 +340,9 @@ describe("dragging a question across a group's boundary in the outline", () => {
 
     await pickUp(user, grip);
     await user.keyboard("{ArrowDown}{ArrowDown}{ArrowDown}");
-    await waitFor(() => expect(screen.getByText("Thả vào nhóm")).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText("Thả vào bài này")).toBeInTheDocument(),
+    );
     await user.keyboard(" ");
     await waitFor(() =>
       expect(moved).toHaveBeenLastCalledWith({
@@ -369,7 +373,9 @@ describe("dragging a question across a group's boundary in the outline", () => {
 
     await pickUp(user, screen.getByRole("button", { name: "Kéo để đổi vị trí câu 1" }));
     await user.keyboard("{ArrowDown}");
-    await waitFor(() => expect(screen.getByText("Thả vào nhóm")).toBeInTheDocument());
+    await waitFor(() =>
+      expect(screen.getByText("Thả vào bài này")).toBeInTheDocument(),
+    );
     await user.keyboard(" ");
 
     await waitFor(() => expect(moved).toHaveBeenCalledOnce());
@@ -388,7 +394,7 @@ describe("dragging a question across a group's boundary in the outline", () => {
     const bound = screen.getByRole("button", { name: "Kéo câu 1" });
     expect(bound).toHaveAttribute("aria-disabled", "true");
     expect(bound).toHaveAccessibleDescription(
-      "Đang gắn với chỗ trống trong nội dung dùng chung",
+      "Trả lời cho một chỗ trống trong đoạn văn",
     );
     expect(bound).not.toHaveAttribute("aria-roledescription");
     bound.focus();
@@ -458,8 +464,8 @@ describe("dragging a question across a group's boundary in the outline", () => {
       expect(items.map((item) => item.textContent)).toEqual([
         "Di chuyển lên",
         "Di chuyển xuống",
-        "Chuyển ra khỏi nhóm",
-        "Chuyển sang nhóm…",
+        "Chuyển ra khỏi bài này",
+        "Chuyển sang bài khác…",
       ]);
       expect(items[0]).toHaveAttribute("aria-disabled", "true");
       expect(items.slice(1).every((item) => !item.hasAttribute("aria-disabled"))).toBe(
@@ -499,7 +505,7 @@ describe("dragging a question across a group's boundary in the outline", () => {
 
       await user.click(
         within(await open(user, 3)).getByRole("menuitem", {
-          name: "Chuyển ra khỏi nhóm",
+          name: "Chuyển ra khỏi bài này",
         }),
       );
       expect(moved).toHaveBeenLastCalledWith({
@@ -517,7 +523,7 @@ describe("dragging a question across a group's boundary in the outline", () => {
 
       await user.click(
         within(await open(user, 3)).getByRole("menuitem", {
-          name: "Chuyển sang nhóm…",
+          name: "Chuyển sang bài khác…",
         }),
       );
       await waitFor(() =>
@@ -531,7 +537,7 @@ describe("dragging a question across a group's boundary in the outline", () => {
       const alone = setup(layout(), [three()]);
       const menu = await open(alone.user, 3);
       expect(
-        within(menu).getByRole("menuitem", { name: "Chuyển sang nhóm…" }),
+        within(menu).getByRole("menuitem", { name: "Chuyển sang bài khác…" }),
       ).toHaveAttribute("aria-disabled", "true");
     });
 
@@ -545,15 +551,15 @@ describe("dragging a question across a group's boundary in the outline", () => {
       const { user } = setup(layout(), [bound, bundle("g2", "Other", [])]);
 
       const menu = await open(user, 2);
-      for (const name of ["Chuyển ra khỏi nhóm", "Chuyển sang nhóm…"]) {
+      for (const name of ["Chuyển ra khỏi bài này", "Chuyển sang bài khác…"]) {
         const item = within(menu).getByRole("menuitem", { name });
         expect(item).toHaveAttribute("aria-disabled", "true");
         expect(item).toHaveAccessibleDescription(
-          "Đang gắn với chỗ trống trong nội dung dùng chung",
+          "Trả lời cho một chỗ trống trong đoạn văn",
         );
       }
       expect(
-        within(menu).getByText("Đang gắn với chỗ trống trong nội dung dùng chung"),
+        within(menu).getByText("Trả lời cho một chỗ trống trong đoạn văn"),
       ).toBeVisible();
       expect(
         within(menu).getByRole("menuitem", { name: "Di chuyển xuống" }),
@@ -612,7 +618,7 @@ describe("dragging a question across a group's boundary in the outline", () => {
       [club, second],
     );
 
-    await pickUp(user, screen.getByRole("button", { name: "Kéo nhóm Reading club" }));
+    await pickUp(user, screen.getByRole("button", { name: "Kéo Reading club" }));
     await user.keyboard("{ArrowDown}");
     await waitFor(() =>
       expect(screen.getByText("Đã đến vị trí thả.")).toBeInTheDocument(),
@@ -797,7 +803,7 @@ async function dragOntoGroup(user: ReturnType<typeof userEvent.setup>) {
   await user.keyboard(" ");
   await waitFor(() => expect(grip).toHaveAttribute("aria-pressed", "true"));
   await user.keyboard("{ArrowDown}");
-  await waitFor(() => expect(screen.getByText("Thả vào nhóm")).toBeInTheDocument());
+  await waitFor(() => expect(screen.getByText("Thả vào bài này")).toBeInTheDocument());
   await user.keyboard(" ");
   vi.restoreAllMocks();
 }
@@ -827,7 +833,7 @@ describe("moving a question in the builder", () => {
       expectedGroupRevisions: [{ groupId: GROUP_ID, revision: 1 }],
     });
 
-    const title = await screen.findByLabelText("Tên nhóm câu hỏi");
+    const title = await screen.findByRole("textbox", { name: "Tiêu đề" });
     expect(
       screen.queryByRole("button", { name: "Kéo để đổi vị trí câu 1" }),
     ).toBeNull();
@@ -867,7 +873,7 @@ describe("moving a question in the builder", () => {
 
     expect(
       await screen.findByText(
-        "Đã sao chép câu hỏi vào nhóm. Bản gốc vẫn ở ngân hàng câu hỏi.",
+        "Đã sao chép câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
       ),
     ).toBeVisible();
   });
@@ -877,14 +883,14 @@ describe("moving a question in the builder", () => {
     await dragOntoGroup(user);
     expect(
       await screen.findByText(
-        "Đã sao chép câu hỏi vào nhóm. Bản gốc vẫn ở ngân hàng câu hỏi.",
+        "Đã sao chép câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
       ),
     ).toBeVisible();
     const invalidated = vi.spyOn(pageClient, "invalidateQueries");
 
     await user.click(await screen.findByRole("button", { name: "Thao tác với câu 1" }));
     await user.click(
-      await screen.findByRole("menuitem", { name: "Chuyển ra khỏi nhóm" }),
+      await screen.findByRole("menuitem", { name: "Chuyển ra khỏi bài này" }),
     );
 
     await waitFor(() => expect(draft.requests).toHaveLength(2));
@@ -937,7 +943,7 @@ describe("moving a question in the builder", () => {
 
     await user.click(trigger);
     await user.click(
-      await screen.findByRole("menuitem", { name: "Chuyển ra khỏi nhóm" }),
+      await screen.findByRole("menuitem", { name: "Chuyển ra khỏi bài này" }),
     );
 
     expect(
@@ -966,7 +972,7 @@ describe("moving a question in the builder", () => {
 
     await user.click(trigger);
     await user.click(
-      await screen.findByRole("menuitem", { name: "Chuyển ra khỏi nhóm" }),
+      await screen.findByRole("menuitem", { name: "Chuyển ra khỏi bài này" }),
     );
 
     await waitFor(() => expect(draft.requests).toHaveLength(1));
@@ -982,14 +988,12 @@ describe("moving a question in the builder", () => {
       MEMBER_ID,
     );
     expect(
-      await screen.findByText(
-        "Nhóm chưa có câu hỏi. Chọn nhóm để thêm ngữ liệu và câu hỏi.",
-      ),
+      await screen.findByText("Chưa có câu hỏi. Bấm vào tiêu đề để thêm."),
     ).toBeVisible();
     await waitFor(() => expect(out).toHaveFocus());
     expect(await screen.findByLabelText("Điểm")).toBeVisible();
     for (const message of [
-      "Đã sao chép câu hỏi vào nhóm. Bản gốc vẫn ở ngân hàng câu hỏi.",
+      "Đã sao chép câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
       "Đã trả câu hỏi gốc về đề thi.",
       "Câu hỏi khác với bản gốc nên được lưu thành câu hỏi mới trong ngân hàng.",
     ])
@@ -1032,8 +1036,7 @@ describe("moving a question in the builder", () => {
           gapId: "g1",
           questionId: QUESTION_ID,
         }),
-      message:
-        "Câu hỏi đang gắn với chỗ trống trong ngữ liệu. Hãy gỡ liên kết trong Nội dung dùng chung trước.",
+      message: "Câu hỏi này trả lời cho một chỗ trống. Hãy bỏ chỗ trống đó trước.",
     },
     {
       name: "a full group",
@@ -1041,7 +1044,7 @@ describe("moving a question in the builder", () => {
         moveFailure(422, "VALIDATION_FAILED", "Nhóm vượt giới hạn.", {
           rule: "group_limits",
         }),
-      message: "Nhóm đã đầy: tối đa 200 câu hỏi và 4 MB nội dung.",
+      message: "Bài này đã đầy: tối đa 200 câu hỏi và 4 MB nội dung.",
     },
     {
       name: "the group's own recording",
@@ -1049,7 +1052,7 @@ describe("moving a question in the builder", () => {
         moveFailure(422, "VALIDATION_FAILED", "Tệp ghi âm thuộc nhóm.", {
           rule: "group_audio_scope",
         }),
-      message: "Câu hỏi dùng chính tệp ghi âm chung của nhóm.",
+      message: "Câu hỏi dùng chính bản ghi âm của bài nghe này.",
     },
     {
       name: "another group rule, in the server's words",

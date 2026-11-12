@@ -91,7 +91,9 @@ test("leaving an offline group keeps an acknowledged local draft and restores it
     },
   });
   await page.goto(`/teacher/tests/${testId}/edit`);
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Nhóm cần khôi phục");
+  await page
+    .getByRole("textbox", { name: "Tiêu đề", exact: true })
+    .fill("Nhóm cần khôi phục");
   await expect(
     page.getByText("Chưa đồng bộ · Đã lưu bản nháp trên máy", { exact: true }),
   ).toBeVisible();
@@ -107,7 +109,7 @@ test("leaving an offline group keeps an acknowledged local draft and restores it
   expect(stored.bundle.group.title).toBe("Nhóm trên máy chủ");
   await page.goBack();
   await page.getByRole("button", { name: "Khôi phục bản nháp", exact: true }).click();
-  await expect(page.getByLabel("Tên nhóm câu hỏi", { exact: true })).toHaveValue(
+  await expect(page.getByRole("textbox", { name: "Tiêu đề", exact: true })).toHaveValue(
     "Nhóm cần khôi phục",
   );
   await expect(
@@ -125,7 +127,7 @@ test("leaving an offline group keeps an acknowledged local draft and restores it
   expect(stored.bundle.group.title).toBe("Nhóm cần khôi phục");
 });
 
-test("a Shared content save cut off by a reload is offered back from the device with the dialog's content", async ({
+test("a passage edit cut off by a reload is offered back from the device and saves once the server answers", async ({
   page,
 }) => {
   const testId = "019535d9-3df7-79fb-b466-fa907fa17fb1";
@@ -144,7 +146,7 @@ test("a Shared content save cut off by a reload is offered back from the device 
         stimuli: [
           {
             id: "019535d9-3df7-79fb-b466-fa907fa17fb4",
-            title: "Bài đọc cũ",
+            title: "Nhóm đọc hiểu",
             content: {
               format: "semantic_v1",
               blocks: [
@@ -220,38 +222,25 @@ test("a Shared content save cut off by a reload is offered back from the device 
   page.on("dialog", (dialog) => void dialog.accept());
   await page.goto(`/teacher/tests/${testId}/edit`);
   const outline = page.locator(`[data-outline-group="${groupId}"]`);
-  await outline
-    .getByRole("button", { name: "Bài đọc · Bài đọc cũ", exact: true })
-    .click();
-  const shared = page.getByRole("dialog", {
-    name: "Nội dung dùng chung của “Nhóm đọc hiểu”",
-  });
-  await shared
-    .getByRole("textbox", { name: "Tiêu đề", exact: true })
-    .fill("Bài đọc mới");
-  await shared.getByRole("button", { name: "Lưu", exact: true }).click();
+  await expect(
+    outline.getByRole("img", { name: "Bài đọc", exact: true }),
+  ).toBeVisible();
+  const title = page.getByRole("textbox", { name: "Tiêu đề", exact: true });
+  await expect(title).toHaveValue("Nhóm đọc hiểu");
+  await title.fill("Bài đọc mới");
   await expect.poll(() => sent.length).toBe(1);
+  expect(sent[0]?.bundle.group.title).toBe("Bài đọc mới");
   expect(sent[0]?.bundle.group.stimuli[0]?.title).toBe("Bài đọc mới");
 
   await page.reload();
   await page.getByRole("button", { name: "Khôi phục bản nháp", exact: true }).click();
-  await expect(
-    outline.getByRole("button", { name: "Bài đọc · Bài đọc mới", exact: true }),
-  ).toBeVisible();
-  expect(stored.bundle.group.stimuli[0]?.title).toBe("Bài đọc cũ");
+  await expect(title).toHaveValue("Bài đọc mới");
+  await expect(outline.getByText("Bài đọc mới", { exact: true })).toBeVisible();
+  expect(stored.bundle.group.title).toBe("Nhóm đọc hiểu");
 
   holding = false;
-  await outline
-    .getByRole("button", { name: "Bài đọc · Bài đọc mới", exact: true })
-    .click();
-  const reopened = page.getByRole("dialog", {
-    name: "Nội dung dùng chung của “Nhóm đọc hiểu”",
-  });
-  const title = reopened.getByRole("textbox", { name: "Tiêu đề", exact: true });
-  await expect(title).toHaveValue("Bài đọc mới");
   await title.fill("Bài đọc đã lưu");
-  await reopened.getByRole("button", { name: "Lưu", exact: true }).click();
-  await expect(reopened).toBeHidden();
-  expect(stored.revision).toBe(2);
+  await expect.poll(() => stored.revision).toBe(2);
+  expect(stored.bundle.group.title).toBe("Bài đọc đã lưu");
   expect(stored.bundle.group.stimuli[0]?.title).toBe("Bài đọc đã lưu");
 });

@@ -186,101 +186,80 @@ function horizontalOverflow(page: Page) {
 
 const NONE = { document: 0, main: 0, mainScrolledBy: 0, past: [] };
 
+const paneTab = (page: Page) => page.getByRole("tab", { name: "Bài đọc", exact: true });
+const material = (page: Page) =>
+  page.getByRole("region", { name: "Bài đọc", exact: true });
+const questions = (page: Page) =>
+  page.getByRole("region", { name: "Câu hỏi của bài đọc", exact: true });
+
 for (const [width, height] of [
   [393, 852],
   [360, 800],
 ] as const) {
-  test(`a group member's editor fits a ${width}px phone, and nothing scrolls the page sideways`, async ({
+  test(`a group's pane is two tabs on a ${width}px phone, and nothing scrolls the page sideways`, async ({
     page,
   }) => {
     await openGroupMember(page, width, height);
+    await expect(
+      page.getByRole("tab", { name: `Câu hỏi · ${PROMPTS.length}`, exact: true }),
+    ).toHaveAttribute("aria-selected", "true");
+    await expect(material(page)).toBeHidden();
     expect(await horizontalOverflow(page)).toEqual(NONE);
 
     await page.getByRole("textbox", { name: "Lựa chọn C", exact: true }).focus();
     await page.locator("#question-prompt").focus();
     expect(await horizontalOverflow(page)).toEqual(NONE);
 
-    await page.locator("#group-content-picker").click();
-    await expect(page.getByRole("listbox")).toBeVisible();
-    expect(await horizontalOverflow(page)).toEqual(NONE);
-    await page.getByRole("option", { name: "Bài đọc", exact: true }).click();
-    await expect(page.getByLabel("Tên ngữ liệu", { exact: true })).toHaveValue(
-      "Bài đọc",
-    );
+    await paneTab(page).click();
+    await expect(material(page)).toBeVisible();
+    await expect(questions(page)).toBeHidden();
+    await expect(
+      material(page).getByRole("button", { name: "Tạo chỗ trống", exact: true }),
+    ).toBeVisible();
     expect(await horizontalOverflow(page)).toEqual(NONE);
   });
 }
 
-const EDITOR_MIN = 256;
-
-async function editorLayout(page: Page) {
-  const box = async (selector: string) =>
-    (await page.locator(selector).first().boundingBox())!;
-  const editor = await box("[data-columns] > [data-resize-middle]");
-  const copy = (await page
-    .getByRole("button", { name: "Lưu bản sao vào ngân hàng", exact: true })
-    .boundingBox())!;
-  const column = page.getByRole("complementary", {
-    name: "Cài đặt câu hỏi",
-    exact: true,
-  });
-  const settings = (await column.count()) ? await column.boundingBox() : null;
-  return { editor, copy, settings };
-}
-
-test("at 1024px with the sidebar expanded a member's settings move to their dialog, and the editor keeps its width", async ({
+test("at 1024px with the sidebar expanded the pane is too narrow for two halves and shows its tabs", async ({
   page,
 }) => {
   await openGroupMember(page, 1024, 768);
-  const { editor, copy, settings } = await editorLayout(page);
-  expect(settings).toBeNull();
-  expect(editor.width).toBeGreaterThanOrEqual(EDITOR_MIN);
-  expect(copy.x + copy.width).toBeLessThanOrEqual(editor.x + editor.width);
+  await expect(paneTab(page)).toBeVisible();
+  await expect(material(page)).toBeHidden();
+  await expect(questions(page)).toBeVisible();
   expect(await horizontalOverflow(page)).toEqual(NONE);
-
-  await page.getByRole("button", { name: "Cài đặt câu hỏi", exact: true }).click();
-  await expect(
-    page
-      .getByRole("dialog", { name: "Cài đặt câu hỏi" })
-      .getByLabel("Điểm", { exact: true }),
-  ).toHaveValue("1");
 });
 
-for (const [width, height, sidebar] of [
-  [1024, 768, "collapsed"],
-  [1280, 900, "expanded"],
-  [1440, 900, "expanded"],
+for (const [width, height] of [
+  [1280, 900],
+  [1440, 900],
 ] as const) {
-  test(`at ${width}px with the sidebar ${sidebar} a member's settings stay in their column beside the editor`, async ({
-    page,
-  }) => {
-    await openGroupMember(page, width, height, sidebar);
-    const { editor, copy, settings } = await editorLayout(page);
-    expect(settings).not.toBeNull();
-    expect(settings!.x).toBeGreaterThanOrEqual(editor.x + editor.width - 1);
-    expect(editor.width).toBeGreaterThanOrEqual(EDITOR_MIN);
-    expect(copy.x + copy.width).toBeLessThanOrEqual(settings!.x);
+  test(`at ${width}px the passage stays beside its questions`, async ({ page }) => {
+    await openGroupMember(page, width, height);
+    await expect(paneTab(page)).toHaveCount(0);
+    const left = (await material(page).boundingBox())!;
+    const right = (await questions(page).boundingBox())!;
+    expect(left.x + left.width).toBeLessThanOrEqual(right.x);
+    expect(Math.abs(left.width - right.width)).toBeLessThanOrEqual(1);
     await expect(
-      page.getByRole("button", { name: "Cài đặt câu hỏi", exact: true }),
-    ).toBeHidden();
+      material(page).getByText("Many young professionals", { exact: false }),
+    ).toBeVisible();
+    await expect(
+      questions(page).getByRole("heading", { name: "Câu 1", exact: true }),
+    ).toBeVisible();
     expect(await horizontalOverflow(page)).toEqual(NONE);
   });
 }
 
-test("the settings follow the editor's width as the window narrows", async ({
+test("the halves become tabs as the window narrows, and come back", async ({
   page,
 }) => {
   await openGroupMember(page, 1280, 900);
-  const column = page.getByRole("complementary", {
-    name: "Cài đặt câu hỏi",
-    exact: true,
-  });
-  await expect(column).toBeVisible();
+  await expect(material(page)).toBeVisible();
   await page.setViewportSize({ width: 1024, height: 768 });
-  await expect(column).toHaveCount(0);
-  await expect(
-    page.getByRole("button", { name: "Cài đặt câu hỏi", exact: true }),
-  ).toBeVisible();
+  await expect(paneTab(page)).toBeVisible();
+  await expect(material(page)).toBeHidden();
   await page.setViewportSize({ width: 1280, height: 900 });
-  await expect(column).toBeVisible();
+  await expect(paneTab(page)).toHaveCount(0);
+  await expect(material(page)).toBeVisible();
 });

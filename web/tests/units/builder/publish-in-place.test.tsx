@@ -207,7 +207,9 @@ describe("publishing from the builder", () => {
     expect(within(dialog).getByText("Mọi câu hỏi đều có đáp án đúng")).toBeVisible();
     expect(within(dialog).getByText("Mọi câu hỏi đều có điểm")).toBeVisible();
     expect(
-      within(dialog).queryByText("Mọi nhóm đều có tiêu đề hoặc hướng dẫn"),
+      within(dialog).queryByText(
+        "Mọi bài đọc, bài điền từ và bài nghe đều có tiêu đề hoặc hướng dẫn",
+      ),
     ).toBeNull();
     await user.type(within(dialog).getByLabelText(/Ghi chú thay đổi/), "  Bản đầu  ");
     await user.click(within(dialog).getByRole("button", { name: "Phát hành" }));
@@ -304,7 +306,9 @@ describe("Publish test? with shared-context groups", () => {
     const dialog = screen.getByRole("dialog", { name: "Phát hành đề thi?" });
     expect(within(dialog).getByText("Mọi câu hỏi đều có đáp án đúng")).toBeVisible();
     expect(
-      within(dialog).getByText("Mọi nhóm đều có tiêu đề hoặc hướng dẫn"),
+      within(dialog).getByText(
+        "Mọi bài đọc, bài điền từ và bài nghe đều có tiêu đề hoặc hướng dẫn",
+      ),
     ).toBeVisible();
   });
 });

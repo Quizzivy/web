@@ -42,7 +42,6 @@ import {
   GripVertical,
   Headphones,
   Library,
-  Layers,
   Pencil,
   Plus,
   ScrollText,
@@ -81,6 +80,8 @@ import {
   type QuestionMove,
 } from "../outlineUnits";
 import type { GroupBundle } from "@/features/question-groups/api";
+import type { GroupStart } from "@/features/question-groups/kinds";
+import { AddButtons } from "./AddButtons";
 import {
   OutlineGroupRow,
   type GroupTargets,
@@ -102,7 +103,7 @@ export interface OutlineQuestion {
 
 type DropPosition = "before" | "after" | undefined;
 
-const NO_FILES: ReadonlyMap<string, string> = new Map();
+const NO_STARTS: ReadonlyMap<string, GroupStart> = new Map();
 const NO_SENSORS: SensorDescriptor<SensorOptions>[] = [];
 
 interface OutlineTreeProps {
@@ -116,12 +117,11 @@ interface OutlineTreeProps {
   onPickFromBank: (opener: HTMLElement) => void;
   onAddSection: () => void;
   groups?: Map<string, GroupBundle>;
-  groupFiles?: ReadonlyMap<string, string>;
+  groupStarts?: ReadonlyMap<string, GroupStart>;
   selectedGroupId?: string | null;
   onSelectGroup?: (id: string, questionId?: string) => void;
   onRenameGroup?: (id: string) => void;
-  onOpenSharedContent?: (id: string, opener: HTMLElement | null) => void;
-  onCreateGroup?: () => void;
+  onCreateGroup?: (start: GroupStart) => void;
   onRemoveGroup?: (id: string, opener: HTMLElement | null) => void;
   onRemoveSection?: (index: number) => void;
   onMove?: (move: QuestionMove) => void;
@@ -130,18 +130,19 @@ interface OutlineTreeProps {
 }
 
 /**
- * OutlineTree edits test sections and whole question or shared-context units
- * in reading order. `groupFiles` maps an audio asset id of a group's
- * materials to its file name, for the group's shared-content line.
- * `onOpenSharedContent` asks for a group's Shared content dialog, naming the
- * control focus returns to when it closes. Moving a whole unit between unit
- * places goes through `onChange`; dragging a question into a group, out of
- * one, between groups or within one asks `onMove`, which the server answers,
- * and opens the group and section it lands in. A member's own menu asks
- * `onMove` for its moves up, down and out of its group, and `onPickGroup`
- * for a move to another group, naming the control focus returns to. While
- * `movingQuestionId` is set that question's row is drawn busy and nothing can
- * be dragged.
+ * OutlineTree edits test sections and whole question or group units in
+ * reading order. Under it, "Add question" adds one to the section it names,
+ * and the second button opens the menu of a passage, a cloze and a recording,
+ * whose choice `onCreateGroup` receives; below 768px the two are one "+" that
+ * opens the same choices, with the question first. `groupStarts` says how a
+ * group that is still empty was started, for its row's name. Moving a whole
+ * unit between unit places goes through `onChange`; dragging a question into
+ * a group, out of one, between groups or within one asks `onMove`, which the
+ * server answers, and opens the group and section it lands in. A member's own
+ * menu asks `onMove` for its moves up, down and out of its group, and
+ * `onPickGroup` for a move to another group, naming the control focus returns
+ * to. While `movingQuestionId` is set that question's row is drawn busy and
+ * nothing can be dragged.
  */
 export function OutlineTree({
   sections,
@@ -154,11 +155,10 @@ export function OutlineTree({
   onPickFromBank,
   onAddSection,
   groups = new Map(),
-  groupFiles = NO_FILES,
+  groupStarts = NO_STARTS,
   selectedGroupId,
   onSelectGroup,
   onRenameGroup,
-  onOpenSharedContent,
   onCreateGroup,
   onRemoveGroup,
   onRemoveSection,
@@ -544,7 +544,7 @@ export function OutlineTree({
                                 id={unit.id}
                                 group={groups.get(unit.id)}
                                 numbering={numbering}
-                                fileNames={groupFiles}
+                                start={groupStarts.get(unit.id)}
                                 drop={dropPosition(dropTarget, unitKey(unit))}
                                 dropInto={dropTarget?.id === `group:${unit.id}:head`}
                                 memberDrop={memberDrop(dropTarget)}
@@ -576,9 +576,6 @@ export function OutlineTree({
                                   onSelectGroup?.(unit.id, questionId)
                                 }
                                 onRename={() => onRenameGroup?.(unit.id)}
-                                onSharedContent={(opener) =>
-                                  onOpenSharedContent?.(unit.id, opener)
-                                }
                                 onStep={(direction) => step(unitKey(unit), direction)}
                                 onRemove={(opener) => onRemoveGroup?.(unit.id, opener)}
                               />
@@ -629,39 +626,16 @@ export function OutlineTree({
       </DndContext>
 
       <div className="flex shrink-0 flex-col gap-0.5 border-t p-2">
-        <Button
-          variant="outline"
-          size="sm"
-          className="shadow-card h-8 w-full justify-start gap-2 px-2.5"
+        <AddButtons
           disabled={creating || sections.length === 0}
-          onClick={onCreateQuestion}
-        >
-          <Plus aria-hidden="true" />
-          <span className="flex-1 text-left whitespace-nowrap">
-            {t(
-              selectedGroupId ? "builder.addStandaloneQuestion" : "builder.addQuestion",
-            )}
-          </span>{" "}
-          {sections.length === 0 ? null : (
-            <span className="text-muted-foreground min-w-0 truncate text-[11.5px] font-normal">
-              {t("builder.addQuestionTo", {
-                title: abbreviatedTarget(sections, selectedGroupId, selectedId),
-              })}
-            </span>
-          )}
-        </Button>
-        {onCreateGroup ? (
-          <Button
-            variant="outline"
-            size="sm"
-            className="shadow-card h-8 w-full justify-start gap-2 px-2.5"
-            disabled={creating || sections.length === 0}
-            onClick={onCreateGroup}
-          >
-            <Layers aria-hidden="true" />
-            {t("builder.addSharedGroup")}
-          </Button>
-        ) : null}
+          target={
+            sections.length === 0
+              ? null
+              : abbreviatedTarget(sections, selectedGroupId, selectedId)
+          }
+          onCreateQuestion={onCreateQuestion}
+          onCreateGroup={onCreateGroup}
+        />
         <Button
           variant="ghost"
           size="sm"

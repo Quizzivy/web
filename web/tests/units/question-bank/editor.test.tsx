@@ -6,7 +6,7 @@ import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http } from "msw";
 import { server } from "@tests/support/server";
 import { contractJson } from "@tests/support/contractResponse";
-import { QuestionEditor } from "@/features/question-bank/components/QuestionEditor";
+import { BuilderQuestionEditor } from "@/features/tests/components/BuilderQuestionEditor";
 import {
   emptyQuestion,
   type QuestionValues,
@@ -66,9 +66,11 @@ function renderEditor(
     });
     const [current, setCurrent] = useState(asset);
     return (
-      <QuestionEditor
+      <BuilderQuestionEditor
         value={value}
         asset={current}
+        number={null}
+        clearPromptOnFocus={false}
         onChange={setValue}
         onAssetChange={setCurrent}
       />
@@ -175,7 +177,8 @@ describe("the question editor, per question type", () => {
       points: 2,
     });
 
-    await user.click(screen.getByRole("tab", { name: "Trả lời ngắn" }));
+    await user.click(screen.getByRole("button", { name: /^Loại câu hỏi:/ }));
+    await user.click(await screen.findByRole("menuitem", { name: /Trả lời ngắn/ }));
 
     expect(screen.getByLabelText("Nội dung câu hỏi")).toHaveValue(
       "They ___ to the museum.",
@@ -276,9 +279,11 @@ describe("the question editor, per question type", () => {
         });
         const [current, setCurrent] = useState<MediaAsset | null>(IMAGE);
         return (
-          <QuestionEditor
+          <BuilderQuestionEditor
             value={value}
             asset={current}
+            number={null}
+            clearPromptOnFocus={false}
             onChange={(next) => {
               seen.push(next);
               setValue(next);

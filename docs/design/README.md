@@ -4,6 +4,8 @@
 consoles, the front door and the public site, and in `page-width-proposal/` three later answers
 from the design team (the page width, the cloze, Grading's finish states). **It is the single
 source of truth for the UI.**
+`deck/proposals/` holds pages written in this repository for screens the deck does not draw yet.
+A proposal is not the design of record until Thuong approves it (see "Proposals").
 It replaced the earlier hand-built mockups (`docs/design/mockups`, removed with T-R0.1) and every
 rule that came with them. Where the product deliberately departs from the deck, the departure is
 listed below, and the reason is in the plan (`docs/plan/70-redesign-overview.md`).
@@ -226,6 +228,33 @@ edit `github.md` by hand, since the manifest pins it.
    script builds (its target holds a quote or a `$`) is not read as a file reference.
 4. Add a line to the log below, and say in the PR which screens changed.
 
+## Proposals
+
+`deck/proposals/` holds pages written in this repository, not exported from Claude Design. A
+proposal draws what `gaps.md` says the deck does not: one page for one topic, laid out as the
+pages in `page-width-proposal/` are (cover, decisions, frames, state table, copy, open questions,
+handoff), with the deck's tokens, typeface, icons and brand files. It loads `../support.js` and
+the deck's SVGs by relative path, so nothing is copied. Its frames are in Vietnamese first, with
+the English strings beside them.
+
+No rounded box in a proposal carries a border on one side only: no card, panel, callout or quote
+with rounded corners and an accent edge along its top or its side (Thuong, 2026-11-12, for every
+surface; `AGENTS.md`, "Design"). Set such a box apart by space, by a quieter ground, or by a
+hairline all the way round. Lines that mark a state are not boxes and stay as the deck draws
+them: the line on the grading queue's active row, the line under the selected tab.
+
+A proposal is not the design of record until Thuong approves it. Until then its `gaps.md` rows
+stay Open and carry a note that names the page. On approval they become Answered, and the release
+that builds the screens reads the page as it reads the deck.
+
+1. Add or change the page under `deck/proposals/`. Never edit the seven exported pages or
+   `page-width-proposal/`: the next export replaces them.
+2. Regenerate the manifest with the command above and run `node scripts/check-design-deck.mjs`.
+3. Add a line to the log below, and a note to each `gaps.md` row the page answers.
+
+To view one, start the server above and open, for example,
+<http://localhost:5175/proposals/R7%20Question%20Sets.dc.html>.
+
 ## Not imported
 
 - `screenshots/` holds Claude Design's own before-and-after captures at about 924px, several of
@@ -332,6 +361,73 @@ edit `github.md` by hand, since the manifest pins it.
   draws the empty queue (all graded, or papers still to finish) and the "Ready to finish" card at
   1280, 768 and 360, light and dark: Review on the row with Finish inside its check, the card
   folded below the panes while answers wait, rows grouped by assignment, and every English line.
+
+- 2026-11-11 — First proposal page, written in this repository: `proposals/R7 Question
+  Sets.dc.html`, for DG-90 (R7; `docs/plan/77-r7.md`, T-R7.19 and T-R7.16). It draws the Sets
+  group in the bank's filter aside and Filters sheet, "Add to set" and "Share…" in the bulk bar,
+  the Add to set dialog, the set page for its owner, a Can-edit and a Can-use recipient with its
+  loading, empty, error and not-found states, and the share dialog for a set with the skeleton
+  and the error line the deck leaves out. Frames at 1280 and 360, light and dark, Vietnamese and
+  English. No exported page changes. It is a proposal until Thuong approves it, and its seven
+  questions for him are on the page.
+
+- 2026-11-12 — Second proposal page: `proposals/R7 Access Modes.dc.html`, for the rest of DG-90
+  (R7; `docs/plan/77-r7.md`, T-R7.18 and the editor part of T-R7.19). It draws what the owner, a
+  Can-edit recipient and a Can-use recipient see in the test builder, test detail, the Shared
+  content dialog, the question editor and the assignment wizard's test step: the owner line and
+  the access pill, the sentence under the heading, the read-only builder, and the three notices of
+  co-editing (someone saved first, saved as a copy, sharing stopped). Frames at 1280 and 360,
+  light and dark, Vietnamese and English. No exported page changes. It is a proposal until Thuong
+  approves it, and its five questions for him are on the page.
+
+- 2026-11-12 — Third proposal page: `proposals/Email Layout.dc.html`, for DG-229, opened with it:
+  the deck draws no email. It draws one layout for the four emails the API sends today (R5) and
+  the fifteen that R7, R10 and R11 plan, and seven of them in full, in a reading pane and on a
+  phone, light and dark, Vietnamese and English, with the plain-text part. It keeps T-R5.2's rule
+  (no images, no remote CSS, no tracking), so there is no logo, and the colours are the deck's
+  tokens as hex. Redrawn the same day on Thuong's review as a flat layout: one white panel on a
+  soft ground, blocks set apart by space and a quieter ground, with no outline and no accent
+  edge: the first drawing's card had a lime top edge, the look he rules out for any rounded box
+  ("Proposals", above). The emails are rendered in `Quizzivy/api`; the
+  page is here because the deck is the design of record. It is a proposal until Thuong approves
+  it, and its six questions for him are on the page.
+
+- 2026-11-12 — Fourth proposal page: `proposals/Builder Shared Groups.dc.html`, for DG-231, opened
+  with it: teachers tell the owner that questions on shared material are hard to build, the cloze
+  most of all. The page reads the builder's code on `develop` (`bc20eec4`; the app was not run),
+  sets what a teacher does today beside what is proposed for seven tasks, and ranks eleven things
+  in the way. It draws one pane in place of the group row's shared-content line (DG-186) and the
+  Shared content dialog (DG-187): the passage or the recording on the left, its questions as
+  cards on the right, two tabs on a phone; a button under the outline that names a passage, a
+  cloze and a recording; and a gap made by selecting a word, with its question made in the same
+  write. Frames at 1280 and 360, light and dark, Vietnamese and English; a frame is as tall as
+  its page. No stored shape changes, and no exported page changes. It is a
+  proposal until Thuong approves it, and its seven questions for him are on the page. He decided
+  the first two the same day, as drawn: a gap with no wrong options is one the student types,
+  and the builder and the bank both use the three names. The page gained a table of the wording
+  that follows ("One name each"); the bank's own screens are still not drawn (DG-68).
+  He also decided the third: the Shared content dialog goes, with the group row's shared-content
+  line and its menu item, when the page is built. And the fourth and fifth: two buttons under the
+  outline, not one menu for everything; and a gap's word on a row picked at random among four.
+  The seventh he decided against the first drawing: the gap's card offers the AI's wrong options
+  now, not later. The page gained that step of the cloze ("4 · AI suggestions"), with the button
+  and the panel the question editor has, and says what it needs: `suggestAiDistractors` has to
+  accept a gap's typed question and read the sentence around the gap, a change in `Quizzivy/sdk`
+  and `Quizzivy/api`. So the page no longer says that no operation changes.
+  The sixth (who tries it before the build) was done another way: he showed the frames to
+  teachers. They said they could tell at a glance what to do and that it is much easier than
+  today, and added that a recording can have a cloze too, with other combinations besides. The
+  page gained a listening gap-fill (step "Listen and fill the gaps" of the recording, and a
+  fourth choice in the menu, "Bài nghe điền từ"), a row that adds a text under any recording,
+  and a table, "What a teacher can build with it", of ten tasks: six drawn, three the pane makes
+  without a drawing, and one the model cannot store (a word bank shared by all the gaps), which
+  he says teachers do not need (Q8).
+  Teachers then asked how one who has chosen one of the menu's four changes to another, and
+  whether that means deleting. It does not: every pane now shows a row for the part it does not
+  have ("Thêm bản ghi âm" above a text, "Thêm đoạn văn" under a recording), a part left empty is
+  not kept, and a part with content is removed from its own card's menu. He decided that the
+  row is enough and the pane needs no switch of kinds (Q9). All nine questions on the page are
+  settled; the page itself still waits for his approval.
 
 ## The brand
 

@@ -35,6 +35,7 @@ export function PreviewGroupContext({
           group={group}
           omitTitle={head.heading}
           onRetryMedia={onRetryMedia}
+          numbers={numbers}
           gapCard
           renderAudio={(node, asset, recording) => (
             <AudioPlayer

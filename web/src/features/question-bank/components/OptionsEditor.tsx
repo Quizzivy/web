@@ -402,7 +402,11 @@ function multipleSentence(
   return null;
 }
 
-function MarkVisual({ multiple, on }: Readonly<{ multiple: boolean; on: boolean }>) {
+/** MarkVisual is the mark of an option row: a box for a multiple choice, a ring for a single one, filled while the option is correct. */
+export function MarkVisual({
+  multiple,
+  on,
+}: Readonly<{ multiple: boolean; on: boolean }>) {
   if (multiple)
     return (
       <span

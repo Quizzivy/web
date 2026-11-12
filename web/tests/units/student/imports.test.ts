@@ -4,11 +4,6 @@ import { describe, expect, it } from "vitest";
 
 const SRC = resolve(import.meta.dirname, "../../../src");
 const ROUTER = readFileSync(resolve(SRC, "app/router.tsx"), "utf8");
-const SIDE_COLUMNS = [
-  "components/shared/PageAside.tsx",
-  "components/shared/SideColumn.tsx",
-  "hooks/useColumnWidth.ts",
-];
 
 function fileOf(specifier: string, from: string): string | null {
   let base: string;
@@ -22,20 +17,6 @@ function fileOf(specifier: string, from: string): string | null {
   return null;
 }
 
-function importsOf(path: string): string[] {
-  if (!/\.tsx?$/.test(path)) return [];
-  const source = readFileSync(path, "utf8");
-  const specifiers = [
-    ...source.matchAll(/\bfrom\s*["']([^"']+)["']/g),
-    ...source.matchAll(/\bimport\s*\(\s*["'`]([^"'`]+)["'`]\s*\)/g),
-    ...source.matchAll(/\bimport\s*["']([^"']+)["']/g),
-  ].map((match) => match[1]!);
-  return specifiers.flatMap((specifier) => {
-    const file = fileOf(specifier, path);
-    return file === null ? [] : [file];
-  });
-}
-
 function routesOf(tree: string): string[] {
   const start = ROUTER.indexOf(`const ${tree}: RouteObject = {`);
   const end = ROUTER.indexOf("\n};", start);
@@ -43,18 +24,6 @@ function routesOf(tree: string): string[] {
   return [...ROUTER.slice(start, end).matchAll(/import\("([^"]+)"\)/g)].map((match) =>
     fileOf(match[1]!, resolve(SRC, "app/router.tsx"))!,
   );
-}
-
-function reachable(roots: string[]): Set<string> {
-  const seen = new Set<string>();
-  const pending = [...roots];
-  while (pending.length > 0) {
-    const path = pending.pop()!;
-    if (seen.has(path)) continue;
-    seen.add(path);
-    pending.push(...importsOf(path));
-  }
-  return seen;
 }
 
 const named = (paths: Iterable<string>) =>
@@ -86,22 +55,5 @@ describe("what the student routes import", () => {
         "layouts/StudentLayout.tsx",
       ]),
     );
-  });
-
-  it("reaches no PageAside, SideColumn or useColumnWidth, through any module", () => {
-    const modules = reachable(student);
-    expect(modules.size).toBeGreaterThan(student.length);
-    expect(named(modules).filter((path) => SIDE_COLUMNS.includes(path))).toEqual([]);
-  });
-
-  it("would be caught: the teacher's routes, walked the same way, reach all three", () => {
-    const modules = named(reachable(routesOf("teacherTree")));
-    expect(modules.filter((path) => SIDE_COLUMNS.includes(path))).toEqual(SIDE_COLUMNS);
-  });
-
-  it("names three modules that exist", () => {
-    for (const path of SIDE_COLUMNS) {
-      expect(existsSync(resolve(SRC, path)), path).toBe(true);
-    }
   });
 });

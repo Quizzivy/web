@@ -8,14 +8,13 @@ import { http } from "msw";
 import TestBuilderPage from "@/features/tests/pages/teacher/TestBuilderPage";
 import { OutlineTree } from "@/features/tests/components/OutlineTree";
 import type { OutlineSection } from "@/features/tests/outline";
-import { sharedContentLine } from "@/features/tests/sharedContentLine";
 import type { GroupBundle, StoredGroup } from "@/features/question-groups/api";
 import type { GroupMaterial } from "@/features/question-groups/model";
 import type { components } from "@/lib/api/schema";
 import { server } from "@tests/support/server";
 import { contractJson } from "@tests/support/contractResponse";
 import { viewport } from "@tests/support/viewport";
-import i18n from "@/lib/i18n";
+import "@/lib/i18n";
 
 globalThis.ResizeObserver ??= class {
   observe() {}
@@ -30,7 +29,6 @@ const QUESTION_ID = "018f0000-0000-7000-8000-0000000002b1";
 const GROUP_ID = "018f0000-0000-7000-8000-0000000002d1";
 const MEMBER_ID = "018f0000-0000-7000-8000-0000000002e1";
 const AUDIO_ID = "018f0000-0000-7000-8000-0000000002f1";
-const SECOND_AUDIO_ID = "018f0000-0000-7000-8000-0000000002f2";
 const STAMP = "2026-01-01T00:00:00Z";
 const TITLE = "Why cities need green space";
 
@@ -131,74 +129,6 @@ function bundle(
   };
 }
 
-const files = new Map([
-  [AUDIO_ID, "lecture.mp3"],
-  [SECOND_AUDIO_ID, "interview.mp3"],
-]);
-
-function line(value: GroupBundle, language = "en") {
-  return sharedContentLine(value, files, i18n.getFixedT(language));
-}
-
-describe("the shared-content line's text", () => {
-  it("names one passage, and adds its gaps only when it has some", () => {
-    expect(line(bundle([passage(TITLE)]))).toEqual({
-      kind: "passage",
-      text: `Passage · ${TITLE}`,
-    });
-    expect(line(bundle([passage(TITLE, 1)]))?.text).toBe(`Passage · ${TITLE} · 1 gap`);
-    expect(line(bundle([passage(TITLE, 3)]))?.text).toBe(`Passage · ${TITLE} · 3 gaps`);
-    expect(line(bundle([passage("  ")]))?.text).toBe("Passage · Untitled");
-    expect(line(bundle([passage(TITLE, 2)]), "vi")?.text).toBe(
-      `Bài đọc · ${TITLE} · 2 chỗ trống`,
-    );
-  });
-
-  it("names one recording's file and its play limit, in the singular for one", () => {
-    expect(line(bundle([recording([AUDIO_ID])], [2]))).toEqual({
-      kind: "audio",
-      text: "Audio · lecture.mp3 · 2 plays",
-    });
-    expect(line(bundle([recording([AUDIO_ID])], [1]))?.text).toBe(
-      "Audio · lecture.mp3 · 1 play",
-    );
-    expect(line(bundle([recording([AUDIO_ID])], [null]))?.text).toBe(
-      "Audio · lecture.mp3 · unlimited plays",
-    );
-    expect(line(bundle([recording([AUDIO_ID])], [null]), "vi")?.text).toBe(
-      "Bài nghe · lecture.mp3 · không giới hạn lượt nghe",
-    );
-  });
-
-  it("leaves out a file name it does not know", () => {
-    const unknown = "018f0000-0000-7000-8000-0000000002f9";
-    expect(line(bundle([recording([unknown])], [3]))?.text).toBe("Audio · 3 plays");
-  });
-
-  it("counts materials and recordings when there is more than one, or both kinds", () => {
-    expect(line(bundle([passage(TITLE), recording([AUDIO_ID])], [2]))).toEqual({
-      kind: "materials",
-      text: "2 materials · 1 recording",
-    });
-    expect(line(bundle([recording([AUDIO_ID], true)], [2]))?.text).toBe(
-      "1 material · 1 recording",
-    );
-    expect(line(bundle([recording([AUDIO_ID, SECOND_AUDIO_ID])], [2, 2]))?.text).toBe(
-      "1 material · 2 recordings",
-    );
-    expect(line(bundle([passage(TITLE), passage("Maps")]))?.text).toBe(
-      "2 materials · 0 recordings",
-    );
-    expect(line(bundle([passage(TITLE), passage("Maps")]), "vi")?.text).toBe(
-      "2 ngữ liệu · 0 bản ghi âm",
-    );
-  });
-
-  it("has no line for a group with no shared content", () => {
-    expect(line(bundle([]))).toBeNull();
-  });
-});
-
 function sections(): OutlineSection[] {
   return [
     {
@@ -217,7 +147,6 @@ function renderTree(value: GroupBundle, initial: OutlineSection[] = sections()) 
     onChange: vi.fn(),
     onSelectGroup: vi.fn(),
     onRenameGroup: vi.fn(),
-    onOpenSharedContent: vi.fn(),
     onRemoveGroup: vi.fn(),
   };
   function Harness() {
@@ -227,7 +156,6 @@ function renderTree(value: GroupBundle, initial: OutlineSection[] = sections()) 
         sections={outline}
         questions={new Map()}
         groups={new Map([[GROUP_ID, value]])}
-        groupFiles={files}
         selectedId={null}
         creating={false}
         onCreateQuestion={vi.fn()}
@@ -236,7 +164,6 @@ function renderTree(value: GroupBundle, initial: OutlineSection[] = sections()) 
         onSelect={vi.fn()}
         onSelectGroup={handlers.onSelectGroup}
         onRenameGroup={handlers.onRenameGroup}
-        onOpenSharedContent={handlers.onOpenSharedContent}
         onRemoveGroup={handlers.onRemoveGroup}
         onChange={(next) => {
           handlers.onChange(next);
@@ -250,46 +177,48 @@ function renderTree(value: GroupBundle, initial: OutlineSection[] = sections()) 
 }
 
 const groupMenu = () =>
-  screen.getByRole("button", { name: "Thao tác với nhóm Reading club" });
+  screen.getByRole("button", { name: "Thao tác với Reading club" });
 
 describe("the group's row in the outline", () => {
-  it("shows the line under the open group in the instructions line's geometry", async () => {
-    const { user, onOpenSharedContent } = renderTree(bundle([passage(TITLE)]));
-
-    const shared = screen.getByRole("button", { name: `Bài đọc · ${TITLE}` });
-    expect(shared).toHaveClass(
-      "mb-0.5",
-      "ml-6.5",
-      "rounded-[6px]",
-      "px-1.5",
-      "py-1",
-      "text-xs",
-      "text-muted-fg",
+  it("names the group for what it holds, with that kind's icon and no line under it", () => {
+    renderTree(bundle([passage(TITLE)]));
+    expect(screen.getByRole("img", { name: "Bài đọc" })).toHaveClass(
+      "lucide-book-open-text",
     );
-    expect(shared.querySelector("svg")).toHaveClass("size-3.25", "lucide-file-text");
-    expect(within(shared).getByText(`Bài đọc · ${TITLE}`)).toHaveClass("truncate");
-
-    await user.click(shared);
-    expect(onOpenSharedContent).toHaveBeenCalledWith(GROUP_ID, shared);
-
-    await user.click(
-      screen.getByRole("button", { name: "Reading club", expanded: true }),
-    );
-    expect(screen.queryByRole("button", { name: `Bài đọc · ${TITLE}` })).toBeNull();
+    expect(screen.queryByRole("button", { name: /^Bài đọc ·|^Bài nghe ·/ })).toBeNull();
   });
 
-  it("draws the audio icon for a recording, and no line without shared content", () => {
-    renderTree(bundle([recording([AUDIO_ID])], [2]));
-    expect(
-      screen
-        .getByRole("button", { name: "Bài nghe · lecture.mp3 · 2 lượt nghe" })
-        .querySelector("svg"),
-    ).toHaveClass("lucide-audio-lines");
+  it("names a group with a recording a recording, whatever else it holds", () => {
+    renderTree(bundle([recording([AUDIO_ID], true)], [2]));
+    expect(screen.getByRole("img", { name: "Bài nghe" })).toHaveClass(
+      "lucide-audio-lines",
+    );
   });
 
-  it("has no line when the group holds no material", () => {
-    renderTree(bundle([]));
-    expect(screen.queryByRole("button", { name: /^Bài đọc|^Bài nghe/ })).toBeNull();
+  it("names a group whose every question answers a gap a cloze, and shows the gap's word", () => {
+    const value = bundle([passage(TITLE, 1)]);
+    value.group.stimuli[0]!.gaps = [
+      { kind: "question", gapId: "g1", questionId: MEMBER_ID },
+    ];
+    renderTree(value);
+    expect(screen.getByRole("img", { name: "Bài điền từ" })).toHaveClass(
+      "lucide-text-cursor-input",
+    );
+    const row = screen
+      .getByRole("button", { name: "Kéo câu 1" })
+      .closest("[data-outline-row]") as HTMLElement;
+    expect(within(row).getByRole("button", { name: /Cool the streets/ })).toBeVisible();
+    expect(within(row).queryByText("What do parks do?")).toBeNull();
+  });
+
+  it("marks the row while one of its questions is not finished", () => {
+    const value = bundle([passage(TITLE)]);
+    expect(screen.queryByRole("img", { name: "Có câu chưa xong" })).toBeNull();
+    value.questions[0]!.input.options = [{ text: "Cool the streets", isCorrect: true }];
+    renderTree(value);
+    expect(screen.getByRole("img", { name: "Có câu chưa xong" })).toHaveClass(
+      "lucide-circle-alert",
+    );
   });
 
   it("puts the row's actions in a menu, in the export's order, ends disabled", async () => {
@@ -301,16 +230,14 @@ describe("the group's row in the outline", () => {
     const items = within(menu).getAllByRole("menuitem");
     expect(items.map((item) => item.textContent)).toEqual([
       "Đổi tên",
-      "Nội dung dùng chung",
       "Di chuyển lên",
       "Di chuyển xuống",
-      "Xoá nhóm",
+      "Xoá bài đọc này",
     ]);
-    expect(items[1]!.querySelector("svg")).toHaveClass("lucide-panel-left");
     expect(trigger.closest(".overflow-y-auto")?.contains(menu)).toBe(false);
-    expect(items[2]).toHaveAttribute("aria-disabled", "true");
-    expect(items[3]).not.toHaveAttribute("aria-disabled");
-    expect(screen.queryByRole("button", { name: /Đưa nhóm|Xoá nhóm/ })).toBeNull();
+    expect(items[1]).toHaveAttribute("aria-disabled", "true");
+    expect(items[2]).not.toHaveAttribute("aria-disabled");
+    expect(screen.queryByRole("menuitem", { name: "Nội dung dùng chung" })).toBeNull();
   });
 
   it("disables Move down on the outline's last unit", async () => {
@@ -329,17 +256,16 @@ describe("the group's row in the outline", () => {
     ).toHaveAttribute("aria-disabled", "true");
   });
 
-  it("moves, removes, renames and opens the group from its items", async () => {
-    const { user, onChange, onRemoveGroup, onRenameGroup, onOpenSharedContent } =
-      renderTree(bundle([passage(TITLE)]));
+  it("moves, removes and renames the group from its items, and opens it from its title", async () => {
+    const { user, onChange, onRemoveGroup, onRenameGroup, onSelectGroup } = renderTree(
+      bundle([passage(TITLE)]),
+    );
 
-    await user.click(groupMenu());
-    await user.click(
-      await screen.findByRole("menuitem", { name: "Nội dung dùng chung" }),
-    );
-    await waitFor(() =>
-      expect(onOpenSharedContent).toHaveBeenCalledWith(GROUP_ID, groupMenu()),
-    );
+    const heading = screen
+      .getAllByRole("button", { name: "Reading club" })
+      .find((button) => !button.hasAttribute("aria-expanded"));
+    await user.click(heading!);
+    expect(onSelectGroup).toHaveBeenCalledWith(GROUP_ID, undefined);
 
     await user.click(groupMenu());
     await user.click(await screen.findByRole("menuitem", { name: "Đổi tên" }));
@@ -354,7 +280,7 @@ describe("the group's row in the outline", () => {
     ]);
 
     await user.click(groupMenu());
-    await user.click(await screen.findByRole("menuitem", { name: "Xoá nhóm" }));
+    await user.click(await screen.findByRole("menuitem", { name: "Xoá bài đọc này" }));
     expect(onRemoveGroup).toHaveBeenCalledWith(GROUP_ID, groupMenu());
   });
 
@@ -389,22 +315,22 @@ describe("the group's row in the outline", () => {
     const grip = screen.getByRole("button", { name: "Kéo câu 1" });
     expect(grip).toHaveAttribute("aria-disabled", "true");
     expect(grip).toHaveAccessibleDescription(
-      "Đang gắn với chỗ trống trong nội dung dùng chung",
+      "Trả lời cho một chỗ trống trong đoạn văn",
     );
     expect(grip).toHaveClass("cursor-not-allowed");
     expect(grip).not.toHaveClass("cursor-grab");
   });
 
   it("opens and runs the menu from the keyboard, and returns focus to its trigger", async () => {
-    const { user, onOpenSharedContent } = renderTree(bundle([passage(TITLE)]));
+    const { user, onRemoveGroup } = renderTree(bundle([passage(TITLE)]));
 
     groupMenu().focus();
     await user.keyboard("{Enter}");
     const menu = await screen.findByRole("menu");
     expect(within(menu).getByRole("menuitem", { name: "Đổi tên" })).toHaveFocus();
-    await user.keyboard("{ArrowDown}{Enter}");
+    await user.keyboard("{ArrowDown}{ArrowDown}{Enter}");
     await waitFor(() =>
-      expect(onOpenSharedContent).toHaveBeenCalledWith(GROUP_ID, groupMenu()),
+      expect(onRemoveGroup).toHaveBeenCalledWith(GROUP_ID, groupMenu()),
     );
     await waitFor(() => expect(groupMenu()).toHaveFocus());
   });
@@ -518,12 +444,12 @@ describe("the group's row in the builder", () => {
   it("opens the group, focuses its title and sends no request on Rename", async () => {
     const user = renderBuilder();
     await screen.findByLabelText("Điểm", undefined, { timeout: 5000 });
-    await screen.findByRole("button", { name: `Bài đọc · ${TITLE}` });
+    await screen.findByRole("img", { name: "Bài đọc" });
 
     await user.click(groupMenu());
     await user.click(await screen.findByRole("menuitem", { name: "Đổi tên" }));
 
-    const field = await screen.findByLabelText("Tên nhóm câu hỏi");
+    const field = await screen.findByDisplayValue("Reading club");
     await waitFor(() => expect(field).toHaveFocus());
     expect(field).toHaveValue("Reading club");
     expect([
@@ -535,16 +461,12 @@ describe("the group's row in the builder", () => {
 
   it("keeps focus in the title when Rename asks again while the group is open", async () => {
     const user = renderBuilder();
-    await screen.findByRole(
-      "button",
-      { name: `Bài đọc · ${TITLE}` },
-      { timeout: 5000 },
-    );
+    await screen.findByRole("img", { name: "Bài đọc" }, { timeout: 5000 });
     const heading = screen
       .getAllByRole("button", { name: "Reading club" })
       .find((button) => !button.hasAttribute("aria-expanded"));
     await user.click(heading!);
-    const field = await screen.findByLabelText("Tên nhóm câu hỏi");
+    const field = await screen.findByDisplayValue("Reading club");
     expect(field).not.toHaveFocus();
 
     await user.click(groupMenu());
@@ -558,16 +480,14 @@ describe("the group's row in the builder", () => {
 
   it("returns focus to the group's menu when its removal is cancelled", async () => {
     const user = renderBuilder();
-    await screen.findByRole(
-      "button",
-      { name: `Bài đọc · ${TITLE}` },
-      { timeout: 5000 },
-    );
+    await screen.findByRole("img", { name: "Bài đọc" }, { timeout: 5000 });
     const trigger = groupMenu();
 
     await user.click(trigger);
-    await user.click(await screen.findByRole("menuitem", { name: "Xoá nhóm" }));
-    expect(await screen.findByRole("dialog")).toBeVisible();
+    await user.click(await screen.findByRole("menuitem", { name: "Xoá bài đọc này" }));
+    expect(
+      await screen.findByRole("dialog", { name: "Xoá bài đọc này khỏi đề?" }),
+    ).toBeVisible();
     await user.keyboard("{Escape}");
 
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
@@ -575,16 +495,19 @@ describe("the group's row in the builder", () => {
     expect(writes).toEqual([]);
   });
 
-  it("saves a pending edit in the open question before the line opens the group", async () => {
+  it("saves a pending edit in the open question before the title opens the group", async () => {
     const user = renderBuilder();
     const points = await screen.findByLabelText("Điểm", undefined, { timeout: 5000 });
     await user.clear(points);
     await user.type(points, "7");
     expect(patches).toEqual([]);
 
-    await user.click(await screen.findByRole("button", { name: `Bài đọc · ${TITLE}` }));
+    const heading = (
+      await screen.findAllByRole("button", { name: "Reading club" })
+    ).find((button) => !button.hasAttribute("aria-expanded"));
+    await user.click(heading!);
 
-    expect(await screen.findByLabelText("Tên nhóm câu hỏi")).toBeVisible();
+    expect(await screen.findByDisplayValue("Reading club")).toBeVisible();
     expect(patches).toEqual([{ id: QUESTION_ID, points: 7 }]);
   });
 });

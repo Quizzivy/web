@@ -1,10 +1,10 @@
-import { useEffect, useMemo, useState, type RefObject } from "react";
+import { useEffect, useState, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { useQuery } from "@tanstack/react-query";
-import { Layers } from "lucide-react";
-import { Button } from "@/components/ui/button";
+import { Library } from "lucide-react";
 import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
+import { DropdownMenuItem } from "@/components/ui/dropdown-menu";
 import { ListSkeleton, LoadError } from "@/components/shared/ListState";
 import { useAuthStore } from "@/stores/auth";
 import { ApiError } from "@/lib/api/errors";
@@ -14,21 +14,17 @@ import {
   type GroupBundle,
   type StoredGroup,
 } from "@/features/question-groups/api";
-import { GroupComposer } from "@/features/question-groups/components/GroupComposer";
+import { GroupWorkspace } from "@/features/question-groups/components/GroupWorkspace";
+import type { GroupMoves } from "@/features/question-groups/components/QuestionHalf";
 import {
   GroupRecoveryGate,
   type RecoveryState,
 } from "@/features/question-groups/components/GroupRecoveryGate";
+import type { GroupStart } from "@/features/question-groups/kinds";
 import { groupIssue } from "@/features/question-groups/model";
 import { independentBundle } from "@/features/question-groups/recovery";
-import {
-  readSharedContent,
-  withSharedContent,
-  type SharedContent,
-} from "@/features/question-groups/sharedContent";
 import { useGroupEditor } from "@/features/question-groups/useGroupEditor";
 import type { AutosaveStatus } from "../useAutosave";
-import { SharedContentDialog } from "./SharedContentDialog";
 
 export interface GroupPaneBridge {
   id: string;
@@ -47,23 +43,21 @@ interface PaneProps {
   bridgeRef: RefObject<GroupPaneBridge | null>;
   onStatus: (status: AutosaveStatus) => void;
   titleFocus?: number | undefined;
-  sharedContent?: number | undefined;
-  sharedContentOpener?: RefObject<HTMLElement | null> | undefined;
-  settingsInDialog?: boolean | undefined;
+  start?: GroupStart | undefined;
+  section?: string | undefined;
+  firstNumber?: number | undefined;
+  moves?: GroupMoves | undefined;
 }
 
 /**
- * BuilderGroupPane edits a shared-context group in the builder's editor pane,
- * framed as the question editor is: a header with the group's title, its save
- * state and "Save a copy to the bank", then the group's alerts and the
- * embedded `GroupComposer`. `titleFocus` is passed to the composer: each
- * new value puts focus in the group's title field. Each new value of
- * `sharedContent` opens the Shared content dialog over the group's editor,
- * once a recovery draft has been offered, and the dialog returns focus to
- * `sharedContentOpener`; a group holding more than the dialog shows stays in
- * the pane, which says so. `settingsInDialog` keeps a member's question
- * settings in their dialog at every width, for a pane too narrow to hold
- * them beside the editor.
+ * BuilderGroupPane edits a passage, a cloze or a recording of the test in the
+ * builder's editor pane: the group's alerts, then `GroupWorkspace`, the pane
+ * with the material on one side and its questions on the other. `titleFocus`
+ * is passed on: each new value puts focus in the title. `start` is how the
+ * group was started from the outline's menu, while it is still empty;
+ * `section` and `firstNumber` place it in the test, and `moves` are the moves
+ * of a question out of it, which the builder carries out. The pane's menu
+ * adds "Save a copy to the bank".
  */
 export function BuilderGroupPane(props: Readonly<PaneProps>) {
   const { t } = useTranslation();
@@ -108,17 +102,13 @@ function GroupForm({
   bridgeRef,
   onStatus,
   titleFocus,
-  sharedContent,
-  sharedContentOpener,
-  settingsInDialog = false,
+  start,
+  section,
+  firstNumber,
+  moves,
 }: Readonly<PaneProps & { stored: StoredGroup; recovery: RecoveryState }>) {
   const { t } = useTranslation();
   const [assets, setAssets] = useState(stored.assets);
-  const [shared, setShared] = useState<{
-    request: number | undefined;
-    content: SharedContent | null;
-    inPane: boolean;
-  }>({ request: undefined, content: null, inPane: false });
   const [error, setError] = useState<string | null>(null);
   const [copied, setCopied] = useState<string | null>(null);
   const [copying, setCopying] = useState(false);
@@ -139,19 +129,6 @@ function GroupForm({
     },
   });
   const { saveNow, advanceOwner, persist, status, copyRequired } = editor;
-  if (shared.request !== sharedContent) {
-    const content =
-      sharedContent === undefined ? null : readSharedContent(editor.bundle);
-    setShared({
-      request: sharedContent,
-      content,
-      inPane: sharedContent !== undefined && content === null,
-    });
-  }
-  const assetById = useMemo(
-    () => new Map(assets.map((asset) => [asset.id, asset])),
-    [assets],
-  );
   useEffect(() => onChange(editor.bundle), [onChange, editor.bundle]);
   useEffect(() => {
     flushRef.current = saveNow;
@@ -195,11 +172,6 @@ function GroupForm({
       setCopying(false);
     }
   }
-  async function saveSharedContent(content: SharedContent) {
-    editor.change(withSharedContent(editor.bundle, content));
-    await persist();
-    await saveNow();
-  }
   function addAsset(asset: StoredGroup["assets"][number]) {
     setAssets((current) => [...current.filter((item) => item.id !== asset.id), asset]);
   }
@@ -208,95 +180,68 @@ function GroupForm({
       .then((fresh) => setAssets((current) => mergeAssets(current, fresh.assets)))
       .catch(() => setError(t("groups.loadFailed")));
   }
+  const local = localSaveLabel(editor);
   return (
-    <div className="flex min-w-0 flex-col">
-      <div className="flex min-w-0 items-center gap-2.5 border-b px-4 py-3">
-        <Layers className="text-muted-fg size-3.5 shrink-0" aria-hidden="true" />
-        <div className="flex min-w-0 flex-1 flex-col">
-          <h2 className="truncate text-[13px] font-semibold">
-            {editor.bundle.group.title || t("groups.newGroup")}
-          </h2>
-          <p role="status" className="text-muted-fg truncate text-xs">
-            {t(localSaveLabel(editor))}
-          </p>
-        </div>
-        <Button
-          variant="outline"
-          size="sm"
-          className="bg-card h-7.5 shrink-0 rounded-[7px] px-2.5 text-[12.5px] font-normal"
-          disabled={copying}
-          onClick={() => void saveBankCopy()}
-        >
-          {t("builder.saveGroupToBank")}
-        </Button>
-      </div>
-      <div className="flex min-w-0 flex-col gap-4.5 px-4 py-4.5">
-        {copied ? (
-          <p role="status" className="text-sm">
-            {t("builder.groupSavedToBank")}{" "}
-            <Link className="underline" to={`/teacher/question-bank/groups/${copied}`}>
-              {t("common.view")}
-            </Link>
-          </p>
-        ) : null}
-        {copyRequired ? (
-          <Alert>
-            <AlertTitle>{t("groups.conflictTitle")}</AlertTitle>
-            <AlertDescription>{t("groups.conflictBody")}</AlertDescription>
-          </Alert>
-        ) : null}
-        {shared.inPane ? (
-          <p role="status" className="text-muted-fg text-xs">
-            {t("builder.sharedDialog.inPane")}
-          </p>
-        ) : null}
-        {error || status.kind === "failed" ? (
-          <Alert>
-            <AlertDescription role="alert">
-              {error ??
-                (status.kind === "failed"
-                  ? status.message || t("groups.saveFailed")
-                  : "")}
-            </AlertDescription>
-          </Alert>
-        ) : null}
-        <GroupComposer
-          embedded
-          titleFocus={titleFocus}
-          settingsInDialog={settingsInDialog}
-          bundle={editor.bundle}
-          assets={assets}
-          selectedQuestionId={selectedQuestionId ?? undefined}
-          onSelectedQuestionChange={onSelectedQuestionChange}
-          onChange={editor.change}
-          onAsset={addAsset}
-          onRefresh={refresh}
-        />
-      </div>
-      <SharedContentDialog
-        open={shared.content !== null}
-        title={editor.bundle.group.title || t("groups.newGroup")}
-        stored={shared.content ?? NO_SHARED_CONTENT}
+    <div className="flex min-w-0 flex-col gap-3.5 p-4">
+      {copied ? (
+        <p role="status" className="text-sm">
+          {t("builder.groupSavedToBank")}{" "}
+          <Link className="underline" to={`/teacher/question-bank/groups/${copied}`}>
+            {t("common.view")}
+          </Link>
+        </p>
+      ) : null}
+      {copyRequired ? (
+        <Alert>
+          <AlertTitle>{t("groups.conflictTitle")}</AlertTitle>
+          <AlertDescription>{t("groups.conflictBody")}</AlertDescription>
+        </Alert>
+      ) : null}
+      {error || status.kind === "failed" ? (
+        <Alert>
+          <AlertDescription role="alert">
+            {error ??
+              (status.kind === "failed"
+                ? status.message || t("groups.saveFailed")
+                : "")}
+          </AlertDescription>
+        </Alert>
+      ) : null}
+      <GroupWorkspace
         bundle={editor.bundle}
-        assets={assetById}
-        copyRequired={copyRequired}
-        returnFocus={sharedContentOpener}
+        assets={assets}
+        selectedQuestionId={selectedQuestionId ?? undefined}
+        onSelectedQuestionChange={onSelectedQuestionChange}
+        onChange={editor.change}
         onAsset={addAsset}
         onRefresh={refresh}
-        onSave={saveSharedContent}
-        onClose={() => setShared((current) => ({ ...current, content: null }))}
+        titleFocus={titleFocus}
+        start={start}
+        section={section}
+        firstNumber={firstNumber}
+        moves={moves}
+        status={
+          local === null ? null : (
+            <span role="status" className="text-muted-fg text-xs">
+              {t(local)}
+            </span>
+          )
+        }
+        menu={
+          <DropdownMenuItem disabled={copying} onSelect={() => void saveBankCopy()}>
+            <Library aria-hidden="true" />
+            {t("builder.saveGroupToBank")}
+          </DropdownMenuItem>
+        }
       />
     </div>
   );
 }
 
-const NO_SHARED_CONTENT: SharedContent = { kind: "none" };
-
-function localSaveLabel(editor: ReturnType<typeof useGroupEditor>): string {
-  if (!editor.dirty) return "groups.serverSaved";
+function localSaveLabel(editor: ReturnType<typeof useGroupEditor>): string | null {
+  if (!editor.dirty) return null;
   if (editor.local === "stored") return "groups.localSaved";
-  if (editor.local === "unavailable") return "groups.localUnavailable";
-  return "groups.unsaved";
+  return editor.local === "unavailable" ? "groups.localUnavailable" : null;
 }
 function mergeAssets(current: StoredGroup["assets"], incoming: StoredGroup["assets"]) {
   return [

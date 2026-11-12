@@ -31,12 +31,9 @@ import { Input } from "@/components/ui/input";
 import { MarqueeText } from "@/components/shared/MarqueeText";
 import { SplitPane } from "@/components/shared/SplitPane";
 import { StickyAside } from "@/components/shared/StickyAside";
-import { useColumnWidth } from "@/hooks/useColumnWidth";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
-import { useWidthAtLeast } from "@/hooks/useWidthAtLeast";
 import { useContentWidthAtLeast } from "@/layouts/shell/contentWidth";
 import { useCrumbs } from "@/layouts/shell/crumbs";
-import { PageAsideSlot } from "@/layouts/slots";
 import { contentPlainText } from "@/components/shared/content/plainText";
 import type { AiFinding } from "@/features/ai/api";
 import { AiWriteError } from "@/features/ai/kind";
@@ -93,13 +90,18 @@ import {
   type StoredGroup,
 } from "@/features/question-groups/api";
 import {
-  emptyGroup,
   groupIssue,
   groupRoom,
   MAX_GROUP_MEMBERS,
   memberValues,
   withMembers,
 } from "@/features/question-groups/model";
+import {
+  groupKind,
+  startBundle,
+  type GroupKind,
+  type GroupStart,
+} from "@/features/question-groups/kinds";
 import {
   BuilderGroupPane,
   type GroupPaneBridge,
@@ -125,8 +127,6 @@ import {
 import { ApiError, failureMessage } from "@/lib/api/errors";
 import { notify } from "@/lib/toast";
 import { FormDialog } from "@/components/shared/form/FormDialog";
-
-const MEMBER_EDITOR_MIN = 256;
 
 /**
  * §2 asks for dnd-kit to be split out: it is ~40 kB that only the one admin
@@ -172,12 +172,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   useCrumbs([{ label: title.trim() || t("tests.untitled") }]);
   const wide = useMediaQuery("(min-width: 768px)");
   const room = useContentWidthAtLeast(594);
-  const { width: panelWidth } = useColumnWidth("panel");
-  const [measureColumns, settingsBeside] = useWidthAtLeast<HTMLDivElement>(
-    MEMBER_EDITOR_MIN + panelWidth,
-  );
   const split = wide && room;
-  const [asideSlot, setAsideSlot] = useState<HTMLDivElement | null>(null);
   const [sections, setSections] = useState<OutlineSection[]>(() =>
     editableOutline(test),
   );
@@ -196,11 +191,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     groupId: string;
     request: number;
   } | null>(null);
-  const [sharedRequest, setSharedRequest] = useState<{
-    groupId: string;
-    request: number;
-  } | null>(null);
-  const sharedOpener = useRef<HTMLElement | null>(null);
+  const [starts, setStarts] = useState<ReadonlyMap<string, GroupStart>>(new Map());
   const [pickingGroup, setPickingGroup] = useState(false);
   const [removing, setRemoving] = useState<
     { groupId: string } | { sectionIndex: number } | null
@@ -356,15 +347,6 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   );
   if (activeBundle && groupIds.includes(activeBundle.group.id))
     groups.set(activeBundle.group.id, activeBundle);
-  const groupFiles = new Map(
-    loadedGroups.flatMap(
-      (result) =>
-        result.data?.assets.map(
-          (asset) => [asset.id, asset.originalFilename] as const,
-        ) ?? [],
-    ),
-  );
-
   const byId = useMemo(() => {
     const map = new Map<string, OutlineQuestion>();
     const noKey = t("builder.noCorrectAnswer");
@@ -685,20 +667,11 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     notify.success(t("builder.removedFromTest"));
   }
 
-  async function selectGroup(
-    groupId: string,
-    questionId?: string,
-    ask?: "title" | "sharedContent",
-  ) {
+  async function selectGroup(groupId: string, questionId?: string, ask?: "title") {
     const request = ++selectionRequest.current;
     const askPane = () => {
       setTitleFocus((current) =>
         ask === "title" ? { groupId, request: (current?.request ?? 0) + 1 } : null,
-      );
-      setSharedRequest((current) =>
-        ask === "sharedContent"
-          ? { groupId, request: (current?.request ?? 0) + 1 }
-          : null,
       );
     };
     if (selectedGroupId === groupId) {
@@ -737,7 +710,11 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     return saved;
   }
 
-  async function insertGroup(source?: GroupSummary, sectionIndex = destinationIndex()) {
+  async function insertGroup(
+    source?: GroupSummary,
+    sectionIndex = destinationIndex(),
+    start: GroupStart = "reading",
+  ) {
     setCreating(true);
     setPublishError(null);
     try {
@@ -757,8 +734,16 @@ function Builder({ test }: Readonly<{ test: Test }>) {
             })
           : await createGroup({
               ...destination,
-              bundle: emptyGroup(t("groups.newGroup")),
+              bundle: startBundle(start, t),
             });
+        const groupId = saved.bundle.group.id;
+        if (!source) {
+          setStarts((current) => new Map(current).set(groupId, start));
+          setTitleFocus((current) => ({
+            groupId,
+            request: (current?.request ?? 0) + 1,
+          }));
+        }
         version.current = saved.testUpdatedAt ?? version.current;
         groupBridge.current?.advanceOwner(false, version.current);
         queryClient.setQueryData(["teacher-group", saved.bundle.group.id], saved);
@@ -802,6 +787,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     removing && "sectionIndex" in removing
       ? sections[removing.sectionIndex]
       : undefined;
+  const doomedKind = removedKind(removing, groups, starts);
 
   async function removeContent() {
     if (!removing) return;
@@ -919,6 +905,19 @@ function Builder({ test }: Readonly<{ test: Test }>) {
           }
         : undefined,
     );
+  }
+
+  function moveOutOfGroup(questionId: string) {
+    const source = findMember(groups, `question:${questionId}`);
+    const owner = source
+      ? findUnit(latestOutline.current, `group:${source.groupId}`)
+      : null;
+    if (!source || !owner) return;
+    void moveQuestion({
+      questionId,
+      to: { sectionIndex: owner.sectionIndex, groupId: null, index: owner.index + 1 },
+      groupIds: [source.groupId],
+    });
   }
 
   function moveToGroup(questionId: string, groupId: string) {
@@ -1104,13 +1103,25 @@ function Builder({ test }: Readonly<{ test: Test }>) {
           titleFocus={
             titleFocus?.groupId === selectedGroupId ? titleFocus.request : undefined
           }
-          sharedContent={
-            sharedRequest?.groupId === selectedGroupId
-              ? sharedRequest.request
-              : undefined
+          start={starts.get(selectedGroupId)}
+          section={
+            sections.find((section) =>
+              unitsOf(section).some(
+                (unit) => unit.kind === "group" && unit.id === selectedGroupId,
+              ),
+            )?.title
           }
-          sharedContentOpener={sharedOpener}
-          settingsInDialog={!settingsBeside}
+          firstNumber={firstNumberOf(sections, selectedGroupId, groups)}
+          moves={{
+            out: (questionId) => moveOutOfGroup(questionId),
+            toAnother:
+              groupIds.length > 1
+                ? (questionId) => {
+                    groupMoveOpener.current = null;
+                    setGroupMove(questionId);
+                  }
+                : undefined,
+          }}
         />
       );
     if (selectedId === null)
@@ -1261,15 +1272,13 @@ function Builder({ test }: Readonly<{ test: Test }>) {
                 <OutlineTree
                   sections={sections}
                   groups={groups}
-                  groupFiles={groupFiles}
                   selectedGroupId={selectedGroupId}
                   onSelectGroup={(id, questionId) => void selectGroup(id, questionId)}
                   onRenameGroup={(id) => void selectGroup(id, undefined, "title")}
-                  onOpenSharedContent={(id, opener) => {
-                    sharedOpener.current = opener;
-                    void selectGroup(id, undefined, "sharedContent");
-                  }}
-                  onCreateGroup={() => void insertGroup().catch(() => undefined)}
+                  onCreateGroup={(start) =>
+                    void insertGroup(undefined, undefined, start).catch(() => undefined)
+                  }
+                  groupStarts={starts}
                   onRemoveGroup={(id, opener) => {
                     removeOpener.current = opener;
                     setRemoving({ groupId: id });
@@ -1301,23 +1310,13 @@ function Builder({ test }: Readonly<{ test: Test }>) {
           </StickyAside>
         }
         second={
-          <div
-            ref={measureColumns}
-            data-columns
-            className="flex min-w-0 flex-1 items-start"
-          >
+          <div data-columns className="flex min-w-0 flex-1 items-start">
             <div
               data-resize-middle
-              className={cn(
-                "bg-card shadow-card min-w-0 flex-1 rounded-xl border",
-                selectedId === null && !selectedGroupId ? "p-4" : "p-0",
-              )}
+              className={editorFrame(selectedId, selectedGroupId)}
             >
-              <PageAsideSlot.Provider value={asideSlot}>
-                {activeEditor()}
-              </PageAsideSlot.Provider>
+              {activeEditor()}
             </div>
-            <div ref={setAsideSlot} className="contents" />
           </div>
         }
       />
@@ -1348,7 +1347,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
         title={
           doomedSection
             ? t("builder.removeSectionTitle", { title: doomedSection.title })
-            : t("builder.removeGroupTitle")
+            : t(`groups.kind.${doomedKind}.removeTitle`)
         }
         description={
           doomedSection
@@ -1866,6 +1865,42 @@ function withMemberFix(bundle: GroupBundle, finding: AiFinding): GroupBundle | n
         : question,
     ),
   };
+}
+
+function removedKind(
+  removing: { groupId: string } | { sectionIndex: number } | null,
+  groups: Map<string, GroupBundle>,
+  starts: ReadonlyMap<string, GroupStart>,
+): GroupKind {
+  if (removing === null || !("groupId" in removing)) return "reading";
+  const group = groups.get(removing.groupId);
+  return group ? groupKind(group, starts.get(removing.groupId)) : "reading";
+}
+
+function editorFrame(
+  selectedId: string | null,
+  selectedGroupId: string | null,
+): string {
+  if (selectedGroupId) return "min-w-0 flex-1";
+  return cn(
+    "bg-card shadow-card min-w-0 flex-1 rounded-xl border",
+    selectedId === null ? "p-4" : "p-0",
+  );
+}
+
+function firstNumberOf(
+  sections: OutlineSection[],
+  groupId: string,
+  groups: Map<string, GroupBundle>,
+): number {
+  let before = 0;
+  for (const section of sections)
+    for (const unit of unitsOf(section)) {
+      if (unit.kind === "group" && unit.id === groupId) return before + 1;
+      before +=
+        unit.kind === "group" ? (groups.get(unit.id)?.group.members.length ?? 0) : 1;
+    }
+  return before + 1;
 }
 
 function positionOf(

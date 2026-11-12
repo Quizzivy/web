@@ -350,7 +350,7 @@ it("tints the collapsed header under a whole-group drop and writes its ordered u
       toJSON: () => ({}),
     };
   });
-  const grip = screen.getByRole("button", { name: "Kéo nhóm Whole group" });
+  const grip = screen.getByRole("button", { name: "Kéo Whole group" });
   grip.focus();
   await user.keyboard(" ");
   await waitFor(() => expect(grip).toHaveAttribute("aria-pressed", "true"));

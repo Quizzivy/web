@@ -392,6 +392,18 @@ To view one, start the server above and open, for example,
   page is here because the deck is the design of record. It is a proposal until Thuong approves
   it, and its six questions for him are on the page.
 
+- 2026-11-12 — Fourth proposal page: `proposals/Builder Shared Groups.dc.html`, for DG-231, opened
+  with it: teachers tell the owner that questions on shared material are hard to build, the cloze
+  most of all. The page reads the builder's code on `develop` (`bc20eec4`; the app was not run),
+  sets what a teacher does today beside what is proposed for seven tasks, and ranks eleven things
+  in the way. It draws one pane in place of the group row's shared-content line (DG-186) and the
+  Shared content dialog (DG-187): the passage or the recording on the left, its questions as
+  cards on the right, two tabs on a phone; a button under the outline that names a passage, a
+  cloze and a recording; and a gap made by selecting a word, with its question made in the same
+  write. Frames at 1280 and 360, light and dark, Vietnamese and English; a frame is as tall as
+  its page. No operation and no stored shape changes, and no exported page changes. It is a
+  proposal until Thuong approves it, and its seven questions for him are on the page.
+
 ## The brand
 
 `brand/` is Thuong's kit, copied byte for byte from `~/Developer/designs/quizzivy-brand`. The

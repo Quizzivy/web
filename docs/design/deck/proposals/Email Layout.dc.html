@@ -31,7 +31,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · Email · Design proposal · 12 Nov 2026</span>
   </div>
   <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">One layout for every email</h1>
-  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws no email. Four are sent today, as bare HTML with the centre's name, a few lines and a link, and fifteen more are planned for R7, R10 and R11. This page draws one layout that all nineteen fill, and seven of them in full: the invite that ships today and six of R7's. It keeps R5's rule: no images, no remote CSS and no tracking. Nothing here changes what an email is allowed to say.</p>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws no email. Four are sent today, as bare HTML with the centre's name, a few lines and a link, and fifteen more are planned for R7, R10 and R11. This page draws one layout that all nineteen fill, and seven of them in full: the invite that ships today and six of R7's. The layout is flat: one white panel on a soft ground, blocks set apart by space and a quieter ground, and no line or stripe anywhere. It keeps R5's rule: no images, no remote CSS and no tracking. Nothing here changes what an email is allowed to say.</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px">
     <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
   </div>
@@ -49,10 +49,11 @@ body{margin:0;-webkit-font-smoothing:antialiased}
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
     <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Where is the brand?</span>
-    <strong style="font-size:17px;font-weight:600;line-height:1.35">In the centre's name and one lime rule. There is no logo.</strong>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">In the centre's name, and in how calm the page is. There is no logo.</strong>
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
       <li>R5 decided that emails carry no images, so nothing is blocked, nothing is fetched and nothing can track an open. A logo is an image, and the brand kit forbids setting the wordmark in type.</li>
       <li><span style="color:var(--fg)">The colours are the deck's tokens written as hex</span>, because mail clients read neither CSS variables nor oklch.</li>
+      <li>Nothing has a border: no outline on the panel, no coloured stripe on an edge, no bar beside a quote. The owner ruled edge stripes out for every surface on 12 Nov 2026.</li>
       <li>The typeface is the reader's system face. Be Vietnam Pro would be a remote font.</li>
     </ul>
   </div>
@@ -61,6 +62,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <strong style="font-size:17px;font-weight:600;line-height:1.35">It is one column that needs no media query to fit a phone.</strong>
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
       <li>600px at most, fluid below. Built as tables with inline styles when it is implemented; the frames here show the result, not the markup.</li>
+      <li>The look follows the plain transactional emails of today: React Email's Barebone and Studio templates, and the receipts of Apple and Nike. A brand line, one large heading, a few lines, one button.</li>
       <li><span style="color:var(--fg)">Dark is a second set of colours</span> for clients that honour the reader's setting. A client that inverts colours itself still gets dark text on light and a solid button.</li>
       <li>Every email keeps its plain-text part, drawn here beside the HTML.</li>
     </ul>
@@ -96,31 +98,31 @@ body{margin:0;-webkit-font-smoothing:antialiased}
               <sc-if value="{{ isHtml }}" hint-placeholder-val="{{ true }}">
                 <div lang="{{ lang }}" style="padding:{{ f.mailPad }};font-family:{{ e.font }};font-size:16px;line-height:1.5;color:{{ e.text }}">
                   <div style="max-width:600px;margin:0 auto">
-                    <div style="display:flex;align-items:center;gap:8px;padding:0 4px 14px;font-size:15px;font-weight:700">{{ m.org }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">1</span></sc-if></div>
-                    <div style="background:{{ e.card }};border:1px solid {{ e.border }};border-top:3px solid {{ e.accent }};border-radius:12px;padding:{{ f.cardPad }}">
-                      <h1 style="margin:0 0 14px;display:flex;align-items:flex-start;gap:8px;font-size:{{ f.h1 }};line-height:1.3;font-weight:700"><span style="flex:1;min-width:0">{{ m.head }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:3px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">2</span></sc-if></h1>
+                    <div style="background:{{ e.card }};border-radius:16px;padding:{{ f.cardPad }}">
+                      <div style="display:flex;align-items:center;gap:8px;margin:0 0 {{ f.brandGap }};font-size:15px;font-weight:700">{{ m.org }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">1</span></sc-if></div>
+                      <h1 style="margin:0 0 16px;display:flex;align-items:flex-start;gap:8px;font-size:{{ f.h1 }};line-height:1.25;letter-spacing:-0.01em;font-weight:700"><span style="flex:1;min-width:0">{{ m.head }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:3px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">2</span></sc-if></h1>
                       <p style="margin:0 0 12px">{{ m.hello }}</p>
                       <sc-for list="{{ m.body }}" as="p" hint-placeholder-count="1"><p style="margin:0 0 12px">{{ p }}</p></sc-for>
                       <sc-if value="{{ m.hasFacts }}" hint-placeholder-val="{{ true }}">
-                        <div style="position:relative;margin:16px 0;border:1px solid {{ e.border }};border-radius:10px;overflow:hidden">
-                          <sc-for list="{{ m.facts }}" as="ft" hint-placeholder-count="3"><div style="display:table;table-layout:fixed;width:100%;border-top:{{ ft.top }} solid {{ e.border }}"><span style="display:table-cell;width:{{ f.factW }};padding:10px 14px;font-size:14px;color:{{ e.muted }};background:{{ e.soft }};vertical-align:top">{{ ft.label }}</span><span style="display:table-cell;padding:10px 14px;font-size:15px;font-weight:600;vertical-align:top;overflow-wrap:anywhere">{{ ft.value }}</span></div></sc-for>
-                          <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;right:10px;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">3</span></sc-if>
+                        <div style="position:relative;margin:20px 0;padding:8px 18px;border-radius:12px;background:{{ e.soft }}">
+                          <sc-for list="{{ m.facts }}" as="ft" hint-placeholder-count="3"><div style="display:table;table-layout:fixed;width:100%"><span style="display:table-cell;width:{{ f.factW }};padding:8px 12px 8px 0;font-size:14px;color:{{ e.muted }};vertical-align:top">{{ ft.label }}</span><span style="display:table-cell;padding:8px 0;font-size:15px;font-weight:600;vertical-align:top;overflow-wrap:anywhere">{{ ft.value }}</span></div></sc-for>
+                          <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:12px;right:12px;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">3</span></sc-if>
                         </div>
                       </sc-if>
                       <sc-if value="{{ m.hasQuote }}" hint-placeholder-val="{{ false }}">
-                        <div style="margin:16px 0;padding:10px 14px;border-left:3px solid {{ e.border }};background:{{ e.soft }};border-radius:0 8px 8px 0"><div style="font-size:13px;color:{{ e.muted }};margin-bottom:4px">{{ m.quoteBy }}</div><div style="font-size:15px">{{ m.quote }}</div></div>
+                        <div style="margin:20px 0;padding:14px 18px;border-radius:12px;background:{{ e.soft }}"><div style="font-size:13px;color:{{ e.muted }};margin-bottom:4px">{{ m.quoteBy }}</div><div style="font-size:16px">{{ m.quoteMarked }}</div></div>
                       </sc-if>
                       <sc-if value="{{ m.hasClasses }}" hint-placeholder-val="{{ false }}">
-                        <div style="position:relative;margin:16px 0;border:1px solid {{ e.border }};border-radius:10px;overflow:hidden">
-                          <sc-for list="{{ m.classes }}" as="cl" hint-placeholder-count="3"><div style="padding:11px 14px;border-top:{{ cl.top }} solid {{ e.border }}"><div style="font-size:15px;font-weight:600">{{ cl.name }}</div><div style="font-size:14px;color:{{ e.muted }}">{{ cl.stats }}</div></div></sc-for>
-                          <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;right:10px;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">3</span></sc-if>
+                        <div style="position:relative;margin:20px 0;padding:8px 18px;border-radius:12px;background:{{ e.soft }}">
+                          <sc-for list="{{ m.classes }}" as="cl" hint-placeholder-count="3"><div style="padding:9px 0"><div style="font-size:15px;font-weight:600">{{ cl.name }}</div><div style="font-size:14px;color:{{ e.muted }}">{{ cl.stats }}</div></div></sc-for>
+                          <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:12px;right:12px;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">3</span></sc-if>
                         </div>
                       </sc-if>
-                      <div style="display:flex;align-items:center;gap:10px;margin:20px 0 0"><span role="link" style="display:inline-block;height:44px;padding:0 22px;border-radius:8px;background:{{ e.btn }};color:{{ e.btnText }};font-size:16px;font-weight:700;line-height:44px;white-space:nowrap">{{ m.cta }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">4</span></sc-if></div>
+                      <div style="display:flex;align-items:center;gap:10px;margin:24px 0 0"><span role="link" style="display:inline-block;height:44px;padding:0 24px;border-radius:8px;background:{{ e.btn }};color:{{ e.btnText }};font-size:16px;font-weight:700;line-height:44px;white-space:nowrap">{{ m.cta }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">4</span></sc-if></div>
                       <p style="margin:14px 0 0;font-size:13px;line-height:1.5;color:{{ e.muted }}">{{ m.linkNote }}<br><span style="word-break:break-all;color:{{ e.text }}">{{ m.link }}</span></p>
                       <sc-for list="{{ m.notes }}" as="n" hint-placeholder-count="1"><p style="margin:12px 0 0;font-size:14px;color:{{ e.muted }}">{{ n }}</p></sc-for>
                     </div>
-                    <div style="display:flex;gap:8px;align-items:flex-start;padding:16px 4px 0;font-size:13px;line-height:1.6;color:{{ e.muted }}"><div style="flex:1;min-width:0"><div>{{ m.why }}</div><sc-if value="{{ m.hasPrefs }}" hint-placeholder-val="{{ true }}"><div><span role="link" style="color:{{ e.text }};text-decoration:underline;text-underline-offset:3px">{{ m.prefs }}</span></div></sc-if><div>{{ m.sent }}</div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">5</span></sc-if></div>
+                    <div style="display:flex;gap:8px;align-items:flex-start;padding:20px {{ f.footPad }} 0;font-size:13px;line-height:1.6;color:{{ e.muted }}"><div style="flex:1;min-width:0"><div>{{ m.why }}</div><sc-if value="{{ m.hasPrefs }}" hint-placeholder-val="{{ true }}"><div><span role="link" style="color:{{ e.text }};text-decoration:underline;text-underline-offset:3px">{{ m.prefs }}</span></div></sc-if><div>{{ m.sent }}</div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">5</span></sc-if></div>
                   </div>
                 </div>
               </sc-if>
@@ -228,15 +230,13 @@ const APP = 'https://app.quizzivy.com';
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 // Email colours: [use, light, dark, deck token]
 const COLOURS = [
-  ['Ground behind the card', '#f7f8f8', '#0a0d0e', '--sidebar'],
+  ['Ground around the card', '#f7f8f8', '#0a0d0e', '--sidebar'],
   ['Card', '#ffffff', '#131819', '--card'],
   ['Text', '#1b2123', '#ecefef', '--fg'],
   ['Quiet text', '#646c6e', '#98a0a2', '--muted-fg'],
-  ['Lines', '#e4e7e8', '#252d2f', '--border'],
-  ['Label cells, quote', '#f2f4f4', '#1a2022', '--muted'],
+  ['Panels inside the card: facts, quote, classes', '#f2f4f4', '#1a2022', '--muted'],
   ['Button', '#252c2e', '#ecefef', '--primary'],
-  ['Button text', '#fafbfb', '#141a1b', '--primary-fg'],
-  ['Rule on the card', '#a4ca3e', '#a4ca3e', '--accent-c']
+  ['Button text', '#fafbfb', '#141a1b', '--primary-fg']
 ];
 // Shared lines: [key, Vietnamese, English, status]
 const SHARED = [
@@ -303,26 +303,27 @@ const MAILS = {
 const ORDER = ['invite', 'due', 'result', 'message', 'shared', 'flagged', 'weekly'];
 const NAMES = { invite: 'Account invite', due: 'Due soon', result: 'Result ready', message: 'New message', shared: 'Shared with you', flagged: 'Flagged attempt', weekly: 'Weekly summary' };
 const NOTES = [
-  'The header is the centre’s short name in text, as today. There is no logo: R5 allows no images, and the wordmark is never set in type.',
-  'The card’s lime top rule is the email’s one brand mark. The heading says what happened in one line; the subject says the same after the centre’s name.',
-  'Facts are a two-column table that still reads top to bottom at 360. A sharer’s message is a quote, and the weekly summary is one block for each class, so no email needs a wide table.',
+  'The centre’s short name in text opens the panel, as it opens today’s emails. There is no logo: R5 allows no images, and the wordmark is never set in type.',
+  'One white panel with 16px corners on the soft ground, and no outline. The heading is the largest thing on it and says what happened in one line.',
+  'Facts sit in a quieter block inside the panel: a label and a value on each row, with space between rows and no lines. A sharer’s message and the weekly summary’s classes use the same block.',
   'One button, 44px tall, in the deck’s primary colour. Under it is the same link in full, for a client that strips the button and for the plain-text part.',
   'The footer says why the reader got the email. A notification email adds the line that leads to its switch; an account email, such as the invite, has no such line.'
 ];
 const PARTS = [
   ['Subject', '{org}: what happened', 'As today: the centre’s short name, a colon, then one line. It names the test, the class or the person, never a score.'],
   ['Preview line', 'One sentence', 'The line an inbox shows after the subject. It adds the next fact (the due time, the class), and is hidden in the body.'],
-  ['Header', '15px bold, the centre’s short name', 'Text only. It sits on the ground above the card.'],
-  ['Card', '600px at most, 12px corners, 1px line, a 3px lime top rule', 'Fluid below 600. 28px padding, 20px at 360.'],
-  ['Heading', '22px bold; 20px at 360', 'One line that says what happened. No full stop.'],
+  ['Panel', 'White, 600px at most, 16px corners, no outline and no shadow', 'Fluid below 600. 40px padding, 26px by 20px at 360. It is the only surface on the ground.'],
+  ['Brand line', '15px bold, the centre’s short name', 'Text only, the first line of the panel.'],
+  ['Heading', '26px bold; 22px at 360', 'One line that says what happened. No full stop.'],
   ['Text', '16px, 1.5 line height', 'A greeting with the reader’s name, then one or two sentences. An email says what the app will show, and does not repeat it.'],
-  ['Facts', 'Two columns: a label on the quiet ground, the value in bold', 'At most five rows. The label column is 150px, 120px at 360. Dates are written in full in the reader’s language.'],
-  ['Quote', 'A 3px line on the left, on the quiet ground', 'Only for a sharer’s own message, with whose it is above it.'],
-  ['Class blocks', 'A name, then one line of counts', 'Only in the weekly summary. One block for each class with activity.'],
+  ['Facts', 'A quieter block with 12px corners; on each row a quiet label and the value in bold', 'At most five rows, set apart by space. The label column is 160px, 116px at 360. Dates are written in full in the reader’s language.'],
+  ['Quote', 'The same block: whose words they are, then the words in quotation marks', 'Only for a sharer’s own message.'],
+  ['Class list', 'The same block: a name, then one line of counts', 'Only in the weekly summary. One entry for each class with activity.'],
   ['Button', '44px tall, 8px corners, 16px bold', 'One per email, with a verb and the thing it opens. It leads to an app route on the app’s own address.'],
   ['Link line', '13px, the address in full, breaking anywhere', 'Always present under the button.'],
   ['Notes', '14px, quiet', 'What the reader must know about the link: that it works once, when it expires, what to do if the email is unexpected.'],
-  ['Footer', '13px, quiet, on the ground', 'Why the reader got it; the settings link for a notification email; the centre’s name and “sent with Quizzivy”.'],
+  ['Footer', '13px, quiet, on the ground under the panel', 'Why the reader got it; the settings link for a notification email; the centre’s name and “sent with Quizzivy”. Space sets it apart, not a line.'],
+  ['Edges', 'None', 'No part has an outline, a coloured stripe on one side or a bar. Blocks are set apart by space and by ground.'],
   ['Plain text', 'The same lines, top to bottom', 'Every email keeps a text part: the facts as “Label: value”, and the link on its own line.']
 ];
 // template, release, goes to, says, besides the text, button, settings link
@@ -348,7 +349,7 @@ const EVERY = [
   ['lead_received', 'R11', 'The centre’s lead recipients', 'A new consultation request', 'Facts: first name, interests. No phone number', 'Open consultation requests', 'No']
 ];
 const QUESTIONS = [
-  ['Q1 · T-R5.2', 'Do emails stay without any image, the mark included?', 'R5 decided no images, no remote CSS and no tracking. A logo fetched from a server breaks that. The mark could travel inside the email as an inline image, which fetches nothing, but some clients show it as an attachment.', 'No image. The centre’s name and the lime rule carry the brand.'],
+  ['Q1 · T-R5.2', 'Do emails stay without any image, the mark included?', 'R5 decided no images, no remote CSS and no tracking. A logo fetched from a server breaks that. The mark could travel inside the email as an inline image, which fetches nothing, but some clients show it as an attachment.', 'No image. The centre’s name carries the brand.'],
   ['Q2', 'May the typeface change from Arial to the reader’s system face?', 'Today’s templates ask for Arial. A system face (San Francisco, Segoe UI, Roboto) reads better and draws Vietnamese well; Be Vietnam Pro cannot be used without a remote font.', 'The system face, with Helvetica and Arial as fallbacks.'],
   ['Q3 · T-R7.13', 'Does the result email ever show the score?', 'The plan forbids a score the review policy does not yet show. Showing it in some emails and not in others needs the policy checked at send time, and a score in an inbox is read by whoever opens the inbox.', 'Never. The email says the result is ready and the button opens it.'],
   ['Q4 · T-R7.13', 'Do emails with no switch carry the settings link?', 'The plan gives every R7 email the footer line “Change which emails you get”. A share, an extension, a change of class teacher and the AI notices have no switch of their own.', 'Yes, as the plan says: the line leads to where the other emails are controlled.'],
@@ -393,7 +394,7 @@ class Component extends DCLogic {
       stats: vi ? c[1] + ' bài nộp · Điểm TB ' + c[2] + '% · ' + c[3] + ' chờ chấm · ' + c[4] + ' bị gắn cờ' : c[1] + ' handed in · average ' + c[2] + '% · ' + c[3] + ' to grade · ' + c[4] + ' flagged' }));
     const m = {
       org: ORG, subject: ORG + ': ' + pick(d.subject), pre: pick(d.pre), head: pick(d.head), hello: fill(sh('greeting'), { name: d.to }),
-      body: d.body.map(b => fill(pick(b), { org: ORG })), hasFacts: facts.length > 0, facts, hasQuote: !!d.quote, quoteBy: d.quote ? pick(d.quoteBy) : '', quote: d.quote ? pick(d.quote) : '',
+      body: d.body.map(b => fill(pick(b), { org: ORG })), hasFacts: facts.length > 0, facts, hasQuote: !!d.quote, quoteBy: d.quote ? pick(d.quoteBy) : '', quote: d.quote ? pick(d.quote) : '', quoteMarked: d.quote ? '“' + pick(d.quote) + '”' : '',
       hasClasses: classes.length > 0, classes, cta: pick(d.cta), linkNote: sh('link line'), link: d.link, notes: d.notes.map(pick),
       why: fill(sh('footer, why'), { org: ORG }), hasPrefs: d.prefs, prefs: sh('footer, settings'), sent: fill(sh('footer, sender'), { org: ORG })
     };
@@ -409,12 +410,12 @@ class Component extends DCLogic {
     m.text = lines.join('\n');
 
     const col = i => COLOURS[i][ci];
-    const e = { font: FONT, ground: col(0), card: col(1), text: col(2), muted: col(3), border: col(4), soft: col(5), btn: col(6), btnText: col(7), accent: col(8) };
+    const e = { font: FONT, ground: col(0), card: col(1), text: col(2), muted: col(3), soft: col(4), btn: col(5), btnText: col(6) };
 
     const W = s.stageW || 1280, both = W >= 1140;
     const mk = (w, h, sc, phone, title, sub) => ({
       w, h, s: sc, ow: Math.floor(w * sc), oh: Math.floor(h * sc), title, sub, screen: NAMES[s.mail] + ' · ' + w, pins: s.anno && !phone && s.part === 'html',
-      chromePad: phone ? '12px 14px' : '14px 20px', subjSize: phone ? '15px' : '17px', mailPad: phone ? '18px 14px 28px' : '28px 24px 40px', cardPad: phone ? '20px' : '28px', h1: phone ? '20px' : '22px', factW: phone ? '120px' : '150px'
+      chromePad: phone ? '12px 14px' : '14px 20px', subjSize: phone ? '15px' : '17px', mailPad: phone ? '12px 10px 28px' : '32px 24px 40px', cardPad: phone ? '26px 20px' : '40px', brandGap: phone ? '22px' : '28px', footPad: phone ? '20px' : '40px', h1: phone ? '22px' : '26px', factW: phone ? '116px' : '160px'
     });
     const frames = [mk(760, 800, both ? 1 : Math.min(1, W / 760), false, 'Reading pane', '760px wide, the email at its full 600'), mk(360, 780, Math.min(1, W / 360), true, 'Phone', '360px wide, 14px gutters')];
 

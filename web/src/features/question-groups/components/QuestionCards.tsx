@@ -19,6 +19,7 @@ import { editorType, optionLetter } from "@/features/question-bank/questionType"
 import { BuilderQuestionEditor } from "@/features/tests/components/BuilderQuestionEditor";
 import { cn } from "@/lib/utils";
 import type { GapQuestion, GapRow } from "../gapQuestions";
+import { GapDistractors } from "./GapDistractors";
 import { memberValues, type GroupQuestion } from "../model";
 
 const NUMBER =
@@ -363,18 +364,26 @@ export function GapCard({
                 </div>
               ))
             : null}
-          {typed ? (
-            <Button
-              type="button"
-              variant="ghost"
-              size="sm"
-              className="h-7.5 self-start px-2 text-[12.5px] font-medium max-[767px]:h-10"
-              onClick={() => write({ also: [...also, ""] })}
-            >
-              <Plus aria-hidden="true" />
-              {t("groups.pane.alsoAccept")}
-            </Button>
-          ) : null}
+          <GapDistractors
+            values={values}
+            sentence={sentence}
+            rows={rows}
+            also={also}
+            onRows={(next) => write({ rows: next })}
+          >
+            {typed ? (
+              <Button
+                type="button"
+                variant="ghost"
+                size="sm"
+                className="h-7.5 px-2 text-[12.5px] font-medium max-[767px]:h-10"
+                onClick={() => write({ also: [...also, ""] })}
+              >
+                <Plus aria-hidden="true" />
+                {t("groups.pane.alsoAccept")}
+              </Button>
+            ) : null}
+          </GapDistractors>
         </div>
         <label className="flex flex-col gap-1.5 text-[12.5px] font-medium">
           {t("questionEditor.prompt")}

@@ -402,7 +402,8 @@ To view one, start the server above and open, for example,
   cloze and a recording; and a gap made by selecting a word, with its question made in the same
   write. Frames at 1280 and 360, light and dark, Vietnamese and English; a frame is as tall as
   its page. No operation and no stored shape changes, and no exported page changes. It is a
-  proposal until Thuong approves it, and its seven questions for him are on the page.
+  proposal until Thuong approves it, and its seven questions for him are on the page. He decided
+  the first the same day, as drawn: a gap with no wrong options is one the student types.
 
 ## The brand
 

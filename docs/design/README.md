@@ -406,6 +406,8 @@ To view one, start the server above and open, for example,
   the first two the same day, as drawn: a gap with no wrong options is one the student types,
   and the builder and the bank both use the three names. The page gained a table of the wording
   that follows ("One name each"); the bank's own screens are still not drawn (DG-68).
+  He also decided the third: the Shared content dialog goes, with the group row's shared-content
+  line and its menu item, when the page is built.
 
 ## The brand
 

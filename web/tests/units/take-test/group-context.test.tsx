@@ -268,7 +268,7 @@ it("pauses and disables group playback after the attempt is locked", async () =>
   expect(HTMLMediaElement.prototype.pause).toHaveBeenCalled();
 });
 
-it("focuses a material's stable blank target even when its printed number differs", async () => {
+it("prints the question's number at a gap that alone is answered by its question, and focuses the blank's stable target", async () => {
   const current = await vi.mocked(getAttempt)("att-1");
   const blankId = "01935000-0000-7000-8000-000000000077";
   const questionId = previewQuestions[2]!.id;
@@ -309,11 +309,11 @@ it("focuses a material's stable blank target even when its printed number differ
     ],
   });
   mount();
-  await userEvent
-    .setup()
-    .click(
-      await screen.findByRole("button", { name: "Chỗ trống A — chuyển đến câu 2" }),
-    );
+  const gap = await screen.findByRole("button", {
+    name: "Chỗ trống 2 — chuyển đến câu 2",
+  });
+  expect(gap).toHaveTextContent(/^2$/);
+  await userEvent.setup().click(gap);
   expect(screen.getByRole("textbox", { name: "Chỗ trống 1" })).toHaveFocus();
 });
 

@@ -122,6 +122,7 @@ export const GroupContext = memo(function GroupContext({
           group={group}
           omitTitle={head.heading}
           onRetryMedia={onRetryMedia}
+          numbers={numbers}
           renderAudio={(node, asset, recording) => (
             <SharedAudio
               recording={recording}

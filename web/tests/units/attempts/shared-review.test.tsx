@@ -54,7 +54,7 @@ function renderPage(byQuestion: boolean) {
     { initialEntries: [`/teacher/attempts/${ATTEMPT_ID}`] },
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  render(
+  return render(
     <QueryClientProvider client={client}>
       <RouterProvider router={router} />
     </QueryClientProvider>,
@@ -111,4 +111,62 @@ it("keeps shared context in anonymous question grading without inventing a cross
   expect(screen.queryByText(/^Đã nghe/)).not.toBeInTheDocument();
   await userEvent.setup().click(screen.getByText("Nội dung bài nghe"));
   expect(screen.getByText("Teacher-only shared transcript.")).toBeVisible();
+});
+
+it("prints the question's number at a gap bound to a blank, in the attempt's review and in grading by question", async () => {
+  const typed = {
+    ...shared,
+    groups: [
+      {
+        ...group,
+        stimuli: [
+          {
+            ...group.stimuli[0]!,
+            gaps: [
+              {
+                kind: "blank" as const,
+                gapId: "material",
+                questionId: CHOICE_ID,
+                blankGapId: "answer",
+              },
+            ],
+          },
+        ],
+      },
+    ],
+  };
+  server.use(
+    http.get(`${BASE}/teacher/attempts/${ATTEMPT_ID}`, () =>
+      contractJson("/teacher/attempts/{id}", "get", 200, {
+        ...review(),
+        sharedContext: typed,
+      }),
+    ),
+    http.get(`${BASE}/teacher/attempts/${ATTEMPT_ID}/events`, () =>
+      contractJson("/teacher/attempts/{id}/events", "get", 200, {
+        startedAt: review().attempt.startedAt,
+        events: [],
+        summary: review().integrity,
+      }),
+    ),
+    http.get(`${BASE}/teacher/assignments/${ASSIGNMENT_ID}/answers`, () =>
+      contractJson("/teacher/assignments/{id}/answers", "get", 200, {
+        question: review().questions[1],
+        questionNumber: 2,
+        questionCount: 2,
+        manualQuestionIds: [ESSAY_ID],
+        items: [],
+        sharedContext: typed,
+      }),
+    ),
+  );
+  const page = renderPage(false);
+  expect(
+    await screen.findByRole("button", { name: "Chỗ trống 1 — chuyển đến câu 1" }),
+  ).toHaveTextContent(/^1$/);
+  page.unmount();
+
+  const { container } = renderPage(true);
+  await screen.findByText(group.title);
+  expect(container.querySelector(".content-gap")).toHaveTextContent(/^1$/);
 });

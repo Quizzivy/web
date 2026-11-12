@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, type ReactNode } from "react";
 import type { Editor } from "@tiptap/react";
 import { ImagePlus, Music2 } from "lucide-react";
 import { useTranslation } from "react-i18next";
@@ -10,16 +10,19 @@ import { MaterialAssetDialog } from "./MaterialAssetDialog";
 /**
  * MaterialTools is a material editor's row of insert buttons, one for each
  * of `kinds`: an image or a recording at the caret, through
- * `MaterialAssetDialog`.
+ * `MaterialAssetDialog`. `lead` is drawn before them, where the host puts a
+ * command of its own.
  */
 export function MaterialTools({
   editor,
   kinds,
   onAsset,
+  lead,
 }: Readonly<{
   editor: Editor;
   kinds: readonly MediaKind[];
   onAsset: (asset: MediaAsset) => void;
+  lead?: ReactNode;
 }>) {
   const { t } = useTranslation();
   const [assetKind, setAssetKind] = useState<MediaKind | null>(null);
@@ -66,8 +69,9 @@ export function MaterialTools({
       <div
         role="group"
         aria-label={t("groups.materialTools")}
-        className="flex flex-wrap gap-1 border-b p-2"
+        className="flex flex-wrap items-center gap-1 border-b p-2"
       >
+        {lead}
         {kinds.includes("image") && (
           <Button
             variant="ghost"

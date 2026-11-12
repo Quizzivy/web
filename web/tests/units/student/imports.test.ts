@@ -94,8 +94,10 @@ describe("what the student routes import", () => {
     expect(named(modules).filter((path) => SIDE_COLUMNS.includes(path))).toEqual([]);
   });
 
-  it("would be caught: the teacher's routes, walked the same way, reach all three", () => {
-    const modules = named(reachable(routesOf("teacherTree")));
+  it("would be caught: the bank's question editor, walked the same way, reaches all three", () => {
+    const modules = named(
+      reachable([resolve(SRC, "features/question-bank/components/QuestionEditor.tsx")]),
+    );
     expect(modules.filter((path) => SIDE_COLUMNS.includes(path))).toEqual(SIDE_COLUMNS);
   });
 

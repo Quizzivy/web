@@ -72,16 +72,11 @@ describe("the student tree", () => {
   }, 60_000);
 
   it.each(["the first time", "and every time after"])(
-    "would be caught %s: the teacher's group editor, walked the same way, loads one",
+    "would be caught %s: the bank's question editor, loaded the same way, loads one",
     async () => {
-      const routes = await routesUnder("teacher");
-      const editor = routes.find(
-        (route) => route.path === "teacher/question-bank/groups/:id",
-      );
-      expect(editor?.load).toBeTypeOf("function");
       expect(loaded.sideColumn).toBe(false);
 
-      await editor?.load?.();
+      await import("@/features/question-bank/components/QuestionEditor");
       expect(loaded.sideColumn).toBe(true);
     },
     60_000,

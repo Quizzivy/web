@@ -5,7 +5,7 @@ import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import "@/lib/i18n";
 import { t } from "i18next";
-import { GroupComposer } from "@/features/question-groups/components/GroupComposer";
+import { GroupWorkspace } from "@/features/question-groups/components/GroupWorkspace";
 import type { GroupBundle } from "@/features/question-groups/api";
 import { emptyGroup, newGroupQuestion } from "@/features/question-groups/model";
 import {
@@ -137,7 +137,7 @@ describe("a group member's option order across a type switch (QC-R6B-10, N9)", (
     function Host() {
       const [bundle, setBundle] = useState(initial);
       return (
-        <GroupComposer
+        <GroupWorkspace
           bundle={bundle}
           assets={[]}
           onChange={(next) => {
@@ -155,12 +155,26 @@ describe("a group member's option order across a type switch (QC-R6B-10, N9)", (
       </QueryClientProvider>,
     );
     const user = userEvent.setup();
-    await user.click(await screen.findByRole("button", { name: /^1Câu hỏi mới/ }));
-    await user.click(await screen.findByRole("tab", { name: "Nối" }));
+    const type = (name: string) => {
+      const label = t(`questionEditor.type.${name}`);
+      return screen.findByRole("button", {
+        name: `${t("questionEditor.typeLabel")}: ${label}`,
+      });
+    };
+    await user.click(await screen.findByRole("button", { name: /Câu hỏi mới/ }));
+    await user.click(await type("single_choice"));
+    await user.click(
+      await screen.findByRole("menuitem", { name: t("questionEditor.type.matching") }),
+    );
     await waitFor(() =>
       expect(latest.current.group.members[0]!.optionOrder).toBe("fixed"),
     );
-    await user.click(screen.getByRole("tab", { name: "Một đáp án" }));
+    await user.click(await type("matching"));
+    await user.click(
+      await screen.findByRole("menuitem", {
+        name: new RegExp(t("questionEditor.type.single_choice")),
+      }),
+    );
     await waitFor(() =>
       expect(latest.current.group.members[0]!.optionOrder).toBe("shuffle"),
     );

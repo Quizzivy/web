@@ -238,7 +238,8 @@ function ClozeSteps() {
  * as a stack of cards, one open and the rest a line each. Under 560px of its
  * own width the halves are two tabs. A word selected in the text becomes a
  * gap with "Make a gap", and the gap's question is made in the same change;
- * a gap's card removes both. Every change is handed to `onChange` whole.
+ * a gap's card removes both, and while it is open its material is the one in
+ * front. Every change is handed to `onChange` whole.
  *
  * `selectedQuestionId` opens that question's card, and `onSelectedQuestionChange`
  * hears which card is open. `start` is how an empty group was started, which
@@ -313,11 +314,12 @@ export function GroupWorkspace({
   const drawn = useRef("");
 
   const { group } = bundle;
+  const gaps = useMemo(() => gapQuestions(bundle), [bundle]);
+  const inFront = gaps.get(openId ?? "")?.materialId ?? materialId;
   const material =
-    group.stimuli.find((item) => item.id === materialId) ?? group.stimuli[0] ?? null;
+    group.stimuli.find((item) => item.id === inFront) ?? group.stimuli[0] ?? null;
   const kind = groupKind(bundle, start);
   const gapsOnly = answersOnlyGaps(bundle, start);
-  const gaps = useMemo(() => gapQuestions(bundle), [bundle]);
   const bound = useMemo(() => boundQuestionIds(bundle), [bundle]);
   const assetById = useMemo(
     () => new Map(assets.map((asset) => [asset.id, asset])),
@@ -609,7 +611,10 @@ export function GroupWorkspace({
   }
 
   const materialActions: MaterialActions = {
-    selectMaterial: setMaterialId,
+    selectMaterial: (id) => {
+      setMaterialId(id);
+      if (gaps.has(openId ?? "")) open(null);
+    },
     renameMaterial: (id, title) =>
       changeStimuli((item) => (item.id === id ? { ...item, title } : item)),
     changeMaterial: (next) =>
@@ -630,11 +635,7 @@ export function GroupWorkspace({
     onRefresh,
   };
   const questionActions: QuestionActions = {
-    open: (id) => {
-      const gap = gaps.get(id);
-      if (gap) setMaterialId(gap.materialId);
-      open(id);
-    },
+    open,
     answer: (gap, answer) =>
       commit(
         withGapAnswer(

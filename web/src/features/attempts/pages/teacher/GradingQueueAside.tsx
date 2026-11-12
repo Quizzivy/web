@@ -83,7 +83,7 @@ export function GradingQueueAside({
               aria-current={active ? "true" : undefined}
               className={cn(
                 "hover:bg-muted flex w-full items-center gap-2.5 border-b px-3.5 py-2.5 text-left leading-[normal] disabled:opacity-50",
-                active && "bg-muted shadow-[inset_2px_0_0_var(--accent-c)]",
+                active && "bg-hover",
               )}
             >
               {mode === "student" ? (

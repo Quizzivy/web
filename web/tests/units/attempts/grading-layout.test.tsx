@@ -72,3 +72,10 @@ it("keeps the active queue row in view when the selection moves", () => {
   expect(active).toHaveAccessibleName(/Trần Thu Hà/);
   expect(scrolled).toHaveBeenLastCalledWith(active);
 });
+
+it("marks the active queue row with a ground, never an edge line", () => {
+  render(aside(first));
+  const active = screen.getByRole("button", { current: true });
+  expect(active).toHaveClass("bg-hover");
+  expect(active.className).not.toMatch(/shadow-\[inset|border-[lrtbse]-/);
+});

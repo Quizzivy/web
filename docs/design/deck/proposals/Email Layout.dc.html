@@ -53,7 +53,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
       <li>R5 decided that emails carry no images, so nothing is blocked, nothing is fetched and nothing can track an open. A logo is an image, and the brand kit forbids setting the wordmark in type.</li>
       <li><span style="color:var(--fg)">The colours are the deck's tokens written as hex</span>, because mail clients read neither CSS variables nor oklch.</li>
-      <li>Nothing has a border: no outline on the panel, no coloured stripe on an edge, no bar beside a quote. The owner ruled edge stripes out for every surface on 12 Nov 2026.</li>
+      <li>Nothing has a border: no outline on the panel, no accent edge on it, no bar beside the quote. A rounded box with a border on one side is the look the owner rules out for every surface (12 Nov 2026).</li>
       <li>The typeface is the reader's system face. Be Vietnam Pro would be a remote font.</li>
     </ul>
   </div>
@@ -323,7 +323,7 @@ const PARTS = [
   ['Link line', '13px, the address in full, breaking anywhere', 'Always present under the button.'],
   ['Notes', '14px, quiet', 'What the reader must know about the link: that it works once, when it expires, what to do if the email is unexpected.'],
   ['Footer', '13px, quiet, on the ground under the panel', 'Why the reader got it; the settings link for a notification email; the centre’s name and “sent with Quizzivy”. Space sets it apart, not a line.'],
-  ['Edges', 'None', 'No part has an outline, a coloured stripe on one side or a bar. Blocks are set apart by space and by ground.'],
+  ['Edges', 'None', 'No part has an outline, and no rounded block has a border on one side. Blocks are set apart by space and by ground.'],
   ['Plain text', 'The same lines, top to bottom', 'Every email keeps a text part: the facts as “Label: value”, and the link on its own line.']
 ];
 // template, release, goes to, says, besides the text, button, settings link

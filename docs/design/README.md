@@ -207,14 +207,6 @@ Defaults taken on 2026-10-12, with the v2 export (DG-196 to DG-202):
   Esc, a focus trap and focus return (DG-201).
 - **"Suggest a score" uses the grading card's own set;** the band form joins R6 (DG-202).
 
-Decided by Thuong on 2026-11-12 (DG-230 in `docs/design/gaps.md`):
-
-- **No block carries a thick or coloured border on one side,** on any surface: no accent stripe
-  along a card's edge, no bar beside a quote, no stripe on a selected row. The deck marks the
-  grading queue's active row with a 2px lime line on its left. The product marks that row with
-  the `--hover` ground instead, as the sidebar marks its current item, and a guard test refuses a
-  new edge stripe.
-
 ## Updating the deck
 
 A new export from Claude Design (project `49cb45cb-7a21-441e-bb39-4261e0f38372`) replaces the
@@ -245,9 +237,11 @@ handoff), with the deck's tokens, typeface, icons and brand files. It loads `../
 the deck's SVGs by relative path, so nothing is copied. Its frames are in Vietnamese first, with
 the English strings beside them.
 
-No block in a proposal carries a thick or coloured border on one side: no accent stripe along a
-card's edge, no bar beside a quote or a selected row (DG-230, Thuong, 2026-11-12, for every
-surface). Set blocks apart by space, by a quieter ground, or by a hairline all the way round.
+No rounded box in a proposal carries a border on one side only: no card, panel, callout or quote
+with rounded corners and an accent edge along its top or its side (Thuong, 2026-11-12, for every
+surface; `AGENTS.md`, "Design"). Set such a box apart by space, by a quieter ground, or by a
+hairline all the way round. Lines that mark a state are not boxes and stay as the deck draws
+them: the line on the grading queue's active row, the line under the selected tab.
 
 A proposal is not the design of record until Thuong approves it. Until then its `gaps.md` rows
 stay Open and carry a note that names the page. On approval they become Answered, and the release
@@ -392,8 +386,9 @@ To view one, start the server above and open, for example,
   phone, light and dark, Vietnamese and English, with the plain-text part. It keeps T-R5.2's rule
   (no images, no remote CSS, no tracking), so there is no logo, and the colours are the deck's
   tokens as hex. Redrawn the same day on Thuong's review as a flat layout: one white panel on a
-  soft ground, blocks set apart by space and a quieter ground, and no outline, edge stripe or bar
-  (DG-230). The emails are rendered in `Quizzivy/api`; the
+  soft ground, blocks set apart by space and a quieter ground, with no outline and no accent
+  edge: the first drawing's card had a lime top edge, the look he rules out for any rounded box
+  ("Proposals", above). The emails are rendered in `Quizzivy/api`; the
   page is here because the deck is the design of record. It is a proposal until Thuong approves
   it, and its six questions for him are on the page.
 

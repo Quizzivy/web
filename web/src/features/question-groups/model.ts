@@ -1,6 +1,6 @@
 import type { TFunction } from "i18next";
 import type { components } from "@/lib/api/schema";
-import type { ContentBlock, SemanticContent } from "@/components/shared/content/model";
+import type { ContentBlock } from "@/components/shared/content/model";
 import { validateContent } from "@/components/shared/content/validation";
 import { contentStringLength } from "@/components/shared/content/unicode";
 import { questionGaps } from "@/components/shared/content/gaps";
@@ -187,18 +187,6 @@ export function materialGaps(material: GroupMaterial) {
   return material.content.format === "semantic_v1"
     ? questionGaps(material.content)
     : [];
-}
-
-export function changeMaterialContent(
-  material: GroupMaterial,
-  content: SemanticContent,
-): GroupMaterial {
-  const ids = new Set(questionGaps(content).map((gap) => gap.id));
-  return {
-    ...material,
-    content,
-    gaps: material.gaps.filter((gap) => ids.has(gap.gapId)),
-  };
 }
 
 function bindingIssue(

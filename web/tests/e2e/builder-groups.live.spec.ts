@@ -1,5 +1,12 @@
 import { fileURLToPath } from "node:url";
 import { expect, test, type Page } from "@playwright/test";
+import {
+  addPaneQuestion,
+  paneMenu,
+  paneText,
+  paneTitle,
+  startGroup,
+} from "./support/groupPane";
 import { signInAsAdmin } from "./support/live";
 
 const AUDIO = fileURLToPath(new URL("./fixtures/unit5-listening.mp3", import.meta.url));
@@ -36,17 +43,11 @@ test("mixed builder saves new sections, moves complete groups, copies context an
   await page.getByRole("textbox", { name: "Tên đề thi", exact: true }).press("Enter");
   await saved(page);
   await expect(sections).toHaveCount(sectionCount);
-  await page
-    .getByRole("button", { name: "Thêm nhóm câu dùng chung", exact: true })
-    .click();
+  await startGroup(page, "Bài đọc và câu hỏi");
   const title = `Bài đọc lớp ${Date.now()}`;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill(title);
-  await page.getByRole("button", { name: "Thêm ngữ liệu", exact: true }).click();
-  await page.getByLabel("Tên ngữ liệu", { exact: true }).fill("Lịch sinh hoạt");
-  await page
-    .getByRole("textbox", { name: "Nội dung ngữ liệu", exact: true })
-    .fill("Câu lạc bộ mở cửa vào thứ Bảy.");
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
+  await paneTitle(page).fill(title);
+  await paneText(page).fill("Câu lạc bộ mở cửa vào thứ Bảy.");
+  await addPaneQuestion(page);
   const prompt = page.getByRole("textbox", { name: "Nội dung câu hỏi", exact: true });
   await prompt.fill("Câu lạc bộ mở cửa vào ngày nào?");
   await saved(page);
@@ -61,7 +62,7 @@ test("mixed builder saves new sections, moves complete groups, copies context an
       /\/teacher\/tests\/[^/]+$/.test(new URL(response.url()).pathname),
   );
   await original
-    .getByRole("button", { name: `Thao tác với nhóm ${title}`, exact: true })
+    .getByRole("button", { name: `Thao tác với ${title}`, exact: true })
     .click();
   await page.getByRole("menuitem", { name: "Di chuyển xuống", exact: true }).click();
   await prompt.fill("Theo lịch, câu lạc bộ mở cửa vào ngày nào?");
@@ -79,16 +80,19 @@ test("mixed builder saves new sections, moves complete groups, copies context an
     preview.getByText("Theo lịch, câu lạc bộ mở cửa vào ngày nào?", { exact: true }),
   ).toBeVisible();
   await page.keyboard.press("Escape");
-  await page
-    .getByRole("button", { name: "Lưu bản sao vào ngân hàng", exact: true })
-    .click();
+  await (await paneMenu(page, "Lưu bản sao vào ngân hàng")).click();
   await expect(
     page
       .getByRole("status")
       .filter({ hasText: "Đã lưu bản sao độc lập vào ngân hàng." }),
   ).toBeVisible();
   await page.getByRole("button", { name: "Từ ngân hàng câu hỏi", exact: true }).click();
-  await page.getByRole("button", { name: "Chọn cả nhóm câu hỏi", exact: true }).click();
+  await page
+    .getByRole("button", {
+      name: "Chọn cả bài đọc, bài điền từ hoặc bài nghe",
+      exact: true,
+    })
+    .click();
   const picker = page.getByRole("dialog");
   await picker.getByRole("textbox").fill(title);
   await picker.getByRole("button", { name: new RegExp(title) }).click();
@@ -118,9 +122,9 @@ test("mixed builder saves new sections, moves complete groups, copies context an
   );
   await page
     .locator(`[data-outline-group="${originalId}"]`)
-    .getByRole("button", { name: `Thao tác với nhóm ${title}`, exact: true })
+    .getByRole("button", { name: `Thao tác với ${title}`, exact: true })
     .click();
-  await page.getByRole("menuitem", { name: "Xoá nhóm", exact: true }).click();
+  await page.getByRole("menuitem", { name: "Xoá bài đọc này", exact: true }).click();
   await page
     .getByRole("dialog")
     .getByRole("button", { name: "Xoá", exact: true })
@@ -162,7 +166,7 @@ test("mixed builder saves new sections, moves complete groups, copies context an
   await expect(page).toHaveURL(builderPath.replace(/\/edit$/, ""));
 });
 
-test("the Shared content dialog saves a recording, then a passage over it, in the shapes the real API accepts", async ({
+test("a recording chosen in the pane, a text under it and a gap made from a word save in the shapes the real API accepts", async ({
   page,
 }) => {
   test.setTimeout(120_000);
@@ -172,75 +176,83 @@ test("the Shared content dialog saves a recording, then a passage over it, in th
   await expect(page).toHaveURL(/\/teacher\/tests\/[0-9a-f-]+\/edit$/);
   await page.getByRole("button", { name: "Thêm phần", exact: true }).click();
   await saved(page);
-  await page
-    .getByRole("button", { name: "Thêm nhóm câu dùng chung", exact: true })
-    .click();
-  const title = `Nghe và đọc ${Date.now()}`;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill(title);
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
-  await page
-    .getByRole("textbox", { name: "Nội dung câu hỏi", exact: true })
-    .fill("Người nói hẹn gặp ở đâu?");
-  await saved(page);
-  const group = page.locator("[data-outline-group]").first();
-  const dialogName = `Nội dung dùng chung của “${title}”`;
-  const groupSaved = () =>
-    page.waitForResponse(
-      (response) =>
-        response.request().method() === "PUT" &&
-        /\/teacher\/question-groups\/[^/]+$/.test(new URL(response.url()).pathname),
-    );
 
-  await group
-    .getByRole("button", { name: `Thao tác với nhóm ${title}`, exact: true })
-    .click();
-  await page
-    .getByRole("menuitem", { name: "Nội dung dùng chung", exact: true })
-    .click();
-  let dialog = page.getByRole("dialog", { name: dialogName });
-  await dialog.getByRole("button", { name: "Bài nghe", exact: true }).click();
-  await dialog.getByLabel("Chọn tệp từ máy").setInputFiles(AUDIO);
-  await expect(dialog.getByText("unit5-listening.mp3", { exact: true })).toBeVisible({
+  let stored: Json | undefined;
+  page.on("response", (response) => {
+    const group =
+      response.request().method() === "PUT" &&
+      /\/teacher\/question-groups\/[^/]+$/.test(new URL(response.url()).pathname);
+    if (group && response.status() === 200)
+      void response.json().then((body: Json) => {
+        stored = body;
+      });
+  });
+  const bundle = () =>
+    (stored?.["bundle"] ?? {}) as {
+      group: {
+        recordings: unknown[];
+        stimuli: {
+          content: { blocks: { type: string }[] };
+          gaps: { kind: string }[];
+        }[];
+      };
+      questions: { input: { type: string } }[];
+    };
+
+  await startGroup(page, "Bài nghe và câu hỏi");
+  const title = `Nghe và điền ${Date.now()}`;
+  await expect(paneTitle(page)).toBeFocused();
+  await paneTitle(page).fill(title);
+  const group = page.locator("[data-outline-group]").first();
+  await page.getByLabel("Chọn tệp từ máy").setInputFiles(AUDIO);
+  await expect(page.getByText("unit5-listening.mp3", { exact: true })).toBeVisible({
     timeout: 30_000,
   });
-  let response = groupSaved();
-  await dialog.getByRole("button", { name: "Lưu", exact: true }).click();
-  expect((await response).status()).toBe(200);
-  await expect(dialog).toBeHidden();
-  const audioLine = group.getByRole("button", {
-    name: "Bài nghe · unit5-listening.mp3 · 2 lượt nghe",
-    exact: true,
-  });
-  await expect(audioLine).toBeVisible();
+  await saved(page);
+  await expect(group.getByRole("img", { name: "Bài nghe", exact: true })).toBeVisible();
+  await expect
+    .poll(() => bundle().group?.stimuli[0]?.content.blocks.map((block) => block.type))
+    .toEqual(["audio"]);
+  expect(bundle().group.recordings).toHaveLength(1);
 
-  await audioLine.click();
-  dialog = page.getByRole("dialog", { name: dialogName });
-  await dialog.getByRole("button", { name: "Bài đọc", exact: true }).click();
-  await dialog
-    .getByRole("textbox", { name: "Tiêu đề", exact: true })
-    .fill("Lịch câu lạc bộ");
-  await dialog
-    .getByRole("textbox", { name: "Bài đọc", exact: true })
-    .fill("Câu lạc bộ mở cửa vào thứ Bảy.");
-  await dialog.getByRole("button", { name: "Lưu", exact: true }).click();
-  const confirm = page.getByRole("dialog", { name: "Thay nội dung dùng chung?" });
-  await expect(confirm).toContainText("unit5-listening.mp3");
-  response = groupSaved();
-  await confirm.getByRole("button", { name: "Thay và lưu", exact: true }).click();
-  expect((await response).status()).toBe(200);
-  await expect(dialog).toBeHidden();
-  await expect(
-    group.getByRole("button", { name: "Bài đọc · Lịch câu lạc bộ", exact: true }),
-  ).toBeVisible();
+  await page.getByRole("button", { name: "Đoạn văn trống", exact: true }).click();
+  await paneText(page).click();
+  await page.keyboard.insertText("Câu lạc bộ mở cửa vào thứ Bảy");
+  await expect(page.getByText("8 từ", { exact: true })).toBeVisible();
+  await page.keyboard.press("Control+Shift+ArrowLeft");
+  const makeGap = page.getByRole("button", { name: "Tạo chỗ trống", exact: true });
+  await expect(makeGap.first()).toBeEnabled();
+  await makeGap.first().click();
+  const card = page.locator("[data-group-card]").filter({
+    has: page.getByRole("heading", { name: "Chỗ trống 1", exact: true }),
+  });
+  await expect(card.locator('input[value="Bảy"]')).toHaveCount(1);
+  await saved(page);
+  await expect.poll(() => bundle().questions?.[0]?.input.type).toBe("fill_blank");
+  expect(bundle().group.stimuli[0]!.gaps.map((gap) => gap.kind)).toEqual(["blank"]);
+  expect(bundle().group.stimuli[0]!.content.blocks.map((block) => block.type)).toEqual([
+    "audio",
+    "paragraph",
+  ]);
+
+  await card
+    .locator('input[value=""][aria-label^="Lựa chọn"]')
+    .first()
+    .fill("Chủ nhật");
+  await saved(page);
+  await expect.poll(() => bundle().questions?.[0]?.input.type).toBe("single_choice");
+  expect(bundle().group.stimuli[0]!.gaps.map((gap) => gap.kind)).toEqual(["question"]);
 
   await page.reload();
+  const reloaded = page.locator("[data-outline-group]").first();
   await expect(
-    page
-      .locator("[data-outline-group]")
-      .first()
-      .getByRole("button", { name: "Bài đọc · Lịch câu lạc bộ", exact: true }),
+    reloaded.getByRole("img", { name: "Bài nghe", exact: true }),
   ).toBeVisible();
-  await expect(page.getByText("Người nói hẹn gặp ở đâu?").first()).toBeVisible();
+  await reloaded.getByRole("button", { name: title, exact: true }).last().click();
+  await expect(page.getByText("unit5-listening.mp3", { exact: true })).toBeVisible();
+  await expect(
+    paneText(page).getByLabel("Chỗ trống 1: Bảy", { exact: true }),
+  ).toBeVisible();
 });
 
 interface Json {
@@ -298,16 +310,10 @@ test("dragging a bank question into a group copies it under a new id, bumps the 
     .fill(bankPrompt);
   await saved(page);
 
-  await page
-    .getByRole("button", { name: "Thêm nhóm câu dùng chung", exact: true })
-    .click();
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill(`Nhóm ${token}`);
-  await page.getByRole("button", { name: "Thêm ngữ liệu", exact: true }).click();
-  await page.getByLabel("Tên ngữ liệu", { exact: true }).fill("Lịch sinh hoạt");
-  await page
-    .getByRole("textbox", { name: "Nội dung ngữ liệu", exact: true })
-    .fill("Câu lạc bộ mở cửa vào thứ Bảy.");
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
+  await startGroup(page, "Bài đọc và câu hỏi");
+  await paneTitle(page).fill(`Nhóm ${token}`);
+  await paneText(page).fill("Câu lạc bộ mở cửa vào thứ Bảy.");
+  await addPaneQuestion(page);
   const resident = `Câu sẵn có ${token}`;
   await page
     .getByRole("textbox", { name: "Nội dung câu hỏi", exact: true })
@@ -372,7 +378,7 @@ test("dragging a bank question into a group copies it under a new id, bumps the 
   expect(Date.parse(result.test.updatedAt)).toBeGreaterThan(Date.parse(stampBefore));
 
   await expect(
-    page.getByText("Đã sao chép câu hỏi vào nhóm. Bản gốc vẫn ở ngân hàng câu hỏi."),
+    page.getByText("Đã sao chép câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi."),
   ).toBeVisible();
   const outlineGroup = page.locator(`[data-outline-group="${groupId}"]`);
   await expect(page.locator(`[data-outline-question="${sourceId}"]`)).toHaveCount(0);
@@ -462,7 +468,7 @@ test("dragging a bank question into a group copies it under a new id, bumps the 
   await page.goto(`/teacher/tests/${testId}`);
   const frame = page.getByRole("region", { name: "Màn hình của học viên" });
   await expect(frame.getByText(edited, { exact: true })).toBeVisible();
-  await expect(frame.getByRole("heading", { name: "Lịch sinh hoạt" })).toBeVisible();
+  await expect(frame.getByRole("heading", { name: `Nhóm ${token}` })).toBeVisible();
   await expect(frame.getByText("Câu lạc bộ mở cửa vào thứ Bảy.")).toBeVisible();
 });
 
@@ -516,16 +522,10 @@ async function startWithABankQuestionBesideAGroup(page: Page): Promise<Setup> {
     .fill(bankPrompt);
   await saved(page);
 
-  await page
-    .getByRole("button", { name: "Thêm nhóm câu dùng chung", exact: true })
-    .click();
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill(`Nhóm ${token}`);
-  await page.getByRole("button", { name: "Thêm ngữ liệu", exact: true }).click();
-  await page.getByLabel("Tên ngữ liệu", { exact: true }).fill("Lịch sinh hoạt");
-  await page
-    .getByRole("textbox", { name: "Nội dung ngữ liệu", exact: true })
-    .fill("Câu lạc bộ mở cửa vào thứ Bảy.");
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
+  await startGroup(page, "Bài đọc và câu hỏi");
+  await paneTitle(page).fill(`Nhóm ${token}`);
+  await paneText(page).fill("Câu lạc bộ mở cửa vào thứ Bảy.");
+  await addPaneQuestion(page);
   await page
     .getByRole("textbox", { name: "Nội dung câu hỏi", exact: true })
     .fill(`Câu sẵn có ${token}`);

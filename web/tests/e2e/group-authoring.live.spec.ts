@@ -1,4 +1,5 @@
 import { expect, test } from "@playwright/test";
+import { addPaneQuestion, paneText, paneTitle } from "./support/groupPane";
 import { signInAsAdmin } from "./support/live";
 
 test("group graph and uploaded material round-trip through the real API, then copy and archive independently", async ({
@@ -7,17 +8,16 @@ test("group graph and uploaded material round-trip through the real API, then co
   test.setTimeout(120_000);
   await signInAsAdmin(page);
   await page.goto("/teacher/question-bank/groups");
-  await page.getByRole("button", { name: "Nhóm mới", exact: true }).first().click();
+  await page.getByRole("button", { name: "Tạo mới", exact: true }).first().click();
+  await page
+    .getByRole("menuitem")
+    .filter({ has: page.getByText("Bài đọc và câu hỏi", { exact: true }) })
+    .click();
   await expect(page).toHaveURL(/\/question-bank\/groups\/[0-9a-f-]+$/);
   const originalPath = new URL(page.url()).pathname;
   const title = `Nhóm bài đọc ${Date.now()}`;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill(title);
-  await page.getByRole("button", { name: "Thêm ngữ liệu", exact: true }).click();
-  await page.getByLabel("Tên ngữ liệu", { exact: true }).fill("Thông báo câu lạc bộ");
-  const material = page.getByRole("textbox", {
-    name: "Nội dung ngữ liệu",
-    exact: true,
-  });
+  await paneTitle(page).fill(title);
+  const material = paneText(page);
   await material.fill(
     "Câu lạc bộ tổ chức hoạt động vào cuối tuần. Hãy đọc thông tin rồi trả lời câu hỏi.",
   );
@@ -36,8 +36,9 @@ test("group graph and uploaded material round-trip through the real API, then co
   });
   await expect(page.getByText(/Đã chọn: group-diagram-/)).toBeVisible();
   await page.getByLabel("Mô tả hình ảnh", { exact: true }).fill("Sơ đồ hoạt động");
-  await page.getByRole("button", { name: "Chèn vào ngữ liệu", exact: true }).click();
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
+  await page.getByRole("button", { name: "Chèn vào đoạn văn", exact: true }).click();
+  await expect(material).toContainText("Sơ đồ hoạt động");
+  await addPaneQuestion(page);
   const prompt = page.getByRole("textbox", { name: "Nội dung câu hỏi", exact: true });
   await prompt.fill("Hoạt động diễn ra khi nào?");
   await page.getByRole("button", { name: "Lưu", exact: true }).click();
@@ -47,17 +48,10 @@ test("group graph and uploaded material round-trip through the real API, then co
   await expect(page.getByText("Đã lưu trên máy chủ", { exact: true })).toBeVisible();
   await page.reload();
   await page
-    .getByRole("button", {
-      name: "1 Theo thông báo, hoạt động diễn ra khi nào?",
-      exact: true,
-    })
+    .getByRole("button", { name: /Theo thông báo, hoạt động diễn ra khi nào\?/ })
     .click();
   await expect(prompt).toHaveText("Theo thông báo, hoạt động diễn ra khi nào?");
-  await page.getByRole("button", { name: "Thông báo câu lạc bộ", exact: true }).click();
-  await page.getByRole("button", { name: "Xem ngữ liệu", exact: true }).click();
-  await expect(
-    page.getByRole("img", { name: "Sơ đồ hoạt động", exact: true }),
-  ).toBeVisible();
+  await expect(material).toContainText("Sơ đồ hoạt động");
   await page.setViewportSize({ width: 1440, height: 1000 });
   await page.screenshot({
     path: testInfo.outputPath("group-editor-desktop.png"),
@@ -77,9 +71,9 @@ test("group graph and uploaded material round-trip through the real API, then co
   await page.keyboard.press("Escape");
   await page
     .getByRole("main")
-    .getByRole("link", { name: "Nhóm câu hỏi", exact: true })
+    .getByRole("link", { name: "Bài đọc, điền từ, bài nghe", exact: true })
     .click();
-  const search = page.getByPlaceholder("Tìm nhóm theo tên hoặc nội dung câu hỏi…");
+  const search = page.getByPlaceholder("Tìm theo tiêu đề hoặc nội dung câu hỏi…");
   await search.fill(title);
   const original = page
     .getByRole("row")
@@ -128,15 +122,8 @@ test("group graph and uploaded material round-trip through the real API, then co
     .click();
   await copyRow.getByRole("link", { name: title, exact: true }).click();
   await page
-    .getByRole("button", {
-      name: "1 Theo thông báo, hoạt động diễn ra khi nào?",
-      exact: true,
-    })
+    .getByRole("button", { name: /Theo thông báo, hoạt động diễn ra khi nào\?/ })
     .click();
   await expect(prompt).toHaveText("Theo thông báo, hoạt động diễn ra khi nào?");
-  await page.getByRole("button", { name: "Thông báo câu lạc bộ", exact: true }).click();
-  await page.getByRole("button", { name: "Xem ngữ liệu", exact: true }).click();
-  await expect(
-    page.getByRole("img", { name: "Sơ đồ hoạt động", exact: true }),
-  ).toBeVisible();
+  await expect(material).toContainText("Sơ đồ hoạt động");
 });

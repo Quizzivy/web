@@ -89,7 +89,9 @@ it("keeps focus on Keep local draft and leave while the local write is pending",
   );
   const user = userEvent.setup();
   await user.click(await screen.findByRole("button", { name: "Khôi phục bản nháp" }));
-  await user.click(await screen.findByRole("link", { name: "Nhóm câu hỏi" }));
+  await user.click(
+    await screen.findByRole("link", { name: "Bài đọc, điền từ, bài nghe" }),
+  );
   const keepLocal = await screen.findByRole("button", {
     name: "Giữ bản nháp trên máy và rời trang",
   });

@@ -126,7 +126,7 @@ async function setup(page: Page) {
   });
   page.on("dialog", (dialog) => void dialog.accept());
   await page.goto(`/teacher/question-bank/groups/${groupId}`);
-  await expect(page.getByLabel("Tên nhóm câu hỏi", { exact: true })).toHaveValue(
+  await expect(page.getByRole("textbox", { name: "Tiêu đề", exact: true })).toHaveValue(
     "Nhóm đọc hiểu",
   );
   return state;
@@ -174,7 +174,9 @@ test("offline edits recover after reload and flush before leaving without resett
 }) => {
   const state = await setup(page);
   state.offline = true;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Bản nháp riêng");
+  await page
+    .getByRole("textbox", { name: "Tiêu đề", exact: true })
+    .fill("Bản nháp riêng");
   await expect(
     page.getByText("Chưa đồng bộ · Đã lưu bản nháp trên máy", { exact: true }),
   ).toBeVisible();
@@ -182,20 +184,17 @@ test("offline edits recover after reload and flush before leaving without resett
   await expect.poll(() => state.writes).toBeGreaterThan(0);
   await page.reload();
   await page.getByRole("button", { name: "Khôi phục bản nháp", exact: true }).click();
-  await expect(page.getByLabel("Tên nhóm câu hỏi", { exact: true })).toHaveValue(
+  await expect(page.getByRole("textbox", { name: "Tiêu đề", exact: true })).toHaveValue(
     "Bản nháp riêng",
   );
   state.offline = false;
-  const material = page.getByRole("textbox", {
-    name: "Nội dung ngữ liệu",
-    exact: true,
-  });
+  const material = page.getByRole("textbox", { name: "Đoạn văn", exact: true });
   await material.click();
   await page.keyboard.press("Control+a");
   await page.keyboard.insertText("Nội dung mới có dấu tiếng Việt.");
   await page
     .getByRole("main")
-    .getByRole("link", { name: "Nhóm câu hỏi", exact: true })
+    .getByRole("link", { name: "Bài đọc, điền từ, bài nghe", exact: true })
     .click();
   await page.getByRole("button", { name: "Lưu và rời trang", exact: true }).click();
   await expect(page).toHaveURL(/question-bank\/groups$/);
@@ -211,12 +210,14 @@ test("stale edits remain editable and recover as an independent group", async ({
 }) => {
   const state = await setup(page);
   state.stale = true;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Nhóm cần khôi phục");
+  await page
+    .getByRole("textbox", { name: "Tiêu đề", exact: true })
+    .fill("Nhóm cần khôi phục");
   await expect(
-    page.getByText("Nhóm đã thay đổi ở nơi khác", { exact: true }),
+    page.getByText("Bài này đã thay đổi ở nơi khác", { exact: true }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
-  await page.getByRole("button", { name: "Lưu thành nhóm mới", exact: true }).click();
+  await page.getByRole("button", { name: "Một đáp án", exact: true }).click();
+  await page.getByRole("button", { name: "Lưu thành bài mới", exact: true }).click();
   await expect.poll(() => state.copies.length).toBe(1);
   expect(state.copies[0]!.bundle.group.id).not.toBe(groupId);
   expect(state.copies[0]!.bundle.group.stimuli[0]!.id).not.toBe(materialId);
@@ -225,26 +226,27 @@ test("stale edits remain editable and recover as an independent group", async ({
   await expect.poll(async () => (await records(page)).length).toBe(0);
 });
 
-test("material editing and question switching preserve text at narrow widths", async ({
+test("the passage and an open question keep their text across the pane's tabs at narrow widths", async ({
   page,
 }) => {
   const state = await setup(page);
   await page.setViewportSize({ width: 768, height: 900 });
-  const material = page.getByRole("textbox", {
-    name: "Nội dung ngữ liệu",
-    exact: true,
-  });
+  const passage = page.getByRole("tab", { name: "Bài đọc", exact: true });
+  await passage.click();
+  const material = page.getByRole("textbox", { name: "Đoạn văn", exact: true });
   await material.click();
   await page.keyboard.press("Control+a");
   await page.keyboard.insertText("Nội dung dùng chung");
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
+  await page.getByRole("tab", { name: "Câu hỏi · 0", exact: true }).click();
+  await expect(material).toBeHidden();
+  await page.getByRole("button", { name: "Một đáp án", exact: true }).click();
   const prompt = page.getByRole("textbox", { name: "Nội dung câu hỏi", exact: true });
   await prompt.click();
   await expect(prompt).toHaveText("");
   await prompt.fill("Câu hỏi đầu tiên");
-  await page.getByRole("button", { name: "Bài đọc", exact: true }).click();
+  await passage.click();
   await expect(material).toHaveText("Nội dung dùng chung");
-  await page.getByRole("button", { name: "1 Câu hỏi đầu tiên", exact: true }).click();
+  await page.getByRole("tab", { name: "Câu hỏi · 1", exact: true }).click();
   await expect(prompt).toHaveText("Câu hỏi đầu tiên");
   await page.getByRole("button", { name: "Lưu", exact: true }).click();
   await expect(page.getByText("Đã lưu trên máy chủ", { exact: true })).toBeVisible();
@@ -259,7 +261,9 @@ test("expired drafts are removed and another account cannot restore a local draf
 }) => {
   const state = await setup(page);
   state.offline = true;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Nội dung riêng");
+  await page
+    .getByRole("textbox", { name: "Tiêu đề", exact: true })
+    .fill("Nội dung riêng");
   await expect.poll(async () => (await records(page)).length).toBe(1);
   await page.evaluate(
     () =>
@@ -284,11 +288,11 @@ test("expired drafts are removed and another account cannot restore a local draf
       }),
   );
   await page.reload();
-  await expect(page.getByLabel("Tên nhóm câu hỏi", { exact: true })).toHaveValue(
+  await expect(page.getByRole("textbox", { name: "Tiêu đề", exact: true })).toHaveValue(
     "Nhóm đọc hiểu",
   );
   await expect.poll(async () => (await records(page)).length).toBe(0);
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Tài khoản A");
+  await page.getByRole("textbox", { name: "Tiêu đề", exact: true }).fill("Tài khoản A");
   await expect.poll(async () => (await records(page)).length).toBe(1);
   await page.route("http://localhost:8080/auth/me", (route) =>
     route.fulfill({
@@ -296,7 +300,7 @@ test("expired drafts are removed and another account cannot restore a local draf
     }),
   );
   await page.reload();
-  await expect(page.getByLabel("Tên nhóm câu hỏi", { exact: true })).toHaveValue(
+  await expect(page.getByRole("textbox", { name: "Tiêu đề", exact: true })).toHaveValue(
     "Nhóm đọc hiểu",
   );
   await expect(
@@ -310,7 +314,9 @@ test("logout clears local drafts and fences a stale writer in another tab", asyn
 }) => {
   const state = await setup(page);
   state.offline = true;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Chưa đồng bộ");
+  await page
+    .getByRole("textbox", { name: "Tiêu đề", exact: true })
+    .fill("Chưa đồng bộ");
   await expect.poll(async () => (await records(page)).length).toBe(1);
   const other = await context.newPage();
   await stubApi(other, {
@@ -322,12 +328,14 @@ test("logout clears local drafts and fences a stale writer in another tab", asyn
   await other.getByRole("menuitem", { name: "Đăng xuất", exact: true }).click();
   await expect(other).toHaveURL(/\/login(?:\?|$)/);
   await expect.poll(async () => (await records(page)).length).toBe(0);
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Tab cũ vẫn đang mở");
+  await page
+    .getByRole("textbox", { name: "Tiêu đề", exact: true })
+    .fill("Tab cũ vẫn đang mở");
   await expect(page.getByText(/Chưa đồng bộ · Không lưu được bản nháp/)).toBeVisible();
   expect(await records(page)).toHaveLength(0);
 });
 
-test("material assets, links and stable gap bindings survive preview and undo", async ({
+test("a selected word becomes a gap with its question, which removing and undoing take away and bring back", async ({
   page,
 }) => {
   const state = await setup(page);
@@ -363,46 +371,96 @@ test("material assets, links and stable gap bindings survive preview and undo", 
       ),
     }),
   );
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).click();
-  await page.getByRole("button", { name: "Bài đọc", exact: true }).click();
-  const material = page.getByRole("textbox", {
-    name: "Nội dung ngữ liệu",
-    exact: true,
-  });
+  const saved = page.getByText("Đã lưu trên máy chủ", { exact: true });
+  const save = page.getByRole("button", { name: "Lưu", exact: true });
+  const material = page.getByRole("textbox", { name: "Đoạn văn", exact: true });
+  const makeGap = page.getByRole("button", { name: "Tạo chỗ trống", exact: true });
+  await expect(makeGap.first()).toBeDisabled();
   await material.click();
   await page.keyboard.press("Control+End");
-  await page.getByRole("button", { name: "Thêm chỗ trống", exact: true }).click();
-  const target = page.getByRole("combobox", {
-    name: "Câu hỏi cho chỗ trống 1",
-    exact: true,
+  await page.keyboard.insertText(" parks");
+  await expect(page.getByText("7 từ", { exact: true })).toBeVisible();
+  await page.keyboard.press("Control+Shift+ArrowLeft");
+  await expect(makeGap.first()).toBeEnabled();
+  await expect(makeGap).toHaveCount(2);
+  await makeGap.last().click();
+
+  const card = page.locator("[data-group-card]").filter({
+    has: page.getByRole("heading", { name: "Chỗ trống 1", exact: true }),
   });
-  await target.click();
-  await page.getByRole("option", { name: "Câu 1", exact: true }).click();
-  await page.getByRole("button", { name: "Lưu", exact: true }).click();
-  await expect(page.getByText("Đã lưu trên máy chủ", { exact: true })).toBeVisible();
-  const originalBinding = state.stored.bundle.group.stimuli[0]!.gaps[0]!;
-  expect(originalBinding.questionId).toBe(state.stored.bundle.questions[0]!.id);
-  await target.click();
-  await page.getByRole("option", { name: "Chọn câu hỏi…", exact: true }).click();
+  await expect(card.getByText(/học viên sẽ tự điền từ này/)).toBeVisible();
+  const rows = card.getByRole("textbox", { name: /^Lựa chọn [A-D]$/ });
+  await expect(rows).toHaveCount(4);
+  await expect(card.locator('input[value="parks"]')).toHaveCount(1);
+  await expect(
+    material.getByLabel("Chỗ trống 1: parks", { exact: true }),
+  ).toBeVisible();
+  await save.click();
+  await expect(saved).toBeVisible();
+  const typed = state.stored.bundle.questions[0]!;
+  expect(typed.input.type).toBe("fill_blank");
+  expect(typed.input.blanks?.[0]?.acceptedAnswers).toEqual(["parks"]);
+  expect(state.stored.bundle.group.stimuli[0]!.gaps[0]).toMatchObject({
+    kind: "blank",
+    questionId: typed.id,
+  });
+
+  await card.locator('input[value=""][aria-label^="Lựa chọn"]').first().fill("streets");
+  await expect(card.getByText(/học viên sẽ tự điền từ này/)).toHaveCount(0);
+  await save.click();
+  await expect(saved).toBeVisible();
+  const chosen = state.stored.bundle.questions[0]!;
+  expect(chosen.id).toBe(typed.id);
+  expect(chosen.input.type).toBe("single_choice");
+  expect(chosen.input.options?.map((option) => option.text).sort()).toEqual([
+    "parks",
+    "streets",
+  ]);
+  expect(state.stored.bundle.group.stimuli[0]!.gaps[0]).toMatchObject({
+    kind: "question",
+    questionId: typed.id,
+  });
+
+  await card.getByRole("button", { name: "Thao tác với câu hỏi", exact: true }).click();
+  await page.getByRole("menuitem", { name: "Bỏ chỗ trống", exact: true }).click();
+  const removed = page.getByText("Đã bỏ chỗ trống 1. Từ “parks” đã trở lại đoạn văn.");
+  await expect(removed).toBeVisible();
+  await expect(material).toContainText("parks");
+  await expect(material.getByLabel("Chỗ trống 1: parks", { exact: true })).toHaveCount(
+    0,
+  );
+  await expect(page.locator("[data-group-card]")).toHaveCount(0);
+  await page
+    .locator("[data-sonner-toast]")
+    .getByRole("button", { name: "Hoàn tác", exact: true })
+    .click();
+  await expect(
+    material.getByLabel("Chỗ trống 1: parks", { exact: true }),
+  ).toBeVisible();
+  await expect(page.locator("[data-group-card]")).toHaveCount(1);
+  await save.click();
+  await expect(saved).toBeVisible();
+  expect(state.stored.bundle.questions.map((question) => question.id)).toEqual([
+    typed.id,
+  ]);
+
   await material.click();
   await page.keyboard.press("Control+End");
-  await page.keyboard.insertText(" kiểm tra");
-  await expect(target).toContainText("Chọn câu hỏi…");
-  await target.click();
-  await page.getByRole("option", { name: "Câu 1", exact: true }).click();
   await page.getByRole("button", { name: "Hình ảnh", exact: true }).click();
   await page.getByRole("button", { name: /diagram.png/ }).click();
   await page.getByLabel("Mô tả hình ảnh", { exact: true }).fill("Sơ đồ bài đọc");
-  await page.getByRole("button", { name: "Chèn vào ngữ liệu", exact: true }).click();
-  await page.getByRole("button", { name: "Xem ngữ liệu", exact: true }).click();
-  await expect(
-    page.getByRole("img", { name: "Sơ đồ bài đọc", exact: true }),
-  ).toBeVisible();
-  await page.getByRole("button", { name: "Chỉnh ngữ liệu", exact: true }).click();
-  await page.getByRole("button", { name: "Hoàn tác", exact: true }).click();
-  await page.getByRole("button", { name: "Lưu", exact: true }).click();
-  await expect(page.getByText("Đã lưu trên máy chủ", { exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Chèn vào đoạn văn", exact: true }).click();
+  await expect(material).toContainText("Sơ đồ bài đọc");
+  await page
+    .getByRole("toolbar")
+    .getByRole("button", { name: /^Hoàn tác/ })
+    .click();
+  await expect(material).not.toContainText("Sơ đồ bài đọc");
+  await save.click();
+  await expect(saved).toBeVisible();
   expect(JSON.stringify(state.stored.bundle)).not.toContain(imageId);
+  expect(state.stored.bundle.questions).toHaveLength(1);
+
   await page.getByRole("button", { name: "Xem như học viên", exact: true }).click();
   await page.getByRole("radio", { name: "Điện thoại", exact: true }).click();
   await expect(
@@ -421,7 +479,9 @@ test("signing out from an unsaved group is not trapped by its leave guard", asyn
 }) => {
   const state = await setup(page);
   state.offline = true;
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Thoát khi đang sửa");
+  await page
+    .getByRole("textbox", { name: "Tiêu đề", exact: true })
+    .fill("Thoát khi đang sửa");
   await expect.poll(async () => (await records(page)).length).toBe(1);
   await page.getByRole("button", { name: /Tài khoản/ }).click();
   await page.getByRole("menuitem", { name: "Đăng xuất", exact: true }).click();

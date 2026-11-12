@@ -1,3 +1,4 @@
+import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { ChevronDown, Copy, FolderInput, Layers, Trash2 } from "lucide-react";
 import { RowMenu } from "@/components/shared/RowMenu";
@@ -53,7 +54,8 @@ export type BuilderQuestionActions = Readonly<{
  * "More options" holding the explanation above the tags. The type menu keeps
  * the other types disabled while gaps bind answers, as the bank does. `ai`
  * offers "Write with AI" and "Suggest wrong options", as the bank's editor
- * does.
+ * does. A host that is not the builder's question pane, a group's card,
+ * gives `menu`, the "…" menu's own items, in place of `actions`.
  */
 export function BuilderQuestionEditor({
   value,
@@ -61,6 +63,7 @@ export function BuilderQuestionEditor({
   number,
   clearPromptOnFocus,
   actions,
+  menu,
   ai,
   onChange: update,
   onAssetChange,
@@ -71,7 +74,8 @@ export function BuilderQuestionEditor({
   asset: MediaAsset | null;
   number: number | null;
   clearPromptOnFocus: boolean;
-  actions: BuilderQuestionActions;
+  actions?: BuilderQuestionActions | undefined;
+  menu?: ReactNode | undefined;
   ai?: QuestionAi | undefined;
   onChange: (value: QuestionValues) => void;
   onAssetChange: (asset: MediaAsset | null) => void;
@@ -112,27 +116,32 @@ export function BuilderQuestionEditor({
               }
             />
           </label>
-          <RowMenu label={t("builder.editor.more")}>
-            <DropdownMenuItem onSelect={actions.onDuplicate}>
-              <Copy aria-hidden="true" />
-              {t("builder.editor.duplicate")}
-            </DropdownMenuItem>
-            <DropdownMenuItem onSelect={actions.onMove}>
-              <FolderInput aria-hidden="true" />
-              {t("builder.editor.move")}
-            </DropdownMenuItem>
-            {actions.onMoveIntoGroup ? (
-              <DropdownMenuItem onSelect={actions.onMoveIntoGroup}>
-                <Layers aria-hidden="true" />
-                {t("builder.moveIntoGroup")}
+          {menu !== undefined ? (
+            <RowMenu label={t("builder.editor.more")}>{menu}</RowMenu>
+          ) : null}
+          {menu === undefined && actions ? (
+            <RowMenu label={t("builder.editor.more")}>
+              <DropdownMenuItem onSelect={actions.onDuplicate}>
+                <Copy aria-hidden="true" />
+                {t("builder.editor.duplicate")}
               </DropdownMenuItem>
-            ) : null}
-            <DropdownMenuSeparator />
-            <DropdownMenuItem variant="destructive" onSelect={actions.onDelete}>
-              <Trash2 aria-hidden="true" />
-              {t("builder.editor.delete")}
-            </DropdownMenuItem>
-          </RowMenu>
+              <DropdownMenuItem onSelect={actions.onMove}>
+                <FolderInput aria-hidden="true" />
+                {t("builder.editor.move")}
+              </DropdownMenuItem>
+              {actions.onMoveIntoGroup ? (
+                <DropdownMenuItem onSelect={actions.onMoveIntoGroup}>
+                  <Layers aria-hidden="true" />
+                  {t("builder.moveIntoGroup")}
+                </DropdownMenuItem>
+              ) : null}
+              <DropdownMenuSeparator />
+              <DropdownMenuItem variant="destructive" onSelect={actions.onDelete}>
+                <Trash2 aria-hidden="true" />
+                {t("builder.editor.delete")}
+              </DropdownMenuItem>
+            </RowMenu>
+          ) : null}
         </div>
         {value.points <= 0 ? (
           <p role="alert" className="text-danger-ink border-b px-4 py-2 text-xs">

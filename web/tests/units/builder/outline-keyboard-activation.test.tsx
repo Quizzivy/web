@@ -599,7 +599,7 @@ it("moves a whole shared-context group with immediate keys while retaining membe
   });
   const destination = screen.getByRole("button", { name: /^To / });
   fireEvent.click(destination);
-  const grip = screen.getByRole("button", { name: "Kéo nhóm Whole group" });
+  const grip = screen.getByRole("button", { name: "Kéo Whole group" });
   grip.focus();
   try {
     expect(key(grip, "Space")).toBe(true);
@@ -685,7 +685,7 @@ it.each([
     ) {
       const lines = [
         ...document.querySelectorAll(
-          '[data-outline-row], [aria-label^="Kéo nhóm"], [aria-label^="Kéo để đổi vị trí phần"]',
+          '[data-outline-row], [data-outline-group-grip], [aria-label^="Kéo để đổi vị trí phần"]',
         ),
       ].map((node) =>
         node.hasAttribute("data-outline-row") ? node : node.parentElement!,

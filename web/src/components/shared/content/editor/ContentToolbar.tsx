@@ -53,16 +53,19 @@ const OPTION_GROUPS = new Set(["marks", "history"]);
  * selection state its controls display. "Insert gap" shows only in a profile
  * that holds gaps, and the option profile keeps the marks and the history.
  * Given `media`, a question's prompt or explanation also has "Image" and
- * "Audio" after "Link" (DG-109).
+ * "Audio" after "Link" (DG-109). `ownGapTool` leaves "Insert gap" out, for a
+ * host that makes gaps with a command of its own.
  */
 export function ContentToolbar({
   editor,
   label,
   profile = "document",
   gapLabel,
+  ownGapTool = false,
   media,
 }: Readonly<{
   gapLabel?: (() => string) | undefined;
+  ownGapTool?: boolean | undefined;
   editor: Editor;
   label: string;
   profile?: EditorProfile;
@@ -87,7 +90,7 @@ export function ContentToolbar({
       redo: e.can().redo(),
     }),
   });
-  const gaps = holdsGaps(profile);
+  const gaps = holdsGaps(profile) && !ownGapTool;
   const allGroups: ToolGroup[] = [
     {
       key: "marks",

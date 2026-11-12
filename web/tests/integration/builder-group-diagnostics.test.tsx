@@ -98,7 +98,7 @@ test("a publication finding opens the owned member editor without trying the sta
       <RouterProvider router={router} />
     </QueryClientProvider>,
   );
-  await screen.findByLabelText("Tên nhóm câu hỏi", { exact: true });
+  await screen.findByRole("textbox", { name: "Tiêu đề" });
   const user = userEvent.setup();
   await user.click(screen.getByRole("button", { name: "Phát hành" }));
   const dialog = await screen.findByRole("dialog", { name: "Phát hành đề thi?" });

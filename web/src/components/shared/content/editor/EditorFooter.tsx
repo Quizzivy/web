@@ -1,4 +1,4 @@
-import { useDeferredValue, useMemo } from "react";
+import { useDeferredValue, useMemo, type ReactNode } from "react";
 import { useEditorState, type Editor } from "@tiptap/react";
 import type { Node as ProseNode } from "@tiptap/pm/model";
 import { useTranslation } from "react-i18next";
@@ -25,8 +25,11 @@ function sameNode(a: ProseNode, b: ProseNode | null): boolean {
   return a === b;
 }
 
-/** EditorFooter is the box's last row: the paste hint, and the words count, which reads a deferred document, so neither the text nor the count is built on the keystroke path. */
-export function EditorFooter({ editor }: Readonly<{ editor: Editor }>) {
+/** EditorFooter is the box's last row: the paste hint, or `start` when the host gives its own line, and the words count, which reads a deferred document, so neither the text nor the count is built on the keystroke path. */
+export function EditorFooter({
+  editor,
+  start,
+}: Readonly<{ editor: Editor; start?: ReactNode | undefined }>) {
   const { t } = useTranslation();
   const doc = useEditorState({
     editor,
@@ -38,7 +41,9 @@ export function EditorFooter({ editor }: Readonly<{ editor: Editor }>) {
   return (
     <div className="text-muted-fg flex flex-wrap justify-between gap-x-3 gap-y-1 border-t px-3 py-1.5 text-[11.5px] leading-normal">
       <span className="min-w-0">
-        {t("contentEditor.footerHint", { shortcut: editorShortcut("V", true).label })}
+        {start === undefined
+          ? t("contentEditor.footerHint", { shortcut: editorShortcut("V", true).label })
+          : start}
       </span>
       <span className="whitespace-nowrap tabular-nums">
         {t("contentEditor.words", { count: words })}

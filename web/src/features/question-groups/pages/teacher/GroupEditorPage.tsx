@@ -1,6 +1,12 @@
 import { useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { useBlocker, useBeforeUnload, useNavigate, useParams } from "react-router";
+import {
+  useBlocker,
+  useBeforeUnload,
+  useLocation,
+  useNavigate,
+  useParams,
+} from "react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Button } from "@/components/ui/button";
 import { Callout } from "@/components/shared/Callout";
@@ -18,7 +24,8 @@ import {
 } from "../../components/GroupRecoveryGate";
 import { useGroupEditor } from "../../useGroupEditor";
 import { GroupPreviewDialog } from "../../components/GroupPreviewDialog";
-import { GroupComposer } from "../../components/GroupComposer";
+import { GroupWorkspace } from "../../components/GroupWorkspace";
+import { GROUP_STARTS, groupKind, type GroupStart } from "../../kinds";
 
 /**
  * GroupEditorPage edits one question group (DG-68): its title, materials,
@@ -57,6 +64,14 @@ function Editor({
   const client = useQueryClient();
   const [assets, setAssets] = useState(stored.assets);
   const [error, setError] = useState<string | null>(null);
+  const started: unknown = useLocation().state;
+  const start = GROUP_STARTS.find(
+    (item) =>
+      typeof started === "object" &&
+      started !== null &&
+      "start" in started &&
+      started.start === item,
+  ) as GroupStart | undefined;
   const [preview, setPreview] = useState(false);
   const previewTrigger = useRef<HTMLButtonElement>(null);
   const [copying, setCopying] = useState(false);
@@ -132,7 +147,10 @@ function Editor({
     <div className="flex min-w-0 flex-col gap-4">
       <PageHead
         crumb
-        title={editor.bundle.group.title || t("groups.newGroup")}
+        title={
+          editor.bundle.group.title ||
+          t(`groups.kind.${groupKind(editor.bundle, start)}.new`)
+        }
         back={{ to: "/teacher/question-bank/groups", label: t("groups.bankTitle") }}
         actions={
           <>
@@ -185,9 +203,11 @@ function Editor({
       />
       <fieldset disabled={stored.archivedAt !== null || copying} className="min-w-0">
         {stored.archivedAt === null ? (
-          <GroupComposer
+          <GroupWorkspace
             bundle={editor.bundle}
             assets={assets}
+            start={start}
+            titleFocus={start === undefined ? undefined : 0}
             onChange={editor.change}
             onAsset={(asset) =>
               setAssets((previous) => [

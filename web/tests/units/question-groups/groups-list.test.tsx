@@ -89,7 +89,7 @@ describe("the groups list's selection", () => {
       await screen.findByRole("checkbox", { name: "Chọn Active passage 1" }),
     );
     await user.type(screen.getByRole("searchbox"), "zzz");
-    expect(await screen.findByText("Chưa có nhóm phù hợp")).toBeInTheDocument();
+    expect(await screen.findByText("Chưa có mục phù hợp")).toBeInTheDocument();
     expect(screen.getByText("Đã chọn 1")).toBeInTheDocument();
   });
 });
@@ -98,18 +98,18 @@ describe("the groups list's empty states", () => {
   it("offers a new group when there are none yet", async () => {
     serve({ active: 0, archived: 0 });
     renderList();
-    const line = (await screen.findByText(/^Chưa có nhóm nào\./)).closest("span")!;
-    expect(within(line).getByRole("button", { name: "Nhóm mới" })).toBeEnabled();
-    expect(screen.queryByText("Chưa có nhóm phù hợp")).toBeNull();
+    const line = (
+      await screen.findByText(/^Chưa có bài đọc, bài điền từ hay bài nghe nào\./)
+    ).closest("span")!;
+    expect(within(line).getByRole("button", { name: "Tạo mới" })).toBeEnabled();
+    expect(screen.queryByText("Chưa có mục phù hợp")).toBeNull();
   });
 
   it("says nothing is archived, without offering a new group", async () => {
     serve({ active: 0, archived: 0 });
     renderList("/teacher/question-bank/groups?status=archived");
-    expect(
-      await screen.findByText("Chưa có nhóm nào được lưu trữ"),
-    ).toBeInTheDocument();
-    expect(screen.getAllByRole("button", { name: "Nhóm mới" })).toHaveLength(1);
+    expect(await screen.findByText("Chưa có mục nào được lưu trữ")).toBeInTheDocument();
+    expect(screen.getAllByRole("button", { name: "Tạo mới" })).toHaveLength(1);
   });
 });
 
@@ -125,14 +125,14 @@ describe("the archive confirmation", () => {
     );
     await user.click(screen.getByRole("button", { name: "Archive" }));
     expect(
-      await screen.findByText(/^Archive this group from the active list\./),
+      await screen.findByText(/^Archive this item from the active list\./),
     ).toBeInTheDocument();
     await user.click(screen.getByRole("button", { name: "Cancel" }));
 
     await user.click(screen.getByRole("checkbox", { name: "Select Active passage 2" }));
     await user.click(screen.getByRole("button", { name: "Archive" }));
     expect(
-      await screen.findByText(/^Archive these 2 groups from the active list\./),
+      await screen.findByText(/^Archive these 2 items from the active list\./),
     ).toBeInTheDocument();
   });
 });

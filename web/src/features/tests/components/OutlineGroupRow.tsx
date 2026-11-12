@@ -8,19 +8,18 @@ import {
 } from "@dnd-kit/sortable";
 
 import {
-  AudioLines,
   ChevronDown,
   ChevronRight,
   ChevronUp,
   CircleAlert,
   Ellipsis,
-  FileText,
   GripVertical,
   Layers,
   LogOut,
-  PanelLeft,
   Pencil,
+  TextCursorInput,
   Trash2,
+  type LucideIcon,
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
@@ -35,53 +34,56 @@ import { Tooltip } from "@/components/shared/Tooltip";
 import { cn } from "@/lib/utils";
 import type { GroupBundle } from "@/features/question-groups/api";
 import { QUESTION_TYPE_ICONS } from "@/features/question-bank/components/questionTypeIcons";
-import { sharedContentLine, type SharedContentLine } from "../sharedContentLine";
+import { KIND_ICONS } from "@/features/question-groups/kindIcons";
+import {
+  gapQuestions,
+  unfinishedMember,
+  type GapQuestion,
+} from "@/features/question-groups/gapQuestions";
+import {
+  groupKind,
+  type GroupKind,
+  type GroupStart,
+} from "@/features/question-groups/kinds";
 import { gapBoundMembers } from "../outlineUnits";
 import { draftUnkeyed } from "../publishProblem";
 
-const SHARED_ICONS = {
-  passage: FileText,
-  audio: AudioLines,
-  materials: FileText,
-} as const;
-
 /**
- * OutlineGroupRow is a shared-context group in the builder's outline, drawn
- * in the outline's own rows: a header row with its grip, disclosure, title,
- * question count and points, and its "…" menu (Rename, Shared content, Move
- * up, Move down, Remove group); while open, the shared-content line under
- * it and its members as numbered question rows with the deck's type icons
- * and points, indented under a rule. From 768px the menu's trigger shows on
- * hover, focus and while open, as a section's does; below it the trigger
- * shows at 44px only while the group or one of its members is selected, as
- * a question row's actions do (DG-135). It keeps the members together while
- * selecting, moving or removing it. Its header, with the shared-content line,
- * is where a question is dropped into the group, tinted while `dropInto`;
- * each member row is sortable by its grip and draws the drop line
- * `memberDrop` names, and a member that a material gap is bound to keeps its
- * grip disabled, with the reason. With `onMemberMove`, each member row has
- * its own "…" menu with the same moves (Move up, Move down, Move out of group,
- * Move to group…), whose trigger takes the place of the points on hover and
- * focus from 768px and at 44px on the selected member below it; a bound
- * member's two moves out are disabled, with the reason under them, and Move
- * to group… needs
+ * OutlineGroupRow is a passage, a cloze or a recording in the builder's
+ * outline, drawn in the outline's own rows: a header row with its grip,
+ * disclosure, the icon of its kind, its title, a mark while one of its
+ * questions is not finished, its question count and points, and its "…" menu
+ * (Rename, Move up, Move down, Delete); while open, its members as numbered
+ * question rows with the deck's type icons and points, indented under a rule.
+ * A member that is a gap's question shows the gap's word for its title.
+ * Pressing the title opens the group's pane. `start` is how an empty group
+ * was started, which names it until it holds something. From 768px the
+ * menu's trigger shows on hover, focus and while open, as a section's does;
+ * below it the trigger shows at 44px only while the group or one of its
+ * members is selected, as a question row's actions do (DG-135). It keeps the
+ * members together while selecting, moving or removing it. Its header is
+ * where a question is dropped into the group, tinted while `dropInto`; each
+ * member row is sortable by its grip and draws the drop line `memberDrop`
+ * names, and a member that answers a gap keeps its grip disabled, with the
+ * reason. With `onMemberMove`, each member row has its own "…" menu with the
+ * same moves (Move up, Move down, Move out, Move to another…), whose trigger
+ * takes the place of the points on hover and focus from 768px and at 44px on
+ * the selected member below it; a member that answers a gap has its two
+ * moves out disabled, with the reason under them, and Move to another… needs
  * `canPickGroup`. `targets` turns off the drop targets the drag in progress
  * cannot use. The member `busyQuestionId` names is being moved and is drawn
  * faded and busy. `open` and `onToggle` are the disclosure, which the outline
- * owns so that a drop can open the group. `fileNames` maps an audio asset id
- * to the file name the line prints. Rename and Shared content only ask the
- * builder to act: the group's title is written by its editor, never here.
- * Rename and Shared content ask once the menu has closed, so the focus they
- * move is not taken back by the menu; Shared content leaves focus on the
- * trigger until its dialog opens. Shared content, from the menu or from the
- * line, and Remove group hand over the control they were asked from, the
- * menu's trigger or the line, where focus returns when their dialog closes.
+ * owns so that a drop can open the group. Rename only asks the builder to
+ * act: the group's title is written by its pane, never here, and it asks once
+ * the menu has closed, so the focus it moves is not taken back by the menu.
+ * Delete hands over the menu's trigger, where focus returns when its dialog
+ * closes.
  */
 export function OutlineGroupRow({
   id,
   group,
   numbering,
-  fileNames,
+  start,
   drop,
   dropInto = false,
   memberDrop = null,
@@ -96,7 +98,6 @@ export function OutlineGroupRow({
   onToggle,
   onSelect,
   onRename,
-  onSharedContent,
   onStep,
   onRemove,
   onMemberMove,
@@ -104,7 +105,7 @@ export function OutlineGroupRow({
   id: string;
   group: GroupBundle | undefined;
   numbering: Map<string, number>;
-  fileNames: ReadonlyMap<string, string>;
+  start?: GroupStart | undefined;
   drop?: "before" | "after" | undefined;
   dropInto?: boolean;
   memberDrop?: MemberDrop | null;
@@ -119,7 +120,6 @@ export function OutlineGroupRow({
   onToggle: () => void;
   onSelect: (questionId?: string) => void;
   onRename: () => void;
-  onSharedContent: (opener: HTMLElement | null) => void;
   onStep: (direction: -1 | 1) => void;
   onRemove: (opener: HTMLElement | null) => void;
   onMemberMove?: MemberMover | undefined;
@@ -136,8 +136,8 @@ export function OutlineGroupRow({
     data: { kind: "group-head", groupId: id },
     disabled: targets === "unit",
   });
-  const title = group?.group.title || t("groups.newGroup");
-  const shared = group ? sharedContentLine(group, fileNames, t) : null;
+  const { kind, KindIcon, unfinished } = rowFacts(group, start);
+  const title = group?.group.title || t(`groups.kind.${kind}.new`);
   const Chevron = open ? ChevronDown : ChevronRight;
   return (
     <div
@@ -169,6 +169,7 @@ export function OutlineGroupRow({
           <button
             type="button"
             aria-label={t("builder.reorderGroup", { title })}
+            data-outline-group-grip=""
             {...attributes}
             {...listeners}
             className="text-muted-fg flex h-6 w-5 shrink-0 cursor-grab touch-none items-center justify-center"
@@ -184,28 +185,31 @@ export function OutlineGroupRow({
           >
             <Chevron className="size-3.5" aria-hidden="true" />
           </button>
-          <Layers className="text-muted-fg size-3.5 shrink-0" aria-hidden="true" />
+          <KindIcon
+            {...(group
+              ? { role: "img", "aria-label": t(`groups.kind.${kind}.name`) }
+              : { "aria-hidden": true })}
+            className="text-muted-fg size-3.5 shrink-0"
+          />
           <GroupHeading
             group={group}
             title={title}
             selected={selected}
+            unfinished={unfinished}
             onSelect={() => onSelect()}
           />
           <GroupActions
             title={title}
+            removeLabel={t(`groups.kind.${kind}.remove`)}
             disabled={!group}
             selected={selected}
             canUp={canUp}
             canDown={canDown}
             onRename={onRename}
-            onSharedContent={onSharedContent}
             onStep={onStep}
             onRemove={onRemove}
           />
         </div>
-        {open && shared ? (
-          <SharedContentButton line={shared} onClick={onSharedContent} />
-        ) : null}
       </div>
       {open && group ? (
         <GroupMembers
@@ -224,24 +228,37 @@ export function OutlineGroupRow({
   );
 }
 
+function rowFacts(
+  group: GroupBundle | undefined,
+  start: GroupStart | undefined,
+): { kind: GroupKind; KindIcon: LucideIcon; unfinished: boolean } {
+  if (!group) return { kind: "reading", KindIcon: Layers, unfinished: false };
+  const kind = groupKind(group, start);
+  return {
+    kind,
+    KindIcon: KIND_ICONS[kind],
+    unfinished: unfinishedMember(group) !== null,
+  };
+}
+
 function GroupActions({
   title,
+  removeLabel,
   disabled,
   selected,
   canUp,
   canDown,
   onRename,
-  onSharedContent,
   onStep,
   onRemove,
 }: Readonly<{
   title: string;
+  removeLabel: string;
   disabled: boolean;
   selected: boolean;
   canUp: boolean;
   canDown: boolean;
   onRename: () => void;
-  onSharedContent: (opener: HTMLElement | null) => void;
   onStep: (direction: -1 | 1) => void;
   onRemove: (opener: HTMLElement | null) => void;
 }>) {
@@ -284,17 +301,6 @@ function GroupActions({
           <Pencil aria-hidden="true" />
           {t("builder.renameGroup")}
         </DropdownMenuItem>
-        <DropdownMenuItem
-          onSelect={() => {
-            afterClose.current = {
-              run: () => onSharedContent(trigger.current),
-              focusTrigger: true,
-            };
-          }}
-        >
-          <PanelLeft aria-hidden="true" />
-          {t("builder.sharedContent")}
-        </DropdownMenuItem>
         <DropdownMenuItem disabled={!canUp} onSelect={() => onStep(-1)}>
           <ChevronUp aria-hidden="true" />
           {t("builder.groupMoveUp")}
@@ -309,7 +315,7 @@ function GroupActions({
           onSelect={() => onRemove(trigger.current)}
         >
           <Trash2 aria-hidden="true" />
-          {t("builder.groupRemove")}
+          {removeLabel}
         </DropdownMenuItem>
       </DropdownMenuContent>
     </DropdownMenu>
@@ -330,6 +336,21 @@ export interface MemberDrop {
 }
 
 type MemberInput = GroupBundle["questions"][number]["input"];
+
+function memberFace(
+  input: MemberInput | undefined,
+  gap: GapQuestion | undefined,
+): { icon: LucideIcon; title: string } {
+  if (gap)
+    return {
+      icon: gap.mode === "typed" ? TextCursorInput : QUESTION_TYPE_ICONS.single_choice,
+      title: gap.word,
+    };
+  return {
+    icon: QUESTION_TYPE_ICONS[input?.type ?? "single_choice"],
+    title: input?.prompt ?? "",
+  };
+}
 
 function GroupMembers({
   group,
@@ -357,6 +378,7 @@ function GroupMembers({
     group.questions.map((question) => [question.id, question.input]),
   );
   const bound = gapBoundMembers(group);
+  const gaps = gapQuestions(group);
   const members = group.group.members;
   return (
     <SortableContext
@@ -373,6 +395,7 @@ function GroupMembers({
             count={members.length}
             canPickGroup={canPickGroup}
             input={questions.get(member.questionId)}
+            gap={gaps.get(member.questionId)}
             number={numbering.get(member.questionId) ?? 0}
             bound={bound.has(member.questionId)}
             targeted={targeted}
@@ -408,6 +431,7 @@ function MemberRow({
   count,
   canPickGroup,
   input,
+  gap,
   number,
   bound,
   targeted,
@@ -423,6 +447,7 @@ function MemberRow({
   count: number;
   canPickGroup: boolean;
   input: MemberInput | undefined;
+  gap: GapQuestion | undefined;
   number: number;
   bound: boolean;
   targeted: boolean;
@@ -439,7 +464,8 @@ function MemberRow({
     disabled: { draggable: bound, droppable: !targeted },
     transition: null,
   });
-  const Icon = QUESTION_TYPE_ICONS[input?.type ?? "single_choice"];
+  const face = memberFace(input, gap);
+  const Icon = face.icon;
   const problemId = useId();
   const problem = input && draftUnkeyed(input) ? t("builder.noCorrectAnswer") : null;
   return (
@@ -489,7 +515,7 @@ function MemberRow({
         </span>
         <Icon className="text-muted-fg size-3.5 shrink-0" aria-hidden="true" />
         <span className="min-w-0 flex-1 truncate px-1 py-0.75 leading-4">
-          {input?.prompt || t("builder.untitledQuestion")}
+          {face.title || t("builder.untitledQuestion")}
         </span>
         {problem ? (
           <CircleAlert className="text-warning size-3.5 shrink-0" aria-hidden="true">
@@ -657,26 +683,6 @@ function BoundGrip({ number }: Readonly<{ number: number }>) {
   );
 }
 
-function SharedContentButton({
-  line,
-  onClick,
-}: Readonly<{
-  line: SharedContentLine;
-  onClick: (opener: HTMLElement) => void;
-}>) {
-  const Icon = SHARED_ICONS[line.kind];
-  return (
-    <button
-      type="button"
-      className="text-muted-fg hover:bg-muted mb-0.5 ml-6.5 flex w-[calc(100%-1.625rem)] items-center gap-1.5 rounded-[6px] px-1.5 py-1 text-left text-xs leading-[1.45]"
-      onClick={(event) => onClick(event.currentTarget)}
-    >
-      <Icon aria-hidden="true" className="size-3.25 shrink-0" />
-      <span className="min-w-0 truncate leading-[18px]">{line.text}</span>
-    </button>
-  );
-}
-
 function groupPoints(group: GroupBundle): number {
   return group.questions.reduce((sum, question) => sum + question.input.points, 0);
 }
@@ -685,11 +691,13 @@ function GroupHeading({
   group,
   title,
   selected,
+  unfinished,
   onSelect,
 }: Readonly<{
   group: GroupBundle | undefined;
   title: string;
   selected: boolean;
+  unfinished: boolean;
   onSelect: () => void;
 }>) {
   const { t } = useTranslation();
@@ -705,6 +713,13 @@ function GroupHeading({
       <button type="button" className={name} onClick={onSelect}>
         {title}
       </button>
+      {unfinished ? (
+        <CircleAlert
+          role="img"
+          aria-label={t("builder.groupNeedsWork")}
+          className="text-warning-ink size-3.5 shrink-0"
+        />
+      ) : null}
       <span
         className={cn(
           "text-muted-fg shrink-0 text-xs whitespace-nowrap tabular-nums",

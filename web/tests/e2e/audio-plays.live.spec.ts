@@ -1,5 +1,6 @@
 import { fileURLToPath } from "node:url";
 import { expect, test, type Page } from "@playwright/test";
+import { addPaneQuestion, paneTitle, startGroup } from "./support/groupPane";
 import {
   assignToClass,
   publishInBuilder,
@@ -114,24 +115,14 @@ async function publishGroupListeningTest(page: Page, title: string) {
     timeout: 15_000,
   });
 
-  await page
-    .getByRole("button", { name: "Thêm nhóm câu dùng chung", exact: true })
-    .click();
-  await page.getByLabel("Tên nhóm câu hỏi", { exact: true }).fill("Hỏi đường");
-  await page.getByRole("button", { name: "Thêm ngữ liệu", exact: true }).click();
-  await page.getByLabel("Tên ngữ liệu", { exact: true }).fill("Hỏi đường");
-  await page.getByRole("textbox", { name: "Nội dung ngữ liệu", exact: true }).click();
-  await page
-    .getByRole("group", { name: "Chèn nội dung vào ngữ liệu" })
-    .getByRole("button", { name: "Bài nghe", exact: true })
-    .click();
-  const dialog = page.getByRole("dialog");
-  await dialog.getByLabel("Chọn tệp từ máy").setInputFiles(AUDIO);
-  await expect(dialog.getByText(/^Đã chọn: /)).toBeVisible({ timeout: 60_000 });
-  await dialog.getByRole("button", { name: "Chèn vào ngữ liệu", exact: true }).click();
-  await expect(dialog).toBeHidden();
+  await startGroup(page, "Bài nghe và câu hỏi");
+  await paneTitle(page).fill("Hỏi đường");
+  await page.getByLabel("Chọn tệp từ máy").setInputFiles(AUDIO);
+  await expect(page.getByRole("button", { name: "Thay tệp", exact: true })).toBeVisible(
+    { timeout: 60_000 },
+  );
 
-  await page.getByRole("button", { name: "Thêm câu hỏi", exact: true }).last().click();
+  await addPaneQuestion(page);
   await addChoiceQuestion(page, "Minh nên đi hướng nào?");
   await expect(page.locator('[role="status"][data-state="saved"]')).toBeVisible({
     timeout: 15_000,

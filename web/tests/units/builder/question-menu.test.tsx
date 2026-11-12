@@ -270,11 +270,13 @@ describe("the editor pane's question menu", () => {
     );
     const user = await renderBuilder();
 
-    await choose(user, "Chuyển vào nhóm…");
-    const dialog = await screen.findByRole("dialog", { name: "Chuyển câu 1 vào nhóm" });
-    expect(within(dialog).getByRole("combobox", { name: "Nhóm" })).toHaveTextContent(
-      "Reading club · Phần 1",
-    );
+    await choose(user, "Chuyển vào bài đọc, bài nghe…");
+    const dialog = await screen.findByRole("dialog", {
+      name: "Chuyển câu 1 vào bài đọc, bài nghe",
+    });
+    expect(
+      within(dialog).getByRole("combobox", { name: "Bài đọc, bài nghe" }),
+    ).toHaveTextContent("Reading club · Phần 1");
     await user.click(within(dialog).getByRole("button", { name: "Chuyển" }));
 
     await waitFor(() => expect(draft.requests).toHaveLength(1));
@@ -286,10 +288,10 @@ describe("the editor pane's question menu", () => {
     });
     expect(
       await screen.findByText(
-        "Đã sao chép câu hỏi vào nhóm. Bản gốc vẫn ở ngân hàng câu hỏi.",
+        "Đã sao chép câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
       ),
     ).toBeVisible();
-    expect(await screen.findByLabelText("Tên nhóm câu hỏi")).toBeVisible();
+    expect(await screen.findByRole("textbox", { name: "Tiêu đề" })).toBeVisible();
     expect(saved).toEqual([]);
   });
 

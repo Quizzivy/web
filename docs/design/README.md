@@ -211,8 +211,9 @@ Decided by Thuong on 2026-11-12 (DG-230 in `docs/design/gaps.md`):
 
 - **No block carries a thick or coloured border on one side,** on any surface: no accent stripe
   along a card's edge, no bar beside a quote, no stripe on a selected row. The deck marks the
-  grading queue's active row with a 2px lime line on its left, and the product builds it; the row
-  keeps its muted ground and loses the line.
+  grading queue's active row with a 2px lime line on its left. The product marks that row with
+  the `--hover` ground instead, as the sidebar marks its current item, and a guard test refuses a
+  new edge stripe.
 
 ## Updating the deck
 

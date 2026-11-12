@@ -420,8 +420,14 @@ To view one, start the server above and open, for example,
   page gained a listening gap-fill (step "Listen and fill the gaps" of the recording, and a
   fourth choice in the menu, "Bài nghe điền từ"), a row that adds a text under any recording,
   and a table, "What a teacher can build with it", of ten tasks: six drawn, three the pane makes
-  without a drawing, and one the model cannot store (a word bank shared by all the gaps). One
-  question is open, Q8: which other tasks teachers build.
+  without a drawing, and one the model cannot store (a word bank shared by all the gaps), which
+  he says teachers do not need (Q8).
+  Teachers then asked how one who has chosen one of the menu's four changes to another, and
+  whether that means deleting. It does not: every pane now shows a row for the part it does not
+  have ("Thêm bản ghi âm" above a text, "Thêm đoạn văn" under a recording), a part left empty is
+  not kept, and a part with content is removed from its own card's menu. Q9 asks the owner
+  whether that row is enough or the pane should have a switch of kinds; it is the one question
+  open.
 
 ## The brand
 

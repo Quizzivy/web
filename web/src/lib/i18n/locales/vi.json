@@ -4599,15 +4599,6 @@
     "backToAssignment": "Về bài giao",
     "viewStudent": "Xem học viên"
   },
-  "layout": {
-    "resize": {
-      "sidebar": "Độ rộng menu",
-      "rail": "Độ rộng cột lọc",
-      "panel": "Độ rộng bảng bên",
-      "outline": "Độ rộng dàn ý",
-      "importSource": "Độ rộng cột tài liệu nguồn"
-    }
-  },
   "formDialog": {
     "optional": "(không bắt buộc)",
     "required": "Bắt buộc",

@@ -4599,15 +4599,6 @@
     "backToAssignment": "Back to assignment",
     "viewStudent": "View student"
   },
-  "layout": {
-    "resize": {
-      "sidebar": "Menu width",
-      "rail": "Filter column width",
-      "panel": "Side panel width",
-      "outline": "Outline width",
-      "importSource": "Source column width"
-    }
-  },
   "formDialog": {
     "optional": "(optional)",
     "required": "Required",

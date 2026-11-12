@@ -403,7 +403,9 @@ To view one, start the server above and open, for example,
   write. Frames at 1280 and 360, light and dark, Vietnamese and English; a frame is as tall as
   its page. No operation and no stored shape changes, and no exported page changes. It is a
   proposal until Thuong approves it, and its seven questions for him are on the page. He decided
-  the first the same day, as drawn: a gap with no wrong options is one the student types.
+  the first two the same day, as drawn: a gap with no wrong options is one the student types,
+  and the builder and the bank both use the three names. The page gained a table of the wording
+  that follows ("One name each"); the bank's own screens are still not drawn (DG-68).
 
 ## The brand
 

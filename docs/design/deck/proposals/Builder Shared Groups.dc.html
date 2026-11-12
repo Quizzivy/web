@@ -320,10 +320,24 @@ body{margin:0;-webkit-font-smoothing:antialiased}
   </div>
 </section>
 
+<section data-screen-label="Names" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">One name each, in the builder and the bank</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The owner decided Q2 on 12 Nov 2026: the builder and the question bank both use the three names. This is the wording that follows from it. About ninety strings of the two say “nhóm”, “ngữ liệu” or “dùng chung” today; each takes its new word from a row below. The bank’s own screens are not drawn here or in the deck (DG-68), so for them this is a change of words only. “Nhóm” stays in the model, the contract and the documents.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:900px">
+      <div style="display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>What is named</span><span>Today</span><span>Tiếng Việt</span><span>English</span></div>
+      <sc-for list="{{ names }}" as="r" hint-placeholder-count="9"><div style="display:grid;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr) minmax(0,1.3fr) minmax(0,1.3fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.what }}</span><span lang="vi" style="color:var(--muted-fg);text-wrap:pretty">{{ r.today }}</span><span lang="vi" style="text-wrap:pretty">{{ r.vi }}</span><span style="text-wrap:pretty">{{ r.en }}</span></div></sc-for>
+    </div>
+  </div>
+  <p style="margin:0;max-width:920px;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">Not part of the decision.</b> The same thing is named on other screens too, in about thirty-five strings: the import review (“Nhóm câu”), AI generation (“vào nhóm của bài này”), the builder’s preview and the student’s test (“Ngữ liệu dùng chung”, “Mở ngữ liệu”), the audit log and the account transfer (“nhóm câu hỏi”). They keep their words until someone decides otherwise; the rows above would cover them.</p>
+</section>
+
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1 is decided; the other six are open.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1 and Q2 are decided; the other five are open.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -374,7 +388,7 @@ const STR = [
   ['addQDesc', 'Add menu', 'Một câu hỏi đứng riêng trong phần này.', 'One question on its own in this section.', 'New'],
   ['kindReading', 'Pane', 'Bài đọc', 'Passage', 'As today'],
   ['kindCloze', 'Pane', 'Bài điền từ', 'Cloze', 'New'],
-  ['kindListening', 'Pane', 'Bài nghe', 'Audio', 'As today'],
+  ['kindListening', 'Pane', 'Bài nghe', 'Recording', 'New'],
   ['newReading', 'Pane', 'Bài đọc mới', 'New passage', 'New'],
   ['newCloze', 'Pane', 'Bài điền từ mới', 'New cloze', 'New'],
   ['newListening', 'Pane', 'Bài nghe mới', 'New recording', 'New'],
@@ -498,10 +512,22 @@ const RULES = [
   ['Moving a question from the bank or the test into a group copies it; the original stays (E1).', 'Unchanged, with the messages the builder has today. A question is moved by dragging its card or outline row, or from the card’s menu.'],
   ['A recording carries its listening rules: plays, pausing, skipping, the transcript.', 'The same four, in the left half of the pane, with today’s labels and defaults. For a recording the group is made empty and the file is attached when it is chosen.']
 ];
+// what the builder and the bank call things after Q2: [what is named, today, Vietnamese, English]
+const NAMES = [
+  ['The list in the bank', '“Nhóm câu hỏi”', 'Bài đọc, điền từ, bài nghe', 'Passages, clozes, recordings'],
+  ['One of them, named for what it holds', '“Nhóm câu hỏi”, “nhóm câu dùng chung”, “nhóm câu”', 'Bài đọc · Bài điền từ · Bài nghe', 'Passage · Cloze · Recording'],
+  ['Several of different kinds, in a sentence or a count', '“{count} nhóm”', '{count} mục, as the product counts mixed things already', '{count} items'],
+  ['Making one', '“Nhóm mới” in the bank, “Thêm nhóm câu dùng chung” in the builder', 'Bài đọc và câu hỏi · Bài điền từ · Bài nghe và câu hỏi, in the bank as in the builder', 'A passage with questions · A cloze · A recording with questions'],
+  ['A new one’s title', '“Nhóm câu hỏi mới”', 'Bài đọc mới · Bài điền từ mới · Bài nghe mới', 'New passage · New cloze · New recording'],
+  ['What it shares', '“Nội dung dùng chung”, “Ngữ liệu dùng chung”, “ngữ liệu”', 'bài đọc, and đoạn văn for its text · bản ghi âm. No word for both', 'passage, and text · recording'],
+  ['Its title', '“Tên nhóm câu hỏi”, “Tên ngữ liệu”, “Tiêu đề”', 'Tiêu đề', 'Title'],
+  ['Moving a question in, across and out', '“Chuyển vào nhóm…”, “Chuyển sang nhóm…”, “Chuyển ra khỏi nhóm”', 'Chuyển vào bài đọc, bài nghe… · Chuyển sang bài khác… · Chuyển ra khỏi bài này', 'Move into a passage or recording… · Move to another… · Move out of this passage'],
+  ['Removing one from a test', '“Xoá nhóm”, then a dialog titled “Xoá nội dung khỏi bản nháp?”', 'Xoá bài đọc này, then “Xoá bài đọc này khỏi đề?”. The same for the other two', 'Delete this passage, then “Delete this passage from the test?”']
+];
 // [id, question, why it matters, default drawn, who decided it and when]
 const QUESTIONS = [
   ['Q1 · Gaps', 'Should a gap with no wrong options be one the student types?', 'A group saves only when every question in it is complete, and a choice needs two filled options. A new gap has one, the word. So either the gap is something complete from its first second, or it is “unfinished” and stops the group from saving until a wrong option is typed, or the server learns to keep unfinished questions in a draft.', 'Yes. The card says so in a line under the options, and the text’s footer counts how many gaps are chosen and how many typed.', 'Thuong, 12 Nov 2026'],
-  ['Q2 · Names', 'Do “Bài đọc”, “Bài điền từ” and “Bài nghe” replace “nhóm câu dùng chung” and “ngữ liệu” everywhere a teacher reads them?', 'The question bank lists groups too, under “Nhóm câu hỏi”. If only the builder changes its words, the same thing has two names again.', 'The builder and the bank both use the three names. “Nhóm” stays in the model and the documents.'],
+  ['Q2 · Names', 'Do “Bài đọc”, “Bài điền từ” and “Bài nghe” replace “nhóm câu dùng chung” and “ngữ liệu” in the builder and in the bank?', 'The question bank lists groups too, under “Nhóm câu hỏi”. If only the builder changes its words, the same thing has two names again.', 'The builder and the bank both use the three names; the table above the questions gives the wording. “Nhóm” stays in the model and the documents.', 'Thuong, 12 Nov 2026'],
   ['Q3 · The dialog', 'Does the Shared content dialog go?', 'It is the deck’s drawing (DG-187), and the group row’s menu has an item for it (DG-186). The pane does all it does. Keeping both keeps two editors for one passage.', 'Yes. The outline’s content line and the row’s menu item go with it; pressing the group opens the pane.'],
   ['Q4 · Adding', 'Two buttons under the outline, or one “Thêm” menu for everything?', 'A question on its own is the most frequent thing added, and one menu would make it two presses. A second button keeps it at one and gives the three a name of their own. It does make the button’s label long.', 'Two buttons: “Thêm câu hỏi” as today, and “Bài đọc, điền từ, bài nghe” with the menu. On a phone they are one “+” that opens a sheet.'],
   ['Q5 · The answer’s row', 'Should the word land on a row picked at random?', 'A gap’s question is made from the word, so the word would always be its first option. Options are shuffled for students unless the teacher keeps them in order; where they are kept, every answer of the cloze would be A.', 'Yes, among four rows. The teacher can drag it or mark another row correct.'],
@@ -517,7 +543,7 @@ const HANDOFF = [
   ['The recording’s card in the pane, from the dialog’s fields', 'SharedContentDialog (AudioFields)', 'Small'],
   ['The unfinished question named in the pane’s heading and marked in the outline', 'useGroupEditor, OutlineGroupRow', 'Small'],
   ['Retire the Shared content dialog, its menu item and the outline’s content line', 'SharedContentDialog, OutlineGroupRow', 'Small'],
-  ['The strings above, in both languages; the bank’s names if Q2 is yes', 'the two locale files', 'Small'],
+  ['The strings above, and the renames of the names table in the builder and the bank: about ninety strings, in both languages', 'the two locale files, under builder and groups', 'Medium'],
   ['The builder’s tests for groups, rewritten for the pane. The contract tests do not change', 'tests for features/tests and features/question-groups', 'Medium'],
   ['The deck draws the builder’s group row and the dialog (DG-186, DG-187). The design team redraws them from this page before the code is written', 'Quizzivy Teacher, in Claude Design', 'Design']
 ];
@@ -737,6 +763,7 @@ class Component extends DCLogic {
       todayLead: TODAY_LEAD, tasks: TASKS.map(r => ({ task: r[0], today: r[1], next: r[2] })),
       problems: PROBLEMS.map((r, i) => ({ n: String(i + 1), sev: r[0], bg: sevTone[r[0]][0], fg: sevTone[r[0]][1], title: r[1], what: r[2], fix: r[3] })),
       rules: RULES.map(r => ({ rule: r[0], next: r[1] })),
+      names: NAMES.map(r => ({ what: r[0], today: r[1], vi: r[2], en: r[3] })),
       copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
       questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:' })),
       handoff: HANDOFF.map(h => ({ what: h[0], where: h[1], size: h[2] })), method: METHOD.map(m => ({ head: m[0], text: m[1] }))

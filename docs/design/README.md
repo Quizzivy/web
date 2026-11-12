@@ -374,6 +374,15 @@ To view one, start the server above and open, for example,
   light and dark, Vietnamese and English. No exported page changes. It is a proposal until Thuong
   approves it, and its five questions for him are on the page.
 
+- 2026-11-12 — Third proposal page: `proposals/Email Layout.dc.html`, for DG-229, opened with it:
+  the deck draws no email. It draws one layout for the four emails the API sends today (R5) and
+  the fifteen that R7, R10 and R11 plan, and seven of them in full, in a reading pane and on a
+  phone, light and dark, Vietnamese and English, with the plain-text part. It keeps T-R5.2's rule
+  (no images, no remote CSS, no tracking), so the brand is the centre's name and one lime rule,
+  and the colours are the deck's tokens as hex. The emails are rendered in `Quizzivy/api`; the
+  page is here because the deck is the design of record. It is a proposal until Thuong approves
+  it, and its six questions for him are on the page.
+
 ## The brand
 
 `brand/` is Thuong's kit, copied byte for byte from `~/Developer/designs/quizzivy-brand`. The

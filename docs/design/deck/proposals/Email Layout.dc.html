@@ -1,0 +1,463 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · Email · Design proposal · 12 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">One layout for every email</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws no email. Four are sent today, as bare HTML with the centre's name, a few lines and a link, and fifteen more are planned for R7, R10 and R11. This page draws one layout that all nineteen fill, and seven of them in full: the invite that ships today and six of R7's. It keeps R5's rule: no images, no remote CSS and no tracking. Nothing here changes what an email is allowed to say.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What does an email hold?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One thing that happened, the facts, and one button into the app.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The centre's name, a heading, a greeting and one or two sentences. Then, where the email has them, the facts as a small table.</li>
+      <li><span style="color:var(--fg)">One button, and the same link written out under it.</span> The app is where things are read and done.</li>
+      <li>A footer that says why the reader got it and where to turn it off.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Where is the brand?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">In the centre's name and one lime rule. There is no logo.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>R5 decided that emails carry no images, so nothing is blocked, nothing is fetched and nothing can track an open. A logo is an image, and the brand kit forbids setting the wordmark in type.</li>
+      <li><span style="color:var(--fg)">The colours are the deck's tokens written as hex</span>, because mail clients read neither CSS variables nor oklch.</li>
+      <li>The typeface is the reader's system face. Be Vietnam Pro would be a remote font.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Will it hold in real clients?</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">It is one column that needs no media query to fit a phone.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>600px at most, fluid below. Built as tables with inline styles when it is implemented; the frames here show the result, not the markup.</li>
+      <li><span style="color:var(--fg)">Dark is a second set of colours</span> for clients that honour the reader's setting. A client that inverts colours itself still gets dark text on light and a solid button.</li>
+      <li>Every email keeps its plain-text part, drawn here beside the HTML.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The email in a reading pane and on a phone</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Both frames show the email chosen in the bar above. The grey strip at the top of each frame stands for the mail client: the subject, the sender and the preview line the inbox shows. It is not part of the design. Everything under it is the email, in the reader's system typeface.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;height:{{ f.oh }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;transform:scale({{ f.s }});transform-origin:0 0;display:flex;flex-direction:column;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <div aria-hidden="true" style="flex:none;display:flex;flex-direction:column;gap:8px;padding:{{ f.chromePad }};border-bottom:1px solid var(--border);background:var(--muted)">
+              <div style="font-size:{{ f.subjSize }};font-weight:600;line-height:1.3;overflow-wrap:anywhere">{{ m.subject }}</div>
+              <div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;font-size:13px;font-weight:600">Q</span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Quizzivy <span style="font-weight:400;color:var(--muted-fg)">no-reply@quizzivy.com</span></span><span style="display:block;font-size:12px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.pre }}</span></span><span style="flex:none;font-size:12px;color:var(--muted-fg)">09:12</span></div>
+            </div>
+
+            <div style="flex:1;min-height:0;overflow-y:auto;background:{{ e.ground }}">
+              <sc-if value="{{ isHtml }}" hint-placeholder-val="{{ true }}">
+                <div lang="{{ lang }}" style="padding:{{ f.mailPad }};font-family:{{ e.font }};font-size:16px;line-height:1.5;color:{{ e.text }}">
+                  <div style="max-width:600px;margin:0 auto">
+                    <div style="display:flex;align-items:center;gap:8px;padding:0 4px 14px;font-size:15px;font-weight:700">{{ m.org }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">1</span></sc-if></div>
+                    <div style="background:{{ e.card }};border:1px solid {{ e.border }};border-top:3px solid {{ e.accent }};border-radius:12px;padding:{{ f.cardPad }}">
+                      <h1 style="margin:0 0 14px;display:flex;align-items:flex-start;gap:8px;font-size:{{ f.h1 }};line-height:1.3;font-weight:700"><span style="flex:1;min-width:0">{{ m.head }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:3px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">2</span></sc-if></h1>
+                      <p style="margin:0 0 12px">{{ m.hello }}</p>
+                      <sc-for list="{{ m.body }}" as="p" hint-placeholder-count="1"><p style="margin:0 0 12px">{{ p }}</p></sc-for>
+                      <sc-if value="{{ m.hasFacts }}" hint-placeholder-val="{{ true }}">
+                        <div style="position:relative;margin:16px 0;border:1px solid {{ e.border }};border-radius:10px;overflow:hidden">
+                          <sc-for list="{{ m.facts }}" as="ft" hint-placeholder-count="3"><div style="display:table;table-layout:fixed;width:100%;border-top:{{ ft.top }} solid {{ e.border }}"><span style="display:table-cell;width:{{ f.factW }};padding:10px 14px;font-size:14px;color:{{ e.muted }};background:{{ e.soft }};vertical-align:top">{{ ft.label }}</span><span style="display:table-cell;padding:10px 14px;font-size:15px;font-weight:600;vertical-align:top;overflow-wrap:anywhere">{{ ft.value }}</span></div></sc-for>
+                          <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;right:10px;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">3</span></sc-if>
+                        </div>
+                      </sc-if>
+                      <sc-if value="{{ m.hasQuote }}" hint-placeholder-val="{{ false }}">
+                        <div style="margin:16px 0;padding:10px 14px;border-left:3px solid {{ e.border }};background:{{ e.soft }};border-radius:0 8px 8px 0"><div style="font-size:13px;color:{{ e.muted }};margin-bottom:4px">{{ m.quoteBy }}</div><div style="font-size:15px">{{ m.quote }}</div></div>
+                      </sc-if>
+                      <sc-if value="{{ m.hasClasses }}" hint-placeholder-val="{{ false }}">
+                        <div style="position:relative;margin:16px 0;border:1px solid {{ e.border }};border-radius:10px;overflow:hidden">
+                          <sc-for list="{{ m.classes }}" as="cl" hint-placeholder-count="3"><div style="padding:11px 14px;border-top:{{ cl.top }} solid {{ e.border }}"><div style="font-size:15px;font-weight:600">{{ cl.name }}</div><div style="font-size:14px;color:{{ e.muted }}">{{ cl.stats }}</div></div></sc-for>
+                          <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:10px;right:10px;display:inline-grid;place-items:center;width:20px;height:20px;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">3</span></sc-if>
+                        </div>
+                      </sc-if>
+                      <div style="display:flex;align-items:center;gap:10px;margin:20px 0 0"><span role="link" style="display:inline-block;height:44px;padding:0 22px;border-radius:8px;background:{{ e.btn }};color:{{ e.btnText }};font-size:16px;font-weight:700;line-height:44px;white-space:nowrap">{{ m.cta }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">4</span></sc-if></div>
+                      <p style="margin:14px 0 0;font-size:13px;line-height:1.5;color:{{ e.muted }}">{{ m.linkNote }}<br><span style="word-break:break-all;color:{{ e.text }}">{{ m.link }}</span></p>
+                      <sc-for list="{{ m.notes }}" as="n" hint-placeholder-count="1"><p style="margin:12px 0 0;font-size:14px;color:{{ e.muted }}">{{ n }}</p></sc-for>
+                    </div>
+                    <div style="display:flex;gap:8px;align-items:flex-start;padding:16px 4px 0;font-size:13px;line-height:1.6;color:{{ e.muted }}"><div style="flex:1;min-width:0"><div>{{ m.why }}</div><sc-if value="{{ m.hasPrefs }}" hint-placeholder-val="{{ true }}"><div><span role="link" style="color:{{ e.text }};text-decoration:underline;text-underline-offset:3px">{{ m.prefs }}</span></div></sc-if><div>{{ m.sent }}</div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700">5</span></sc-if></div>
+                  </div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ isText }}" hint-placeholder-val="{{ false }}">
+                <pre lang="{{ lang }}" style="margin:0;padding:{{ f.mailPad }};font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;color:{{ e.text }}">{{ m.text }}</pre>
+              </sc-if>
+            </div>
+
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">The parts of the layout</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="5"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:1px;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">{{ mailNote }}</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Parts" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Sizes and rules</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Sizes are CSS pixels and do not change with the width. Body text is 16px so a phone does not have to zoom, and the button is 44px tall, the deck's floor for a touch target.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:150px minmax(0,1.2fr) minmax(0,2fr);gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>Drawn as</span><span>Rule</span></div>
+      <sc-for list="{{ parts }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:150px minmax(0,1.2fr) minmax(0,2fr);gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:500">{{ r.part }}</span><span style="color:var(--muted-fg)">{{ r.as }}</span><span style="text-wrap:pretty">{{ r.rule }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Colours" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Colours, as hex</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each is one of the deck's tokens. The light set is written inline on every element. The dark set sits in one style block under <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">prefers-color-scheme: dark</code>, and a client that ignores the block shows the light set.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:640px">
+      <div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Used for</span><span>Light</span><span>Dark</span><span>Deck token</span></div>
+      <sc-for list="{{ colours }}" as="c" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1.2fr) minmax(0,1fr) minmax(0,1fr) minmax(0,1fr);gap:14px;padding:10px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:center"><span style="font-weight:500">{{ c.use }}</span><span style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:18px;flex:none;border-radius:5px;border:1px solid var(--border);background:{{ c.light }}"></span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">{{ c.light }}</code></span><span style="display:flex;align-items:center;gap:8px"><span style="width:18px;height:18px;flex:none;border-radius:5px;border:1px solid var(--border);background:{{ c.dark }}"></span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">{{ c.dark }}</code></span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px;color:var(--muted-fg)">{{ c.token }}</code></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Every email" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The nineteen emails and what each fills</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Four ship today (R5). The rest are in the plans of R7, R10 and R11. The rows in the accent tint are drawn above. "Settings link" is the footer line that leads to the reader's notification settings.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:920px">
+      <div style="display:grid;grid-template-columns:200px 44px 120px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) 70px;gap:12px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Template</span><span>From</span><span>Goes to</span><span>Says</span><span>Besides the text</span><span>Button</span><span>Settings link</span></div>
+      <sc-for list="{{ every }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:200px 44px 120px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr) 70px;gap:12px;padding:10px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline;background:{{ r.bg }}"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ r.tpl }}</code><span style="color:var(--muted-fg)">{{ r.rel }}</span><span>{{ r.to }}</span><span style="text-wrap:pretty">{{ r.says }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.extra }}</span><span>{{ r.btn }}</span><span style="color:{{ r.prefsFg }}">{{ r.prefs }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Every line of the seven, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames above use these exact strings. "As today" lines are in the API's templates now and do not change; "New" lines are proposed for the templates R7 writes. A subject is sent with the centre's name and a colon before it, as today. A placeholder is written {org}; the templates write it Go's way.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:920px">
+      <div style="display:grid;grid-template-columns:170px 90px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Template</span><span>Part</span><span>Tiếng Việt</span><span>English</span><span>Status</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:170px 90px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ c.tpl }}</code><span style="color:var(--muted-fg)">{{ c.part }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}</span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">Default drawn:</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What this means for the work</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The emails are rendered by the API, in <code style="font-family:ui-monospace,Menlo,monospace;font-size:13px">Quizzivy/api</code>, so the layout is built there. The page is in the web's deck because the deck is the design of record.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.3fr) 90px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Change</span><span>Where</span><span>When</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:minmax(0,2.2fr) minmax(0,1.3fr) 90px;gap:14px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="text-wrap:pretty">{{ h.what }}</span><code style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.where }}</code><span>{{ h.when }}</span></div></sc-for>
+    </div>
+  </div>
+  <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">Read for this page: the API's four templates and its renderer at <code style="font-family:ui-monospace,Menlo,monospace">develop</code>, <code style="font-family:ui-monospace,Menlo,monospace">docs/plan/75-r5.md</code> (T-R5.2), <code style="font-family:ui-monospace,Menlo,monospace">77-r7.md</code> (T-R7.13, T-R7.14, T-R7.23 and the decisions at its head), <code style="font-family:ui-monospace,Menlo,monospace">80-r10.md</code> (T-R10.6), <code style="font-family:ui-monospace,Menlo,monospace">81-r11.md</code> (T-R11.6), the deck's tokens and the brand kit's rules.</p>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+const ORG = 'Quizzivy English Centre';
+const APP = 'https://app.quizzivy.com';
+const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+// Email colours: [use, light, dark, deck token]
+const COLOURS = [
+  ['Ground behind the card', '#f7f8f8', '#0a0d0e', '--sidebar'],
+  ['Card', '#ffffff', '#131819', '--card'],
+  ['Text', '#1b2123', '#ecefef', '--fg'],
+  ['Quiet text', '#646c6e', '#98a0a2', '--muted-fg'],
+  ['Lines', '#e4e7e8', '#252d2f', '--border'],
+  ['Label cells, quote', '#f2f4f4', '#1a2022', '--muted'],
+  ['Button', '#252c2e', '#ecefef', '--primary'],
+  ['Button text', '#fafbfb', '#141a1b', '--primary-fg'],
+  ['Rule on the card', '#a4ca3e', '#a4ca3e', '--accent-c']
+];
+// Shared lines: [key, Vietnamese, English, status]
+const SHARED = [
+  ['greeting', 'Chào {name},', 'Hello {name},', 'As today'],
+  ['link line', 'Nếu nút không mở được, hãy sao chép liên kết này vào trình duyệt:', 'If the button does not open, copy this link into your browser:', 'New'],
+  ['footer, why', 'Bạn nhận thư này vì bạn có tài khoản Quizzivy tại {org}.', 'You got this email because you have a Quizzivy account at {org}.', 'New'],
+  ['footer, settings', 'Đổi loại thư bạn nhận', 'Change which emails you get', 'New'],
+  ['footer, sender', '{org} · gửi qua Quizzivy', '{org} · sent with Quizzivy', 'New']
+];
+const STUDENT = 'Trần Minh Anh', TEACHER = 'Giàu Bùi', DUC = 'Phan Minh Đức', TEST = 'Mid-term Reading Mock', CLS = 'IELTS 6.5 Evening';
+const L = { test: ['Bài kiểm tra', 'Test'], cls: ['Lớp', 'Class'], student: ['Học viên', 'Student'] };
+// Each email: Vietnamese first, English second. status: [subject, preheader, heading, body, button, notes]
+const MAILS = {
+  invite: { tpl: 'account_invite', to: STUDENT, prefs: false, status: 'As today', newParts: ['preheader', 'heading'],
+    subject: ['Đặt mật khẩu cho tài khoản Quizzivy của bạn', 'Set a password for your Quizzivy account'],
+    pre: ['Liên kết chỉ dùng được một lần và hết hạn sau 24 giờ.', 'The link works once and expires after 24 hours.'],
+    head: ['Đặt mật khẩu cho tài khoản của bạn', 'Set a password for your account'],
+    body: [['{org} đã tạo cho bạn một tài khoản Quizzivy. Hãy mở liên kết dưới đây để đặt mật khẩu và đăng nhập:', '{org} has created a Quizzivy account for you. Open the link below to set a password and sign in:']],
+    cta: ['Đặt mật khẩu', 'Set a password'], link: APP + '/set-password#token=3fQx…K9',
+    notes: [['Liên kết chỉ dùng được một lần và hết hạn sau 24 giờ. Nếu liên kết đã hết hạn, hãy nhờ trung tâm gửi liên kết mới.', 'The link works once and expires after 24 hours. If it has expired, ask your centre for a new one.'], ['Nếu bạn không chờ thư này, hãy bỏ qua nó.', 'If you were not expecting this email, you can ignore it.']] },
+  due: { tpl: 'assignment_due_soon', to: STUDENT, prefs: true, status: 'New',
+    subject: ['Còn 24 giờ để nộp “' + TEST + '”', '24 hours left to hand in “' + TEST + '”'],
+    pre: ['Hạn nộp: 20:00 thứ Sáu, 13/11.', 'Due Friday 13 Nov, 20:00.'],
+    head: ['Còn 24 giờ để nộp bài', '24 hours left to hand in'],
+    body: [['Bạn chưa nộp bài kiểm tra dưới đây. Bài sẽ đóng khi hết hạn.', 'You have not handed in the test below. It closes at the due time.']],
+    facts: [[L.test, TEST], [L.cls, CLS], [['Hạn nộp', 'Due'], ['20:00 thứ Sáu, 13/11/2026', 'Friday 13 Nov 2026, 20:00']], [['Thời gian làm bài', 'Time allowed'], ['60 phút', '60 minutes']]],
+    cta: ['Mở bài kiểm tra', 'Open the test'], link: APP + '/app/assignments/0193a7c2', notes: [] },
+  result: { tpl: 'result_ready', to: STUDENT, prefs: true, status: 'New',
+    subject: ['Đã có kết quả “' + TEST + '”', 'Your result for “' + TEST + '” is ready'],
+    pre: ['Mở Quizzivy để xem điểm và nhận xét.', 'Open Quizzivy to see your score and feedback.'],
+    head: ['Đã có kết quả bài kiểm tra', 'Your result is ready'],
+    body: [['Giáo viên đã chấm xong bài kiểm tra dưới đây. Thư này không ghi điểm; bạn xem điểm và nhận xét trong Quizzivy.', 'Your teacher has finished grading the test below. This email does not show the score; you can see it, with any feedback, in Quizzivy.']],
+    facts: [[L.test, TEST], [L.cls, CLS], [['Nộp lúc', 'Handed in'], ['19:42 thứ Năm, 12/11/2026', 'Thursday 12 Nov 2026, 19:42']]],
+    cta: ['Xem kết quả', 'See your result'], link: APP + '/app/results/0193a9f1', notes: [] },
+  message: { tpl: 'message_received', to: STUDENT, prefs: true, status: 'New',
+    subject: ['Tin nhắn mới từ ' + TEACHER, 'New message from ' + TEACHER],
+    pre: ['Trong lớp ' + CLS + '. Mở Quizzivy để đọc.', 'In ' + CLS + '. Open Quizzivy to read it.'],
+    head: ['Bạn có tin nhắn mới', 'You have a new message'],
+    body: [[TEACHER + ' đã nhắn cho bạn trong lớp ' + CLS + '. Tin nhắn chỉ đọc được trong Quizzivy, nên thư này không ghi nội dung.', TEACHER + ' sent you a message in ' + CLS + '. Messages can only be read in Quizzivy, so this email does not show it.']],
+    cta: ['Mở tin nhắn', 'Open the message'], link: APP + '/app/messages/teachers/0192c4d7', notes: [] },
+  shared: { tpl: 'content_shared', to: TEACHER, prefs: true, status: 'New',
+    subject: [DUC + ' đã chia sẻ một bộ câu hỏi với bạn', DUC + ' shared a question set with you'],
+    pre: ['“Collocations · B1”, quyền Có thể dùng.', '“Collocations · B1”, Can use.'],
+    head: ['Bạn được chia sẻ một bộ câu hỏi', 'A question set was shared with you'],
+    body: [[DUC + ' đã chia sẻ bộ câu hỏi dưới đây với bạn. Bộ vẫn thuộc về ' + DUC + '.', DUC + ' shared the question set below with you. It still belongs to ' + DUC + '.']],
+    facts: [[['Tên', 'Name'], 'Collocations · B1'], [['Quyền', 'Access'], ['Có thể dùng', 'Can use']], [['Số câu hỏi', 'Questions'], '48']],
+    quoteBy: ['Lời nhắn của ' + DUC, 'Message from ' + DUC], quote: ['Mình gom các câu collocation cho lớp B1, bạn dùng thử nhé.', 'I put the B1 collocation questions together. Try them with your class.'],
+    cta: ['Mở Được chia sẻ với tôi', 'Open Shared with me'], link: APP + '/teacher/shared-with-me', notes: [] },
+  flagged: { tpl: 'attempt_flagged', to: TEACHER, prefs: true, status: 'New',
+    subject: ['Một lượt làm bài bị gắn cờ: Lê Hoàng Nam', 'An attempt was flagged: Lê Hoàng Nam'],
+    pre: ['Rời trang làm bài 3 lần trong “' + TEST + '”.', 'Left the test 3 times in “' + TEST + '”.'],
+    head: ['Một lượt làm bài bị gắn cờ', 'An attempt was flagged'],
+    body: [['Học viên rời trang làm bài nhiều hơn số lần đề cho phép. Bài vẫn được nộp; bạn xem lại rồi quyết định.', 'The student left the test more often than the test allows. The attempt was still handed in; review it and decide.']],
+    facts: [[L.student, 'Lê Hoàng Nam'], [['Đề thi', 'Test'], TEST], [L.cls, CLS], [['Ghi nhận', 'Recorded'], ['Rời trang làm bài 3 lần', 'Left the test 3 times']]],
+    cta: ['Xem bài làm', 'Review the attempt'], link: APP + '/teacher/assignments/0193a7c2/attempts/0193a8e0', notes: [] },
+  weekly: { tpl: 'weekly_summary', to: TEACHER, prefs: true, status: 'New',
+    subject: ['Tổng kết tuần 2/11 – 8/11', 'Weekly summary, 2 – 8 Nov'],
+    pre: ['3 lớp, 41 bài nộp, 6 câu trả lời chờ chấm.', '3 classes, 41 submissions, 6 answers to grade.'],
+    head: ['Tuần qua ở các lớp của bạn', 'Last week in your classes'],
+    body: [['Từ thứ Hai 2/11 đến Chủ nhật 8/11.', 'Monday 2 Nov to Sunday 8 Nov.']],
+    classes: [[CLS, 18, 72, 4, 1], ['IELTS Foundation A', 15, 64, 2, 0], ['TOEIC 600 Weekend', 8, 81, 0, 0]],
+    cta: ['Mở trang Tổng quan', 'Open the dashboard'], link: APP + '/teacher', notes: [] }
+};
+const ORDER = ['invite', 'due', 'result', 'message', 'shared', 'flagged', 'weekly'];
+const NAMES = { invite: 'Account invite', due: 'Due soon', result: 'Result ready', message: 'New message', shared: 'Shared with you', flagged: 'Flagged attempt', weekly: 'Weekly summary' };
+const NOTES = [
+  'The header is the centre’s short name in text, as today. There is no logo: R5 allows no images, and the wordmark is never set in type.',
+  'The card’s lime top rule is the email’s one brand mark. The heading says what happened in one line; the subject says the same after the centre’s name.',
+  'Facts are a two-column table that still reads top to bottom at 360. A sharer’s message is a quote, and the weekly summary is one block for each class, so no email needs a wide table.',
+  'One button, 44px tall, in the deck’s primary colour. Under it is the same link in full, for a client that strips the button and for the plain-text part.',
+  'The footer says why the reader got the email. A notification email adds the line that leads to its switch; an account email, such as the invite, has no such line.'
+];
+const PARTS = [
+  ['Subject', '{org}: what happened', 'As today: the centre’s short name, a colon, then one line. It names the test, the class or the person, never a score.'],
+  ['Preview line', 'One sentence', 'The line an inbox shows after the subject. It adds the next fact (the due time, the class), and is hidden in the body.'],
+  ['Header', '15px bold, the centre’s short name', 'Text only. It sits on the ground above the card.'],
+  ['Card', '600px at most, 12px corners, 1px line, a 3px lime top rule', 'Fluid below 600. 28px padding, 20px at 360.'],
+  ['Heading', '22px bold; 20px at 360', 'One line that says what happened. No full stop.'],
+  ['Text', '16px, 1.5 line height', 'A greeting with the reader’s name, then one or two sentences. An email says what the app will show, and does not repeat it.'],
+  ['Facts', 'Two columns: a label on the quiet ground, the value in bold', 'At most five rows. The label column is 150px, 120px at 360. Dates are written in full in the reader’s language.'],
+  ['Quote', 'A 3px line on the left, on the quiet ground', 'Only for a sharer’s own message, with whose it is above it.'],
+  ['Class blocks', 'A name, then one line of counts', 'Only in the weekly summary. One block for each class with activity.'],
+  ['Button', '44px tall, 8px corners, 16px bold', 'One per email, with a verb and the thing it opens. It leads to an app route on the app’s own address.'],
+  ['Link line', '13px, the address in full, breaking anywhere', 'Always present under the button.'],
+  ['Notes', '14px, quiet', 'What the reader must know about the link: that it works once, when it expires, what to do if the email is unexpected.'],
+  ['Footer', '13px, quiet, on the ground', 'Why the reader got it; the settings link for a notification email; the centre’s name and “sent with Quizzivy”.'],
+  ['Plain text', 'The same lines, top to bottom', 'Every email keeps a text part: the facts as “Label: value”, and the link on its own line.']
+];
+// template, release, goes to, says, besides the text, button, settings link
+const EVERY = [
+  ['account_invite', 'R5', 'A new account', 'Set a password for your account', '—', 'Set a password', 'No'],
+  ['password_reset_link', 'R5', 'An account', 'Set a new password', '—', 'Set a new password', 'No'],
+  ['sign_in_invite', 'R5', 'A new account', 'Your account is ready: sign in with Google', '—', 'Go to sign in', 'No'],
+  ['data_export_ready', 'R5', 'An admin', 'Your data export is ready', '—', 'Open the download page', 'No'],
+  ['attempt_flagged', 'R7', 'Teacher', 'An attempt was flagged', 'Facts: student, test, class, what was recorded', 'Review the attempt', 'Yes'],
+  ['assignment_extended', 'R7', 'Student', 'You have more time for a test', 'Facts: test, class, the new due time', 'Open the test', 'Yes'],
+  ['assignment_due_soon', 'R7', 'Student', '24 hours, or 1 hour, left to hand in', 'Facts: test, class, due time, time allowed', 'Open the test', 'Yes'],
+  ['assignment_closing', 'R7', 'Teacher', 'An assignment closes in 1 hour', 'Facts: test, class, how many have not handed in', 'Open the assignment', 'Yes'],
+  ['result_ready', 'R7', 'Student', 'Your result is ready', 'Facts: test, class, when it was handed in. No score', 'See your result', 'Yes'],
+  ['content_shared', 'R7', 'Teacher', 'A test or question set was shared with you', 'Facts: name, access, size; the sharer’s message as a quote', 'Open Shared with me', 'Yes'],
+  ['class_teacher_changed', 'R7', 'Both teachers', 'A class has a new teacher', 'Facts: class, from, to', 'Open the class', 'Yes'],
+  ['submissions_digest', 'R7', 'Teacher', 'Students handed in a test', 'Facts: test, class, how many in the last 15 minutes', 'Open the assignment', 'Yes'],
+  ['message_received', 'R7', 'Teacher or student', 'You have a new message', 'None. The message itself is never in the email', 'Open the message', 'Yes'],
+  ['weekly_summary', 'R7', 'Teacher', 'Last week in your classes', 'One block for each class: handed in, average, to grade, flagged', 'Open the dashboard', 'Yes'],
+  ['ai_allowance_warning', 'R7', 'Teacher', 'You have used most of your AI credits', 'Facts: used, allowance, when it renews', 'Open AI assistant settings', 'Yes'],
+  ['ai_credit_request', 'R7', 'Whoever manages AI credits', 'A teacher asked for more AI credits', 'Facts: who, how many, their note', 'Open AI credits', 'Yes'],
+  ['ai_credit_request_decided', 'R7', 'The teacher who asked', 'Your request for AI credits was answered', 'Facts: the answer, the new allowance', 'Open AI assistant settings', 'Yes'],
+  ['practice_reminder', 'R10', 'Student', '{n} words to review today', 'None', 'Practise now', 'Yes'],
+  ['lead_received', 'R11', 'The centre’s lead recipients', 'A new consultation request', 'Facts: first name, interests. No phone number', 'Open consultation requests', 'No']
+];
+const QUESTIONS = [
+  ['Q1 · T-R5.2', 'Do emails stay without any image, the mark included?', 'R5 decided no images, no remote CSS and no tracking. A logo fetched from a server breaks that. The mark could travel inside the email as an inline image, which fetches nothing, but some clients show it as an attachment.', 'No image. The centre’s name and the lime rule carry the brand.'],
+  ['Q2', 'May the typeface change from Arial to the reader’s system face?', 'Today’s templates ask for Arial. A system face (San Francisco, Segoe UI, Roboto) reads better and draws Vietnamese well; Be Vietnam Pro cannot be used without a remote font.', 'The system face, with Helvetica and Arial as fallbacks.'],
+  ['Q3 · T-R7.13', 'Does the result email ever show the score?', 'The plan forbids a score the review policy does not yet show. Showing it in some emails and not in others needs the policy checked at send time, and a score in an inbox is read by whoever opens the inbox.', 'Never. The email says the result is ready and the button opens it.'],
+  ['Q4 · T-R7.13', 'Do emails with no switch carry the settings link?', 'The plan gives every R7 email the footer line “Change which emails you get”. A share, an extension, a change of class teacher and the AI notices have no switch of their own.', 'Yes, as the plan says: the line leads to where the other emails are controlled.'],
+  ['Q5', 'Is “Quizzivy” the right sender name?', 'Emails are sent as “Quizzivy” from no-reply@quizzivy.com, and the subject starts with the centre’s name. A student may know the centre and not the product.', 'No change. The subject and the header name the centre.'],
+  ['Q6', 'Is a quoted message from the sharer acceptable in an email?', 'A share email carries the sharer’s optional message (DG-90), while a chat message never leaves the app (D17). The quote is the one place an email shows text a user wrote.', 'Yes, as DG-90 says, marked as the sharer’s words.']
+];
+const HANDOFF = [
+  ['One shared HTML layout that every template fills: header, card, heading, text, facts, quote, class blocks, button, link line, notes, footer', 'api: platform/email/templates/', 'T-R7.13'],
+  ['The four R5 templates moved onto the layout, wording unchanged, with a preview line and a heading added', 'api: templates/{vi,en}/', 'With T-R7.13'],
+  ['The text part of each template in the same order as the HTML', 'api: templates/{vi,en}/', 'Each template'],
+  ['The two colour sets, the dark one in a style block', 'api: the shared layout', 'T-R7.13'],
+  ['Golden renders of every template in vi and en, as the plan already asks', 'api: platform/email/tests/', 'T-R7.13']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', mail: 'due', part: 'html', anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1, ci = theme === 'dark' ? 2 : 1;
+    const pick = v => (Array.isArray(v) ? v[li] : v);
+    const fill = (str, o) => String(str).replace(/\{(\w+)\}/g, (x, k) => (o && o[k] != null ? o[k] : x));
+    const sh = k => SHARED.find(r => r[0] === k)[vi ? 1 : 2];
+
+    const d = MAILS[s.mail];
+    const facts = (d.facts || []).map((ft, i) => ({ label: pick(ft[0]), value: pick(ft[1]), top: i ? '1px' : '0' }));
+    const classes = (d.classes || []).map((c, i) => ({ name: c[0], top: i ? '1px' : '0',
+      stats: vi ? c[1] + ' bài nộp · Điểm TB ' + c[2] + '% · ' + c[3] + ' chờ chấm · ' + c[4] + ' bị gắn cờ' : c[1] + ' handed in · average ' + c[2] + '% · ' + c[3] + ' to grade · ' + c[4] + ' flagged' }));
+    const m = {
+      org: ORG, subject: ORG + ': ' + pick(d.subject), pre: pick(d.pre), head: pick(d.head), hello: fill(sh('greeting'), { name: d.to }),
+      body: d.body.map(b => fill(pick(b), { org: ORG })), hasFacts: facts.length > 0, facts, hasQuote: !!d.quote, quoteBy: d.quote ? pick(d.quoteBy) : '', quote: d.quote ? pick(d.quote) : '',
+      hasClasses: classes.length > 0, classes, cta: pick(d.cta), linkNote: sh('link line'), link: d.link, notes: d.notes.map(pick),
+      why: fill(sh('footer, why'), { org: ORG }), hasPrefs: d.prefs, prefs: sh('footer, settings'), sent: fill(sh('footer, sender'), { org: ORG })
+    };
+    const lines = [m.org, '', m.hello, ''].concat(m.body.flatMap(b => [b, '']))
+      .concat(facts.length ? facts.map(ft => ft.label + ': ' + ft.value).concat(['']) : [])
+      .concat(m.hasQuote ? [m.quoteBy + ':', '“' + m.quote + '”', ''] : [])
+      .concat(classes.flatMap(c => [c.name, c.stats, '']))
+      .concat([m.cta + ':', m.link, ''])
+      .concat(m.notes.flatMap(n => [n, '']))
+      .concat(['--', m.why])
+      .concat(m.hasPrefs ? [m.prefs + ': ' + APP + (d.to === STUDENT ? '/app' : '/teacher') + '/settings/notifications'] : [])
+      .concat([m.sent]);
+    m.text = lines.join('\n');
+
+    const col = i => COLOURS[i][ci];
+    const e = { font: FONT, ground: col(0), card: col(1), text: col(2), muted: col(3), border: col(4), soft: col(5), btn: col(6), btnText: col(7), accent: col(8) };
+
+    const W = s.stageW || 1280, both = W >= 1140;
+    const mk = (w, h, sc, phone, title, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), oh: Math.floor(h * sc), title, sub, screen: NAMES[s.mail] + ' · ' + w, pins: s.anno && !phone && s.part === 'html',
+      chromePad: phone ? '12px 14px' : '14px 20px', subjSize: phone ? '15px' : '17px', mailPad: phone ? '18px 14px 28px' : '28px 24px 40px', cardPad: phone ? '20px' : '28px', h1: phone ? '20px' : '22px', factW: phone ? '120px' : '150px'
+    });
+    const frames = [mk(760, 800, both ? 1 : Math.min(1, W / 760), false, 'Reading pane', '760px wide, the email at its full 600'), mk(360, 780, Math.min(1, W / 360), true, 'Phone', '360px wide, 14px gutters')];
+
+    const ctl = [
+      { label: 'Email', opts: this.seg(ORDER.map(k => [k, NAMES[k]]), s.mail, v => this.setState({ mail: v })) },
+      { label: 'Part', opts: this.seg([['html', 'HTML'], ['text', 'Plain text']], s.part, v => this.setState({ part: v })) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+
+    const tone = { New: 'var(--accent-ink)', 'As today': 'var(--muted-fg)' };
+    const copyRows = [];
+    ORDER.forEach(k => {
+      const x = MAILS[k], isNew = part => (x.status === 'New' || (x.newParts || []).includes(part) ? 'New' : 'As today');
+      const row = (part, v) => copyRows.push({ tpl: x.tpl, part, vi: Array.isArray(v) ? v[0] : v, en: Array.isArray(v) ? v[1] : v, status: isNew(part), tone: tone[isNew(part)] });
+      row('subject', x.subject); row('preheader', x.pre); row('heading', x.head); x.body.forEach(b => row('text', b));
+      (x.facts || []).forEach(ft => { if (Array.isArray(ft[0])) row('fact label', ft[0]); });
+      if (x.quote) row('quote label', x.quoteBy);
+      row('button', x.cta); x.notes.forEach(n => row('note', n));
+    });
+    copyRows.push({ tpl: 'weekly_summary', part: 'class line', vi: '{n} bài nộp · Điểm TB {n}% · {n} chờ chấm · {n} bị gắn cờ', en: '{n} handed in · average {n}% · {n} to grade · {n} flagged', status: 'New', tone: tone.New });
+    SHARED.forEach(r => copyRows.push({ tpl: 'every email', part: r[0], vi: r[1], en: r[2], status: r[3], tone: tone[r[3]] }));
+    const seen = new Set();
+    const rows = copyRows.filter(r => { const key = r.tpl + '|' + r.part + '|' + r.vi; if (seen.has(key)) return false; seen.add(key); return true; });
+
+    const drawn = ORDER.map(k => MAILS[k].tpl);
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', lang: vi ? 'vi' : 'en',
+      chips: ['R5 shipped · R7, R10, R11 planned', 'DG-229', 'Plan: T-R5.2, T-R7.13, T-R7.14', 'Built in Quizzivy/api'],
+      ctl, reset: () => this.setState({ lang: 'vi', theme: null, mail: 'due', part: 'html' }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      stageRef: this.stageRef, frames, m, e, isHtml: s.part === 'html', isText: s.part === 'text',
+      notes: NOTES.map((text, i) => ({ n: String(i + 1), text })),
+      mailNote: 'Shown: ' + d.tpl + ', sent to ' + (d.to === STUDENT ? 'a student' : 'a teacher') + (d.status === 'New' ? '. Its wording is proposed here.' : '. Its wording is today’s; only the layout, the preview line and the heading are new.'),
+      parts: PARTS.map(r => ({ part: r[0], as: r[1], rule: r[2] })),
+      colours: COLOURS.map(c => ({ use: c[0], light: c[1], dark: c[2], token: c[3] })),
+      every: EVERY.map(r => ({ tpl: r[0], rel: r[1], to: r[2], says: r[3], extra: r[4], btn: r[5], prefs: r[6], prefsFg: r[6] === 'No' ? 'var(--muted-fg)' : 'var(--fg)', bg: drawn.includes(r[0]) ? 'var(--accent-soft)' : 'transparent' })),
+      copyRows: rows,
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3] })),
+      handoff: HANDOFF.map(h => ({ what: h[0], where: h[1], when: h[2] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

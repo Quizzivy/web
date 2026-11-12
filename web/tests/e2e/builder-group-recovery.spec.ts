@@ -146,7 +146,7 @@ test("a passage edit cut off by a reload is offered back from the device and sav
         stimuli: [
           {
             id: "019535d9-3df7-79fb-b466-fa907fa17fb4",
-            title: "Bài đọc cũ",
+            title: "Nhóm đọc hiểu",
             content: {
               format: "semantic_v1",
               blocks: [

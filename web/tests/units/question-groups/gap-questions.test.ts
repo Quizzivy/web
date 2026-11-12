@@ -200,7 +200,7 @@ test("a gap that leaves the text takes its question, and undoing brings both bac
   expect(back.bundle.group.stimuli[0]!.gaps).toEqual(withGap.group.stimuli[0]!.gaps);
 });
 
-test("an ordinary question a gap pointed at stays when the gap goes", () => {
+function ordinary(): { bound: GroupBundle; questionId: string } {
   const start = withMembers(cloze(), [newGroupQuestion(t)]);
   const questionId = start.questions[0]!.id;
   const material = start.group.stimuli[0]!;
@@ -221,10 +221,66 @@ test("an ordinary question a gap pointed at stays when the gap goes", () => {
       ],
     },
   };
+  return { bound, questionId };
+}
+
+test("an ordinary question a gap pointed at stays when the gap goes", () => {
+  const { bound, questionId } = ordinary();
   expect(gapQuestions(bound).size).toBe(0);
   const gone = make(bound, text("a"), {});
   expect(gone.removed).toEqual([]);
+  expect(gone.unbound).toEqual([{ kind: "question", gapId: "g1", questionId }]);
   expect(gone.bundle.questions.map((question) => question.id)).toEqual([questionId]);
+});
+
+test("undoing brings a gap back to the ordinary question it pointed at, while that still stands", () => {
+  const { bound, questionId } = ordinary();
+  const gone = make(bound, text("a"), {});
+  const context = {
+    words: new Map<string, string>(),
+    restore: new Map<string, RemovedGap>(),
+    bindings: new Map(gone.unbound.map((item) => [item.gapId, item])),
+    prompts,
+  };
+  const materialId = bound.group.stimuli[0]!.id;
+
+  const back = withMaterialContent(
+    gone.bundle,
+    materialId,
+    text("a ", { gap: "g1" }),
+    context,
+  );
+  expect(back.made).toEqual([]);
+  expect(back.bundle.questions.map((question) => question.id)).toEqual([questionId]);
+  expect(back.bundle.group.stimuli[0]!.gaps).toEqual([
+    { kind: "question", gapId: "g1", questionId },
+  ]);
+
+  const emptied: GroupBundle = {
+    ...gone.bundle,
+    questions: [],
+    group: { ...gone.bundle.group, members: [] },
+  };
+  const fresh = withMaterialContent(
+    emptied,
+    materialId,
+    text("a ", { gap: "g1" }),
+    context,
+  );
+  expect(fresh.made).toHaveLength(1);
+  expect(fresh.bundle.group.stimuli[0]!.gaps[0]!.kind).toBe("blank");
+
+  const twice = withMaterialContent(
+    back.bundle,
+    materialId,
+    text("a ", { gap: "g1" }, " b ", { gap: "g2" }),
+    { ...context, bindings: new Map([["g2", gone.unbound[0]!]]) },
+  );
+  expect(twice.made).toHaveLength(1);
+  expect(twice.bundle.group.stimuli[0]!.gaps.map((gap) => gap.questionId)).toEqual([
+    questionId,
+    twice.made[0],
+  ]);
 });
 
 test("the word's row is one of four and differs between gaps", () => {

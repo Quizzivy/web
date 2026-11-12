@@ -58,6 +58,7 @@ import {
   memberValues,
   newGroupQuestion,
   withMembers,
+  type GroupGapBinding,
   type GroupMaterial,
   type GroupQuestion,
   type GroupRecording,
@@ -239,7 +240,8 @@ function ClozeSteps() {
  * own width the halves are two tabs. A word selected in the text becomes a
  * gap with "Make a gap", and the gap's question is made in the same change;
  * a gap's card removes both, and while it is open its material is the one in
- * front. Every change is handed to `onChange` whole.
+ * front. The title is also the title of the group's one material while that
+ * carries no title of its own. Every change is handed to `onChange` whole.
  *
  * `selectedQuestionId` opens that question's card, and `onSelectedQuestionChange`
  * hears which card is open. `start` is how an empty group was started, which
@@ -298,6 +300,7 @@ export function GroupWorkspace({
   const [textOpen, setTextOpen] = useState(start === "listeningCloze");
   const [picking, setPicking] = useState(false);
   const [textEpoch, setTextEpoch] = useState(0);
+  const [draftId, setDraftId] = useState(() => crypto.randomUUID());
   const [starters, setStarters] = useState<ReadonlySet<string>>(new Set());
   const [asking, setAsking] = useState<Asking | null>(null);
 
@@ -307,6 +310,7 @@ export function GroupWorkspace({
   }, [bundle]);
   const words = useRef(new Map<string, string>());
   const restore = useRef(new Map<string, RemovedGap>());
+  const bindings = useRef(new Map<string, GroupGapBinding>());
   const knownRecordings = useRef(new Map<string, GroupRecording>());
   const editor = useRef<Editor | null>(null);
   const faces = useRef<(gapId: string) => GapFace | undefined>(() => undefined);
@@ -337,6 +341,7 @@ export function GroupWorkspace({
   const context = (): MaterialContext => ({
     words: words.current,
     restore: restore.current,
+    bindings: bindings.current,
     prompts,
   });
 
@@ -405,7 +410,7 @@ export function GroupWorkspace({
     if (!target) {
       if (isBlank(text)) return;
       target = {
-        id: crypto.randomUUID(),
+        id: draftId,
         title: current.group.title,
         content: EMPTY_TEXT,
         gaps: [],
@@ -423,7 +428,9 @@ export function GroupWorkspace({
       context(),
     );
     for (const item of sync.removed) restore.current.set(item.binding.gapId, item);
+    for (const item of sync.unbound) bindings.current.set(item.gapId, item);
     remember(current);
+    setTextOpen(true);
     commit(withRecordings(sync.bundle, knownRecordings.current));
     const made = sync.made[0];
     if (made === undefined) closeIfGone(sync.removed);
@@ -440,15 +447,17 @@ export function GroupWorkspace({
 
   function changeTitle(title: string) {
     const current = latest.current;
-    const one = current.group.stimuli.length === 1;
+    const [only, ...others] = current.group.stimuli;
+    const follows =
+      only !== undefined &&
+      others.length === 0 &&
+      (only.title === current.group.title || only.title.trim() === "");
     commit({
       ...current,
       group: {
         ...current.group,
         title,
-        stimuli: one
-          ? current.group.stimuli.map((item) => ({ ...item, title }))
-          : current.group.stimuli,
+        stimuli: follows ? [{ ...only, title }] : current.group.stimuli,
       },
     });
   }
@@ -580,6 +589,7 @@ export function GroupWorkspace({
     const result = withoutText(latest.current, target, context());
     commit(result.bundle);
     if (result.dropped) setMaterialId(null);
+    setDraftId(crypto.randomUUID());
     setTextOpen(false);
     setTextEpoch((epoch) => epoch + 1);
     closeIfGone(result.removed);
@@ -591,6 +601,7 @@ export function GroupWorkspace({
     if (asking?.kind === "recording" && material) {
       remember(current);
       commit(withoutLeadRecording(current, material.id));
+      setDraftId(crypto.randomUUID());
     }
     if (asking?.kind === "text" && material) removeText(material);
     setAsking(null);
@@ -613,6 +624,7 @@ export function GroupWorkspace({
   const materialActions: MaterialActions = {
     selectMaterial: (id) => {
       setMaterialId(id);
+      setTextOpen(false);
       if (gaps.has(openId ?? "")) open(null);
     },
     renameMaterial: (id, title) =>
@@ -724,7 +736,7 @@ export function GroupWorkspace({
           material={material}
           view={view}
           assets={assetById}
-          textKey={`${material?.id ?? "new"}:${textEpoch}`}
+          textKey={`${material?.id ?? draftId}:${textEpoch}`}
           placeholder={t(
             kind === "reading"
               ? "groups.pane.passagePlaceholder"

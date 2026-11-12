@@ -48,16 +48,23 @@ export function hasText(material: GroupMaterial): boolean {
   );
 }
 
+function underNothing(blocks: readonly ContentBlock[]): ContentBlock[] {
+  return blocks[0]?.type === "audio" ? [EMPTY_PARAGRAPH, ...blocks] : [...blocks];
+}
+
 /**
  * withText is the material's content with `text` under the recording it opens
- * with. A text left empty is not kept under a recording.
+ * with. A text left empty is not kept under a recording. Where the material
+ * opens with no recording, a text that begins with one gets an empty
+ * paragraph above it, so the recording stays a part of the text and is not
+ * taken for the one the material opens with.
  */
 export function withText(
   material: GroupMaterial,
   text: SemanticContent,
 ): SemanticContent {
   const audio = leadAudio(material);
-  if (!audio) return text;
+  if (!audio) return { format: "semantic_v1", blocks: underNothing(text.blocks) };
   const blank = text.blocks.every(isEmptyParagraph);
   return { format: "semantic_v1", blocks: blank ? [audio] : [audio, ...text.blocks] };
 }
@@ -164,7 +171,7 @@ export function withLeadRecording(
 /**
  * withoutLeadRecording removes the recording a material opens with, and the
  * material itself when nothing else is in it. The text and every question
- * stay.
+ * stay, and a recording the text begins with stays a part of the text.
  */
 export function withoutLeadRecording(
   bundle: GroupBundle,
@@ -178,7 +185,10 @@ export function withoutLeadRecording(
     ? bundle.group.stimuli.filter((item) => item !== material)
     : bundle.group.stimuli.map((item) =>
         item === material
-          ? { ...item, content: { format: "semantic_v1" as const, blocks: rest } }
+          ? {
+              ...item,
+              content: { format: "semantic_v1" as const, blocks: underNothing(rest) },
+            }
           : item,
       );
   return withRecordings({ ...bundle, group: { ...bundle.group, stimuli } });

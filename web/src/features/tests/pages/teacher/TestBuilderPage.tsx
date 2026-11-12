@@ -485,6 +485,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     if (selectedGroupId === groupId) {
       setActiveBundle(null);
       setEditorEpoch((epoch) => epoch + 1);
+      setTitleFocus(null);
     }
     await selectGroup(groupId, members[0]?.id);
   }
@@ -505,6 +506,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     if (selectedGroupId === groupId) {
       setActiveBundle(null);
       setEditorEpoch((epoch) => epoch + 1);
+      setTitleFocus(null);
     }
   }
 
@@ -968,6 +970,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     setSelectedId(moved.questionId);
     setQuestionStatus({ kind: "idle" });
     setEditorEpoch((epoch) => epoch + 1);
+    setTitleFocus(null);
     focusAfterMove.current = moved.questionId;
     if (moved.copied) notify.success(t("builder.movedIntoGroupCopied"));
     else if (moved.restored) notify.success(t("builder.movedOutRestored"));

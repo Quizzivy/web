@@ -1,12 +1,14 @@
 import { useState } from "react";
 import { expect, test } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import type { Editor } from "@tiptap/react";
 import { t } from "i18next";
 import "@/lib/i18n";
 import type { SemanticContent } from "@/components/shared/content/model";
 import { contentPlainText } from "@/components/shared/content/plainText";
+import { DEFAULT_AUDIO_POLICY } from "@/features/question-bank/audioPolicy";
 import type { GroupBundle } from "@/features/question-groups/api";
 import { GroupWorkspace } from "@/features/question-groups/components/GroupWorkspace";
 import {
@@ -50,6 +52,14 @@ function cloze(): GroupBundle {
     restore: new Map(),
     prompts,
   }).bundle;
+}
+
+function passage(): HTMLElement {
+  return screen.getByRole("textbox", { name: t("groups.pane.textLabel") });
+}
+
+function editorOf(box: HTMLElement): Editor {
+  return (box as unknown as { editor: Editor }).editor;
 }
 
 function mount(initial: GroupBundle, start?: GroupStart) {
@@ -196,6 +206,107 @@ test("one title is written to the group and to its one material", async () => {
   await user.type(title, "Green space");
   await waitFor(() => expect(latest.current.group.title).toBe("Green space"));
   expect(latest.current.group.stimuli[0]!.title).toBe("Green space");
+});
+
+test("a material with a title of its own keeps it when the group is renamed", async () => {
+  const start = startBundle("reading", t);
+  const latest = mount(
+    {
+      ...start,
+      group: {
+        ...start.group,
+        stimuli: start.group.stimuli.map((item) => ({
+          ...item,
+          title: "The town park",
+        })),
+      },
+    },
+    "reading",
+  );
+  const user = userEvent.setup();
+  const title = screen.getByRole("textbox", { name: t("groups.titleLabel") });
+  await user.clear(title);
+  await user.type(title, "Green space");
+  await waitFor(() => expect(latest.current.group.title).toBe("Green space"));
+  expect(latest.current.group.stimuli[0]!.title).toBe("The town park");
+});
+
+test("a text emptied under its recording stays in its editor, so undo brings it back", async () => {
+  const start = startBundle("reading", t);
+  const assetId = "018f0000-0000-7000-8000-0000000008a1";
+  const recording = { type: "audio" as const, assetId, label: "Recording" };
+  const latest = mount({
+    ...start,
+    group: {
+      ...start.group,
+      stimuli: start.group.stimuli.map((item) => ({
+        ...item,
+        content: {
+          format: "semantic_v1" as const,
+          blocks: [
+            recording,
+            {
+              type: "paragraph" as const,
+              content: [{ type: "text" as const, text: "Listen and read.", marks: [] }],
+            },
+          ],
+        },
+      })),
+      recordings: [
+        {
+          id: "018f0000-0000-7000-8000-0000000008b1",
+          assetId,
+          policy: { ...DEFAULT_AUDIO_POLICY },
+          transcript: null,
+        },
+      ],
+    },
+  });
+  const box = passage();
+  act(() => {
+    editorOf(box).chain().selectAll().deleteSelection().run();
+  });
+  await waitFor(() =>
+    expect(latest.current.group.stimuli[0]!.content).toEqual({
+      format: "semantic_v1",
+      blocks: [recording],
+    }),
+  );
+  expect(passage()).toBe(box);
+  expect(editorOf(box).isDestroyed).toBe(false);
+
+  act(() => {
+    editorOf(box).commands.undo();
+  });
+  await waitFor(() =>
+    expect(contentPlainText(latest.current.group.stimuli[0]!.content)).toContain(
+      "Listen and read.",
+    ),
+  );
+});
+
+test("the first words of a text added where the group has no material stay in the editor they were typed in", async () => {
+  const latest = mount(startBundle("listening", t), "listening");
+  const user = userEvent.setup();
+  await user.click(
+    screen.getByRole("button", { name: new RegExp(t("groups.pane.addText")) }),
+  );
+  const box = passage();
+  act(() => {
+    editorOf(box).commands.insertContent("Listen");
+  });
+  await waitFor(() => expect(latest.current.group.stimuli).toHaveLength(1));
+  expect(passage()).toBe(box);
+  expect(editorOf(box).isDestroyed).toBe(false);
+  act(() => {
+    editorOf(box).commands.insertContent(" again");
+  });
+  await waitFor(() =>
+    expect(contentPlainText(latest.current.group.stimuli[0]!.content)).toBe(
+      "Listen again",
+    ),
+  );
+  expect(latest.current.group.stimuli).toHaveLength(1);
 });
 
 test("a pane started from a recording asks for the file and offers a text under it", () => {

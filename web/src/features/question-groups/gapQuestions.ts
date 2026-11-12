@@ -411,12 +411,15 @@ function placeMember(
 
 /**
  * MaterialSync is a bundle after a material's text changed, with the ids of
- * the questions made for its new gaps and what left with the gaps that went.
+ * the questions made for its new gaps, what left with the gaps that went, and
+ * in `unbound` the bindings of the gaps that went and left their question in
+ * the group.
  */
 export interface MaterialSync {
   bundle: GroupBundle;
   made: string[];
   removed: RemovedGap[];
+  unbound: GroupGapBinding[];
 }
 
 interface Answers {
@@ -429,10 +432,11 @@ function withoutGoneGaps(
   bundle: GroupBundle,
   material: GroupMaterial,
   here: ReadonlySet<string>,
-): Answers & { removed: RemovedGap[] } {
+): Answers & { removed: RemovedGap[]; unbound: GroupGapBinding[] } {
   const known = gapQuestions(bundle);
   const kept = new Map<string, GroupGapBinding>();
   const removed: RemovedGap[] = [];
+  const unbound: GroupGapBinding[] = [];
   let questions = bundle.questions;
   let members = bundle.group.members;
   for (const binding of material.gaps) {
@@ -442,12 +446,36 @@ function withoutGoneGaps(
     }
     const question = questions.find((item) => item.id === binding.questionId);
     const member = members.find((item) => item.questionId === binding.questionId);
-    if (!known.has(binding.questionId) || !question || !member) continue;
+    if (!known.has(binding.questionId) || !question || !member) {
+      unbound.push(binding);
+      continue;
+    }
     removed.push({ binding, question, member });
     questions = questions.filter((item) => item !== question);
     members = members.filter((item) => item !== member);
   }
-  return { questions, members, kept, removed };
+  return { questions, members, kept, removed, unbound };
+}
+
+function stillAnswers(
+  binding: GroupGapBinding,
+  questions: GroupBundle["questions"],
+  kept: ReadonlyMap<string, GroupGapBinding>,
+): boolean {
+  const input = questions.find((item) => item.id === binding.questionId)?.input;
+  if (!input) return false;
+  const taken = [...kept.values()].some(
+    (item) =>
+      item.questionId === binding.questionId &&
+      (item.kind === "question" ||
+        binding.kind === "question" ||
+        item.blankGapId === binding.blankGapId),
+  );
+  if (taken) return false;
+  return (
+    binding.kind === "question" ||
+    (input.blanks ?? []).some((blank) => blank.gapId === binding.blankGapId)
+  );
 }
 
 function withNewGaps(
@@ -468,6 +496,11 @@ function withNewGaps(
       added.push(back.member);
       continue;
     }
+    const bound = context.bindings?.get(gapId);
+    if (bound && stillAnswers(bound, questions, kept)) {
+      kept.set(gapId, bound);
+      continue;
+    }
     const { question, blankGapId } = newGapQuestion(
       context.words.get(gapId) ?? "",
       context.prompts,
@@ -483,12 +516,14 @@ function withNewGaps(
 
 /**
  * MaterialContext is what withMaterialContent knows beyond the bundle: the
- * word of each gap just made, what each removed gap took with it, and the
+ * word of each gap just made, what each removed gap took with it, in
+ * `bindings` what each gap that left its question behind pointed at, and the
  * prompts a new gap's question starts with.
  */
 export interface MaterialContext {
   words: ReadonlyMap<string, string>;
   restore: ReadonlyMap<string, RemovedGap>;
+  bindings?: ReadonlyMap<string, GroupGapBinding> | undefined;
   prompts: GapPrompts;
   newId?: () => string;
 }
@@ -496,10 +531,12 @@ export interface MaterialContext {
 /**
  * withMaterialContent writes a material's text and keeps the rule that every
  * gap has exactly one answer. A gap that left the text takes its gap question
- * with it (reported in `removed`); an ordinary question it pointed at stays.
- * A gap new to the text gets back what `restore` holds for it, else a typed
- * gap question accepting `words`' word for it, placed beside the questions of
- * the gaps around it. Gap questions then follow the order of the gaps.
+ * with it (reported in `removed`); an ordinary question it pointed at stays
+ * (its binding is reported in `unbound`). A gap new to the text gets back what
+ * `restore` holds for it, else points again at what `bindings` holds for it
+ * while that still stands unanswered in the group, else gets a typed gap
+ * question accepting `words`' word for it, placed beside the questions of the
+ * gaps around it. Gap questions then follow the order of the gaps.
  */
 export function withMaterialContent(
   bundle: GroupBundle,
@@ -508,7 +545,7 @@ export function withMaterialContent(
   context: MaterialContext,
 ): MaterialSync {
   const material = bundle.group.stimuli.find((item) => item.id === materialId);
-  if (!material) return { bundle, made: [], removed: [] };
+  if (!material) return { bundle, made: [], removed: [], unbound: [] };
   const present = questionGaps(content).map((gap) => gap.id);
   const gone = withoutGoneGaps(bundle, material, new Set(present));
   const next = withNewGaps(gone, present, context);
@@ -534,6 +571,7 @@ export function withMaterialContent(
     }),
     made: next.made,
     removed: gone.removed,
+    unbound: gone.unbound,
   };
 }
 

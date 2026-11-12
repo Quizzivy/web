@@ -162,6 +162,13 @@ export type AiDistractor = Schemas["AiDistractor"];
 export type AiDistractorsResult = Schemas["AiDistractorsResult"];
 
 /**
+ * AiGapDistractorsRequest is a gap in a text as the builder's pane holds it:
+ * its sentence on either side of the gap, the answers it accepts and the wrong
+ * options it already has.
+ */
+export type AiGapDistractorsRequest = Schemas["AiGapDistractorsRequest"];
+
+/**
  * writeAiExplanation asks for an explanation of a stored question's answer
  * and writes nothing: the teacher's own save writes what they keep.
  */
@@ -186,5 +193,21 @@ export function suggestAiDistractors(id: string, signal?: AbortSignal) {
     "post",
     "/teacher/ai/questions/{id}/distractors",
     signal ? { path: { id }, signal } : { path: { id } },
+  );
+}
+
+/**
+ * suggestAiGapDistractors asks for wrong options for a gap in a text from what
+ * the pane holds of it, saved or not, and writes nothing: the group's own save
+ * writes what the teacher adds.
+ */
+export function suggestAiGapDistractors(
+  body: AiGapDistractorsRequest,
+  signal?: AbortSignal,
+) {
+  return api(
+    "post",
+    "/teacher/ai/gaps/distractors",
+    signal ? { body, signal } : { body },
   );
 }

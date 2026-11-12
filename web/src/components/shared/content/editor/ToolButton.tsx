@@ -55,3 +55,40 @@ export function ToolButton({
     </button>
   );
 }
+
+/**
+ * NamedToolButton is a toolbar button that shows its name beside its icon,
+ * for the one command of a toolbar a teacher has to find by reading. It keeps
+ * the editor's selection when pressed, as ToolButton does, and is drawn
+ * filled while pressed.
+ */
+export function NamedToolButton({
+  icon: Icon,
+  label,
+  className,
+  onPointerDown,
+  onMouseDown,
+  ...props
+}: Readonly<ComponentProps<"button"> & { icon: LucideIcon; label: string }>) {
+  return (
+    <button
+      type="button"
+      onPointerDown={(event) => {
+        keepSelection(event);
+        onPointerDown?.(event);
+      }}
+      onMouseDown={(event) => {
+        keepSelection(event);
+        onMouseDown?.(event);
+      }}
+      className={cn(
+        "bg-card text-fg hover:bg-hover aria-pressed:border-primary aria-pressed:bg-primary aria-pressed:text-primary-foreground disabled:hover:bg-card inline-flex h-7 flex-none items-center gap-1.5 rounded-[7px] border px-2.5 text-[12.5px] font-semibold whitespace-nowrap transition-colors disabled:opacity-60 motion-reduce:transition-none max-[767px]:h-9",
+        className,
+      )}
+      {...props}
+    >
+      <Icon size={14} aria-hidden="true" />
+      {label}
+    </button>
+  );
+}

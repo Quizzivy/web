@@ -276,3 +276,43 @@
   outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
+.content-editor .content-gap.content-gap-answered {
+  gap: 6px;
+  min-width: 0;
+  height: 28px;
+  padding: 0 9px 0 4px;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  background: var(--accent-soft);
+  color: var(--fg);
+  font-size: 0;
+  cursor: pointer;
+}
+.content-editor .content-gap.content-gap-answered::before {
+  content: attr(data-gap-number);
+  display: grid;
+  place-items: center;
+  min-width: 20px;
+  height: 20px;
+  padding: 0 5px;
+  border-radius: 6px;
+  background: var(--primary);
+  color: var(--primary-fg);
+  font-size: 11.5px;
+  font-weight: 700;
+  font-variant-numeric: tabular-nums;
+}
+.content-editor .content-gap.content-gap-answered::after {
+  content: attr(data-gap-word);
+  font-size: 14px;
+  font-weight: 600;
+}
+.content-editor .content-gap.content-gap-answered[data-gap-open] {
+  border-color: var(--primary);
+  background: var(--primary);
+  color: var(--primary-fg);
+}
+.content-editor .content-gap.content-gap-answered[data-gap-open]::before {
+  background: var(--primary-fg);
+  color: var(--primary);
+}

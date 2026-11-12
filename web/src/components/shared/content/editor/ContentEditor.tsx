@@ -50,6 +50,8 @@ export type ContentEditorProps<
   label: string;
   describedBy?: string | undefined;
   gapLabel?: (() => string) | undefined;
+  ownGapTool?: boolean | undefined;
+  footerStart?: ReactNode | undefined;
   id?: string;
   profile?: EditorProfile;
   tools?: ((editor: Editor) => ReactNode) | undefined;
@@ -70,6 +72,8 @@ function ActiveEditor({
   id,
   profile,
   gapLabel,
+  ownGapTool,
+  footerStart,
   tools,
   footer,
   placeholder,
@@ -158,6 +162,7 @@ function ActiveEditor({
         label={label}
         profile={profile}
         gapLabel={gapLabel}
+        ownGapTool={ownGapTool}
         media={host !== null && field !== null ? { host, field } : undefined}
       />
       {tools?.(editor)}
@@ -169,7 +174,7 @@ function ActiveEditor({
         <NoticeBand message={message} onDismiss={() => setNotice(undefined)} />
       )}
       {host !== null && field !== null && host.status(field)}
-      {footer && <EditorFooter editor={editor} />}
+      {footer && <EditorFooter editor={editor} start={footerStart} />}
       {paste && (
         <PastePreview
           content={paste.result}
@@ -195,7 +200,9 @@ function ActiveEditor({
  * about a pasted or dropped file; `readOnly` renders the document with
  * `ContentView` and no toolbar or footer. `onEditor` receives the live editor
  * once it exists and `null` when it goes, for a host command that acts at its
- * caret; it must be a stable callback.
+ * caret; it must be a stable callback. `ownGapTool` leaves the toolbar's
+ * "Insert gap" out, for a host that draws its own gap command in `tools`, and
+ * `footerStart` replaces the footer's paste hint with the host's own line.
  */
 export function ContentEditor<
   D extends SemanticContent | ProseDocument = SemanticContent,

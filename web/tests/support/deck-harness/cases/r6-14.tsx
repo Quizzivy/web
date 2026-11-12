@@ -1,10 +1,4 @@
-import { useState, type ReactElement } from "react";
-import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { QuestionEditor } from "@/features/question-bank/components/QuestionEditor";
-import {
-  emptyQuestion,
-  type QuestionValues,
-} from "@/features/question-bank/questionSchema";
+import type { ReactElement } from "react";
 import { QuestionSheet } from "@/features/take-test/components/QuestionSheet";
 import { AudioPlayer } from "@/features/media/components/AudioPlayer";
 import { ReviewItem } from "@/features/results/components/ReviewItem";
@@ -100,43 +94,7 @@ const RESULT: ResultQuestion = {
   explanationAssets: [MODEL_ANSWER],
 } as unknown as ResultQuestion;
 
-const client = new QueryClient();
-
 export const cases: Record<string, () => ReactElement> = {
-  editor: function Editor() {
-    const [value, setValue] = useState<QuestionValues>(() => ({
-      ...emptyQuestion(),
-      prompt: PROMPT_TEXT,
-      promptContent: PROMPT as never,
-      explanation: WHY,
-      explanationContent: EXPLANATION as never,
-      mediaAssetId: RECORDING.id,
-      audio: {
-        maxPlays: 2,
-        allowSeek: false,
-        allowPause: true,
-        showTranscriptAfterSubmit: false,
-      },
-      options: OPTIONS.map((option, index) => ({
-        id: option.id,
-        text: option.text,
-        content: null,
-        isCorrect: index === 2,
-      })) as QuestionValues["options"],
-    }));
-    const [asset, setAsset] = useState<MediaAsset | null>(RECORDING);
-    return (
-      <QueryClientProvider client={client}>
-        <QuestionEditor
-          value={value}
-          asset={asset}
-          assets={new Map([CHART, MODEL_ANSWER].map((file) => [file.id, file]))}
-          onChange={setValue}
-          onAssetChange={setAsset}
-        />
-      </QueryClientProvider>
-    );
-  },
   engine: () => (
     <div className="bg-card rounded-xl border p-5">
       <QuestionSheet

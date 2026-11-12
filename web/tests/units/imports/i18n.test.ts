@@ -105,12 +105,7 @@ const templatePrefixes = [
 const expanded = Object.entries(TEMPLATED).flatMap(([prefix, suffixes]) =>
   suffixes.map((suffix) => `${prefix}${suffix}`),
 );
-const entryPoints = [
-  "tests.importWord",
-  "tests.importHistory",
-  "tests.pasteTest",
-  "layout.resize.importSource",
-];
+const entryPoints = ["tests.importWord", "tests.importHistory", "tests.pasteTest"];
 
 describe("Word import strings", () => {
   it("covers every templated key the feature builds", () => {

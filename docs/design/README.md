@@ -474,6 +474,13 @@ To view one, start the server above and open, for example,
   teacher acts on it. Frames at 1280 and 360, light and dark, Vietnamese and English. No
   exported page is edited and no operation changes. It is a proposal until Thuong approves it,
   and its four questions for him are on the page.
+- 2026-11-13 — Seventh proposal page: `proposals/R7 Email Status.dc.html`, for DG-96 (O-R7.3).
+  R7 stops sending to an address after a hard bounce or a spam report, and no screen says so.
+  The page draws one notice in the Admin user sheet, with the product's warning callout: what
+  happened, since when, and what still works. It adds no action. The sheet is drawn alone at
+  440 and 360, light and dark, Vietnamese and English. R7's plan does not build it and the
+  page changes no plan: it names the one field the read of an admin user would need. Its five
+  questions for Thuong are on the page.
 
 ## The brand
 

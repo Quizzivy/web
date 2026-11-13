@@ -1,0 +1,504 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R8 Schedule · A session in the calendar · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">A session in the calendar, and what a teacher can do with it</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws the Calendar and its New session form. Pressing a class session there jumps to Attendance, and nothing else can be done to a session: not moved, not cancelled, not stopped. R8 builds those (T-R8.4, T-R8.11) and its plan asks for a popover “from deck primitives” (DG-92). This page draws it: the popover on the week grid and as a sheet on a phone, its six actions, the two dialogs and the three confirms, and how a cancelled session looks on the grid. Everything is in Vietnamese first. One thing goes beyond the plan’s wording and is a question below: a sentence in the repeating-session dialog that says what a change does to dates already cancelled or moved.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The popover</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">What the session is, then what can be done to it.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>Five lines of fact: the class, the date, the time, the room, and whether it repeats. A note and a mark for “cancelled” or “changed” follow when there is one.</li>
+      <li><span style="color:var(--fg)">The actions are a menu, one per line, in the plan’s order</span>. Only those that apply are listed: a one-off has no “repeating” actions, and “Điểm danh” appears once the session has started.</li>
+      <li>On a phone it is a sheet from the bottom, with the same lines and 44px rows.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">One date, or every week</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The two are never mixed in one form.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>“Sửa buổi này” and “Huỷ buổi này” touch one date. “Sửa lịch lặp lại” and “Dừng lặp lại” touch the weeks to come. Each opens its own dialog, and each dialog says which it is in its first line.</li>
+      <li><span style="color:var(--fg)">A change to the weeks to come starts at a date</span>, the next session by default, and the dialog says that everything before it stays.</li>
+      <li>It also says, before saving, that dates already moved or cancelled from then on will follow the new schedule. The plan tells the teacher only afterwards, as a count.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Cancelling</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A cancelled session stays on the grid, struck through.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>It is not removed: students see it as cancelled in “Tuần này”, and the teacher can restore it from the same popover.</li>
+      <li><span style="color:var(--fg)">The confirm’s two buttons read “Giữ buổi này” and “Huỷ buổi”</span>. The usual “Huỷ” would mean both “do not do this” and “cancel the session”.</li>
+      <li>A one-off that nobody has taken attendance for can be deleted instead. Anything with attendance can only be cancelled, and the confirm says so if it comes to that.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The calendar at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. The week grid and the agenda are the deck’s; today is Wednesday the 24th at 20:15, as the deck has it. Pick a state in the bar above. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+                <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                    <div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;white-space:nowrap">{{ tx.week }}</div>
+                    <div style="display:flex;gap:8px;align-items:center">
+                      <div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)"><span style="width:{{ f.navBtn }};height:{{ f.navBtn }};display:grid;place-items:center"><i class="icon-chevron-left" style="font-size:16px"></i></span><span style="height:{{ f.navBtn }};padding:0 12px;border-left:1px solid var(--border);border-right:1px solid var(--border);display:grid;place-items:center;font-size:13px;font-weight:500;white-space:nowrap">{{ tx.today }}</span><span style="width:{{ f.navBtn }};height:{{ f.navBtn }};display:grid;place-items:center"><i class="icon-chevron-right" style="font-size:16px"></i></span></div>
+                      <span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.navBtn }};padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-plus" style="font-size:15px"></i>{{ tx.addSession }}</span>
+                    </div>
+                  </div>
+                  <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted-fg)"><sc-for list="{{ legend }}" as="lg" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;flex:none;border-radius:3px;background:{{ lg.color }}"></span>{{ lg.label }}</span></sc-for></div>
+
+                  <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}">
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                      <div style="max-height:600px;overflow:hidden">
+                        <div style="display:grid;grid-template-columns:56px repeat(7,minmax(0,1fr));border-bottom:1px solid var(--border);background:var(--card)"><span></span><sc-for list="{{ days }}" as="d" hint-placeholder-count="7"><div style="padding:10px 8px;border-left:1px solid var(--border);text-align:center;background:{{ d.bg }}"><div style="font-size:12px;color:var(--muted-fg)">{{ d.dow }}</div><div style="font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:{{ d.fg }}">{{ d.num }}</div></div></sc-for></div>
+                        <div style="display:grid;grid-template-columns:56px repeat(7,minmax(0,1fr));position:relative;padding-top:10px">
+                          <div><sc-for list="{{ hours }}" as="h" hint-placeholder-count="14"><div style="height:44px;font-size:11.5px;color:var(--muted-fg);text-align:right;padding:0 8px;transform:translateY(-7px);font-variant-numeric:tabular-nums">{{ h }}</div></sc-for></div>
+                          <sc-for list="{{ days }}" as="d" hint-placeholder-count="7">
+                            <div style="position:relative;border-left:1px solid var(--border);height:616px;background:{{ d.colBg }}">
+                              <sc-for list="{{ hours }}" as="h2" hint-placeholder-count="14"><div style="height:44px;border-top:1px solid var(--border);opacity:.6"></div></sc-for>
+                              <sc-for list="{{ d.events }}" as="ev" hint-placeholder-count="1"><span style="position:absolute;left:4px;right:4px;top:{{ ev.top }};height:{{ ev.h }};min-height:36px;z-index:1;border-radius:6px;padding:3px 7px;display:flex;flex-direction:column;justify-content:center;overflow:hidden;background:{{ ev.bg }};color:{{ ev.fg }};box-shadow:{{ ev.ring }}"><span style="display:flex;align-items:center;gap:4px"><span style="flex:1;min-width:0;font-size:12px;font-weight:600;line-height:1.3;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;text-decoration:{{ ev.deco }}">{{ ev.title }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ev.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.event.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.event.n }}</span></sc-if></sc-if></sc-if></span><span style="display:block;font-size:11.5px;line-height:1.3;opacity:.85;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ev.time }}</span></span></sc-for>
+                              <sc-if value="{{ d.isToday }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:0;right:0;top:{{ nowTop }};height:2px;background:var(--danger)"><span style="position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--danger)"></span></div></sc-if>
+                              <sc-if value="{{ d.hasPop }}" hint-placeholder-val="{{ false }}"><div role="dialog" aria-label="{{ pop.title }}" style="position:absolute;{{ d.popPos }};width:292px;z-index:6;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);padding:12px;display:flex;flex-direction:column;gap:10px;text-align:left"><div style="display:flex;align-items:flex-start;gap:8px"><span style="width:10px;height:10px;flex:none;margin-top:5px;border-radius:3px;background:var(--accent-c)"></span><span style="flex:1;min-width:0;font-size:14.5px;font-weight:600;line-height:1.35">{{ pop.title }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pop.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.pop.n }}</span></sc-if></sc-if><span role="img" aria-label="{{ tx.close }}" style="width:26px;height:26px;flex:none;margin:-3px -4px 0 0;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></div><div style="display:flex;flex-direction:column;gap:6px;font-size:13px;line-height:1.45"><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-calendar" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.date }}</span></span><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-clock" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.time }}</span></span><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-map-pin" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.room }}</span></span><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-{{ pop.repIcon }}" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.repeat }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.repeat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.repeat.n }}</span></sc-if></sc-if></span><sc-if value="{{ pop.hasNote }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-sticky-note" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.note }}</span></span></sc-if><sc-if value="{{ pop.hasMark }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ pop.markBg }};color:{{ pop.markFg }}"><i class="icon-{{ pop.markIcon }}" style="font-size:12px"></i>{{ pop.mark }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mark.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mark.n }}</span></sc-if></sc-if></span></sc-if></div><div style="height:1px;background:var(--border);margin:0 -12px"></div><div role="menu" style="display:flex;flex-direction:column;gap:1px"><sc-for list="{{ pop.actions }}" as="a" hint-placeholder-count="4"><span role="menuitem" style="display:flex;align-items:center;gap:9px;height:34px;padding:0 9px;border-radius:7px;font-size:13.5px;font-weight:500;color:{{ a.fg }};background:{{ a.bg }}"><i class="icon-{{ a.icon }}" style="font-size:15px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.label }}</span><sc-if value="{{ a.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ a.pinN }}</span></sc-if></sc-if></span></sc-for></div></div></sc-if>
+                            </div>
+                          </sc-for>
+                        </div>
+                      </div>
+                    </div>
+                  </sc-if>
+
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}">
+                    <div style="display:flex;flex-direction:column;gap:14px">
+                      <sc-for list="{{ agenda }}" as="d" hint-placeholder-count="3"><div><div style="font-size:12.5px;font-weight:600;color:{{ d.fg }};margin-bottom:6px">{{ d.label }}</div>
+                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;overflow:hidden"><sc-for list="{{ d.events }}" as="ev" hint-placeholder-count="2"><div style="display:flex;gap:12px;padding:12px 14px;border-top:{{ ev.border }};background:{{ ev.rowBg }}"><span style="width:3px;border-radius:3px;background:{{ ev.bar }}"></span><span style="width:44px;font-size:12.5px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ ev.start }}</span><span style="flex:1;min-width:0;font-size:13.5px;font-weight:500"><span style="text-decoration:{{ ev.deco }}">{{ ev.title }}</span><span style="display:block;font-size:12px;color:var(--muted-fg);font-weight:400">{{ ev.time }}</span></span></div></sc-for></div>
+                      </div></sc-for>
+                    </div>
+                  </sc-if>
+                </div>
+              </div>
+            </div>
+
+            <sc-if value="{{ f.sheet }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:8"></div><div role="dialog" aria-label="{{ pop.title }}" style="position:absolute;left:0;right:0;bottom:0;z-index:9;background:var(--card);border-radius:16px 16px 0 0;box-shadow:var(--shadow-lg);padding:8px 14px 14px;display:flex;flex-direction:column;gap:12px"><div aria-hidden="true" style="width:36px;height:4px;border-radius:4px;background:var(--border);margin:2px auto 0"></div><div style="display:flex;align-items:flex-start;gap:8px"><span style="width:10px;height:10px;flex:none;margin-top:6px;border-radius:3px;background:var(--accent-c)"></span><span style="flex:1;min-width:0;font-size:16px;font-weight:600;line-height:1.35">{{ pop.title }}</span></div><div style="display:flex;flex-direction:column;gap:8px;font-size:14px;line-height:1.45"><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-calendar" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.date }}</span></span><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-clock" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.time }}</span></span><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-map-pin" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.room }}</span></span><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-{{ pop.repIcon }}" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.repeat }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.repeat.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.repeat.n }}</span></sc-if></sc-if></span><sc-if value="{{ pop.hasNote }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-start;gap:8px"><i class="icon-sticky-note" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="min-width:0;text-wrap:pretty">{{ pop.note }}</span></span></sc-if><sc-if value="{{ pop.hasMark }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ pop.markBg }};color:{{ pop.markFg }}"><i class="icon-{{ pop.markIcon }}" style="font-size:12px"></i>{{ pop.mark }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mark.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.mark.n }}</span></sc-if></sc-if></span></sc-if></div><div style="height:1px;background:var(--border);margin:0 -14px"></div><div role="menu" style="display:flex;flex-direction:column;gap:1px"><sc-for list="{{ pop.actions }}" as="a" hint-placeholder-count="4"><span role="menuitem" style="display:flex;align-items:center;gap:9px;height:44px;padding:0 9px;border-radius:7px;font-size:14.5px;font-weight:500;color:{{ a.fg }};background:{{ a.bg }}"><i class="icon-{{ a.icon }}" style="font-size:15px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ a.label }}</span><sc-if value="{{ a.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ a.pinN }}</span></sc-if></sc-if></span></sc-for></div></div></sc-if>
+            <sc-if value="{{ dg.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:10"></div><div role="dialog" aria-label="{{ dg.title }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};max-height:92%;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);z-index:11"><div style="padding:18px 14px 4px 18px;display:flex;gap:12px;align-items:flex-start"><sc-if value="{{ dg.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:{{ dg.iconBg }};color:{{ dg.iconFg }}"><i class="icon-{{ dg.icon }}" style="font-size:18px"></i></span></sc-if><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600;line-height:1.35">{{ dg.title }}</div><sc-if value="{{ dg.hasDesc }}" hint-placeholder-val="{{ true }}"><div style="font-size:13px;color:var(--muted-fg);margin-top:3px;line-height:1.5;text-wrap:pretty">{{ dg.desc }}</div></sc-if></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialog.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialog.n }}</span></sc-if></sc-if><span role="img" aria-label="{{ tx.close }}" style="width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:16px"></i></span></div><sc-if value="{{ dg.hasFields }}" hint-placeholder-val="{{ true }}"><div style="padding:14px 18px 4px;display:flex;flex-direction:column;gap:14px;overflow:hidden"><sc-for list="{{ dg.fields }}" as="fd" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ fd.label }}<sc-if value="{{ fd.optional }}" hint-placeholder-val="{{ false }}"><span style="font-weight:400;color:var(--muted-fg)"> {{ tx.optional }}</span></sc-if></span><sc-if value="{{ fd.isInput }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px;height:{{ f.inH }};border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg)"><span style="flex:1;min-width:0;color:{{ fd.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums">{{ fd.value }}</span><sc-if value="{{ fd.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ fd.icon }}" style="font-size:15px;color:var(--muted-fg)"></i></sc-if></span></sc-if><sc-if value="{{ fd.isSeg }}" hint-placeholder-val="{{ false }}"><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ fd.opts }}" as="o" hint-placeholder-count="3"><span style="flex:1;border-radius:7px;height:{{ f.segH }};padding:0 4px;font-size:12.5px;white-space:nowrap;font-weight:500;display:grid;place-items:center;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</span></sc-for></div></sc-if><sc-if value="{{ fd.hasHint }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:flex-start;gap:6px;font-size:12.5px;color:var(--muted-fg);line-height:1.5"><span style="flex:1;min-width:0;text-wrap:pretty">{{ fd.hint }}</span><sc-if value="{{ fd.pinHint }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></sc-if></span></sc-if></div></sc-for><sc-if value="{{ dg.hasWarn }}" hint-placeholder-val="{{ false }}"><div role="note" style="display:flex;gap:10px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--warning-soft);font-size:13px;line-height:1.5"><i class="icon-triangle-alert" style="font-size:15px;margin-top:2px;flex:none;color:var(--warning-ink)"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ dg.warn }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.warn.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.warn.n }}</span></sc-if></sc-if></div></sc-if></div></sc-if><sc-if value="{{ dg.hasBody }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 18px 0;font-size:13.5px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">{{ dg.body }}</div></sc-if><sc-if value="{{ dg.hasErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="margin:12px 18px 0;display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:10px;background:var(--danger-soft);color:var(--danger-ink);font-size:13px;line-height:1.5"><i class="icon-circle-alert" style="font-size:15px;margin-top:2px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ dg.err }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.err.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.err.n }}</span></sc-if></sc-if></div></sc-if><div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:16px 18px 16px;flex-wrap:wrap"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.buttons.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.buttons.n }}</span></sc-if></sc-if><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap">{{ dg.cancel }}</span><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:{{ dg.btnBg }};color:{{ dg.btnFg }};font-size:13.5px;font-weight:600;white-space:nowrap">{{ dg.submit }}</span></div></div></sc-if>
+            <sc-if value="{{ hasToast }}" hint-placeholder-val="{{ false }}">
+              <div role="status" style="position:absolute;right:16px;bottom:16px;z-index:12;display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);font-size:13.5px;max-width:calc(100% - 32px)"><i class="icon-circle-check" style="font-size:16px;flex:none;color:var(--success)"></i><span style="text-wrap:pretty">{{ toast }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.toast.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.toast.n }}</span></sc-if></sc-if></div>
+            </sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. The grid, the agenda, the header and the legend are the deck’s Calendar, with the words T-R8.10 will need in Vietnamese.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Calendar as it is. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which action shows, and what it does</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the operation of T-R8.4 behind it, or the rule that decides.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Operation or rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Plan” and “Deck” say where the English comes from, “As today” that both strings are in the locale files now, and “New” that both are proposed here. The schedule has almost no words in the product yet, so most Vietnamese here is a first proposal.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R8.11</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan names three components. This is what each takes from this page. No operation of T-R8.4 changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R8 · A session in the calendar. A proposal page for DG-92 and T-R8.11.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['title', 'Shell', 'Lịch', 'Calendar', 'Deck'],
+  ['week', 'Header', '22 – 28 tháng 9', '22 – 28 September', 'Plan'],
+  ['today', 'Header', 'Hôm nay', 'Today', 'Deck'],
+  ['addSession', 'Header', 'Buổi học', 'Session', 'Deck'],
+  ['legClass', 'Legend', 'Buổi học', 'Class session', 'Deck'],
+  ['legClose', 'Legend', 'Bài giao đóng', 'Test closes', 'Deck'],
+  ['legOpen', 'Legend', 'Bài giao mở', 'Test opens', 'Deck'],
+  ['window', 'Agenda', 'Khung làm bài', 'Test window', 'Plan'],
+  ['agendaToday', 'Agenda', 'Hôm nay · {day}', 'Today · {day}', 'Plan'],
+  ['close', 'Popover', 'Đóng', 'Close', 'As today'],
+  ['every', 'Popover', 'Mỗi {weekday}', 'Every {weekday}', 'Plan'],
+  ['oneOff', 'Popover', 'Không lặp lại', 'One-off', 'Plan'],
+  ['cancelled', 'Popover, grid', 'Đã huỷ', 'Cancelled', 'New'],
+  ['changed', 'Popover', 'Đã đổi so với lịch lặp lại', 'Changed from the repeating schedule', 'New'],
+  ['actAttendance', 'Actions', 'Điểm danh', 'Take attendance', 'Plan'],
+  ['actEditDate', 'Actions', 'Sửa buổi này', 'Edit this date', 'Plan'],
+  ['actCancel', 'Actions', 'Huỷ buổi này', 'Cancel this date', 'Plan'],
+  ['actRestore', 'Actions', 'Khôi phục buổi này', 'Restore', 'Plan'],
+  ['actEditSeries', 'Actions', 'Sửa lịch lặp lại', 'Edit repeating session', 'Plan'],
+  ['actStop', 'Actions', 'Dừng lặp lại', 'Stop repeating', 'Plan'],
+  ['actDelete', 'Actions', 'Xoá buổi này', 'Delete', 'Plan'],
+  ['edTitle', 'Edit this date', 'Sửa buổi ngày {date}', 'Edit the session on {date}', 'New'],
+  ['edDesc', 'Edit this date', 'Chỉ buổi này thay đổi. Lịch lặp lại giữ nguyên.', 'Only this date changes. The repeating schedule stays.', 'New'],
+  ['fDate', 'Fields', 'Ngày', 'Date', 'Deck'],
+  ['fStart', 'Fields', 'Bắt đầu', 'Starts', 'Deck'],
+  ['fLength', 'Fields', 'Thời lượng', 'Length', 'Deck'],
+  ['minutes', 'Fields', '{count} phút', '{count} min', 'Deck'],
+  ['fRoom', 'Fields', 'Phòng', 'Room', 'As today'],
+  ['fNote', 'Fields', 'Ghi chú', 'Note', 'Plan'],
+  ['optional', 'Fields', '(không bắt buộc)', '(optional)', 'Deck'],
+  ['notePh', 'Fields', 'Ví dụ: mang tai nghe', 'For example: bring headphones', 'New'],
+  ['cancel', 'Dialogs', 'Huỷ', 'Cancel', 'As today'],
+  ['save', 'Dialogs', 'Lưu', 'Save', 'As today'],
+  ['ccTitle', 'Cancel this date', 'Huỷ buổi ngày {date}?', 'Cancel the session on {date}?', 'New'],
+  ['ccBody', 'Cancel this date', 'Học viên sẽ thấy buổi này là đã huỷ trong Tuần này.', 'Students see it as cancelled in This week.', 'Plan'],
+  ['ccKeep', 'Cancel this date', 'Giữ buổi này', 'Keep the session', 'New'],
+  ['ccDo', 'Cancel this date', 'Huỷ buổi', 'Cancel the session', 'New'],
+  ['toastCancelled', 'Toast', 'Đã huỷ buổi ngày {date}', 'Session on {date} cancelled', 'New'],
+  ['toastRestored', 'Toast', 'Đã khôi phục buổi ngày {date}', 'Session on {date} restored', 'New'],
+  ['esTitle', 'Edit repeating', 'Sửa lịch lặp lại', 'Edit repeating session', 'Plan'],
+  ['fFrom', 'Edit repeating', 'Áp dụng từ', 'From', 'Plan'],
+  ['fromHint', 'Edit repeating', 'Các buổi trước ngày {date} giữ nguyên.', 'Sessions before {date} stay as they are.', 'Plan'],
+  ['fromTomorrow', 'Edit repeating', 'Buổi hôm nay đã điểm danh, nên thay đổi bắt đầu từ ngày mai.', 'Today’s session has attendance, so the change starts tomorrow.', 'New'],
+  ['fWeekday', 'Edit repeating', 'Thứ', 'Weekday', 'Plan'],
+  ['esWarn', 'Edit repeating', 'Những buổi bạn đã sửa hoặc huỷ riêng từ ngày này sẽ theo lịch mới.', 'Sessions you changed or cancelled one by one from this date will follow the new schedule.', 'New'],
+  ['esSave', 'Edit repeating', 'Lưu thay đổi', 'Save changes', 'As today'],
+  ['toastSeries', 'Toast', 'Đã cập nhật lịch lặp lại.', 'Repeating session updated.', 'New'],
+  ['toastCleared', 'Toast', 'Đã cập nhật lịch lặp lại. {count} thay đổi riêng lẻ đã bị xoá.', 'Repeating session updated. {count} one-off changes were cleared.', 'Plan'],
+  ['stTitle', 'Stop repeating', 'Dừng lặp lại', 'Stop repeating', 'Plan'],
+  ['fLast', 'Stop repeating', 'Buổi cuối cùng', 'Last date', 'Plan'],
+  ['lastHint', 'Stop repeating', 'Các buổi sau ngày này sẽ không còn trên lịch. Buổi đã điểm danh vẫn được giữ.', 'Sessions after this date leave the calendar. Sessions with attendance are kept.', 'New'],
+  ['toastStopped', 'Toast', 'Lịch lặp lại kết thúc sau ngày {date}', 'The repeating session ends after {date}', 'New'],
+  ['dlTitle', 'Delete', 'Xoá buổi ngày {date}?', 'Delete the session on {date}?', 'New'],
+  ['dlBody', 'Delete', 'Buổi này sẽ không còn trên lịch của bạn và của học viên.', 'It leaves your calendar and your students’.', 'New'],
+  ['dlDo', 'Delete', 'Xoá buổi', 'Delete session', 'New'],
+  ['errAttendance', 'Delete', 'Buổi này đã điểm danh nên chỉ có thể huỷ.', 'This session has attendance, so it can only be cancelled.', 'Plan']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+// the deck's week: Monday 22 to Sunday 28 September, today Wednesday the 24th at 20:15
+// [column name vi, en] [long name vi, en] [short for a button vi, en] day of the month
+const DAYS = [[['Th 2', 'Mon'], ['thứ Hai', 'Monday'], ['T2', 'Mon'], 22], [['Th 3', 'Tue'], ['thứ Ba', 'Tuesday'], ['T3', 'Tue'], 23], [['Th 4', 'Wed'], ['thứ Tư', 'Wednesday'], ['T4', 'Wed'], 24], [['Th 5', 'Thu'], ['thứ Năm', 'Thursday'], ['T5', 'Thu'], 25], [['Th 6', 'Fri'], ['thứ Sáu', 'Friday'], ['T6', 'Fri'], 26], [['Th 7', 'Sat'], ['thứ Bảy', 'Saturday'], ['T7', 'Sat'], 27], [['CN', 'Sun'], ['Chủ nhật', 'Sunday'], ['CN', 'Sun'], 28]];
+const TODAY = 2, NOW = 20.25;
+// [id, day, start hour, hours, title or [vi, en], kind]
+const EV = [
+  ['m1', 0, 18, 1.5, 'IELTS 6.5 Evening', 'class'], ['t1', 1, 17.5, 1.5, 'IELTS Foundation A', 'class'], ['o1', 2, 8, 0.75, ['Reading Mock mở', 'Reading Mock opens'], 'open'], ['w1', 2, 18, 1.5, 'IELTS 6.5 Evening', 'class'],
+  ['c1', 2, 21, 0.75, ['Reading Mock đóng', 'Reading Mock closes'], 'close'], ['c2', 3, 8, 0.75, ['Listening đóng', 'Listening closes'], 'close'], ['h1', 3, 17.5, 1.5, 'IELTS Foundation A', 'class'], ['f1', 4, 18, 1.5, 'IELTS 6.5 Evening', 'class'],
+  ['c3', 4, 20.5, 0.75, ['Vocabulary quiz đóng', 'Vocabulary quiz closes'], 'close'], ['s1', 5, 9, 2, 'TOEIC 600 Weekend', 'class'], ['s2', 5, 14, 1.5, 'Kids Starters B', 'class'], ['u1', 6, 9, 2, 'TOEIC 600 Weekend', 'class']
+];
+const KIND = { class: ['var(--accent-soft)', 'var(--accent-ink)', 'var(--accent-c)'], close: ['var(--warning-soft)', 'var(--warning-ink)', 'var(--warning)'], open: ['var(--info-soft)', 'var(--info-ink)', 'var(--info-ink)'] };
+const STATES = [['series', 'A repeating session'], ['started', 'Once it has started'], ['cancelled', 'A cancelled date'], ['oneoff', 'A one-off'], ['editDate', 'Edit this date'], ['cancelConfirm', 'Cancel this date'], ['editSeries', 'Edit repeating'], ['cleared', 'After editing repeating'], ['stop', 'Stop repeating'], ['deleteErr', 'Delete, with attendance']];
+// which session each state is about
+const TARGET = { series: 'f1', started: 'w1', cancelled: 'h1', oneoff: 's2', editDate: 'f1', cancelConfirm: 'f1', editSeries: 'f1', cleared: 'f1', stop: 'f1', deleteErr: 's2' };
+const POPS = ['series', 'started', 'cancelled', 'oneoff'];
+// [pin, note] per state; a pin named "act:x" sits on that action of the popover
+const NOTES = {
+  series: [['pop', 'Pressing a session opens this popover beside it. The deck jumps to Attendance instead. Five facts, then the actions that apply.'], ['repeat', 'The last fact says whether the session repeats, and on which day.'], ['act:editDate', 'Two actions for this date alone, then two for the weeks to come. The order is the plan’s.']],
+  started: [['act:attendance', '“Điểm danh” appears once the session has started, for a teacher who may take attendance, and then leads the list.'], ['mark', 'This date differs from its weekly schedule: the room was changed for one day. The read says only that it differs, so the popover says only that.']],
+  cancelled: [['event', 'A cancelled session stays on the grid, struck through on the muted tint, with “Đã huỷ” where the time was.'], ['mark', 'The same word in the popover.'], ['act:restore', '“Khôi phục buổi này” takes the place of the two actions for one date. It asks nothing first: restoring harms nobody.']],
+  oneoff: [['repeat', 'A one-off says so, and has no actions for the weeks to come.'], ['act:delete', '“Xoá buổi này” is offered only for a one-off with no attendance. Every other session is cancelled, not deleted.']],
+  editDate: [['dialog', 'The deck’s form dialog, with the fields of its New session form and a note. Its first line says that only this date changes.']],
+  cancelConfirm: [['buttons', '“Giữ buổi này” and “Huỷ buổi”, in place of the usual “Huỷ” beside a verb: here “Huỷ” would mean both things.']],
+  editSeries: [['hint', 'The change starts at a date, the next session by default, and the plan’s sentence says what stays. When today’s session has attendance the server starts the change tomorrow, and this line says so instead.'], ['warn', 'New on this page: said before saving, and not only counted afterwards. A date the teacher cancelled for a holiday comes back if it falls on or after this one (Q1).']],
+  cleared: [['toast', 'The plan’s count, after saving: two dates had been changed one by one, and now follow the new time.'], ['event', 'Friday’s session at its new time. The weeks before the 26th are as they were.']],
+  stop: [['hint', 'One field: the last date that is held. The line under it says what goes and what is kept. A date before the first session removes the series altogether.']],
+  deleteErr: [['err', 'Someone took attendance after the popover opened. The confirm says why it cannot delete. “Huỷ buổi này” is still in the popover.']]
+};
+const PIN_KEYS = ['pop', 'repeat', 'mark', 'event', 'dialog', 'buttons', 'hint', 'warn', 'toast', 'err', 'act:attendance', 'act:editDate', 'act:restore', 'act:delete'];
+
+// [part, the deck, this page]
+const ADDS = [
+  ['Pressing a class session', 'Jumps to Attendance.', 'Opens a popover beside the session: what it is, and what can be done to it. A sheet on a phone.'],
+  ['One date', 'Cannot be changed.', '“Sửa buổi này”: date, start, length, room and a note, in the deck’s form dialog.'],
+  ['Cancelling', 'Not drawn.', '“Huỷ buổi này” with a confirm, and “Khôi phục buổi này” on a cancelled date.'],
+  ['A cancelled session', 'Not drawn.', 'Stays on the grid and in the agenda, struck through on the muted tint, reading “Đã huỷ”.'],
+  ['The weeks to come', 'Only “Repeat every week” when the session is made.', '“Sửa lịch lặp lại” from a date, and “Dừng lặp lại” after a last date.'],
+  ['A date that differs from its series', 'Not drawn.', 'A mark in the popover, “Đã đổi so với lịch lặp lại”.'],
+  ['Deleting', 'Not drawn.', 'For a one-off with no attendance only, with a danger confirm.'],
+  ['What a change to the series does to single dates', 'Not drawn.', 'A sentence in the dialog before saving, and the plan’s count in a toast after (Q1).'],
+  ['The calendar’s own words', 'English only.', 'The header, the legend and the agenda in Vietnamese, as T-R8.10 will need them.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, operation or rule]
+const WHENS = [
+  ['The session is one of a series, and has not started', '“Sửa buổi này”, “Huỷ buổi này”, “Sửa lịch lặp lại”, “Dừng lặp lại”.', 'seriesId is set. T-R8.11’s order.'],
+  ['The session has started', '“Điểm danh” first, for a teacher with teaching.attendance. The rest as above.', 'startsAt is past. Attendance is T-R8.12’s screen.'],
+  ['The date is cancelled', '“Khôi phục buổi này”, and the two actions for the series.', 'cancelled. PATCH /teacher/sessions/{sessionId} with cancelled false.'],
+  ['The session is a one-off', '“Sửa buổi này”, “Huỷ buổi này”, and “Xoá buổi này” while it has no attendance.', 'seriesId is null. hasAttendance decides the last one.'],
+  ['“Sửa buổi này” is saved', 'The session moves on the grid, and its popover gains “Đã đổi so với lịch lặp lại”.', 'PATCH /teacher/sessions/{sessionId}. changed is true once the date differs from its series.'],
+  ['“Huỷ buổi” is confirmed', 'The session is struck through, and the toast reads “Đã huỷ buổi ngày 26 thg 9”.', 'PATCH with cancelled true. Students see it in “Tuần này”.'],
+  ['“Sửa lịch lặp lại” is saved', 'The grid follows the new schedule from the date. The toast says how many single dates were cleared, when any were.', 'PATCH /teacher/session-series/{seriesId} returns droppedChanges.'],
+  ['Today’s session has attendance', 'The “Áp dụng từ” line reads “Buổi hôm nay đã điểm danh, nên thay đổi bắt đầu từ ngày mai.”', 'fromDate moves to tomorrow (T-R8.4).'],
+  ['“Dừng lặp lại” is confirmed', 'Later sessions leave the grid. The toast reads “Lịch lặp lại kết thúc sau ngày 26 thg 9”.', 'POST /teacher/session-series/{seriesId}/end. A last date before the first session removes the series.'],
+  ['“Xoá buổi” meets attendance', '“Buổi này đã điểm danh nên chỉ có thể huỷ.” in the confirm.', '409 SESSION_HAS_ATTENDANCE.'],
+  ['Delete is asked of a session in a series', 'Never offered: the popover has “Huỷ buổi này” there.', '409 SESSION_IN_SERIES; the plan has the web offer Cancel instead.'],
+  ['The keyboard', 'Arrow keys move through the actions, Esc closes the popover and focus returns to the session.', 'T-R8.11, DG-36.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · What a change to the series undoes', 'Should a teacher be told, before saving, that single dates already changed or cancelled will follow the new schedule?', 'The plan clears every single-date change from the chosen date on, and says so afterwards as a count. A date cancelled for a holiday is one of them: after the save, that session is back on the calendar and in the students’ week, and only the count hints at it.', 'One sentence in the dialog before saving, and the plan’s count after. Keeping cancelled dates cancelled would be a change to T-R8.4, and is not drawn.'],
+  ['Q2 · The confirm’s two buttons', 'May the Cancel confirm read “Giữ buổi này” and “Huỷ buổi”?', 'Every other confirm in the product pairs “Huỷ” with a verb. Here the verb is also “Huỷ”, in Vietnamese and in English alike, so the two buttons would say the same word for opposite things.', '“Giữ buổi này” and “Huỷ buổi”, for this confirm only.'],
+  ['Q3 · A cancelled session on the grid', 'Does a cancelled session stay on the teacher’s calendar?', 'Hiding it would make the week look free, and the way to restore it would go with it. Showing it costs a block of space for something that will not happen.', 'It stays, struck through on the muted tint, and reads “Đã huỷ”.'],
+  ['Q4 · The words', 'Are these the Vietnamese words for the schedule?', 'The schedule has almost no words in the product yet. New here: “Buổi học” (session), “Sửa buổi này” and “Huỷ buổi này” (this date), “Lịch lặp lại” (the repeating session), “Dừng lặp lại”, “Khôi phục”, “Không lặp lại” (one-off), and “Bài giao đóng” and “Bài giao mở” in the legend, where the deck says “Test closes” and “Test opens”.', 'As listed in the copy table.']
+];
+// [component in the plan, what it takes from this page]
+const HANDOFF = [
+  ['SessionPopover', 'The five facts, the note, the two marks, and the menu of actions in the plan’s order, each shown only when it applies. A popover beside the session from 768px, a sheet below.'],
+  ['EditSessionDialog', 'Date, start, length, room and a note in the deck’s form dialog, with the line that says only this date changes.'],
+  ['EditSeriesDialog', 'From, weekday, start, length and room; the plan’s sentence under From, or the one for a session with attendance today; and the sentence about single dates before saving (Q1).'],
+  ['Stop repeating', 'One field, the last date, and the line under it. It is small enough to live in EditSeriesDialog’s file or in a confirm of its own.'],
+  ['ConfirmDialog', 'Cancel this date with its own two labels (Q2); Delete as a danger confirm with the error for attendance.'],
+  ['The week grid and the agenda', 'A cancelled session’s look: muted tint, the title struck through, “Đã huỷ” in place of the time.'],
+  ['Locales', 'The copy table: fifty-six strings, Vietnamese first.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher page (Calendar, its agenda and its New session form), R8’s plan (docs/plan/78-r8.md: T-R8.4, T-R8.10, T-R8.11) and the register (DG-92, DG-36). The calendar is not built yet, so there was no screen to run.'],
+  ['What it leaves alone.', 'The week grid, the agenda, the header, the legend and the form dialog are the deck’s. No operation of T-R8.4 changes.'],
+  ['What is not drawn.', 'Attendance (T-R8.12), the New session form (the deck draws it), the calendar’s own loading, empty and error states (T-R8.10), and the student’s side of a cancelled session (T-R8.15).']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', st: 'series', anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const st = s.st;
+    const noteList = NOTES[st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const on = x => ({ bg: x ? 'var(--card)' : 'transparent', fg: x ? 'var(--fg)' : 'var(--muted-fg)', ring: x ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' });
+
+    // ---- the week
+    const fmtH = h => String(Math.floor(h)).padStart(2, '0') + ':' + (h % 1 ? String(Math.round((h % 1) * 60)).padStart(2, '0') : '00');
+    const range = (a, len) => fmtH(a) + ' – ' + fmtH(a + len);
+    const shortDate = d => DAYS[d][3] + (vi ? ' thg 9' : ' Sep');
+    const longDate = d => { const n = DAYS[d][1][li]; return (vi ? n.charAt(0).toUpperCase() + n.slice(1) + ', ' + DAYS[d][3] + ' tháng 9' : n + ', ' + DAYS[d][3] + ' September'); };
+    const fieldDate = d => (vi ? DAYS[d][3] + '/09/2026' : DAYS[d][3] + ' Sep 2026');
+    const targetId = TARGET[st], popOpen = POPS.includes(st);
+    const evs = EV.map(e => (st === 'cleared' && e[0] === 'f1' ? [e[0], e[1], 18.5, e[3], e[4], e[5]] : e));
+    const target = evs.find(e => e[0] === targetId);
+    const isCancelled = e => st === 'cancelled' && e[0] === 'h1';
+    const titleOf = e => (Array.isArray(e[4]) ? e[4][li] : e[4]);
+    const drawEv = e => { const k = KIND[e[5]], off = isCancelled(e), me = e[0] === targetId;
+      return { title: titleOf(e), time: off ? tx.cancelled : e[5] === 'class' ? range(e[2], e[3]) : fmtH(e[2]), top: ((e[2] - 8) * 44 + 1) + 'px', h: (e[3] * 44 - 3) + 'px',
+        bg: off ? 'var(--muted)' : k[0], fg: off ? 'var(--muted-fg)' : k[1], deco: off ? 'line-through' : 'none', ring: me && popOpen ? '0 0 0 2px var(--ring)' : 'none', pin: me && pin.event.on }; };
+    // the popover hangs beside its session: to the right for Monday to Thursday, to the left after; upward for an evening session
+    const popPos = e => (e[1] <= 3 ? 'left:calc(100% + 6px)' : 'right:calc(100% + 6px)') + ';' + (e[2] >= 16 ? 'bottom:' + (616 - ((e[2] - 8) * 44 + 1) - (e[3] * 44 - 3)) + 'px' : 'top:' + ((e[2] - 8) * 44 + 1) + 'px');
+    const days = DAYS.map((d, i) => ({ dow: d[0][li], num: d[3], isToday: i === TODAY, bg: i === TODAY ? 'var(--accent-soft)' : 'transparent', fg: i === TODAY ? 'var(--accent-ink)' : 'var(--fg)', colBg: i >= 5 ? 'var(--sidebar)' : 'transparent',
+      events: evs.filter(e => e[1] === i).map(drawEv), hasPop: popOpen && target[1] === i, popPos: popOpen && target[1] === i ? popPos(target) : '' }));
+    const agenda = [2, 3, 4, 5].map(i => ({ label: i === TODAY ? fmt(tx.agendaToday, { day: DAYS[i][0][li] + ', ' + shortDate(i) }) : DAYS[i][0][li] + ', ' + shortDate(i), fg: i === TODAY ? 'var(--accent-ink)' : 'var(--fg)',
+      events: evs.filter(e => e[1] === i).map((e, n) => { const k = KIND[e[5]], off = isCancelled(e); return { border: n ? '1px solid var(--border)' : '0', bar: off ? 'var(--border)' : k[2], start: fmtH(e[2]), title: titleOf(e), deco: off ? 'line-through' : 'none',
+        time: off ? tx.cancelled : e[5] === 'class' ? range(e[2], e[3]) : tx.window, rowBg: e[0] === targetId && popOpen ? 'var(--muted)' : 'transparent' }; }) }));
+
+    // ---- the popover
+    const ACT = { attendance: ['clipboard-check', tx.actAttendance], editDate: ['pencil', tx.actEditDate], cancel: ['calendar-x', tx.actCancel], restore: ['rotate-ccw', tx.actRestore], editSeries: ['repeat', tx.actEditSeries], stop: ['circle-stop', tx.actStop], delete: ['trash-2', tx.actDelete] };
+    const act = keys => keys.map(k => { const pk = pin['act:' + k]; return { icon: ACT[k][0], label: ACT[k][1], fg: k === 'delete' ? 'var(--danger-ink)' : 'var(--fg)', bg: 'transparent', pin: !!(pk && pk.on), pinN: pk ? pk.n : '' }; });
+    const every = d => fmt(tx.every, { weekday: DAYS[d][1][li] });
+    const none = { hasNote: false, note: '', hasMark: false, mark: '', markBg: '', markFg: '', markIcon: '' };
+    const POP = {
+      series: { ...none, room: vi ? 'Phòng 2' : 'Room 2', repeat: every(4), repIcon: 'repeat', actions: act(['editDate', 'cancel', 'editSeries', 'stop']) },
+      started: { ...none, room: vi ? 'Phòng 3' : 'Room 3', repeat: every(2), repIcon: 'repeat', hasNote: true, note: vi ? 'Phòng 2 dùng cho buổi diễn tập phòng cháy.' : 'Room 2 is used for the fire drill.', hasMark: true, mark: tx.changed, markBg: 'var(--muted)', markFg: 'var(--muted-fg)', markIcon: 'pencil-line', actions: act(['attendance', 'editDate', 'cancel', 'editSeries', 'stop']) },
+      cancelled: { ...none, room: vi ? 'Phòng 4' : 'Room 4', repeat: every(3), repIcon: 'repeat', hasMark: true, mark: tx.cancelled, markBg: 'var(--danger-soft)', markFg: 'var(--danger-ink)', markIcon: 'calendar-x', actions: act(['restore', 'editSeries', 'stop']) },
+      oneoff: { ...none, room: vi ? 'Phòng 1' : 'Room 1', repeat: tx.oneOff, repIcon: 'calendar-off', hasNote: true, note: vi ? 'Học bù cho buổi nghỉ ngày 13 thg 9.' : 'Makes up for the class missed on 13 Sep.', actions: act(['editDate', 'cancel', 'delete']) }
+    }[st];
+    const pop = POP ? { title: titleOf(target), date: longDate(target[1]), time: range(target[2], target[3]), ...POP } : { title: '', date: '', time: '', room: '', repeat: '', repIcon: 'repeat', actions: [], ...none };
+
+    // ---- the dialogs
+    const tile = { iconBg: 'var(--muted)', iconFg: 'var(--fg)' }, plain = { btnBg: 'var(--primary)', btnFg: 'var(--primary-fg)' }, danger = { btnBg: 'var(--danger)', btnFg: '#fff' };
+    const input = (label, value, icon, o = {}) => ({ label, optional: !!o.optional, isInput: true, value, fg: o.placeholder ? 'var(--muted-fg)' : 'var(--fg)', hasIcon: !!icon, icon: icon || '', isSeg: false, opts: [], hasHint: !!o.hint, hint: o.hint || '', pinHint: !!o.pinHint });
+    const segF = (label, opts, cur) => ({ label, optional: false, isInput: false, value: '', fg: '', hasIcon: false, icon: '', isSeg: true, opts: opts.map((x, i) => ({ label: x, ...on(i === cur) })), hasHint: false, hint: '', pinHint: false });
+    const lengths = [60, 90, 120].map(n => fmt(tx.minutes, { count: n }));
+    const room = vi ? 'Phòng 2' : 'Room 2', cls = 'IELTS 6.5 Evening';
+    const blank = { open: false, hasIcon: false, icon: '', ...tile, title: '', hasDesc: false, desc: '', hasFields: false, fields: [], hasWarn: false, warn: '', hasBody: false, body: '', hasErr: false, err: '', cancel: tx.cancel, submit: '', ...plain };
+    const dg = {
+      editDate: { ...blank, open: true, hasIcon: true, icon: 'pencil', title: fmt(tx.edTitle, { date: shortDate(4) }), hasDesc: true, desc: tx.edDesc, hasFields: true, submit: tx.save,
+        fields: [input(tx.fDate, fieldDate(4), 'calendar'), input(tx.fStart, '18:00', 'clock'), segF(tx.fLength, lengths, 1), input(tx.fRoom, room), input(tx.fNote, tx.notePh, '', { optional: true, placeholder: true })] },
+      cancelConfirm: { ...blank, open: true, title: fmt(tx.ccTitle, { date: shortDate(4) }), hasBody: true, body: tx.ccBody, cancel: tx.ccKeep, submit: tx.ccDo },
+      editSeries: { ...blank, open: true, hasIcon: true, icon: 'repeat', title: tx.esTitle, hasDesc: true, desc: cls + ' · ' + every(4), hasFields: true, submit: tx.esSave, hasWarn: true, warn: tx.esWarn,
+        fields: [input(tx.fFrom, fieldDate(4), 'calendar', { hint: fmt(tx.fromHint, { date: shortDate(4) }), pinHint: true }), segF(tx.fWeekday, DAYS.map(d => d[2][li]), 4), input(tx.fStart, '18:30', 'clock'), segF(tx.fLength, lengths, 1), input(tx.fRoom, room)] },
+      stop: { ...blank, open: true, hasIcon: true, icon: 'circle-stop', title: tx.stTitle, hasDesc: true, desc: cls + ' · ' + every(4), hasFields: true, submit: tx.actStop,
+        fields: [input(tx.fLast, fieldDate(4), 'calendar', { hint: tx.lastHint, pinHint: true })] },
+      deleteErr: { ...blank, open: true, title: fmt(tx.dlTitle, { date: shortDate(5) }), hasBody: true, body: tx.dlBody, hasErr: true, err: tx.errAttendance, submit: tx.dlDo, ...danger }
+    }[st] || blank;
+    const toast = st === 'cleared' ? fmt(tx.toastCleared, { count: 2 }) : '';
+
+    // ---- the shell
+    const navOn = 'calendar';
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: false });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('calendar', 'calendar-days', tx.title), item('messages', 'message-square', vi ? 'Tin nhắn' : 'Messages')] },
+      { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', vi ? 'Lớp học' : 'Classes'), item('students', 'users', vi ? 'Học viên' : 'Students')] },
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'share-2', vi ? 'Được chia sẻ với tôi' : 'Shared with me', 2), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'image', vi ? 'Thư viện media' : 'Media')] }
+    ];
+    const hours = []; for (let h = 8; h < 22; h++) hours.push(fmtH(h));
+
+    const W = s.stageW || 1280;
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Teacher · Calendar · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: !phone, tBar: true, sheet: phone && popOpen,
+      barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px' : '24px 28px 28px', gap: phone ? '12px' : '16px', h1: phone ? '20px' : '24px', navBtn: phone ? '40px' : '34px',
+      btnH: phone ? '44px' : '36px', inH: phone ? '44px' : '38px', segH: phone ? '38px' : '30px',
+      dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '440px', dlgR: phone ? '16px 16px 0 0' : '12px'
+    });
+    const frames = [mk(1280, 820, Math.min(1, W / 1280), false, 'the week grid, with the popover beside its session'), mk(360, 780, Math.min(1, W / 360), true, 'the agenda from today, with a sheet')];
+    const ctl = [
+      { label: 'State', opts: this.seg(STATES, st, v => this.setState({ st: v })) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const stLabel = (STATES.find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, pin, nav, frames, ctl, stageRef: this.stageRef, days, hours, agenda, pop, dg, nowTop: ((NOW - 8) * 44) + 'px',
+      legend: [{ color: 'var(--accent-c)', label: tx.legClass }, { color: 'var(--warning)', label: tx.legClose }, { color: 'var(--info-ink)', label: tx.legOpen }],
+      hasToast: !!toast, toast,
+      chips: ['R8 · v0.15.0', 'T-R8.11', 'DG-92, DG-36', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, st: 'series' }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

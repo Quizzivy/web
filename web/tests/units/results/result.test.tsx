@@ -150,10 +150,10 @@ function renderResult(
 ) {
   const router = createMemoryRouter(
     [
-      { path: "/app/attempts/:attemptId/result", element: <ResultPage /> },
-      { path: "/app", element: <p>home page</p> },
+      { path: "/attempts/:attemptId/result", element: <ResultPage /> },
+      { path: "/", element: <p>home page</p> },
     ],
-    { initialEntries: [`/app/attempts/${ATTEMPT_ID}/result`] },
+    { initialEntries: [`/attempts/${ATTEMPT_ID}/result`] },
   );
   render(
     <QueryClientProvider client={client}>
@@ -782,7 +782,7 @@ describe("the deck's three variants", () => {
     const wrong = item(/^I\s+him yesterday at the station\.$/);
     expect(wrong).toHaveTextContent("You answered have seen");
     expect(wrong).toHaveTextContent("Correct answer saw");
-    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/app");
+    expect(screen.getByRole("link", { name: "Home" })).toHaveAttribute("href", "/");
   });
 
   it("writes the just-submitted variant in the deck's English", async () => {
@@ -981,7 +981,7 @@ describe("the tiles' columns", () => {
     await waitFor(() => expect(columns()).toBe("repeat(3, minmax(0, 1fr))"));
     expect(screen.getByRole("link", { name: "Trang chủ" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
   });
 });
@@ -1392,7 +1392,7 @@ describe("before and instead of a result", () => {
     expect(screen.getByText("Bài chưa được nộp.")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Về trang chủ" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
     expect(screen.queryByRole("button", { name: "Thử lại" })).toBeNull();
   });
@@ -1413,7 +1413,7 @@ describe("before and instead of a result", () => {
       expect(screen.queryByText("Không có quyền.")).toBeNull();
       expect(screen.getByRole("link", { name: "Về trang chủ" })).toHaveAttribute(
         "href",
-        "/app",
+        "/",
       );
       expect(screen.queryByRole("button", { name: "Thử lại" })).toBeNull();
     },
@@ -1530,7 +1530,7 @@ describe("on a wide screen", () => {
     );
     expect(screen.getByRole("link", { name: "Trang chủ" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
     expect(screen.getByRole("heading", { level: 2 })).toHaveTextContent(
       "Câu trả lời của bạn",
@@ -1543,7 +1543,7 @@ describe("on a wide screen", () => {
     await screen.findByRole("alert");
     expect(screen.getByRole("link", { name: "Trang chủ" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
   });
 });

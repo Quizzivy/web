@@ -56,9 +56,9 @@ afterEach(() => useTakeTestStore.getState().reset());
 
 it("keeps navigation and answer shortcuts working after clicking a radio", async () => {
   const router = createMemoryRouter(
-    [{ path: "/app/attempts/:attemptId", element: <TakeTestPage /> }],
+    [{ path: "/attempts/:attemptId", element: <TakeTestPage /> }],
     {
-      initialEntries: ["/app/attempts/att-1"],
+      initialEntries: ["/attempts/att-1"],
     },
   );
   render(<RouterProvider router={router} />);
@@ -83,10 +83,10 @@ it("keeps navigation and answer shortcuts working after clicking a radio", async
 function mount() {
   const router = createMemoryRouter(
     [
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
-      { path: "/app", element: <p>home</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
     ],
-    { initialEntries: ["/app/attempts/att-1"] },
+    { initialEntries: ["/attempts/att-1"] },
   );
   render(<RouterProvider router={router} />);
   return userEvent.setup();

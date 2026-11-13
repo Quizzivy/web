@@ -68,7 +68,7 @@ export function ComingUp({
           return (
             <li key={card.id} className={HOME_ITEM}>
               <Link
-                to={`/app/assignments/${card.id}`}
+                to={`/assignments/${card.id}`}
                 className={cn(HOME_ROW, "hover:bg-muted")}
               >
                 <span

@@ -99,7 +99,7 @@ function land(
     [
       { path: "/set-password", element: <SetPasswordPage /> },
       { path: "/teacher", element: <p>teacher home</p> },
-      { path: "/app", element: <p>student home</p> },
+      { path: "/", element: <p>student home</p> },
       { path: "/change-password", element: <p>change password</p> },
       { path: "/login", element: <p>sign in page</p> },
     ],
@@ -531,7 +531,7 @@ describe("setting the password", () => {
     const user = await fillIn();
     await user.click(submit());
     expect(await screen.findByText("student home")).toBeInTheDocument();
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
   });
 
   it("works from the keyboard alone: the fields, their show buttons, then Enter", async () => {

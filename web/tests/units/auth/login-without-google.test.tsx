@@ -17,7 +17,7 @@ function renderLogin() {
   const routes: RouteObject[] = [
     { path: "/login", element: <LoginPage /> },
     { path: "/teacher", element: <p>admin home</p> },
-    { path: "/app", element: <p>student home</p> },
+    { path: "/", element: <p>student home</p> },
   ];
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(

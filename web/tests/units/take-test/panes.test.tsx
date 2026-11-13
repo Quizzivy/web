@@ -43,8 +43,8 @@ const store = () => useTakeTestStore.getState();
 async function open(paper: AttemptSession) {
   vi.mocked(getAttempt).mockResolvedValue(paper);
   const router = createMemoryRouter(
-    [{ path: "/app/attempts/:attemptId", element: <TakeTestPage /> }],
-    { initialEntries: [`/app/attempts/${DECK_ATTEMPT}`] },
+    [{ path: "/attempts/:attemptId", element: <TakeTestPage /> }],
+    { initialEntries: [`/attempts/${DECK_ATTEMPT}`] },
   );
   const view = render(<RouterProvider router={router} />);
   await screen.findByRole("main");

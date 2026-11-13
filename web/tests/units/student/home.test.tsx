@@ -76,9 +76,9 @@ function serve(lists: Lists, classes: unknown[] = [SAMPLE_CLASS]) {
 }
 
 function show() {
-  return renderAt("/app", [
+  return renderAt("/", [
     {
-      path: "/app",
+      path: "/",
       element: (
         <>
           <StudentHomePage />
@@ -86,8 +86,8 @@ function show() {
         </>
       ),
     },
-    { path: "/app/assignments/:id", element: <p>intro page</p> },
-    { path: "/app/attempts/:id/result", element: <p>result page</p> },
+    { path: "/assignments/:id", element: <p>intro page</p> },
+    { path: "/attempts/:id/result", element: <p>result page</p> },
   ]);
 }
 
@@ -311,7 +311,7 @@ describe("the resume card", () => {
     const router = home({ dueNow: [live()] });
     await user.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual(["start"]);
   });
@@ -322,7 +322,7 @@ describe("the resume card", () => {
     const router = home({ dueNow: [live()] });
     await user.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(sent).toEqual([{ resume: ATTEMPT }]);
   });
@@ -349,7 +349,7 @@ describe("the resume card", () => {
     await waitFor(() =>
       expect(screen.queryByRole("button", { name: "Tiếp tục làm bài" })).toBeNull(),
     );
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
     expect(sent).toEqual([{ resume: ATTEMPT }]);
   });
 
@@ -491,7 +491,7 @@ describe("the resume card", () => {
       await screen.findByRole("heading", { level: 2, name: "Sooner" }),
     ).toBeInTheDocument();
     expect(screen.getAllByRole("button", { name: "Tiếp tục làm bài" })).toHaveLength(1);
-    expect(row("Later")).toHaveAttribute("href", `/app/assignments/${card().id}`);
+    expect(row("Later")).toHaveAttribute("href", `/assignments/${card().id}`);
     expect(within(row("Later")).getByText("Đang làm")).toHaveClass("bg-info-soft");
     expect(row("Later").querySelector("[aria-hidden='true']")).toHaveClass("bg-muted");
     expect(screen.getByText("2 bài")).toBeInTheDocument();
@@ -504,7 +504,7 @@ describe("the resume card", () => {
     const router = home({ dueNow: [live()] });
     await user.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual([
       { call: "save", body: DRAFT },
@@ -519,7 +519,7 @@ describe("the resume card", () => {
     const router = home({ dueNow: [live()] });
     await user.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual([{ call: "resume", body: { resume: ATTEMPT } }]);
   });
@@ -539,7 +539,7 @@ describe("the resume card", () => {
     const router = home({ dueNow: [live()] });
     await user.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls.map(({ call }) => call)).toEqual(["save", "resume"]);
     expect(localStorage.getItem(DRAFT_KEY)).toBeNull();
@@ -558,7 +558,7 @@ describe("the resume card", () => {
     await waitFor(() => expect(asked).toBe(2));
     await waitFor(() => expect(resume).toBeEnabled());
     expect(calls.map(({ call }) => call)).toEqual(["save"]);
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
     expect(localStorage.getItem(DRAFT_KEY)).toBe(stored);
   });
 
@@ -578,7 +578,7 @@ describe("the resume card", () => {
     await waitFor(() => expect(asked).toBe(2));
     await waitFor(() => expect(resume).toBeEnabled());
     expect(calls.map(({ call }) => call)).toEqual(["save"]);
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
     expect(localStorage.getItem(DRAFT_KEY)).toBe(stored);
   });
 });
@@ -634,7 +634,7 @@ describe("coming up", () => {
     const user = userEvent.setup();
     const router = home({ dueNow: [card()] });
     await user.click(await screen.findByRole("link", { name: /Unit 5/ }));
-    expect(router.state.location.pathname).toBe(`/app/assignments/${card().id}`);
+    expect(router.state.location.pathname).toBe(`/assignments/${card().id}`);
   });
 
   it.each([
@@ -766,7 +766,7 @@ describe("recent results", () => {
     const user = userEvent.setup();
     const router = home({ completed: [done(1)] });
     await user.click(await screen.findByRole("link", { name: /Paper 1/ }));
-    expect(router.state.location.pathname).toBe(`/app/attempts/${id(901)}/result`);
+    expect(router.state.location.pathname).toBe(`/attempts/${id(901)}/result`);
   });
 
   it("reads just now for a minute, then the date, without asking the server", async () => {
@@ -792,8 +792,8 @@ describe("recent results", () => {
     });
     const links = await screen.findAllByRole("link", { name: /Unit 5/ });
     expect(links.map((link) => link.getAttribute("href"))).toEqual([
-      `/app/assignments/${card().id}`,
-      `/app/attempts/${id(901)}/result`,
+      `/assignments/${card().id}`,
+      `/attempts/${id(901)}/result`,
     ]);
     expect(within(links[0]!).getByText("Đang mở")).toBeInTheDocument();
     expect(within(links[1]!).getByText("8 / 10")).toBeInTheDocument();
@@ -906,9 +906,9 @@ describe("the states the deck does not draw", () => {
         });
       }),
     );
-    renderAt("/app", [
+    renderAt("/", [
       {
-        path: "/app",
+        path: "/",
         element: (
           <>
             <main tabIndex={-1}>

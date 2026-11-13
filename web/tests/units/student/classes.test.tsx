@@ -62,9 +62,9 @@ function serveLists(lists: Lists | "fail" | "wait" = {}) {
 }
 
 function show() {
-  return renderAt("/app/classes", [
+  return renderAt("/classes", [
     {
-      path: "/app/classes",
+      path: "/classes",
       element: (
         <>
           <main>

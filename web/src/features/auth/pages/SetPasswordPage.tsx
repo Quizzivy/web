@@ -29,6 +29,8 @@ import {
 } from "@/features/auth/api";
 import { GoogleMark } from "@/features/auth/components/GoogleMark";
 import { homePathFor } from "@/features/auth/home";
+import { OtherHostLink } from "@/features/auth/components/OtherHostLink";
+import { isWrongHost } from "@/features/auth/wrongHost";
 import {
   MAX_LINK_TOKEN_LENGTH,
   setPasswordSchema,
@@ -239,6 +241,7 @@ function SetPasswordForm({
   const [again, setAgain] = useState("");
   const [revealed, setRevealed] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [elsewhere, setElsewhere] = useState(false);
   const [busy, setBusy] = useState(false);
   const passwordRef = useRef<HTMLInputElement>(null);
   const againRef = useRef<HTMLInputElement>(null);
@@ -295,6 +298,7 @@ function SetPasswordForm({
         onPasswordsOff();
         return;
       }
+      setElsewhere(isWrongHost(cause));
       setError(failureFor(cause));
     }
   }
@@ -394,7 +398,15 @@ function SetPasswordForm({
         {error && (
           <Alert variant="danger" className="text-ui flex gap-2.5">
             <CircleAlert aria-hidden="true" className="mt-px size-4 shrink-0" />
-            <span>{error}</span>
+            <span>
+              {error}
+              {elsewhere && (
+                <>
+                  {" "}
+                  <OtherHostLink />
+                </>
+              )}
+            </span>
           </Alert>
         )}
 

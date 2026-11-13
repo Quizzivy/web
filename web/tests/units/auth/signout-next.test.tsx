@@ -51,9 +51,9 @@ function openSignedIn(entries: string[], login: RouteObject = loginPage) {
       {
         element: <RequireSession />,
         children: [
-          { path: "/app", element: <SignOut /> },
-          { path: "/app/one", element: <SignOut /> },
-          { path: "/app/two", element: <SignOut /> },
+          { path: "/", element: <SignOut /> },
+          { path: "/one", element: <SignOut /> },
+          { path: "/two", element: <SignOut /> },
         ],
       },
       login,
@@ -94,7 +94,7 @@ afterEach(() => {
 
 describe("signing out", () => {
   it("ends on the sign-in page with no next", async () => {
-    const router = openSignedIn(["/app"]);
+    const router = openSignedIn(["/"]);
 
     await signOut();
     await settled(router);
@@ -104,7 +104,7 @@ describe("signing out", () => {
   });
 
   it("does so when the sign-in page loads lazily", async () => {
-    const router = openSignedIn(["/app"], lazyLoginPage);
+    const router = openSignedIn(["/"], lazyLoginPage);
 
     await signOut();
     await settled(router);
@@ -115,7 +115,7 @@ describe("signing out", () => {
   });
 
   it("attaches none when the user goes Back after signing out", async () => {
-    const router = openSignedIn(["/app/one", "/app/two"]);
+    const router = openSignedIn(["/one", "/two"]);
 
     await signOut();
     await settled(router);
@@ -127,25 +127,25 @@ describe("signing out", () => {
   });
 
   it("still attaches next when a session expired", async () => {
-    const router = openSignedIn(["/app"]);
+    const router = openSignedIn(["/one"]);
     expect(await screen.findByRole("button", { name: "sign out" })).toBeInTheDocument();
 
     act(() => useAuthStore.getState().clearSession());
 
-    await waitFor(() => expect(address(router)).toBe("/login?next=%2Fapp"));
+    await waitFor(() => expect(address(router)).toBe("/login?next=%2Fone"));
   });
 
   it("attaches next again once somebody has signed in after a sign-out", async () => {
-    const router = openSignedIn(["/app"]);
+    const router = openSignedIn(["/"]);
     await signOut();
     await settled(router);
 
     act(() => useAuthStore.getState().setSession("t", studentUser));
-    await act(() => router.navigate("/app"));
+    await act(() => router.navigate("/one"));
     expect(await screen.findByRole("button", { name: "sign out" })).toBeInTheDocument();
     act(() => useAuthStore.getState().clearSession());
 
-    await waitFor(() => expect(address(router)).toBe("/login?next=%2Fapp"));
+    await waitFor(() => expect(address(router)).toBe("/login?next=%2Fone"));
   });
 
   it("marks only the user's own sign-out", () => {

@@ -72,10 +72,10 @@ async function open(left = DECK_LEFT, over: Partial<AttemptSession> = {}) {
   });
   const router = createMemoryRouter(
     [
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
-      { path: "/app", element: <p>home</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
     ],
-    { initialEntries: ["/app/attempts/att-1"] },
+    { initialEntries: ["/attempts/att-1"] },
   );
   render(<RouterProvider router={router} />);
   await act(() => vi.advanceTimersByTimeAsync(0));

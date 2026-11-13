@@ -27,7 +27,7 @@ function openStudentApp(user: typeof studentUser) {
   const router = createMemoryRouter(
     [
       {
-        path: "/app",
+        path: "/",
         element: <StudentArea />,
         children: [{ index: true, element: <p>trang học viên</p> }],
       },
@@ -35,7 +35,7 @@ function openStudentApp(user: typeof studentUser) {
       { path: "/admin", element: <p>bảng quản trị</p> },
       { path: "*", element: <p>không có trang này</p> },
     ],
-    { initialEntries: ["/before", "/app"], initialIndex: 1 },
+    { initialEntries: ["/before", "/"], initialIndex: 1 },
   );
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   render(
@@ -62,9 +62,9 @@ describe("where a signed-in user lands", () => {
     ],
     ["a user with the admin workspace alone", "/admin", adminOnly],
     ["an admin who takes tests", "/admin", adminWhoTakesTests],
-    ["a student", "/app", studentUser],
-    ["a user with no workspace", "/app", nobody],
-    ["nobody", "/app", null],
+    ["a student", "/", studentUser],
+    ["a user with no workspace", "/", nobody],
+    ["nobody", "/", null],
   ])("sends %s home to %s", (_who, home, user) => {
     expect(homePathFor(user)).toBe(home);
   });
@@ -92,7 +92,7 @@ describe("the student tree's guard", () => {
     const router = openStudentApp(studentUser);
 
     expect(await screen.findByText("trang học viên")).toBeInTheDocument();
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
     expect(screen.queryByText("bàn làm việc của giáo viên")).not.toBeInTheDocument();
   });
 
@@ -105,7 +105,7 @@ describe("the student tree's guard", () => {
         name: "Bạn không có quyền mở trang này",
       }),
     ).toBeInTheDocument();
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
     expect(screen.queryByText("trang học viên")).not.toBeInTheDocument();
   });
 });
@@ -125,7 +125,7 @@ describe("the splash hand-off for the teacher's tree", () => {
       "/teachers",
       "/teacher-old",
       "/admin/tests",
-      "/app",
+      "/",
       "/login",
       "/",
     ]) {

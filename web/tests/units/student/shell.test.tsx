@@ -28,7 +28,7 @@ const flags = vi.hoisted(() => ({
 }));
 vi.mock("@/app/modules", () => ({ modules: flags }));
 
-const SETTINGS = { detail: { titleKey: "nav.settings", back: "/app" } };
+const SETTINGS = { detail: { titleKey: "nav.settings", back: "/" } };
 const NAV = "Điều hướng chính";
 
 const CLASS = {
@@ -108,27 +108,21 @@ function destinations() {
 describe("the shell from 768", () => {
   it("draws the logo, the destinations that exist and the account button", async () => {
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await screen.findByRole("navigation", { name: NAV });
 
     expect(destinations()).toEqual(["Trang chủ", "Lớp"]);
     const nav = within(screen.getByRole("navigation", { name: NAV }));
-    expect(nav.getByRole("link", { name: "Trang chủ" })).toHaveAttribute(
-      "href",
-      "/app",
-    );
+    expect(nav.getByRole("link", { name: "Trang chủ" })).toHaveAttribute("href", "/");
     expect(nav.getByRole("link", { name: "Trang chủ" })).toHaveAttribute(
       "aria-current",
       "page",
     );
-    expect(nav.getByRole("link", { name: "Lớp" })).toHaveAttribute(
-      "href",
-      "/app/classes",
-    );
+    expect(nav.getByRole("link", { name: "Lớp" })).toHaveAttribute("href", "/classes");
     expect(nav.getByRole("link", { name: "Lớp" })).not.toHaveAttribute("aria-current");
     expect(screen.getByRole("link", { name: "Trang chủ Quizzivy" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
     expect(
       screen.getByRole("button", { name: "Tài khoản của Nguyễn Văn An" }),
@@ -140,7 +134,7 @@ describe("the shell from 768", () => {
   it("opens the deck's account menu from the bar", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     const account = await screen.findByRole("button", {
       name: "Tài khoản của Nguyễn Văn An",
     });
@@ -159,13 +153,13 @@ describe("the shell from 768", () => {
     ).toEqual(["Cài đặt", "Chế độ tối", "Đăng xuất"]);
     expect(within(menu).getByRole("menuitem", { name: "Cài đặt" })).toHaveAttribute(
       "href",
-      "/app/settings",
+      "/settings",
     );
   });
 
   it("keeps the bar on a detail screen, lights no destination and offers no back arrow", async () => {
     serveStudent({});
-    shell("/app/settings", <StudentSettingsPage />, SETTINGS);
+    shell("/settings", <StudentSettingsPage />, SETTINGS);
     await screen.findByRole("navigation", { name: NAV });
 
     expect(destinations()).toEqual(["Trang chủ", "Lớp"]);
@@ -183,7 +177,7 @@ describe("the shell from 768", () => {
   it("adds a destination when its module ships", async () => {
     flags.learn = true;
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await screen.findByRole("navigation", { name: NAV });
     expect(destinations()).toEqual(["Trang chủ", "Lớp", "Học tập"]);
   });
@@ -192,7 +186,7 @@ describe("the shell from 768", () => {
     flags.learn = true;
     flags.grades = true;
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await screen.findByRole("navigation", { name: NAV });
     expect(destinations()).toEqual(["Trang chủ", "Lớp", "Học tập", "Điểm số"]);
   });
@@ -200,7 +194,7 @@ describe("the shell from 768", () => {
   it("follows the chosen theme and draws the mark for it", async () => {
     writeThemePreference("dark");
     serveStudent({});
-    shell("/app", <p>trang</p>, undefined, "/app", {
+    shell("/", <p>trang</p>, undefined, "/", {
       ...STUDENT,
       preferences: { theme: "dark" },
     });
@@ -216,12 +210,12 @@ describe("the shell from 768", () => {
   it("gives the keyboard the page: main takes focus on a new route, unless the page took it", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     serveStudent({});
-    renderAt("/app", [
+    renderAt("/", [
       {
         element: <StudentLayout />,
         children: [
-          { path: "/app", element: <p>trang chủ</p> },
-          { path: "/app/classes", element: <TakesFocus /> },
+          { path: "/", element: <p>trang chủ</p> },
+          { path: "/classes", element: <TakesFocus /> },
         ],
       },
     ]);
@@ -236,12 +230,12 @@ describe("the shell from 768", () => {
   it("returns to the top when the route changes", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     serveStudent({});
-    renderAt("/app", [
+    renderAt("/", [
       {
         element: <StudentLayout />,
         children: [
-          { path: "/app", element: <p>trang chủ</p> },
-          { path: "/app/classes", element: <p>các lớp</p> },
+          { path: "/", element: <p>trang chủ</p> },
+          { path: "/classes", element: <p>các lớp</p> },
         ],
       },
     ]);
@@ -255,14 +249,14 @@ describe("the shell from 768", () => {
   it("stays where it is when a page moves between its own sections", async () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     serveStudent({});
-    renderAt("/app/settings", [
+    renderAt("/settings", [
       {
         element: <StudentLayout />,
         children: [
           {
-            path: "/app/settings/:section?",
+            path: "/settings/:section?",
             handle: SETTINGS,
-            element: <Link to="/app/settings/security">mục bảo mật</Link>,
+            element: <Link to="/settings/security">mục bảo mật</Link>,
           },
         ],
       },
@@ -276,7 +270,7 @@ describe("the shell from 768", () => {
 
 describe("the splash hand-off", () => {
   it("gives the splash a student frame to fade onto", () => {
-    const { container } = render(<>{skeletonFor("/app/classes")}</>);
+    const { container } = render(<>{skeletonFor("/classes")}</>);
     const frame = container.firstElementChild as HTMLElement;
     expect(frame.className).toContain("bg-bg");
     expect(frame.querySelectorAll("[data-slot='skeleton']").length).toBeGreaterThan(10);
@@ -284,12 +278,10 @@ describe("the splash hand-off", () => {
   });
 
   it("has no frame for the test itself or for a console not yet rebuilt", () => {
-    expect(
-      skeletonFor("/app/attempts/018f0000-0000-7000-8000-0000000000e1"),
-    ).toBeNull();
+    expect(skeletonFor("/attempts/018f0000-0000-7000-8000-0000000000e1")).toBeNull();
     expect(skeletonFor("/teacher")).toBeNull();
     expect(
-      skeletonFor("/app/attempts/018f0000-0000-7000-8000-0000000000e1/result"),
+      skeletonFor("/attempts/018f0000-0000-7000-8000-0000000000e1/result"),
     ).not.toBeNull();
   });
 });
@@ -307,7 +299,7 @@ describe("what the shell asks the server", () => {
         });
       }),
     );
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await waitFor(() => expect(asked).toBe(1));
 
     await act(() => vi.advanceTimersByTimeAsync(5 * 60 * 1000));
@@ -326,7 +318,7 @@ describe("the Home badge (DG-82)", () => {
       dueNow: [card()],
       upcoming: [card({ closesAt: "2026-09-20T00:00:00Z" })],
     });
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
 
     const home = await screen.findByRole("link", {
       name: /^Trang chủ\s*1 bài đến hạn trong 7 ngày$/,
@@ -346,7 +338,7 @@ describe("the Home badge (DG-82)", () => {
         });
       }),
     );
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await waitFor(() => expect(asked).toBeGreaterThan(0));
     expect(await screen.findByRole("link", { name: "Trang chủ" })).toBeInTheDocument();
   });
@@ -365,7 +357,7 @@ describe("the Home badge (DG-82)", () => {
         });
       }),
     );
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await waitFor(() => expect(asked).toBeGreaterThan(0));
     expect(screen.getByRole("link", { name: "Trang chủ" })).toBeInTheDocument();
   });
@@ -373,12 +365,12 @@ describe("the Home badge (DG-82)", () => {
   it("carries the count on the phone's Home tab too", async () => {
     viewport("phone");
     serveStudent({ dueNow: [card()] });
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     expect(
       await screen.findByRole("link", {
         name: /^1 bài đến hạn trong 7 ngày\s*Trang chủ$/,
       }),
-    ).toHaveAttribute("href", "/app");
+    ).toHaveAttribute("href", "/");
   });
 });
 
@@ -386,7 +378,7 @@ describe("the shell below 768", () => {
   it("moves the destinations to a tab bar that ends in Me", async () => {
     viewport("phone");
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await screen.findByRole("navigation", { name: NAV });
 
     expect(destinations()).toEqual(["Trang chủ", "Lớp", "Tôi"]);
@@ -397,7 +389,7 @@ describe("the shell below 768", () => {
     );
     expect(tabs.getByRole("link", { name: "Tôi" })).toHaveAttribute(
       "href",
-      "/app/settings",
+      "/settings",
     );
     expect(screen.getAllByRole("navigation")).toHaveLength(1);
     expect(
@@ -411,7 +403,7 @@ describe("the shell below 768", () => {
   it("lights only the tab of the screen on show", async () => {
     viewport("phone");
     serveStudent({});
-    shell("/app/classes", <p>các lớp</p>);
+    shell("/classes", <p>các lớp</p>);
     const tabs = within(await screen.findByRole("navigation", { name: NAV }));
     expect(tabs.getByRole("link", { name: "Lớp" })).toHaveAttribute(
       "aria-current",
@@ -427,7 +419,7 @@ describe("the shell below 768", () => {
     viewport("phone");
     flags.grades = true;
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await screen.findByRole("navigation", { name: NAV });
     expect(destinations()).toEqual(["Trang chủ", "Lớp", "Điểm số", "Tôi"]);
   });
@@ -435,11 +427,11 @@ describe("the shell below 768", () => {
   it("swaps the logo for a way back and the title on a detail screen, and hides the tabs", async () => {
     viewport("phone");
     serveStudent({});
-    shell("/app/settings", <StudentSettingsPage />, SETTINGS);
+    shell("/settings", <StudentSettingsPage />, SETTINGS);
 
     expect(await screen.findByRole("link", { name: "Quay lại" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
     expect(
       within(screen.getAllByRole("banner")[0]!).getByText("Cài đặt"),
@@ -458,7 +450,7 @@ describe("crossing 768", () => {
     const user = userEvent.setup({ advanceTimers: vi.advanceTimersByTime });
     const screenWidth = viewport("desktop");
     serveStudent({});
-    shell("/app", <input aria-label="Ghi chú" />);
+    shell("/", <input aria-label="Ghi chú" />);
     const note = await screen.findByRole("textbox", { name: "Ghi chú" });
     await user.type(note, "đang viết");
     expect(destinations()).toEqual(["Trang chủ", "Lớp"]);
@@ -498,7 +490,7 @@ describe("home", () => {
         }),
       ],
     });
-    shell("/app", <StudentHomePage />);
+    shell("/", <StudentHomePage />);
     await screen.findByText("Unit 5 — Present perfect");
 
     const main = within(screen.getByRole("main"));
@@ -507,15 +499,15 @@ describe("home", () => {
       main.getAllByRole("heading", { level: 2 }).map((heading) => heading.textContent),
     ).toEqual(["Sắp tới", "Kết quả gần đây"]);
     expect(main.getAllByRole("link").map((link) => link.getAttribute("href"))).toEqual([
-      `/app/assignments/${card().id}`,
-      "/app/assignments/018f0000-0000-7000-8000-0000000000d2",
-      "/app/attempts/018f0000-0000-7000-8000-0000000000e3/result",
+      `/assignments/${card().id}`,
+      "/assignments/018f0000-0000-7000-8000-0000000000d2",
+      "/attempts/018f0000-0000-7000-8000-0000000000e3/result",
     ]);
   });
 
   it("draws no panel when there is nothing to put in it", async () => {
     serveStudent({ dueNow: [card()] }, []);
-    shell("/app", <StudentHomePage />);
+    shell("/", <StudentHomePage />);
     await screen.findByText("Unit 5 — Present perfect");
     expect(screen.queryByRole("complementary")).toBeNull();
   });
@@ -529,10 +521,10 @@ describe("the intro", () => {
       ),
     );
     shell(
-      `/app/assignments/${ASSIGNMENT}`,
+      `/assignments/${ASSIGNMENT}`,
       <AssignmentIntroPage />,
-      { detail: { titleKey: "student.shell.test", back: "/app" } },
-      "/app/assignments/:id",
+      { detail: { titleKey: "student.shell.test", back: "/" } },
+      "/assignments/:id",
     );
     await screen.findByRole("heading", { level: 1, name: "Unit 5 — Present perfect" });
 
@@ -542,10 +534,7 @@ describe("the intro", () => {
       "45 phút",
     );
     expect(panel.getByRole("button", { name: "Bắt đầu làm bài" })).toBeInTheDocument();
-    expect(panel.getByRole("link", { name: "Trang chủ" })).toHaveAttribute(
-      "href",
-      "/app",
-    );
+    expect(panel.getByRole("link", { name: "Trang chủ" })).toHaveAttribute("href", "/");
     expect(
       panel.getByRole("heading", { name: "Trước khi bắt đầu" }),
     ).toBeInTheDocument();
@@ -564,10 +553,10 @@ describe("the intro", () => {
         ),
       );
       shell(
-        `/app/assignments/${ASSIGNMENT}`,
+        `/assignments/${ASSIGNMENT}`,
         <AssignmentIntroPage />,
-        { detail: { titleKey: "student.shell.test", back: "/app" } },
-        "/app/assignments/:id",
+        { detail: { titleKey: "student.shell.test", back: "/" } },
+        "/assignments/:id",
       );
       const start = await screen.findByRole("button", { name: "Bắt đầu làm bài" });
       expect(screen.getByRole("main")).toHaveClass(padding);
@@ -579,7 +568,7 @@ describe("the intro", () => {
 describe("classes", () => {
   it("draws each class with what comes next and one join action", async () => {
     serveStudent({ dueNow: [card({ classId: CLASS.id, className: CLASS.name })] });
-    shell("/app/classes", <StudentClassesPage />);
+    shell("/classes", <StudentClassesPage />);
     expect(
       await screen.findByRole("heading", { level: 2, name: "IELTS Foundation" }),
     ).toBeInTheDocument();
@@ -595,7 +584,7 @@ describe("classes", () => {
 describe("settings", () => {
   it("keeps the account and its editable form in one flow, with no side panel", async () => {
     serveStudent({});
-    shell("/app/settings", <StudentSettingsPage />, SETTINGS);
+    shell("/settings", <StudentSettingsPage />, SETTINGS);
     const panel = within(screen.getByRole("main"));
     expect(panel.getByLabelText("Họ và tên")).toHaveValue("Nguyễn Văn An");
     expect(panel.getByLabelText("Email")).toHaveValue("an@example.com");
@@ -614,7 +603,7 @@ describe("the bell", () => {
 
   it("is absent while the notifications module is off", async () => {
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     await screen.findByRole("navigation", { name: NAV });
     expect(screen.queryByRole("button", { name: /^Thông báo/ })).toBeNull();
   });
@@ -629,7 +618,7 @@ describe("the bell", () => {
         return contractJson("/me/summary", "get", 200, { unreadNotifications: 2 });
       }),
     );
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     const bell = await screen.findByRole("button", { name: "Thông báo, 2 chưa đọc" });
     expect(bell.querySelector("[data-slot='bell-dot']")).not.toBeNull();
     expect(new Set(audiences)).toEqual(new Set(["student"]));
@@ -643,7 +632,7 @@ describe("the bell", () => {
     viewport("phone");
     flags.notifications = true;
     serveStudent({});
-    shell("/app", <p>trang</p>);
+    shell("/", <p>trang</p>);
     const bell = await screen.findByRole("button", { name: "Thông báo" });
     expect(bell.closest("header")).not.toBeNull();
     expect(bell.querySelector("[data-slot='bell-dot']")).toBeNull();

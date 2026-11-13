@@ -221,7 +221,7 @@ export default function TakeTestPage() {
         <LoadError error={loadError} onRetry={reload}>
           {t("takeTest.loadFailed")}
         </LoadError>
-        <Button variant="ghost" size="sm" onClick={() => void navigate("/app")}>
+        <Button variant="ghost" size="sm" onClick={() => void navigate("/")}>
           {t("takeTest.backHome")}
         </Button>
       </main>
@@ -246,9 +246,9 @@ export default function TakeTestPage() {
           submittedAt={submittedAt}
           answered={dots.filter((d) => d.answered).length}
           total={dots.length}
-          onHome={() => void navigate("/app", { replace: true })}
+          onHome={() => void navigate("/", { replace: true })}
           onResult={() =>
-            void navigate(`/app/attempts/${attemptId}/result`, { replace: true })
+            void navigate(`/attempts/${attemptId}/result`, { replace: true })
           }
         />
       </div>

@@ -56,14 +56,14 @@ async function open(left = DECK_LEFT_MS, over: Partial<AttemptSession> = {}) {
   const router = createMemoryRouter(
     [
       {
-        path: "/app/attempts/:attemptId",
+        path: "/attempts/:attemptId",
         element: <FocusLayout />,
         children: [{ index: true, element: <TakeTestPage /> }],
       },
-      { path: "/app", element: <p>home</p> },
-      { path: "/app/attempts/:attemptId/result", element: <p>result page</p> },
+      { path: "/", element: <p>home</p> },
+      { path: "/attempts/:attemptId/result", element: <p>result page</p> },
     ],
-    { initialEntries: [`/app/attempts/${DECK_ATTEMPT}`] },
+    { initialEntries: [`/attempts/${DECK_ATTEMPT}`] },
   );
   render(<RouterProvider router={router} />);
   await pass(0);
@@ -372,7 +372,7 @@ describe("the Submit dialog", () => {
       screen.getByRole("heading", { level: 1, name: "Bài đã được nộp." }),
     ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Thoát khỏi bài làm" })).toBeNull();
-    expect(router.state.location.pathname).toBe(`/app/attempts/${DECK_ATTEMPT}`);
+    expect(router.state.location.pathname).toBe(`/attempts/${DECK_ATTEMPT}`);
   });
 
   it("holds the dialog while the submission is out, and sends it once", async () => {

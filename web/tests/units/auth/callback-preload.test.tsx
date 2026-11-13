@@ -38,7 +38,7 @@ function arrive(pending: { joinCode?: string }) {
   const router = createMemoryRouter(
     [
       { path: "/auth/google/callback", element: <GoogleCallbackPage /> },
-      { path: "/app", element: <p>student home</p> },
+      { path: "/", element: <p>student home</p> },
       { path: "/join/:code", element: <p>join page</p> },
       { path: "/login", element: <p>login</p> },
     ],
@@ -71,7 +71,7 @@ afterEach(() => {
 });
 
 /**
- * Rendering /app needs two nested lazy chunks after the URL settles. A student
+ * Rendering / needs two nested lazy chunks after the URL settles. A student
  * arriving from a QR code waits for both before the first screen they ever
  * see; overlapping that with the exchange is what makes the wait shorter.
  */

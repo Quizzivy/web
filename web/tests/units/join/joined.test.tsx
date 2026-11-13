@@ -35,7 +35,7 @@ function renderReturn() {
   client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const routes: RouteObject[] = [
     { path: "/join/:code", element: <JoinPage /> },
-    { path: "/app/classes", element: <p>my classes</p> },
+    { path: "/classes", element: <p>my classes</p> },
     { path: "/change-password", element: <p>change password</p> },
   ];
   const router = createMemoryRouter(routes, { initialEntries: [`/join/${CODE}`] });
@@ -83,7 +83,7 @@ describe("coming back from sign-in to join", () => {
     expect(readJoinContext()).toBeNull();
 
     await user.click(screen.getByRole("link", { name: "Đến lớp của tôi" }));
-    expect(router.state.location.pathname).toBe("/app/classes");
+    expect(router.state.location.pathname).toBe("/classes");
   });
 
   it("marks the student's lists stale, so the app shows the new class", async () => {

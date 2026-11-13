@@ -45,7 +45,7 @@ function phaseOf(
  * useLeave is the one way out of a test that is still open. The ✕ asks first.
  * The browser's back button, or any other navigation while an answer is
  * unsaved, is blocked and taken as the answer "leave". Either way the unsaved
- * answers are sent before the route changes: to `/app` from the ✕, to
+ * answers are sent before the route changes: to `/` from the ✕, to
  * wherever the blocked navigation was going otherwise. With no answer
  * unsaved, Leave goes at once and waits on nothing: what the integrity monitor
  * has buffered goes by the beacon as the page unmounts. A save that fails
@@ -97,7 +97,7 @@ export function useLeave(): Leave {
 
   const ask = useCallback(() => {
     const { lock } = useTakeTestStore.getState();
-    if (lock !== null) void navigate("/app");
+    if (lock !== null) void navigate("/");
     else setStep("asking");
   }, [navigate]);
 
@@ -117,7 +117,7 @@ export function useLeave(): Leave {
         return;
       }
       setStep("idle");
-      if (proceed === undefined) void navigate("/app");
+      if (proceed === undefined) void navigate("/");
       else proceed();
     });
   }, [navigate, proceed]);

@@ -116,11 +116,11 @@ function long(count: number): AttemptSession {
 function renderPage() {
   const router = createMemoryRouter(
     [
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
-      { path: "/app", element: <p>home</p> },
-      { path: "/app/attempts/:attemptId/result", element: <p>result page</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
+      { path: "/attempts/:attemptId/result", element: <p>result page</p> },
     ],
-    { initialEntries: ["/app/attempts/att-1"] },
+    { initialEntries: ["/attempts/att-1"] },
   );
   render(<RouterProvider router={router} />);
   return router;

@@ -87,7 +87,7 @@ function renderBell(
         element,
         children: [
           { id: "teacher-assignment", path: "/teacher/assignments/:id" },
-          { id: "student-assignment", path: "/app/assignments/:id" },
+          { id: "student-assignment", path: "/assignments/:id" },
           { id: "elsewhere", path: "*" },
         ],
       },
@@ -493,7 +493,7 @@ describe("closing", () => {
 
   it.each([
     ["teacher", "assignment.closing", "/teacher/assignments"],
-    ["student", "assignment.due_soon", "/app/assignments"],
+    ["student", "assignment.due_soon", "/assignments"],
   ] as const)(
     "puts focus on the page when a %s row only changes the route's parameter (QA-45b-1)",
     async (audience, kind, base) => {

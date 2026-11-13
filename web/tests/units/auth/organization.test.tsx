@@ -100,7 +100,7 @@ function newClient() {
 function renderPage(
   element: React.ReactElement,
   {
-    path = "/",
+    path = "/page",
     state,
     login = element,
     client = newClient(),
@@ -117,7 +117,7 @@ function renderPage(
       { path: "/login", element: login },
       { path: "/forgot-password", element },
       { path: "*", element },
-      { path: "/app", element: <p>student home</p> },
+      { path: "/", element: <p>student home</p> },
     ],
     { initialEntries: [{ pathname: path, state }] },
   );
@@ -770,7 +770,7 @@ describe("the join page", () => {
     await waitFor(() => expect(heading()).toBeInTheDocument());
     expect(screen.getByRole("link", { name: "Về trang chủ của tôi" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
   });
 });

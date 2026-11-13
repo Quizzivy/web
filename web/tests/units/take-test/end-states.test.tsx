@@ -68,14 +68,14 @@ async function open(over: Over = {}, left = DECK_LEFT_MS) {
   const router = createMemoryRouter(
     [
       {
-        path: "/app/attempts/:attemptId",
+        path: "/attempts/:attemptId",
         element: <FocusLayout />,
         children: [{ index: true, element: <TakeTestPage /> }],
       },
-      { path: "/app", element: <p>home</p> },
-      { path: "/app/attempts/:attemptId/result", element: <p>result page</p> },
+      { path: "/", element: <p>home</p> },
+      { path: "/attempts/:attemptId/result", element: <p>result page</p> },
     ],
-    { initialEntries: [`/app/attempts/${DECK_ATTEMPT}`] },
+    { initialEntries: [`/attempts/${DECK_ATTEMPT}`] },
   );
   render(
     <>
@@ -211,12 +211,12 @@ describe("the submitted screen", () => {
   });
 
   it.each([
-    { button: "Về trang chủ", path: "/app" },
-    { button: "Xem bài đã nộp", path: `/app/attempts/${DECK_ATTEMPT}/result` },
+    { button: "Về trang chủ", path: "/" },
+    { button: "Xem bài đã nộp", path: `/attempts/${DECK_ATTEMPT}/result` },
   ])("follows $button", async ({ button, path }) => {
     const router = await open();
     await handIn();
-    expect(router.state.location.pathname).toBe(`/app/attempts/${DECK_ATTEMPT}`);
+    expect(router.state.location.pathname).toBe(`/attempts/${DECK_ATTEMPT}`);
 
     fireEvent.click(screen.getByRole("button", { name: button }));
     await pass(0);

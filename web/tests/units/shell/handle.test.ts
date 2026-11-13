@@ -22,7 +22,7 @@ describe("teacherHandleOf", () => {
     ["nothing", undefined],
     ["null", null],
     ["an empty handle", {}],
-    ["a student detail handle", { detail: { titleKey: "nav.settings", back: "/app" } }],
+    ["a student detail handle", { detail: { titleKey: "nav.settings", back: "/" } }],
     ["the take-test handle", { focus: true }],
     ["a crumb that is one object", { crumb: { key: "nav.tests" } }],
     ["a crumb that is a string", { crumb: "nav.tests" }],

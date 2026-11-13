@@ -516,6 +516,16 @@ To view one, start the server above and open, for example,
   failed. Ten states, at 1280 and 360, light and dark, Vietnamese and English. No operation
   changes. A row's first column on the page is 96px, where the deck has 64px, so a Vietnamese
   date fits. Its three questions for Thuong are on the page.
+- 2026-11-13 — Twelfth proposal page: `proposals/R9 Gradebook Weights.dc.html`, for DG-93 (R9;
+  T-R9.6, T-R9.7). The deck's gradebook shows a kind and a weight on every column and nothing
+  sets them. The page draws the plan's three places with one pair of controls, "Tính là" and
+  "Trọng số": a second group in the wizard's Schedule step with a line in its summary, a sixth
+  card in the assignment's Settings tab that stays editable while the assignment is open, and
+  the dialog a gradebook column's heading opens. Nine states, at 1280 and 360, light and dark,
+  Vietnamese and English. No operation changes. It follows the plan's wording and asks four
+  questions; the first is that a weight is shown with "%" and is a percent only while a term's
+  weights add to 100. Its saved toast leaves out the Settings tab's sentence about students,
+  who never see a weight.
 
 ## The brand
 

@@ -450,7 +450,10 @@ To view one, start the server above and open, for example,
   with them: two lines of T-R7.20, and the kinds of file T-R7.11's upload accepts. The page
   asked in return whether a Word file that carries macros is refused (Q7), and he decided that
   it is: the dialog gains that refusal as a state. An announcement keeps the count of who has
-  seen it and shows no names (Q4).
+  seen it and shows no names (Q4). And a class ending closes no conversation (Q5): a teacher
+  and a student who have one can go on writing after the student leaves the class. The page's
+  refusal state became a disabled account, and the eligibility rule of T-R7.10a changes in the
+  plan.
 
 ## The brand
 

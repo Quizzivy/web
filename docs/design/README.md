@@ -429,6 +429,18 @@ To view one, start the server above and open, for example,
   row is enough and the pane needs no switch of kinds (Q9). All nine questions on the page are
   settled; the page itself still waits for his approval.
 
+- 2026-11-13 — Fifth proposal page: `proposals/R7 Messages.dc.html`, for DG-83 and DG-91 (R7;
+  `docs/plan/77-r7.md`, T-R7.20 and T-R7.21). The deck draws Messages for a teacher and for a
+  student with every thread full and every send working. The page adds, from the deck's parts:
+  a file as a chip in its sender's bubble or in the announcement's card, the Attach dialog's
+  states (nothing chosen, uploading, ready, refused for size or kind), Details as a popover and
+  as a sheet on a phone, the list's skeleton, empty sentence, error and no-match, an empty
+  thread and channel, "Load earlier", a send on its way and one that failed, and the composer
+  replaced when the two no longer share a class or the class is archived. Both screens are in
+  Vietnamese for the first time. Frames at 1280 and 360, light and dark, Vietnamese and
+  English. No exported page changes and no operation of T-R7.10 to T-R7.12 changes. It is a
+  proposal until Thuong approves it, and its six questions for him are on the page.
+
 ## The brand
 
 `brand/` is Thuong's kit, copied byte for byte from `~/Developer/designs/quizzivy-brand`. The

@@ -1,0 +1,718 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R7 Collaboration · Messages · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Messages, in the states the deck does not draw</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws Messages twice, for a teacher and for a student, with every thread full and every send working. R7 builds both screens (T-R7.20, T-R7.21), and its plan names what the drawing leaves out: a file in a message, the Details popover, a list that is loading, empty or broken, a send that fails, and a thread nobody may write in any more. This page draws those from the deck’s own parts and puts the screens in Vietnamese for the first time. It moves nothing the deck drew.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">A file in a message</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">An attachment is a chip to download, on its sender’s side.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The deck writes “Attachment · name” in a bubble. A chip says what the file is before it is opened: its kind, its name, its size, and Download.</li>
+      <li><span style="color:var(--fg)">It follows the sender (DG-91)</span>: in the teacher’s bubble on the right, in the announcement’s card for a class, on the left for the student who receives it.</li>
+      <li>A file is a download and nothing more. No picture is shown in the thread and no audio plays there, as the server serves every attachment as a download.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">When it does not work</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One sentence and one action, where the trouble is.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>A list or a thread that cannot load says so in its own pane and offers “Thử lại”. The other pane stays as it was.</li>
+      <li><span style="color:var(--fg)">A send that fails keeps its bubble</span>, with “Chưa gửi được” and “Thử lại” under it. The words are never lost.</li>
+      <li>When writing is no longer allowed, the composer gives its place to the reason. The thread stays readable, as the plan decides.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What cannot be taken back</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Nothing sent can be edited or deleted, so the screen says who will get it.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>Messages are kept as written, to protect both sides: most students are minors. That is the plan’s decision and this page does not reopen it.</li>
+      <li>The class composer keeps the deck’s line, “Gửi tới cả 24 học viên”, and the Attach dialog names its receiver before Send.</li>
+      <li>Whether Enter should send an announcement at all is a question for the owner (Q2).</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick who is looking, the screen and its state in the bar above. The layout, the sizes and the parts are the deck’s: a list and a thread side by side from 760px of content, one pane at a time below. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ f.sBar }}" hint-placeholder-val="{{ false }}">
+                <div style="height:60px;flex:none;display:flex;align-items:center;gap:14px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin:0 -10px 0 -8px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:18px"></i></span><span style="font-size:15px;font-weight:600;white-space:nowrap">{{ tx.title }}</span></sc-if>
+                  <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></span><span style="display:flex;align-items:center;gap:2px;margin-left:14px"><sc-for list="{{ sNav }}" as="n" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;font-size:14px;white-space:nowrap;color:var(--muted-fg)"><i class="icon-{{ n.icon }}" style="font-size:16px"></i>{{ n.label }}</span></sc-for></span></sc-if>
+                  <span style="margin-left:auto;display:flex;align-items:center;gap:4px">
+                    <span role="img" aria-label="{{ tx.title }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};display:grid;place-items:center;border-radius:8px;background:var(--hover);position:relative"><i class="icon-message-square" style="font-size:18px"></i><sc-if value="{{ m.sUnread }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:4px;right:3px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--accent-c);color:#1b2123;font-size:10px;font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center">{{ m.sUnread }}</span></sc-if></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msgBtn.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msgBtn.n }}</span></sc-if></sc-if>
+                    <span style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};display:grid;place-items:center;border-radius:8px"><i class="icon-bell" style="font-size:18px"></i></span>
+                    <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;font-weight:600">BN</span>
+                  </span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;padding:{{ f.pad }};display:flex;flex-direction:column">
+                <div style="width:100%;max-width:{{ m.maxW }};margin:0 auto;flex:1;min-height:0;display:flex;flex-direction:column;gap:{{ f.gap }}">
+
+                  <sc-if value="{{ f.tHead }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px">
+                      <div style="min-width:0"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.title }}</div><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="margin-top:2px;color:var(--muted-fg);font-size:14px">{{ tx.lead }}</div></sc-if></div>
+                      <span style="display:flex;align-items:center;gap:8px;flex:none"><sc-if value="{{ m.newAnnOff }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:var(--muted-fg);white-space:nowrap">{{ tx.newAnnOff }}</span></sc-if></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.newAnn.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.newAnn.n }}</span></sc-if></sc-if><span aria-disabled="{{ m.newAnnOff }}" title="{{ m.newAnnTitle }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap;opacity:{{ m.newAnnOp }}"><i class="icon-megaphone" style="font-size:15px"></i>{{ tx.newAnn }}</span></span>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ f.sHead }}" hint-placeholder-val="{{ false }}"><div style="font-size:24px;font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.title }}</div></sc-if>
+
+                  <div style="flex:1;min-height:0;display:flex;background:var(--card);border:1px solid var(--border);border-radius:{{ m.cardR }};box-shadow:var(--shadow);overflow:hidden;position:relative">
+
+                    <sc-if value="{{ f.showList }}" hint-placeholder-val="{{ true }}">
+                      <aside style="width:{{ f.listW }};flex:none;border-right:{{ f.listBorder }};display:flex;flex-direction:column;min-height:0">
+                        <sc-if value="{{ m.hasTools }}" hint-placeholder-val="{{ true }}">
+                          <div style="padding:12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--border)">
+                            <span style="display:flex;align-items:center;gap:8px;height:{{ f.fieldH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg)"><i class="icon-search" style="font-size:15px;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;font-size:13px;color:{{ m.qFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.q }}</span></span>
+                            <div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ m.tabs }}" as="tb" hint-placeholder-count="3"><span style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:{{ f.tabH }};padding:0 10px;border-radius:7px;font-size:13px;font-weight:500;white-space:nowrap;background:{{ tb.bg }};color:{{ tb.fg }};box-shadow:{{ tb.ring }}">{{ tb.label }}<sc-if value="{{ tb.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--primary);color:var(--primary-fg);font-size:11px;font-weight:600;line-height:1;display:inline-flex;align-items:center;justify-content:center">{{ tb.count }}</span></sc-if></span></sc-for></div>
+                          </div>
+                        </sc-if>
+                        <div style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column">
+                          <sc-if value="{{ m.listRows }}" hint-placeholder-val="{{ true }}">
+                            <sc-for list="{{ m.rows }}" as="cv" hint-placeholder-count="6"><div style="display:flex;gap:10px;padding:{{ m.rowPad }};border-bottom:1px solid var(--border);background:{{ cv.bg }}"><span style="width:{{ m.avSize }};height:{{ m.avSize }};flex:none;border-radius:{{ cv.radius }};background:{{ cv.avBg }};color:{{ cv.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ cv.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ cv.icon }}" style="font-size:16px"></i></sc-if><sc-if value="{{ cv.hasInitials }}" hint-placeholder-val="{{ true }}">{{ cv.initials }}</sc-if></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:baseline;gap:8px"><span style="flex:1;min-width:0;font-size:13.5px;font-weight:{{ cv.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cv.name }}</span><span style="font-size:11.5px;color:var(--muted-fg);white-space:nowrap">{{ cv.time }}</span></span><span style="display:flex;align-items:center;gap:8px"><span style="flex:1;min-width:0;font-size:12.5px;color:{{ cv.previewFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cv.preview }}</span><sc-if value="{{ cv.hasUnread }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent-c);color:#1b2123;font-size:11px;font-weight:600;display:grid;place-items:center">{{ cv.unread }}</span></sc-if></span></span></div></sc-for>
+                          </sc-if>
+                          <sc-if value="{{ m.listSkeleton }}" hint-placeholder-val="{{ false }}">
+                            <div role="status" aria-label="{{ tx.loading }}"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="6"><div style="display:flex;gap:10px;padding:{{ m.rowPad }};border-bottom:1px solid var(--border)"><span style="width:{{ m.avSize }};height:{{ m.avSize }};flex:none;border-radius:{{ sk.radius }};background:var(--muted)"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;padding-top:3px"><span style="height:11px;width:{{ sk.w1 }};border-radius:6px;background:var(--muted)"></span><span style="height:10px;width:{{ sk.w2 }};border-radius:6px;background:var(--muted)"></span></span></div></sc-for></div><div style="display:flex;justify-content:center;padding:10px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                          <sc-if value="{{ m.listMsg }}" hint-placeholder-val="{{ false }}">
+                            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px 20px"><span style="width:40px;height:40px;border-radius:11px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ m.listIcon }}" style="font-size:19px"></i></span><span style="max-width:30ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.listText }}</span><sc-if value="{{ m.listRetry }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.listMsg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.listMsg.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                        </div>
+                      </aside>
+                    </sc-if>
+
+                    <sc-if value="{{ f.showThread }}" hint-placeholder-val="{{ true }}">
+                      <section style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:0">
+                        <sc-if value="{{ m.noThread }}" hint-placeholder-val="{{ false }}">
+                          <div style="flex:1;background:var(--sidebar);display:flex;flex-direction:column;gap:12px;padding:18px 16px;justify-content:flex-end"><sc-for list="{{ m.threadSkel }}" as="sk" hint-placeholder-count="3"><span style="align-self:{{ sk.align }};width:{{ sk.w }};height:{{ sk.h }};border-radius:14px;background:var(--muted)"></span></sc-for></div>
+                        </sc-if>
+                        <sc-if value="{{ m.hasThread }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);min-height:60px;flex:none">
+                            <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span role="img" aria-label="{{ tx.back }}" style="width:44px;height:44px;flex:none;margin:0 -6px 0 -8px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:17px"></i></span></sc-if>
+                            <sc-if value="{{ m.th.hasAvatar }}" hint-placeholder-val="{{ true }}"><span style="width:34px;height:34px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span></sc-if>
+                            <span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.th.name }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.th.sub }}</span></span>
+                            <sc-if value="{{ m.th.hasDetails }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.details.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.details.n }}</span></sc-if></sc-if><span role="img" aria-label="{{ tx.details }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;display:grid;place-items:center;border-radius:7px;background:{{ m.det.btnBg }}"><i class="icon-info" style="font-size:17px"></i></span></sc-if>
+                          </div>
+
+                          <div style="flex:1;min-height:0;overflow:hidden;padding:18px 16px;display:flex;flex-direction:column;justify-content:{{ m.streamJustify }};gap:12px;background:var(--sidebar)">
+                            <sc-for list="{{ m.items }}" as="it" hint-placeholder-count="5">
+                              <sc-if value="{{ it.isCenter }}" hint-placeholder-val="{{ false }}"><div style="align-self:center;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px"><span style="width:40px;height:40px;border-radius:11px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center"><i class="icon-{{ it.icon }}" style="font-size:19px"></i></span><span style="max-width:32ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ it.text }}</span><sc-if value="{{ it.retry }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.empty.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.empty.n }}</span></sc-if></sc-if></div></sc-if>
+                              <sc-if value="{{ it.isLoad }}" hint-placeholder-val="{{ false }}"><span style="align-self:center;display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.smH }};padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500"><i class="icon-arrow-up" style="font-size:13px"></i>{{ tx.loadEarlier }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.load.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.load.n }}</span></sc-if></sc-if></span></sc-if>
+                              <sc-if value="{{ it.isDay }}" hint-placeholder-val="{{ false }}"><div style="align-self:center;font-size:11.5px;color:var(--muted-fg);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:1px 10px">{{ it.text }}</div></sc-if>
+                              <sc-if value="{{ it.isPost }}" hint-placeholder-val="{{ false }}"><div style="max-width:620px;width:100%;align-self:center;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg)"><i class="icon-megaphone" style="font-size:13px"></i>{{ it.label }}</div><div style="font-size:14px;line-height:1.6;white-space:pre-wrap;text-wrap:pretty">{{ it.text }}</div><sc-if value="{{ it.hasChip }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;min-width:0;max-width:340px;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg)"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ it.chipIcon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.chipName }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ it.chipMeta }}</span></span><span role="img" aria-label="{{ tx.download }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px"><i class="icon-download" style="font-size:16px"></i></span></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.chip.n }}</span></sc-if></sc-if></div></sc-if><sc-if value="{{ it.hasSeen }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-fg);border-top:1px solid var(--border);padding-top:8px"><i class="icon-eye" style="font-size:13px"></i>{{ it.seen }}</div></sc-if></div></sc-if>
+                              <sc-if value="{{ it.isAttempt }}" hint-placeholder-val="{{ false }}"><div style="align-self:flex-start;width:min(440px,92%);flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:10px 12px;display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;flex:none;border-radius:8px;background:var(--danger-soft);color:var(--danger-ink);display:grid;place-items:center"><i class="icon-flag" style="font-size:15px"></i></span><span style="flex:1 1 180px;min-width:0"><span style="display:block;font-size:13px;font-weight:500;text-wrap:pretty">{{ it.text }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ it.time }}</span></span><span style="display:inline-flex;align-items:center;height:{{ f.smH }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap">{{ tx.openAttempt }}</span></div></sc-if>
+                              <sc-if value="{{ it.isBubble }}" hint-placeholder-val="{{ true }}"><div style="align-self:{{ it.align }};max-width:min(520px,86%);display:flex;flex-direction:column;gap:3px;align-items:{{ it.align }}"><div style="display:flex;align-items:center;gap:8px;flex-direction:{{ it.dir }}"><div style="min-width:0;padding:{{ it.pad }};border-radius:14px;font-size:14px;line-height:1.5;text-wrap:pretty;background:{{ it.bg }};color:{{ it.fg }};border:{{ it.border }};opacity:{{ it.op }};display:flex;flex-direction:column;gap:8px"><sc-if value="{{ it.hasText }}" hint-placeholder-val="{{ true }}"><span style="overflow-wrap:anywhere"><sc-for list="{{ it.parts }}" as="pt" hint-placeholder-count="1"><sc-if value="{{ pt.isText }}" hint-placeholder-val="{{ true }}">{{ pt.text }}</sc-if><sc-if value="{{ pt.isLink }}" hint-placeholder-val="{{ false }}"><span style="text-decoration:underline;text-underline-offset:2px">{{ pt.text }}</span></sc-if></sc-for></span></sc-if><sc-if value="{{ it.hasChip }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;min-width:0;padding:8px 8px 8px 10px;border-radius:10px;background:{{ it.chipBg }};border:{{ it.chipBorder }}"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:{{ it.chipTile }};display:grid;place-items:center"><i class="icon-{{ it.chipIcon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.chipName }}</span><span style="display:block;font-size:12px;opacity:.72">{{ it.chipMeta }}</span></span><span role="img" aria-label="{{ tx.download }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px"><i class="icon-download" style="font-size:16px"></i></span></div></sc-if></div><sc-if value="{{ it.pinChip }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.chip.n }}</span></sc-if></sc-if></sc-if><sc-if value="{{ it.pinLink }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.link.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.link.n }}</span></sc-if></sc-if></sc-if></div><sc-if value="{{ it.isSent }}" hint-placeholder-val="{{ true }}"><span style="font-size:11.5px;color:var(--muted-fg);padding:0 4px">{{ it.time }}</span></sc-if><sc-if value="{{ it.isSending }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;color:var(--muted-fg);padding:0 4px">{{ tx.sending }}</span></sc-if><sc-if value="{{ it.isFailed }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--danger-ink);padding:0 4px"><i class="icon-circle-alert" style="font-size:13px"></i>{{ tx.failed }}<span style="font-weight:600;text-decoration:underline;text-underline-offset:2px;color:var(--fg);display:inline-flex;align-items:center;min-height:{{ f.linkH }}">{{ tx.retry }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.status.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.status.n }}</span></sc-if></sc-if></span></sc-if></div></sc-if>
+                            </sc-for>
+                          </div>
+
+                          <sc-if value="{{ m.hasComposer }}" hint-placeholder-val="{{ true }}">
+                            <div style="padding:10px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;flex:none">
+                              <div style="display:flex;align-items:flex-end;gap:8px;border:1px solid var(--border);border-radius:10px;padding:6px 6px 6px 12px;background:var(--bg)">
+                                <span style="flex:1;min-width:0;font-size:14px;line-height:1.5;padding:5px 0;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.placeholder }}</span>
+                                <sc-if value="{{ m.canAttach }}" hint-placeholder-val="{{ true }}"><span role="img" aria-label="{{ tx.attachBtn }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg);background:{{ m.attachBg }}"><i class="icon-paperclip" style="font-size:16px"></i></span></sc-if>
+                                <span role="img" aria-label="{{ tx.send }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:8px;background:var(--primary);color:var(--primary-fg);opacity:.45"><i class="icon-arrow-up" style="font-size:16px"></i></span>
+                              </div>
+                              <sc-if value="{{ m.hasHint }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg);padding:0 4px">{{ m.hint }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></span></sc-if>
+                            </div>
+                          </sc-if>
+                          <sc-if value="{{ m.hasNotice }}" hint-placeholder-val="{{ false }}">
+                            <div role="status" style="padding:14px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted-fg);flex:none"><i class="icon-{{ m.noticeIcon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ m.noticeText }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.blocked.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.blocked.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                          <sc-if value="{{ m.readOnly }}" hint-placeholder-val="{{ false }}">
+                            <div style="padding:12px 16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted-fg);text-align:center;flex:none"><span>{{ m.roText }} </span><span style="font-weight:600;color:var(--fg);text-decoration:underline;text-underline-offset:2px;display:inline-flex;align-items:center;min-height:{{ f.linkH }}">{{ m.roLink }}</span> <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.readonly.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.readonly.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                        </sc-if>
+                      </section>
+                    </sc-if>
+
+                    <sc-if value="{{ f.popover }}" hint-placeholder-val="{{ false }}">
+                      <div role="dialog" aria-label="{{ tx.details }}" style="position:absolute;top:56px;right:12px;width:292px;z-index:5;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);padding:14px;display:flex;flex-direction:column;gap:12px">
+                        <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span><span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.th.name }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ m.det.sub }}</span></span></div>
+                        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:13px"><i class="icon-{{ dr.icon }}" style="font-size:14px;color:var(--muted-fg);flex:none"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dr.text }}</span></span></sc-for></div>
+                        <span style="display:flex;align-items:center;justify-content:center;gap:6px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:14px"></i></span>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+
+              <sc-if value="{{ f.sheet }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:var(--overlay);z-index:6"></div>
+                <div role="dialog" aria-label="{{ tx.details }}" style="position:absolute;left:0;right:0;bottom:0;z-index:7;background:var(--card);border-radius:16px 16px 0 0;box-shadow:var(--shadow-lg);padding:8px 16px 18px;display:flex;flex-direction:column;gap:14px">
+                  <div aria-hidden="true" style="width:36px;height:4px;border-radius:4px;background:var(--border);margin:2px auto 0"></div>
+                  <div style="display:flex;align-items:center;gap:10px"><span style="width:38px;height:38px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span><span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:15px">{{ m.th.name }}</span><span style="display:block;font-size:13px;color:var(--muted-fg)">{{ m.det.sub }}</span></span></div>
+                  <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:14px"><i class="icon-{{ dr.icon }}" style="font-size:15px;color:var(--muted-fg);flex:none"></i>{{ dr.text }}</span></sc-for></div>
+                  <span style="display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:9px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:14px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:15px"></i></span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ m.dlg.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:var(--overlay);z-index:6"></div>
+                <div role="dialog" aria-label="{{ tx.attachTitle }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};z-index:7;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);display:flex;flex-direction:column">
+                  <div style="display:flex;align-items:flex-start;gap:12px;padding:18px 20px 0"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-paperclip" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:16px;font-weight:600;line-height:1.3">{{ tx.attachTitle }}</span><span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted-fg);text-wrap:pretty">{{ m.dlg.to }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogTo.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogTo.n }}</span></sc-if></sc-if></span></span><span role="img" aria-label="{{ tx.close }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;margin:-6px -8px 0 0;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:17px"></i></span></div>
+                  <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px">
+                    <sc-if value="{{ m.dlg.pick }}" hint-placeholder-val="{{ true }}">
+                      <div style="border:1px dashed {{ m.dlg.dropBorder }};border-radius:10px;padding:22px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-upload" style="font-size:15px"></i>{{ tx.chooseFile }}</span><span style="font-size:12.5px;color:var(--muted-fg)">{{ tx.attachAccept }}</span></div>
+                    </sc-if>
+                    <sc-if value="{{ m.dlg.hasFile }}" hint-placeholder-val="{{ false }}">
+                      <div style="border:1px solid var(--border);border-radius:10px;padding:10px 10px 10px 12px;display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-file-text" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.dlg.name }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ m.dlg.meta }}</span></span><span role="img" aria-label="{{ tx.attachRemove }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></div><sc-if value="{{ m.dlg.uploading }}" hint-placeholder-val="{{ false }}"><div role="progressbar" aria-valuenow="{{ m.dlg.pct }}" aria-valuemin="0" aria-valuemax="100" style="height:4px;border-radius:4px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ m.dlg.pctW }};background:var(--accent-c)"></span></div></sc-if></div>
+                    </sc-if>
+                    <sc-if value="{{ m.dlg.hasErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:flex-start;gap:6px;font-size:12.5px;color:var(--danger-ink)"><i class="icon-circle-alert" style="font-size:14px;margin-top:2px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ m.dlg.err }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogErr.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogErr.n }}</span></sc-if></sc-if></span></sc-if>
+                    <div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500">{{ tx.attachNote }} <span style="font-weight:400;color:var(--muted-fg)">· {{ tx.optional }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogNote.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogNote.n }}</span></sc-if></sc-if></span><span style="display:flex;align-items:flex-start;min-height:64px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.5;background:var(--bg);color:{{ m.dlg.noteFg }}">{{ m.dlg.note }}</span></div>
+                  </div>
+                  <div style="display:flex;justify-content:flex-end;gap:8px;padding:0 20px 18px"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500">{{ tx.cancel }}</span><span aria-disabled="{{ m.dlg.sendOff }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;opacity:{{ m.dlg.sendOp }}">{{ tx.send }}</span></div>
+                </div>
+              </sc-if>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="4"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:1px;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is drawn as the deck draws it.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Teacher and Student pages as they are. The right is this page. No part of the deck is redrawn: each row adds a state or a part the plan asks for.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">For a teacher and for a student alike, unless a row says otherwise. The last column is what the plan or the contract says about the cause.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Cause</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. The deck and the plan give the English; every Vietnamese string is new here, because the deck draws Messages in English only (DG-20). “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}</span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">Default drawn:</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R7.20 and T-R7.21</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists the components. This is what each takes from this page. Nothing here changes the contract of T-R7.10 to T-R7.12, with one exception a question asks about.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// [key, where, Vietnamese, English, where the English comes from]
+const STR = [
+  ['title', 'Page', 'Tin nhắn', 'Messages', 'Deck'],
+  ['lead', 'Page', 'Thông báo tới lớp và tin nhắn riêng với học viên.', 'Announcements to classes and direct messages with students.', 'Deck'],
+  ['newAnn', 'Page', 'Thông báo mới', 'New announcement', 'Deck'],
+  ['newAnnOff', 'Page', 'Bạn chưa dạy lớp nào.', 'You teach no class yet.', 'New'],
+  ['search', 'List', 'Tìm người và lớp', 'Search people and classes', 'Deck'],
+  ['tabAll', 'List', 'Tất cả', 'All', 'Deck'],
+  ['tabDirect', 'List', 'Riêng', 'Direct', 'Deck'],
+  ['tabClasses', 'List', 'Lớp', 'Classes', 'Deck'],
+  ['you', 'List', 'Bạn: ', 'You: ', 'Deck'],
+  ['attachPreview', 'List', 'Tệp đính kèm · {name}', 'Attachment · {name}', 'Plan'],
+  ['listEmpty', 'List', 'Chưa có tin nhắn. Nhắn cho một học viên từ trang Học viên, hoặc đăng thông báo tới một lớp.', 'No messages yet. Message a student from Students or post to a class.', 'Plan'],
+  ['listError', 'List', 'Không tải được tin nhắn.', 'Messages could not be loaded.', 'New'],
+  ['noMatch', 'List', 'Không có người hay lớp nào khớp với “{q}”.', 'No person or class matches “{q}”.', 'New'],
+  ['loading', 'List', 'Đang tải…', 'Loading…', 'New'],
+  ['retry', 'List', 'Thử lại', 'Retry', 'As today'],
+  ['back', 'Thread', 'Về danh sách', 'Back to conversations', 'Deck'],
+  ['details', 'Thread', 'Chi tiết', 'Details', 'Deck'],
+  ['subClass', 'Thread', '{count} học viên · thông báo lớp', '{count} students · announcements', 'Deck'],
+  ['roleStudent', 'Details', 'Học viên', 'Student', 'As today'],
+  ['roleClass', 'Details', 'Lớp', 'Class', 'As today'],
+  ['detClasses', 'Details', 'Lớp đang học với bạn', 'Classes with you', 'Plan'],
+  ['detOpenStudent', 'Details', 'Mở trong Học viên', 'Open in Students', 'Plan'],
+  ['detMembers', 'Details', 'Thành viên', 'Members', 'Plan'],
+  ['detCount', 'Details', '{count} học viên', '{count} students', 'As today'],
+  ['detOpenClass', 'Details', 'Mở trang lớp', 'Open the class', 'Plan'],
+  ['today', 'Stream', 'Hôm nay', 'Today', 'Plan'],
+  ['monday', 'Stream', 'Thứ Hai', 'Monday', 'Plan'],
+  ['loadEarlier', 'Stream', 'Xem tin nhắn cũ hơn', 'Load earlier', 'Plan'],
+  ['annLabel', 'Stream', 'Thông báo · {time}', 'Announcement · {time}', 'Deck'],
+  ['seenBy', 'Stream', '{seen}/{of} học viên đã xem', 'Seen by {seen} of {of}', 'Deck'],
+  ['attemptCard', 'Stream', '{title} · rời khỏi bài thi {count} lần', '{title} · left the test {count} times', 'Plan'],
+  ['openAttempt', 'Stream', 'Mở lượt làm bài', 'Open attempt', 'Deck'],
+  ['threadEmpty', 'Stream', 'Chưa có tin nhắn.', 'No messages yet.', 'Plan'],
+  ['channelEmpty', 'Stream', 'Chưa có thông báo nào.', 'No announcements yet.', 'Plan'],
+  ['threadError', 'Stream', 'Không tải được cuộc trò chuyện này.', 'This conversation could not be loaded.', 'New'],
+  ['sending', 'Stream', 'Đang gửi…', 'Sending…', 'New'],
+  ['failed', 'Stream', 'Chưa gửi được.', 'Not sent.', 'New'],
+  ['download', 'Stream', 'Tải xuống', 'Download', 'As today'],
+  ['phDirect', 'Composer', 'Nhắn cho {name}…', 'Message {name}…', 'Deck'],
+  ['phClass', 'Composer', 'Viết thông báo tới lớp {name}…', 'Write an announcement to {name}…', 'Deck'],
+  ['attachBtn', 'Composer', 'Đính kèm tệp', 'Attach file', 'Deck'],
+  ['send', 'Composer', 'Gửi', 'Send', 'Deck'],
+  ['classHint', 'Composer', 'Gửi tới cả {count} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.', 'Sent to all {count} students. Replies come to you as direct messages.', 'Deck'],
+  ['notAllowed', 'Composer', 'Bạn không còn dạy chung lớp nào với {name}.', 'You no longer share a class with {name}.', 'Plan'],
+  ['archived', 'Composer', 'Lớp này đã được lưu trữ nên không đăng thêm thông báo được.', 'This class is archived, so nothing more can be posted.', 'New'],
+  ['attachTitle', 'Attach', 'Đính kèm tệp', 'Attach a file', 'Deck'],
+  ['attachToStudent', 'Attach', 'Gửi riêng cho {name}.', 'Goes to {name} only.', 'New'],
+  ['attachToClass', 'Attach', 'Gửi tới cả {count} học viên của lớp {name}.', 'Goes to all {count} students of {name}.', 'New'],
+  ['chooseFile', 'Attach', 'Chọn tệp', 'Choose file', 'As today'],
+  ['attachAccept', 'Attach', 'PDF, ảnh hoặc âm thanh · tối đa 20 MB', 'PDF, image or audio · up to 20 MB', 'Deck'],
+  ['attachUploading', 'Attach', 'Đang tải lên… {percent}%', 'Uploading… {percent}%', 'New'],
+  ['attachRemove', 'Attach', 'Bỏ tệp', 'Remove file', 'New'],
+  ['attachTooBig', 'Attach', 'Tệp lớn hơn 20 MB. Hãy chọn tệp nhỏ hơn.', 'The file is larger than 20 MB. Choose a smaller one.', 'New'],
+  ['attachBadType', 'Attach', 'Chỉ nhận tệp PDF, PNG, JPEG, MP3 hoặc M4A.', 'Only PDF, PNG, JPEG, MP3 or M4A files are accepted.', 'New'],
+  ['attachLimit', 'Attach', 'Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.', 'Too many uploads in an hour. Try again later.', 'New'],
+  ['attachNote', 'Attach', 'Lời nhắn kèm theo', 'A note with it', 'New'],
+  ['optional', 'Attach', 'không bắt buộc', 'optional', 'New'],
+  ['notePh', 'Attach', 'Ví dụ: Đáp án Unit 4, các em xem trước buổi thứ Năm.', 'e.g. The Unit 4 answer key, for Thursday.', 'New'],
+  ['cancel', 'Attach', 'Huỷ', 'Cancel', 'As today'],
+  ['close', 'Attach', 'Đóng', 'Close', 'As today'],
+  ['sTeacherSub', 'Student', 'Giáo viên của bạn · {classes}', 'Your teacher · {classes}', 'Deck'],
+  ['sChannelSub', 'Student', 'Thông báo lớp', 'Class announcements', 'Deck'],
+  ['sReadOnly', 'Student', 'Chỉ giáo viên đăng được ở đây.', 'Only your teacher can post here.', 'Deck'],
+  ['sReplyLink', 'Student', 'Nhắn riêng cho {name}', 'Reply to {name} directly', 'Deck'],
+  ['sListEmpty', 'Student', 'Chưa có tin nhắn. Thông báo của giáo viên sẽ hiện ở đây.', 'No messages yet. Your teachers’ announcements appear here.', 'Plan'],
+  ['sNotAllowed', 'Student', 'Bạn không còn học lớp nào của {name}.', 'You are no longer in a class of {name}.', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+// sample people and classes: the deck's own
+const TEACHER = 'Giàu Bùi';
+const NAM = { name: 'Lê Hoàng Nam', short: 'Nam', initials: 'NL', classes: ['IELTS 6.5 Evening', 'Speaking Club Saturday'] };
+const CLS = { name: 'IELTS 6.5 Evening', count: 24 };
+// [Vietnamese, English] throughout
+const CONVS = [
+  { id: 'd1', kind: 'direct', name: 'Lê Hoàng Nam', initials: 'NL', time: ['20:32', '20:32'], unread: 0, file: true },
+  { id: 'c1', kind: 'class', name: 'IELTS 6.5 Evening', time: ['17:42', '17:42'], unread: 0, mine: true, pv: ['Đáp án Unit 4, các em xem trước buổi thứ Năm.', 'The Unit 4 answer key, for Thursday.'] },
+  { id: 'd2', kind: 'direct', name: 'Phạm Thu Hà', initials: 'HP', time: ['18:02', '18:02'], unread: 1, pv: ['Em cảm ơn thầy cô nhiều ạ!', 'Thank you so much!'] },
+  { id: 'c2', kind: 'class', name: 'IELTS Foundation A', time: ['Hôm qua', 'Yesterday'], unread: 0, mine: true, pv: ['Bài nghe Unit 4 mở đến 22:00 thứ Năm.', 'Unit 4 listening is open until Thursday 22:00.'] },
+  { id: 'd3', kind: 'direct', name: 'Đỗ Phương Thảo', initials: 'TĐ', time: ['Th 2', 'Mon'], unread: 0, pv: ['Em cảm ơn ạ!', 'Thank you!'] },
+  { id: 'c3', kind: 'class', name: 'TOEIC 600 Weekend', time: ['CN', 'Sun'], unread: 0, mine: true, pv: ['Chủ nhật này lớp nghỉ, học bù chiều thứ Bảy.', 'No class this Sunday. We make it up on Saturday afternoon.'] }
+];
+const FILE_GUIDE = { icon: 'file-text', name: ['Hướng dẫn thi thử.pdf', 'Mock test guide.pdf'], meta: ['PDF · 1,2 MB', 'PDF · 1.2 MB'] };
+const FILE_KEY = { icon: 'file-text', name: ['Đáp án Unit 4.pdf', 'Unit 4 answer key.pdf'], meta: ['PDF · 340 KB', 'PDF · 340 KB'] };
+const FILE_VOCAB = { icon: 'file-text', name: ['Từ vựng Unit 4.pdf', 'Unit 4 vocabulary.pdf'], meta: ['PDF · 280 KB', 'PDF · 280 KB'] };
+const LINK = 'https://example.edu.vn/thi-thu';
+const SAY = {
+  nam1: ['Dạ, lúc làm bài thi thử wifi nhà em bị rớt nên hệ thống tính là em rời khỏi bài ạ.', 'Hi teacher, my wifi dropped during the mock and it counted as leaving the test.'],
+  nam2: ['Nhờ thầy cô xem lại lượt làm bài giúp em. Em không mở gì khác ạ.', 'Can you check my attempt? I did not open anything else.'],
+  me1: [['Đã xem rồi, không sao nhé. Lần sau em xem cách chuẩn bị ở ', { link: LINK }, '.'], ['Checked, all fine. Next time, see how to prepare at ', { link: LINK }, '.']],
+  me2: ['Hướng dẫn làm bài thi thử, em đọc trước nhé.', 'The mock test guide. Read it before the next one.'],
+  meFail: ['Lần sau em nhớ bật 4G dự phòng nhé.', 'Next time keep mobile data on as a backup.'],
+  old1: ['Điểm bài từ vựng tốt lắm: 24/25!', 'Great result on the vocabulary quiz. 24/25!'],
+  old2: ['Em cảm ơn ạ!', 'Thank you!'],
+  post1: ['Thứ Sáu này lớp chuyển sang Phòng 3 vì trung tâm diễn tập phòng cháy.', 'Class moves to Room 3 on Friday because of the fire drill.'],
+  post2: ['Nhắc lại: bài Reading Mock đóng lúc 21:00 tối nay. Nên làm trên laptop.', 'Reminder: the Reading Mock closes tonight at 21:00. Use a laptop if you can.'],
+  post3: ['Đáp án Unit 4, các em xem trước buổi thứ Năm.', 'The Unit 4 answer key, for Thursday.'],
+  t1: ['Chào Bảo, tuần này phần ngữ pháp của em tiến bộ rõ.', 'Hi Bảo, great progress on the grammar check this week.'],
+  t2: ['Thứ Năm học Unit 4, em nhớ mang tai nghe. Audio phát hai lần.', 'For Unit 4 on Thursday, please bring headphones. The audio plays twice.'],
+  t3: ['Từ vựng Unit 4, em xem trước nhé.', 'Unit 4 vocabulary. Have a look first.'],
+  s1: ['Dạ em cảm ơn ạ. Em sẽ mang tai nghe.', 'Thank you! I will bring headphones.']
+};
+
+const SCREENS = {
+  teacher: [['direct', 'A student’s thread'], ['channel', 'A class channel'], ['attach', 'Attach a file'], ['list', 'The list']],
+  student: [['direct', 'The teacher’s thread'], ['channel', 'A class channel'], ['list', 'The list']]
+};
+const STATES = {
+  'teacher:direct': [['normal', 'With a file'], ['details', 'Details open'], ['failed', 'A send failed'], ['blocked', 'No longer allowed'], ['empty', 'Nothing yet']],
+  'teacher:channel': [['normal', 'Announcements'], ['details', 'Details open'], ['empty', 'Nothing yet'], ['archived', 'Class archived']],
+  'teacher:attach': [['pick', 'Nothing chosen'], ['uploading', 'Uploading'], ['ready', 'Ready to send'], ['tooBig', 'Too large'], ['badType', 'Wrong kind']],
+  'teacher:list': [['loading', 'Loading'], ['empty', 'No class, no message'], ['error', 'Could not load'], ['search', 'No match']],
+  'student:direct': [['normal', 'With a file'], ['failed', 'A send failed'], ['blocked', 'No longer allowed'], ['empty', 'Nothing yet']],
+  'student:channel': [['normal', 'Read only']],
+  'student:list': [['loading', 'Loading'], ['empty', 'Nothing yet'], ['error', 'Could not load']]
+};
+const START = { 'teacher:direct': 'normal', 'teacher:channel': 'normal', 'teacher:attach': 'ready', 'teacher:list': 'empty', 'student:direct': 'normal', 'student:channel': 'normal', 'student:list': 'empty' };
+
+// notes by who, screen and state: [the pin's place, the note]
+const NOTES = {
+  'teacher:direct:normal': [['nav', 'The nav item carries the lime count of unread messages (T-R7.22). Opening a thread reads it.'], ['load', '“Xem tin nhắn cũ hơn” brings the fifty before, and the stream stays where it was.'], ['link', 'A web address in a message is a link. Nothing else in a body is formatted.'], ['chip', 'A file sits in its sender’s bubble as a chip: its kind, name and size, and Download. A note sent with it is in the same bubble.']],
+  'teacher:direct:details': [['details', 'Details is a popover, not a page (DG-91): the classes this student takes with the teacher, and one link to Students. On a phone it is a sheet.']],
+  'teacher:direct:failed': [['status', 'A send that fails keeps its bubble and its words. “Thử lại” sends it under the same id, so it cannot arrive twice.']],
+  'teacher:direct:blocked': [['blocked', 'The student left the teacher’s last class. The thread stays readable and the composer gives its place to the reason (409 MESSAGING_NOT_ALLOWED).']],
+  'teacher:direct:empty': [['empty', 'A thread opened from Students before anything is said. The conversation exists from its first message.']],
+  'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it.'], ['hint', 'The deck’s line under the composer stays. It is the one place that says an announcement goes to everyone and that students answer in private.']],
+  'teacher:channel:details': [['details', 'For a class: how many students it has, and one link to its page.']],
+  'teacher:channel:empty': [['empty', 'A class is listed from the day it exists, so its channel can be empty.']],
+  'teacher:channel:archived': [['blocked', 'An archived class cannot be posted to (409 CLASS_ARCHIVED). Its announcements stay readable.']],
+  'teacher:attach:pick': [['dialogTo', 'The dialog says who will get the file before anything is chosen.'], ['dialogNote', 'A note can go with the file, in the same message. The deck’s dialog has the file only (Q3).']],
+  'teacher:attach:uploading': [['dialogTo', 'The receiver stays in view through every step.'], ['dialogNote', '“Gửi” stays off until the file is up. The note can be typed meanwhile.']],
+  'teacher:attach:ready': [['dialogTo', 'The dialog says who will get the file. For a class it counts the students.'], ['dialogNote', 'The note and the file leave as one message, which a student gets as one notification.']],
+  'teacher:attach:tooBig': [['dialogErr', 'More than 20 MB (413). The field stays open for another file.']],
+  'teacher:attach:badType': [['dialogErr', 'The server reads the file’s content, not its name (415). WebP is refused too, which is why the sentence lists the five kinds.']],
+  'teacher:list:loading': [['skeleton', 'Six rows of the list’s own shape while it loads. The thread pane is quiet.']],
+  'teacher:list:empty': [['newAnn', 'With no class to post to, “Thông báo mới” is off and the reason is beside it.'], ['listMsg', 'The plan’s sentence. It names the two ways a first message starts.']],
+  'teacher:list:error': [['listMsg', 'One sentence and “Thử lại”, inside the list. The search and the tabs stay.']],
+  'teacher:list:search': [['listMsg', 'A search that matches nothing repeats what was typed. The open thread stays.']],
+  'student:direct:normal': [['msgBtn', 'The top bar’s Messages button. Its lime count is the unread messages (T-R7.21).'], ['chip', 'A teacher’s file downloads from its chip. Students cannot attach, so their composer has no paperclip.']],
+  'student:direct:failed': [['status', 'The same as for a teacher: the bubble stays, with “Thử lại”.']],
+  'student:direct:blocked': [['blocked', 'The student left the teacher’s class. The thread stays, and the composer gives its place to the reason.']],
+  'student:direct:empty': [['empty', 'Opened from the class card’s message button, before anything is said.']],
+  'student:channel:normal': [['msgBtn', 'A message from the teacher stays unread while the student reads the class channel.'], ['chip', 'An announcement can carry a file too.'], ['readonly', 'The footer’s second half is a link to the teacher’s thread.']],
+  'student:list:loading': [['skeleton', 'Three rows of the list’s own shape.']],
+  'student:list:empty': [['listMsg', 'The plan’s sentence for a student. A class channel appears here with its first announcement.']],
+  'student:list:error': [['listMsg', 'One sentence and “Thử lại”.']]
+};
+const PIN_KEYS = ['nav', 'msgBtn', 'newAnn', 'skeleton', 'listMsg', 'details', 'empty', 'load', 'chip', 'link', 'status', 'hint', 'blocked', 'readonly', 'dialogTo', 'dialogErr', 'dialogNote'];
+
+// [part, the deck, this page]
+const ADDS = [
+  ['A file in a message', 'A bubble that reads “Attachment · name”, always on the teacher’s own side.', 'A chip in the sender’s bubble, or in the announcement’s card: its kind, name and size, and Download. A note can share the bubble.'],
+  ['The Attach dialog', 'One file field and Send.', 'Its states: nothing chosen, uploading, ready, and refused for size or kind. It names the receiver, and a note can go with the file.'],
+  ['Details', 'An info button that leaves for Students or Classes.', 'A popover (DG-91): a student’s classes and a link to Students; a class’s member count and a link to its page. A sheet on a phone.'],
+  ['The list', 'Six conversations.', 'A skeleton, the empty sentence, an error with “Thử lại”, and a search that matches nothing.'],
+  ['A thread', 'Messages, from the first one.', '“Xem tin nhắn cũ hơn” at the top, and the empty sentence for a thread and for a channel.'],
+  ['Sending', 'A message that is sent.', 'A message on its way (dimmed, “Đang gửi…”) and one that failed, with “Thử lại” under its bubble.'],
+  ['The composer', 'Always there for a teacher.', 'Replaced by one sentence when the two no longer share a class, or the class is archived.'],
+  ['“Thông báo mới”', 'Always on.', 'Off, with the reason beside it, when the teacher has no class.'],
+  ['The student’s side', 'Text bubbles, and a footer of plain text on a channel.', 'The teacher’s file as a chip, the same failed and not-allowed states, and the footer’s second half as a link to the teacher’s thread.'],
+  ['Links', 'None drawn.', 'A web address in a body is an underlined link. Bodies are plain text otherwise.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string of both screens, in the copy table below.']
+];
+// [when, what shows, cause]
+const WHENS = [
+  ['The list is loading', 'Skeleton rows in the list; the thread pane is quiet.', 'The first read of the threads.'],
+  ['No class and no thread', 'The empty sentence in the list. For a teacher, “Thông báo mới” is off.', 'A teacher’s class channels are listed from the day a class exists, so this is a teacher with no class.'],
+  ['The list cannot load', 'One sentence and “Thử lại” in the list.', 'The server did not answer, or the device is offline.'],
+  ['A search matches nothing', 'One sentence that repeats the query.', 'q matches names and class names without accents.'],
+  ['A thread has no message', '“Chưa có tin nhắn.”, or “Chưa có thông báo nào.” for a class.', 'A direct conversation is made by its first message.'],
+  ['Older messages exist', '“Xem tin nhắn cũ hơn” at the top of the stream.', 'The read returned nextBefore; a page is at most fifty.'],
+  ['A message is on its way', 'Its bubble at 60%, with “Đang gửi…” in place of the time.', 'Sends are optimistic and carry a clientId.'],
+  ['A send fails', '“Chưa gửi được.” and “Thử lại” under the bubble. The text stays in it.', 'No answer, a server error, or too many posts in a minute or a day.'],
+  ['The two no longer share a class', 'The composer gives its place to the sentence. The thread stays readable.', '409 MESSAGING_NOT_ALLOWED on a post.'],
+  ['The class is archived', 'The composer gives its place to the sentence.', '409 CLASS_ARCHIVED on a post.'],
+  ['A file is over 20 MB', '“Tệp lớn hơn 20 MB.” in the dialog; the field opens again.', '413 on the upload.'],
+  ['A file is of another kind', '“Chỉ nhận tệp PDF, PNG, JPEG, MP3 hoặc M4A.” in the dialog.', '415 on the upload: the content is read, not the name. WebP is refused.'],
+  ['Too many files in an hour', '“Bạn đã tải lên quá nhiều tệp trong một giờ.” in the dialog. Not drawn.', '429: twenty uploads an hour for each user.'],
+  ['Download is pressed', 'The browser saves the file.', 'A signed link that lives five minutes, made at each press.']
+];
+// [id, question, why it matters, default drawn]
+const QUESTIONS = [
+  ['Q1 · One word, two things', 'Is “thông báo” the word for a class announcement, when Settings and the bell already call a notification “Thông báo”?', 'It is the word Vietnamese teachers use for both. Inside Messages the context separates them: “Thông báo mới”, “Thông báo · 17:30”, “Thông báo lớp”. In Settings › Thông báo, the row for new messages has to say “tin nhắn” to stay clear. The other choice is a word of its own, such as “Bảng tin lớp”.', '“Thông báo” for an announcement, and “thông báo lớp” wherever the two could be confused.'],
+  ['Q2 · Enter in a class channel', 'Should Enter send an announcement to a whole class?', 'The plan has Enter send everywhere. In a class channel that one key reaches 24 students, and nothing sent can be edited or deleted. The safer rule is that Enter makes a new line there and only the button sends. This page would rather have the safer rule, but it is the plan’s to change.', 'As planned: Enter sends in both. The line under the composer says who will get it.'],
+  ['Q3 · A note with a file', 'May the Attach dialog take a note as well as the file?', 'The deck’s dialog sends the file alone, so “Đáp án Unit 4.pdf” arrives without a word and the teacher writes a second message. The contract already lets one message carry a body and a file.', 'Yes: one optional field, “Lời nhắn kèm theo”. The note and the chip share a bubble.'],
+  ['Q4 · Who has not seen it', 'Is “21/24 học viên đã xem” enough, or will teachers want the three names?', 'The count is all the contract returns. Names would be a change to the staff read of a class channel, and a question of its own about what one student may be shown to have done.', 'The count only, as the deck draws.'],
+  ['Q5 · The student’s sentence', 'What does a student read when writing is no longer allowed?', 'The plan gives the teacher’s sentence and none for the student, who meets the same refusal after leaving a class.', '“Bạn không còn học lớp nào của {name}.”'],
+  ['Q6 · How long messages are kept', 'Does Data & privacy say that messages are kept?', 'DG-96 answers that they are, and that anonymising an account deletes its direct messages. The plan leaves the row to a design (O-R7.2). It is one read-only row in Admin › System settings › Data & privacy, and it is not drawn here.', 'One row, “Tin nhắn: được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.”, when R7 touches that page.']
+];
+// [component in the plan, what it takes from this page]
+const HANDOFF = [
+  ['ThreadList', 'Its skeleton, the empty sentence, the error with “Thử lại”, and the no-match sentence. “Thông báo mới” off with its reason.'],
+  ['ThreadView', '“Xem tin nhắn cũ hơn”, the empty sentence for a thread and for a channel, and the composer’s two replacements.'],
+  ['MessageBubble', 'The sending and failed lines under a bubble, links in a body, and a note sharing a bubble with a chip.'],
+  ['AttachmentChip', 'New from this page: kind tile, name, kind and size, Download. In a bubble it takes the bubble’s colours; in a card it is bordered.'],
+  ['AnnouncementCard', 'A chip between the text and the line that counts who has seen it.'],
+  ['AttachDialog', 'Four states, the receiver’s line, the optional note (Q3), and the three refusals.'],
+  ['ThreadDetails', 'A popover from 768 and a sheet below: the header, one short list, one link.'],
+  ['Composer', 'No change to the deck’s, apart from what Q2 decides.'],
+  ['StudentMessagesPage', 'The chip on the teacher’s side, the footer link on a channel, its own empty sentence and its own refusal (Q5).'],
+  ['Locales', 'The copy table: sixty-odd strings, Vietnamese first.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher and Student pages (r.messages and “Student messages”), R7’s plan (docs/plan/77-r7.md: its decisions on messaging, T-R7.10a to T-R7.12 and T-R7.20 to T-R7.22) and the register (DG-08, DG-83, DG-91, DG-96). Messages is not built yet, so there was no screen to run.'],
+  ['What it leaves alone.', 'The layout, the sizes, the list’s rows, the bubbles, the announcement and attempt cards, the composer and every rule of who may read or write. No operation of T-R7.10 to T-R7.12 changes.'],
+  ['What is not drawn.', 'The entry points of T-R7.22 outside this page (the Students row menu, the class member menu, the palette), the notification settings of T-R7.23, and the Data & privacy row (Q6).']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', role: 'teacher', screen: { teacher: 'direct', student: 'direct' }, st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const role = s.role, teacher = role === 'teacher', scr = s.screen[role], key = role + ':' + scr, st = s.st[key];
+    const noteList = NOTES[key + ':' + st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const pinned = k => pin[k].on;
+
+    // ---- the pieces of a stream
+    const fileOf = f => ({ icon: f.icon, name: f.name[li], meta: f.meta[li] });
+    const day = text => ({ isDay: true, text });
+    const bubble = (mine, text, time, o = {}) => {
+      const parts = Array.isArray(text) ? text.map(x => (typeof x === 'string' ? { isText: true, isLink: false, text: x } : { isText: false, isLink: true, text: x.link })) : text ? [{ isText: true, isLink: false, text }] : [];
+      const chip = o.file ? fileOf(o.file) : null;
+      return { isBubble: true, align: mine ? 'flex-end' : 'flex-start', dir: mine ? 'row-reverse' : 'row', hasText: parts.length > 0, parts, pad: chip ? '10px' : '9px 13px',
+        bg: mine ? 'var(--primary)' : 'var(--card)', fg: mine ? 'var(--primary-fg)' : 'var(--fg)', border: mine ? '1px solid var(--primary)' : '1px solid var(--border)', op: o.status === 'sending' ? 0.6 : 1,
+        hasChip: !!chip, chipIcon: chip ? chip.icon : '', chipName: chip ? chip.name : '', chipMeta: chip ? chip.meta : '',
+        chipBg: mine ? 'color-mix(in oklab, currentColor 12%, transparent)' : 'var(--bg)', chipBorder: mine ? '1px solid transparent' : '1px solid var(--border)', chipTile: mine ? 'color-mix(in oklab, currentColor 14%, transparent)' : 'var(--muted)',
+        pinChip: !!o.pinChip && pinned('chip'), pinLink: !!o.pinLink && pinned('link'), isSent: !o.status, isSending: o.status === 'sending', isFailed: o.status === 'failed', time };
+    };
+    const post = (text, time, seen, of, file) => { const chip = file ? fileOf(file) : null; return { isPost: true, label: fmt(tx.annLabel, { time }), text, hasChip: !!chip, chipIcon: chip ? chip.icon : '', chipName: chip ? chip.name : '', chipMeta: chip ? chip.meta : '', hasSeen: teacher, seen: fmt(tx.seenBy, { seen, of }) }; };
+    const center = (icon, text, retry) => ({ isCenter: true, icon, text, retry: !!retry });
+    const monTime = t => (vi ? 'Th 2 ' : 'Mon ') + t;
+
+    // ---- the open thread
+    let th = {}, items = [], foot = { hasComposer: true, placeholder: '', canAttach: teacher, hasHint: false, hint: '', hasNotice: false, noticeIcon: 'ban', noticeText: '', readOnly: false, roText: '', roLink: '' };
+    let det = { open: false, btnBg: 'transparent', sub: '', label: '', rows: [], link: '' };
+    const namThread = variant => {
+      th = { hasAvatar: true, radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)', isClass: false, isDirect: true, initials: NAM.initials, name: NAM.name, sub: NAM.classes[0], hasDetails: true };
+      det = { ...det, sub: tx.roleStudent, label: tx.detClasses, rows: NAM.classes.map(c => ({ icon: 'graduation-cap', text: c })), link: tx.detOpenStudent };
+      foot.placeholder = fmt(tx.phDirect, { name: NAM.short });
+      const head = [{ isLoad: true }, day(tx.today), { isAttempt: true, text: fmt(tx.attemptCard, { title: 'Mid-term Reading Mock', count: 3 }), time: '20:14' }, bubble(false, SAY.nam1[li], '20:16'), bubble(false, SAY.nam2[li], '20:20'), bubble(true, SAY.me1[li], '20:31', { pinLink: true })];
+      if (variant === 'failed') items = head.concat([bubble(true, SAY.meFail[li], '', { status: 'failed' })]);
+      else if (variant === 'blocked') { items = [day(tx.monday), bubble(true, SAY.old1[li], monTime('10:05')), bubble(false, SAY.old2[li], monTime('10:22'))]; foot = { ...foot, hasComposer: false, hasNotice: true, noticeIcon: 'ban', noticeText: fmt(tx.notAllowed, { name: NAM.name }) }; }
+      else if (variant === 'empty') items = [center('message-square', tx.threadEmpty)];
+      else items = head.concat([bubble(true, SAY.me2[li], '20:32', { file: FILE_GUIDE, pinChip: true })]);
+      if (variant === 'details') det = { ...det, open: true, btnBg: 'var(--hover)' };
+    };
+    const classThread = variant => {
+      th = { hasAvatar: teacher, radius: '9px', avBg: 'var(--accent-soft)', avFg: 'var(--accent-ink)', isClass: true, isDirect: false, initials: '', name: CLS.name, sub: teacher ? fmt(tx.subClass, { count: CLS.count }) : tx.sChannelSub, hasDetails: teacher };
+      det = { ...det, sub: tx.roleClass, label: tx.detMembers, rows: [{ icon: 'users', text: fmt(tx.detCount, { count: CLS.count }) }], link: tx.detOpenClass };
+      items = variant === 'empty' ? [center('megaphone', tx.channelEmpty)]
+        : [day(tx.monday), post(SAY.post1[li], monTime('09:12'), 24, 24), day(tx.today), post(SAY.post2[li], '17:30', 21, 24), post(SAY.post3[li], '17:42', 9, 24, FILE_KEY)];
+      if (teacher) {
+        foot = { ...foot, placeholder: fmt(tx.phClass, { name: CLS.name }), hasHint: true, hint: fmt(tx.classHint, { count: CLS.count }) };
+        if (variant === 'archived') foot = { ...foot, hasComposer: false, hasHint: false, hasNotice: true, noticeIcon: 'archive', noticeText: tx.archived };
+        if (variant === 'details') det = { ...det, open: true, btnBg: 'var(--hover)' };
+      } else foot = { ...foot, hasComposer: false, readOnly: true, roText: tx.sReadOnly, roLink: fmt(tx.sReplyLink, { name: TEACHER }) };
+    };
+    const teacherThread = variant => {
+      th = { hasAvatar: false, radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)', isClass: false, isDirect: true, initials: 'GB', name: TEACHER, sub: fmt(tx.sTeacherSub, { classes: 'IELTS 6.5 Evening, IELTS Foundation A' }), hasDetails: false };
+      foot.placeholder = fmt(tx.phDirect, { name: TEACHER });
+      const head = [day(tx.monday), bubble(false, SAY.t1[li], monTime('10:02')), bubble(false, SAY.t2[li], monTime('10:03')), bubble(false, SAY.t3[li], monTime('10:04'), { file: FILE_VOCAB, pinChip: true }), day(tx.today)];
+      if (variant === 'failed') items = head.concat([bubble(true, SAY.s1[li], '', { status: 'failed' })]);
+      else if (variant === 'blocked') { items = head.slice(0, 4); foot = { ...foot, hasComposer: false, hasNotice: true, noticeIcon: 'ban', noticeText: fmt(tx.sNotAllowed, { name: TEACHER }) }; }
+      else if (variant === 'empty') items = [center('message-square', tx.threadEmpty)];
+      else items = head.concat([bubble(true, SAY.s1[li], '19:40')]);
+    };
+
+    // ---- the list
+    const listState = scr === 'list' ? st : 'rows';
+    const activeId = teacher ? (scr === 'channel' ? 'c1' : 'd1') : scr === 'channel' ? 'c1' : 't1';
+    const avOf = kind => (kind === 'class' ? { radius: '9px', avBg: 'var(--accent-soft)', avFg: 'var(--accent-ink)' } : { radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)' });
+    let rows;
+    if (teacher) {
+      rows = CONVS.map(c => ({ ...avOf(c.kind), hasIcon: c.kind === 'class', icon: 'megaphone', hasInitials: c.kind !== 'class', initials: c.initials || '', name: c.name, time: c.time[li],
+        preview: c.file ? tx.you + fmt(tx.attachPreview, { name: FILE_GUIDE.name[li] }) : (c.mine ? tx.you : '') + c.pv[li],
+        hasUnread: c.unread > 0, unread: String(c.unread), weight: c.unread ? 600 : 500, previewFg: c.unread ? 'var(--fg)' : 'var(--muted-fg)', bg: c.id === activeId ? 'var(--muted)' : 'transparent' }));
+    } else {
+      const dmUnread = scr === 'channel';
+      rows = [
+        { ...avOf('direct'), hasIcon: true, icon: 'user', hasInitials: false, initials: '', name: TEACHER, time: dmUnread ? '19:52' : '19:40', preview: fmt(tx.sTeacherSub, { classes: 'IELTS 6.5 Evening, IELTS Foundation A' }), hasUnread: dmUnread, unread: '1', weight: dmUnread ? 600 : 500, previewFg: dmUnread ? 'var(--fg)' : 'var(--muted-fg)', bg: activeId === 't1' ? 'var(--muted)' : 'transparent' },
+        { ...avOf('class'), hasIcon: true, icon: 'megaphone', hasInitials: false, initials: '', name: 'IELTS 6.5 Evening', time: '17:42', preview: tx.sChannelSub, hasUnread: false, unread: '', weight: 500, previewFg: 'var(--muted-fg)', bg: activeId === 'c1' ? 'var(--muted)' : 'transparent' },
+        { ...avOf('class'), hasIcon: true, icon: 'megaphone', hasInitials: false, initials: '', name: 'IELTS Foundation A', time: vi ? 'Hôm qua' : 'Yesterday', preview: tx.sChannelSub, hasUnread: false, unread: '', weight: 500, previewFg: 'var(--muted-fg)', bg: 'transparent' }
+      ];
+    }
+    const Q = 'minh';
+    const listMsg = { empty: ['message-square', teacher ? tx.listEmpty : tx.sListEmpty, false], error: ['cloud-off', tx.listError, true], search: ['search-x', fmt(tx.noMatch, { q: Q }), false] }[listState];
+
+    // ---- which thread is open, and the dialog
+    let hasThread = true, threadSkel = [];
+    let dlg = { open: false, to: '', pick: false, dropBorder: 'var(--ring)', hasFile: false, uploading: false, pct: 0, pctW: '0%', name: '', meta: '', hasErr: false, err: '', note: tx.notePh, noteFg: 'var(--muted-fg)', sendOff: true, sendOp: 0.45 };
+    if (teacher) {
+      if (scr === 'direct') namThread(st);
+      if (scr === 'channel') classThread(st);
+      if (scr === 'attach') {
+        namThread('normal');
+        items = items.slice(0, -1).map(x => ({ ...x, pinChip: false, pinLink: false }));
+        dlg = { ...dlg, open: true, to: fmt(tx.attachToStudent, { name: NAM.name }) };
+        if (st === 'pick') dlg.pick = true;
+        if (st === 'uploading') dlg = { ...dlg, hasFile: true, uploading: true, pct: 62, pctW: '62%', name: FILE_GUIDE.name[li], meta: fmt(tx.attachUploading, { percent: 62 }) };
+        if (st === 'ready') dlg = { ...dlg, hasFile: true, name: FILE_GUIDE.name[li], meta: FILE_GUIDE.meta[li], note: SAY.me2[li], noteFg: 'var(--fg)', sendOff: false, sendOp: 1 };
+        if (st === 'tooBig') dlg = { ...dlg, pick: true, dropBorder: 'var(--danger)', hasErr: true, err: tx.attachTooBig };
+        if (st === 'badType') dlg = { ...dlg, pick: true, dropBorder: 'var(--danger)', hasErr: true, err: tx.attachBadType };
+      }
+      if (scr === 'list') { if (st === 'search') namThread('normal'); else hasThread = false; }
+    } else {
+      if (scr === 'direct') teacherThread(st);
+      if (scr === 'channel') classThread(st);
+      if (scr === 'list') hasThread = false;
+    }
+    if (scr === 'list' && st === 'search') items = items.map(x => ({ ...x, pinChip: false, pinLink: false }));
+    if (!hasThread && listState === 'loading') threadSkel = [{ align: 'flex-start', w: '46%', h: '40px' }, { align: 'flex-start', w: '34%', h: '40px' }, { align: 'flex-end', w: '40%', h: '40px' }];
+    const centered = items.length === 1 && items[0].isCenter;
+    const unreadDirect = CONVS.filter(c => c.kind === 'direct').reduce((a, c) => a + c.unread, 0);
+
+    const m = {
+      maxW: teacher ? '1320px' : '960px', cardR: teacher ? '12px' : '14px', rowPad: teacher ? '12px' : '14px', avSize: teacher ? '36px' : '38px',
+      hasTools: teacher, q: listState === 'search' ? Q : tx.search, qFg: listState === 'search' ? 'var(--fg)' : 'var(--muted-fg)',
+      tabs: [['all', tx.tabAll, 0], ['direct', tx.tabDirect, listState === 'rows' || listState === 'search' ? unreadDirect : 0], ['classes', tx.tabClasses, 0]].map((x, i) => ({ label: x[1], hasCount: x[2] > 0, count: String(x[2]), bg: i === 0 ? 'var(--card)' : 'transparent', fg: i === 0 ? 'var(--fg)' : 'var(--muted-fg)', ring: i === 0 ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' })),
+      listRows: listState === 'rows', rows, listSkeleton: listState === 'loading',
+      skel: (teacher ? [0, 1, 0, 1, 0, 1] : [0, 1, 1]).map((k, i) => ({ radius: k ? '9px' : '50%', w1: ['52%', '64%', '44%', '58%', '48%', '60%'][i], w2: ['78%', '70%', '84%', '62%', '74%', '80%'][i] })),
+      listMsg: !!listMsg, listIcon: listMsg ? listMsg[0] : '', listText: listMsg ? listMsg[1] : '', listRetry: listMsg ? listMsg[2] : false,
+      hasThread, noThread: !hasThread, threadSkel, th, items, streamJustify: centered ? 'center' : 'flex-end', ...foot, attachBg: dlg.open ? 'var(--hover)' : 'transparent', det, dlg,
+      newAnnOff: teacher && listState === 'empty', newAnnOp: teacher && listState === 'empty' ? 0.45 : 1, newAnnTitle: teacher && listState === 'empty' ? tx.newAnnOff : '',
+      sUnread: !teacher && scr === 'channel' ? '1' : ''
+    };
+
+    // ---- the shell
+    const navOn = 'messages';
+    const item = (id, icon, label, count, lime) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: lime ? 'var(--accent-c)' : 'var(--muted)', countFg: lime ? '#1b2123' : 'var(--muted-fg)', pin: id === navOn && pinned('nav') });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('messages', 'message-square', tx.title, listState === 'rows' || listState === 'search' ? unreadDirect : 0, true)] },
+      { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', vi ? 'Lớp học' : 'Classes'), item('students', 'users', vi ? 'Học viên' : 'Students')] },
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'share-2', vi ? 'Được chia sẻ với tôi' : 'Shared with me', 2, false), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'image', vi ? 'Thư viện media' : 'Media')] }
+    ];
+    const sNav = [['house', vi ? 'Trang chủ' : 'Home'], ['graduation-cap', vi ? 'Lớp' : 'Classes'], ['book-open', vi ? 'Học tập' : 'Learn'], ['chart-column', vi ? 'Điểm số' : 'Grades']].map(x => ({ icon: x[0], label: x[1] }));
+
+    const W = s.stageW || 1280;
+    const names = { direct: teacher ? 'Student thread' : 'Teacher thread', channel: 'Class channel', attach: 'Attach a file', list: 'List' };
+    const listOnly = scr === 'list' && st !== 'search';
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: (teacher ? 'Teacher' : 'Student') + ' · ' + names[scr] + ' · ' + w,
+      desk: !phone, phone, pins: s.anno && !phone, sidebar: teacher && !phone, tBar: teacher, sBar: !teacher, tHead: teacher, sHead: !teacher && !phone,
+      showList: phone ? listOnly || (scr === 'list' && st === 'search') : true, showThread: phone ? !(listOnly || (scr === 'list' && st === 'search')) : true,
+      listW: phone ? '100%' : teacher ? '320px' : '300px', listBorder: phone ? '0' : '1px solid var(--border)', popover: !phone && det.open, sheet: phone && det.open,
+      barPad: phone ? '0 14px' : teacher ? '0 28px' : '0 32px', pad: phone ? '14px' : teacher ? '24px 28px 28px' : '24px 32px 28px', gap: phone ? '12px' : '16px', h1: phone ? '20px' : '24px',
+      btnH: phone ? '44px' : '36px', smH: phone ? '40px' : '30px', iconBtn: phone ? '44px' : '34px', sendBtn: phone ? '40px' : '32px', fieldH: phone ? '44px' : '34px', tabH: phone ? '40px' : '30px', linkH: phone ? '40px' : '20px',
+      dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '460px', dlgR: phone ? '16px 16px 0 0' : '14px'
+    });
+    const frames = [mk(1280, 900, Math.min(1, W / 1280), false, teacher ? 'the list and the thread side by side' : 'the page is at most 960 wide'), mk(360, 760, Math.min(1, W / 360), true, 'one pane at a time')];
+
+    const ctl = [
+      { label: 'Who', opts: this.seg([['teacher', 'Teacher'], ['student', 'Student']], role, v => this.setState({ role: v })) },
+      { label: 'Screen', opts: this.seg(SCREENS[role], scr, v => this.setState(x => ({ screen: { ...x.screen, [role]: v } }))) }
+    ].concat(STATES[key].length > 1 ? [{ label: 'State', opts: this.seg(STATES[key], st, v => this.setState(x => ({ st: { ...x.st, [key]: v } }))) }] : []).concat([
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ]);
+
+    const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const stLabel = (STATES[key].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, sNav, frames, ctl, stageRef: this.stageRef,
+      chips: ['R7 · v0.14.0', 'T-R7.20 and T-R7.21', 'DG-83, DG-91', 'No contract change', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, role: 'teacher', screen: { teacher: 'direct', student: 'direct' }, st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + names[scr] + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3] })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

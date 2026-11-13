@@ -499,6 +499,15 @@ To view one, start the server above and open, for example,
   Vietnamese and English. No operation of T-R8.3 changes. One line goes beyond the plan: when
   a term's end date moves, the dialog says that repeating sessions already made keep their old
   last date. Its three questions for Thuong are on the page.
+- 2026-11-13 — Tenth proposal page: `proposals/R8 Week and Class Schedule.dc.html`, for DG-83
+  (R8; T-R8.10, T-R8.14, T-R8.15). Three things the deck draws only in part. The student's
+  This week gains a cancelled class, a week with nothing, and its loading and failed states.
+  Edit class shows the Schedule field read-only, with "Đổi trong Lịch", once the class has
+  sessions, and as today when it has none. The teacher's Calendar is drawn loading, empty (the
+  grid stays, with the sentence over it) and failed. Ten states in all, at 1280 and 360, light
+  and dark, Vietnamese and English. No operation changes. One line goes beyond the plan: under
+  Room in Edit class, what the room is for once sessions exist. Its four questions for Thuong
+  are on the page.
 
 ## The brand
 

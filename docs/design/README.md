@@ -460,7 +460,10 @@ To view one, start the server above and open, for example,
   server keeps no record of a past class membership, so the plan gains one (T-R7.9, O-R7.8),
   and a student who left before R7 is found only if they joined with a code. Asked about the
   other side, he kept it as planned: a student cannot write first to a teacher of a class
-  they left.
+  they left. Last, he decided the page's Q6 as proposed: Admin › Data & privacy gets one
+  read-only row saying that messages are kept and that anonymising an account deletes its
+  direct messages. The page draws it on the card as the product has it (DG-96), and no
+  question is open on the page.
 
 ## The brand
 

@@ -253,6 +253,33 @@ body{margin:0;-webkit-font-smoothing:antialiased}
   </div>
 </section>
 
+<section data-screen-label="Data and privacy row" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">One row in Data &amp; privacy</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Admin › System settings › Data &amp; privacy says how long the centre keeps things, and says nothing of messages. The owner decided on 13 Nov 2026 that it gets one read-only row (Q6). The card is the one the product has today, with its own strings, and its fourth row is the new one. It follows the language and the theme of the bar above.</p>
+  </div>
+  <div style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ dp.frames }}" as="d" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ d.w }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ d.title }}</strong> · {{ d.sub }}</figcaption>
+        <div data-screen-label="{{ d.screen }}" style="padding:{{ d.pad }};border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg);color:var(--fg);font-size:14px">
+          <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+            <div style="padding:16px 18px;border-bottom:1px solid var(--border)"><div style="font-size:15px;font-weight:600">{{ dp.title }}</div><div style="font-size:13px;color:var(--muted-fg)">{{ dp.hint }}</div></div>
+            <sc-for list="{{ dp.rows }}" as="rt" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:8px 14px;padding:12px 18px;border-top:{{ rt.border }};flex-wrap:wrap"><span style="flex:1 1 208px;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500">{{ rt.label }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">{{ rt.hint }}</span></span><sc-if value="{{ rt.hasSelect }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;justify-content:space-between;gap:10px;min-width:144px;height:{{ d.selH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;white-space:nowrap">{{ rt.value }}<i class="icon-chevrons-up-down" style="font-size:14px;color:var(--muted-fg)"></i></span></sc-if><sc-if value="{{ rt.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ d.pins }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">1</span></sc-if></sc-if></div></sc-for>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">What is new on the card</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">1</span><span style="color:var(--muted-fg);text-wrap:pretty">The row for messages: a label and one sentence. It has no control and is not part of the form, because there is nothing to choose. Messages are kept, and anonymising an account deletes its direct messages.</span></li>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The three rows above it and the card’s heading are as the product has them. A value on the right of the new row, where the others have a select, would be a part the deck does not have, so the row does without one.</p>
+    </aside>
+  </div>
+</section>
+
 <section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
@@ -295,7 +322,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1, Q4 and Q7 are decided as drawn; Q7 came with the owner’s request for Word files. Q2, Q3 and Q5 are decided, none as first drawn, and the frames were redrawn for each. Q5 has two more answers from the same day: a teacher may write first to a former student, and a student may not write first to a teacher of a class they left. One is open: Q6.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1, Q4 and Q7 are decided as drawn; Q7 came with the owner’s request for Word files. Q2, Q3 and Q5 are decided, none as first drawn, and the frames were redrawn for each. Q5 has two more answers from the same day: a teacher may write first to a former student, and a student may not write first to a teacher of a class they left. Q6 is decided as proposed, and its row is drawn above. No question is open.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -383,6 +410,8 @@ const STR = [
   ['attachLimit', 'Attach', 'Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.', 'Too many uploads in an hour. Try again later.', 'New'],
   ['cancel', 'Attach', 'Huỷ', 'Cancel', 'As today'],
   ['close', 'Attach', 'Đóng', 'Close', 'As today'],
+  ['dpMessages', 'Data & privacy', 'Tin nhắn', 'Messages', 'New'],
+  ['dpMessagesHint', 'Data & privacy', 'Được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.', 'Kept. Anonymising an account deletes its direct messages.', 'New'],
   ['sTeacherSub', 'Student', 'Giáo viên của bạn · {classes}', 'Your teacher · {classes}', 'Deck'],
   ['sFormer', 'Student', 'Giáo viên cũ', 'Former teacher', 'New'],
   ['sChannelSub', 'Student', 'Thông báo lớp', 'Class announcements', 'Deck'],
@@ -390,6 +419,14 @@ const STR = [
   ['sReplyLink', 'Student', 'Nhắn riêng cho {name}', 'Reply to {name} directly', 'Deck'],
   ['sListEmpty', 'Student', 'Chưa có tin nhắn. Thông báo của giáo viên sẽ hiện ở đây.', 'No messages yet. Your teachers’ announcements appear here.', 'Plan']
 ];
+const DP = {
+  title: ['Dữ liệu và quyền riêng tư', 'Data & privacy'], hint: ['Quizzivy giữ dữ liệu trong bao lâu.', 'How long Quizzivy keeps things.'],
+  rows: [
+    [['Giữ câu trả lời của bài làm', 'Keep attempt answers'], ['Sau thời hạn này, câu trả lời của học viên bị xoá hằng đêm. Điểm vẫn được giữ.', "After this, students' answers are deleted overnight. Scores are kept."], ['2 năm', '2 years']],
+    [['Giữ sự kiện rời khỏi bài thi', 'Keep focus-loss events'], ['Sau thời hạn này, các sự kiện rời khỏi bài thi bị xoá hằng đêm.', 'After this, focus-loss events are deleted overnight.'], ['13 tháng (mặc định)', '13 months (default)']],
+    [['Ẩn danh tài khoản đã tắt sau', 'Anonymise disabled accounts after'], ['Kết quả được giữ; tên và email bị xoá.', 'Results are kept; name and email are removed.'], ['Không bao giờ', 'Never']]
+  ]
+};
 const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
 
 // sample people and classes: the deck's own
@@ -493,6 +530,7 @@ const ADDS = [
   ['The composer', 'Always there for a teacher. Enter sends.', 'Replaced by one sentence when the other account is disabled, or the class is archived. Leaving a class no longer closes a conversation (Q5). In a class channel Enter makes a new line (Q2); nothing on the screen spells that out.'],
   ['“Thông báo mới”', 'Always on.', 'Off, with the reason beside it, when the teacher has no class.'],
   ['The student’s side', 'Text bubbles, and a footer of plain text on a channel.', 'The teacher’s file as a chip, the same failed and disabled-account states, and the footer’s second half as a link to the teacher’s thread.'],
+  ['Data & privacy', 'Three rows, each a select: answers, focus-loss events, disabled accounts. It is on the Admin page.', 'A fourth row, read-only: messages are kept, and anonymising an account deletes its direct messages (Q6).'],
   ['Links', 'None drawn.', 'A web address in a body is an underlined link. Bodies are plain text otherwise.'],
   ['Vietnamese', 'English only (DG-20).', 'Every string of both screens, in the copy table below.']
 ];
@@ -527,7 +565,7 @@ const QUESTIONS = [
   ['Q3 · A message with a file', 'May a file be sent with a message, and where is the message written?', 'The deck’s dialog sends the file alone, so “Đáp án Unit 4.pdf” arrives without a word and the teacher writes a second message. The contract already lets one message carry a body and a file. The first drawing put a note field in the dialog.', 'No field in the dialog. The dialog attaches and does not send: the file waits in the composer as a chip, the teacher writes a message as usual or presses Send as it is, and both leave as one message.', 'Thuong, 13 Nov 2026', 'Decided another way (Thuong, 13 Nov 2026), and redrawn:'],
   ['Q4 · Who has not seen it', 'Is “21/24 học viên đã xem” enough, or will teachers want the three names?', 'The count is all the contract returns. Names would be a change to the staff read of a class channel, and a question of its own about what one student may be shown to have done.', 'The count only, as the deck draws.', 'Thuong, 13 Nov 2026'],
   ['Q5 · After a class ends', 'What does a student read when writing is no longer allowed, after leaving a class?', 'The plan closed a thread to new messages once the teacher and the student no longer shared a class, and gave a sentence for the teacher and none for the student.', 'Nothing, because nothing is closed: a conversation that exists stays open to both sides after the student leaves the class. The composer gives its place to a sentence only when the other account is disabled. A teacher may also write first to a former student they have never written to: the list’s search finds the student, marked “Học viên cũ”. A student the teacher never taught cannot be found. A student still cannot write first to a teacher of a class they left: asked, the owner kept that side as the plan has it.', 'Thuong, 13 Nov 2026', 'Decided another way (Thuong, 13 Nov 2026), and redrawn:'],
-  ['Q6 · How long messages are kept', 'Does Data & privacy say that messages are kept?', 'DG-96 answers that they are, and that anonymising an account deletes its direct messages. The plan leaves the row to a design (O-R7.2). It is one read-only row in Admin › System settings › Data & privacy, and it is not drawn here.', 'One row, “Tin nhắn: được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.”, when R7 touches that page.'],
+  ['Q6 · How long messages are kept', 'Does Data & privacy say that messages are kept?', 'DG-96 answers that they are, and that anonymising an account deletes its direct messages. The plan left the row to a design (O-R7.2). The first drawing proposed the wording and did not draw the row.', 'One read-only row, the card’s fourth: “Tin nhắn”, and under it “Được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.” It has no control, since there is nothing to choose. It is drawn above, on the card as the product has it.', 'Thuong, 13 Nov 2026', 'Decided as proposed (Thuong, 13 Nov 2026), and now drawn:'],
   ['Q7 · Word files with macros', 'Should a Word file that carries macros be refused?', 'The owner added DOC and DOCX to what a teacher may attach. A DOC or a DOCM can carry macros, which run on the computer that opens the file. Students download what a teacher attaches, and most are minors. Refusing such a file costs the teacher one “Save as”.', 'Refused, with a sentence that says how to save it without macros. A plain DOC or DOCX is accepted.', 'Thuong, 13 Nov 2026']
 ];
 // [component in the plan, what it takes from this page]
@@ -542,13 +580,14 @@ const HANDOFF = [
   ['Composer', 'A waiting file as a chip above the text, with a ×; Send on while a file waits; the file kept with the thread’s draft (Q3). In a class channel Enter makes a new line and only the button posts, with no sentence about it (Q2). In a direct thread Enter sends.'],
   ['T-R7.11, on the server', 'The upload accepts DOCX and DOC as well, read by content like the rest. One that carries macros is refused, under a code of its own so the dialog can say why (Q7).'],
   ['T-R7.9 and T-R7.10a, on the server', 'A record of who has taught whom, which the server does not keep today, so that a former student can be found and written to. The read of the threads returns the students a search finds, and says which are former (Q5, O-R7.8).'],
+  ['DataPrivacySection', 'One row after the three selects: a label and a sentence, with no control and no form field. Two strings (Q6).'],
   ['StudentMessagesPage', 'The chip on the teacher’s side, the footer link on a channel, its own empty sentence, and the same sentence as the teacher’s for a disabled account. “Giáo viên cũ” as the sub-line of a teacher whose class the student has left.'],
-  ['Locales', 'The copy table: some sixty strings, Vietnamese first.']
+  ['Locales', 'The copy table: some seventy strings, Vietnamese first.']
 ];
 const METHOD = [
   ['What this was drawn from.', 'The deck’s Teacher and Student pages (r.messages and “Student messages”), R7’s plan (docs/plan/77-r7.md: its decisions on messaging, T-R7.10a to T-R7.12 and T-R7.20 to T-R7.22) and the register (DG-08, DG-83, DG-91, DG-96). Messages is not built yet, so there was no screen to run.'],
   ['What it leaves alone.', 'The layout, the sizes, the list’s rows, the bubbles, the announcement and attempt cards and every rule of who may read. One read gains something: the list of threads, which answers a search with students too. Five things change on the owner’s word: the Attach dialog no longer sends, Enter does not send in a class channel, the upload takes Word files, a conversation stays open after a class ends, and a teacher can write first to a former student.'],
-  ['What is not drawn.', 'The entry points of T-R7.22 outside this page (the Students row menu, the class member menu, the palette), the notification settings of T-R7.23, the Details of a former student, the student’s list with a former teacher, and the Data & privacy row (Q6).']
+  ['What is not drawn.', 'The entry points of T-R7.22 outside this page (the Students row menu, the class member menu, the palette), the notification settings of T-R7.23, the Details of a former student, and the student’s list with a former teacher.']
 ];
 
 class Component extends DCLogic {
@@ -731,6 +770,10 @@ class Component extends DCLogic {
     });
     const frames = [mk(1280, 900, Math.min(1, W / 1280), false, teacher ? 'the list and the thread side by side' : 'the page is at most 960 wide'), mk(360, 760, Math.min(1, W / 360), true, 'one pane at a time')];
 
+    const dpRows = DP.rows.map(r => ({ label: r[0][li], hint: r[1][li], hasSelect: true, value: r[2][li], isNew: false })).concat([{ label: tx.dpMessages, hint: tx.dpMessagesHint, hasSelect: false, value: '', isNew: true }]);
+    const dp = { title: DP.title[li], hint: DP.hint[li], rows: dpRows.map((r, i) => ({ ...r, border: i ? '1px solid var(--border)' : '0' })),
+      frames: [{ w: Math.min(760, W), title: '760', sub: 'the card alone, at the width of the settings column', screen: 'Admin · Data & privacy · 760', pad: '20px', selH: '34px', pins: s.anno }, { w: Math.min(360, W), title: '360', sub: 'the select drops under its label', screen: 'Admin · Data & privacy · 360', pad: '14px', selH: '44px', pins: false }] };
+
     const ctl = [
       { label: 'Who', opts: this.seg([['teacher', 'Teacher'], ['student', 'Student']], role, v => this.setState({ role: v })) },
       { label: 'Screen', opts: this.seg(SCREENS[role], scr, v => this.setState(x => ({ screen: { ...x.screen, [role]: v } }))) }
@@ -742,7 +785,7 @@ class Component extends DCLogic {
     const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
     const stLabel = (STATES[key].find(x => x[0] === st) || ['', ''])[1];
     return {
-      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, sNav, frames, ctl, stageRef: this.stageRef,
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, sNav, frames, dp, ctl, stageRef: this.stageRef,
       chips: ['R7 · v0.14.0', 'T-R7.20 and T-R7.21', 'DG-83, DG-91', 'The server’s plan changes: Word files, former students', 'Vietnamese first'],
       reset: () => this.setState({ lang: 'vi', theme: null, role: 'teacher', screen: { teacher: 'direct', student: 'direct' }, st: { ...START } }),
       anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),

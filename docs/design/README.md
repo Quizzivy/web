@@ -490,6 +490,15 @@ To view one, start the server above and open, for example,
   Vietnamese and English. No operation of T-R8.4 changes. One sentence goes beyond the plan:
   the repeating-session dialog says, before saving, that dates already changed or cancelled
   will follow the new schedule. Its four questions for Thuong are on the page.
+- 2026-11-13 — Ninth proposal page: `proposals/R8 Terms.dc.html`, for DG-93 and DG-57 (R8;
+  T-R8.13). The deck has no screen for terms, and R8's plan builds one from deck parts as a
+  fifth section of Admin › System settings. The page draws it in the product's settings
+  layout: the list with a pill for current, upcoming or past and a row menu; one dialog to add
+  and edit; an overlap named by the server and an end before the start; the delete confirm;
+  and the empty, loading and failed states. Ten states, at 1280 and 360, light and dark,
+  Vietnamese and English. No operation of T-R8.3 changes. One line goes beyond the plan: when
+  a term's end date moves, the dialog says that repeating sessions already made keep their old
+  last date. Its three questions for Thuong are on the page.
 
 ## The brand
 

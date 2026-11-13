@@ -449,7 +449,8 @@ To view one, start the server above and open, for example,
   pictures and audio. So the page changes three things the deck draws, and the plan changes
   with them: two lines of T-R7.20, and the kinds of file T-R7.11's upload accepts. The page
   asked in return whether a Word file that carries macros is refused (Q7), and he decided that
-  it is: the dialog gains that refusal as a state.
+  it is: the dialog gains that refusal as a state. An announcement keeps the count of who has
+  seen it and shows no names (Q4).
 
 ## The brand
 

@@ -429,6 +429,44 @@ To view one, start the server above and open, for example,
   row is enough and the pane needs no switch of kinds (Q9). All nine questions on the page are
   settled; the page itself still waits for his approval.
 
+- 2026-11-13 — Fifth proposal page: `proposals/R7 Messages.dc.html`, for DG-83 and DG-91 (R7;
+  `docs/plan/77-r7.md`, T-R7.20 and T-R7.21). The deck draws Messages for a teacher and for a
+  student with every thread full and every send working. The page adds, from the deck's parts:
+  a file as a chip in its sender's bubble or in the announcement's card, the Attach dialog's
+  states (nothing chosen, uploading, ready, refused for size or kind), Details as a popover and
+  as a sheet on a phone, the list's skeleton, empty sentence, error and no-match, an empty
+  thread and channel, "Load earlier", a send on its way and one that failed, and the composer
+  replaced when the two no longer share a class or the class is archived. Both screens are in
+  Vietnamese for the first time. Frames at 1280 and 360, light and dark, Vietnamese and
+  English. No exported page is edited and no operation of T-R7.10 to T-R7.12 changes. It is a
+  proposal until Thuong approves it, and its six questions for him are on the page. He decided
+  two the same day, neither as first drawn. In a class channel Enter makes a new line and only
+  the button posts, because an announcement reaches a whole class and cannot be edited or
+  deleted; no sentence on the screen says so. And the Attach dialog attaches and no longer
+  sends: the file waits in the composer as a chip, the teacher writes a message with it or
+  presses Send as it is, and both leave as one message. He kept "thông báo" as the
+  word for an announcement, and asked that a Word file (DOC or DOCX) can be attached beside PDF,
+  pictures and audio. So the page changes three things the deck draws, and the plan changes
+  with them: two lines of T-R7.20, and the kinds of file T-R7.11's upload accepts. The page
+  asked in return whether a Word file that carries macros is refused (Q7), and he decided that
+  it is: the dialog gains that refusal as a state. An announcement keeps the count of who has
+  seen it and shows no names (Q4). And a class ending closes no conversation (Q5): a teacher
+  and a student who have one can go on writing after the student leaves the class. The page's
+  refusal state became a disabled account, and the eligibility rule of T-R7.10a changes in the
+  plan. He then decided that a teacher may write first to a former student never written to.
+  The list gains a state for it: a search also finds the students the teacher may write to and
+  has no conversation with, under "Học viên chưa nhắn tin", a former student marked "Học viên
+  cũ". Finding a current student there was not asked; it comes with the same search. The
+  server keeps no record of a past class membership, so the plan gains one (T-R7.9, O-R7.8),
+  and a student who left before R7 is found only if they joined with a code. Asked about the
+  other side, he kept it as planned: a student cannot write first to a teacher of a class
+  they left. Last, he decided the page's Q6 as proposed: Admin › Data & privacy gets one
+  read-only row saying that messages are kept and that anonymising an account deletes its
+  direct messages. The page draws it on the card as the product has it (DG-96), and no
+  question is open on the page. Two states the page had left to its tables were then drawn at
+  his word: Details for a former student, which says so in one sentence and has no link, and
+  the student's thread and list with a former teacher.
+
 ## The brand
 
 `brand/` is Thuong's kit, copied byte for byte from `~/Developer/designs/quizzivy-brand`. The

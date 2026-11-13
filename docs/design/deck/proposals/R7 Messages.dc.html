@@ -62,7 +62,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
       <li>Messages are kept as written, to protect both sides: most students are minors. That is the plan’s decision and this page does not reopen it.</li>
       <li>The class composer keeps the deck’s line, “Gửi tới cả 24 học viên”, and the Attach dialog names its receiver before Send.</li>
-      <li>Whether Enter should send an announcement at all is a question for the owner (Q2).</li>
+      <li>In a class channel Enter makes a new line and only the button posts, so a slip of a key cannot reach 24 students (Q2, decided).</li>
     </ul>
   </div>
 </section>
@@ -184,7 +184,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                                 <sc-if value="{{ m.canAttach }}" hint-placeholder-val="{{ true }}"><span role="img" aria-label="{{ tx.attachBtn }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg);background:{{ m.attachBg }}"><i class="icon-paperclip" style="font-size:16px"></i></span></sc-if>
                                 <span role="img" aria-label="{{ tx.send }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:8px;background:var(--primary);color:var(--primary-fg);opacity:.45"><i class="icon-arrow-up" style="font-size:16px"></i></span>
                               </div>
-                              <sc-if value="{{ m.hasHint }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg);padding:0 4px">{{ m.hint }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></span></sc-if>
+                              <sc-if value="{{ m.hasHint }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg);padding:0 4px"><span style="min-width:0;text-wrap:pretty">{{ m.hint }} <span style="color:var(--fg);font-weight:500">{{ tx.classKeys }}</span></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></span></sc-if>
                             </div>
                           </sc-if>
                           <sc-if value="{{ m.hasNotice }}" hint-placeholder-val="{{ false }}">
@@ -292,17 +292,17 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q2 is decided, against its first default, and the class composer was redrawn for it. The other five are open.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
-    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}</span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">Default drawn:</b> {{ q.def }}</span></div></sc-for>
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
   </div>
 </section>
 
 <section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R7.20 and T-R7.21</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists the components. This is what each takes from this page. Nothing here changes the contract of T-R7.10 to T-R7.12, with one exception a question asks about.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists the components. This is what each takes from this page. Nothing here changes the contract of T-R7.10 to T-R7.12. One line of T-R7.20 changes: Enter in a class channel (Q2).</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:720px">
@@ -364,6 +364,7 @@ const STR = [
   ['attachBtn', 'Composer', 'Đính kèm tệp', 'Attach file', 'Deck'],
   ['send', 'Composer', 'Gửi', 'Send', 'Deck'],
   ['classHint', 'Composer', 'Gửi tới cả {count} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.', 'Sent to all {count} students. Replies come to you as direct messages.', 'Deck'],
+  ['classKeys', 'Composer', 'Enter để xuống dòng. Bấm nút gửi để đăng.', 'Enter makes a new line. Press the button to post.', 'New'],
   ['notAllowed', 'Composer', 'Bạn không còn dạy chung lớp nào với {name}.', 'You no longer share a class with {name}.', 'Plan'],
   ['archived', 'Composer', 'Lớp này đã được lưu trữ nên không đăng thêm thông báo được.', 'This class is archived, so nothing more can be posted.', 'New'],
   ['attachTitle', 'Attach', 'Đính kèm tệp', 'Attach a file', 'Deck'],
@@ -446,7 +447,7 @@ const NOTES = {
   'teacher:direct:failed': [['status', 'A send that fails keeps its bubble and its words. “Thử lại” sends it under the same id, so it cannot arrive twice.']],
   'teacher:direct:blocked': [['blocked', 'The student left the teacher’s last class. The thread stays readable and the composer gives its place to the reason (409 MESSAGING_NOT_ALLOWED).']],
   'teacher:direct:empty': [['empty', 'A thread opened from Students before anything is said. The conversation exists from its first message.']],
-  'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it.'], ['hint', 'The deck’s line under the composer stays. It is the one place that says an announcement goes to everyone and that students answer in private.']],
+  'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it.'], ['hint', 'The deck’s line under the composer stays, and gains a sentence: here Enter makes a new line and only the button posts (Q2). An announcement goes to everyone and cannot be taken back.']],
   'teacher:channel:details': [['details', 'For a class: how many students it has, and one link to its page.']],
   'teacher:channel:empty': [['empty', 'A class is listed from the day it exists, so its channel can be empty.']],
   'teacher:channel:archived': [['blocked', 'An archived class cannot be posted to (409 CLASS_ARCHIVED). Its announcements stay readable.']],
@@ -494,6 +495,7 @@ const WHENS = [
   ['Older messages exist', '“Xem tin nhắn cũ hơn” at the top of the stream.', 'The read returned nextBefore; a page is at most fifty.'],
   ['A message is on its way', 'Its bubble at 60%, with “Đang gửi…” in place of the time.', 'Sends are optimistic and carry a clientId.'],
   ['A send fails', '“Chưa gửi được.” and “Thử lại” under the bubble. The text stays in it.', 'No answer, a server error, or too many posts in a minute or a day.'],
+  ['Enter is pressed in a class channel', 'A new line in the composer. Nothing is sent until the button is pressed.', 'Decided by the owner on 13 Nov 2026 (Q2). A direct thread still sends on Enter.'],
   ['The two no longer share a class', 'The composer gives its place to the sentence. The thread stays readable.', '409 MESSAGING_NOT_ALLOWED on a post.'],
   ['The class is archived', 'The composer gives its place to the sentence.', '409 CLASS_ARCHIVED on a post.'],
   ['A file is over 20 MB', '“Tệp lớn hơn 20 MB.” in the dialog; the field opens again.', '413 on the upload.'],
@@ -501,10 +503,10 @@ const WHENS = [
   ['Too many files in an hour', '“Bạn đã tải lên quá nhiều tệp trong một giờ.” in the dialog. Not drawn.', '429: twenty uploads an hour for each user.'],
   ['Download is pressed', 'The browser saves the file.', 'A signed link that lives five minutes, made at each press.']
 ];
-// [id, question, why it matters, default drawn]
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
 const QUESTIONS = [
   ['Q1 · One word, two things', 'Is “thông báo” the word for a class announcement, when Settings and the bell already call a notification “Thông báo”?', 'It is the word Vietnamese teachers use for both. Inside Messages the context separates them: “Thông báo mới”, “Thông báo · 17:30”, “Thông báo lớp”. In Settings › Thông báo, the row for new messages has to say “tin nhắn” to stay clear. The other choice is a word of its own, such as “Bảng tin lớp”.', '“Thông báo” for an announcement, and “thông báo lớp” wherever the two could be confused.'],
-  ['Q2 · Enter in a class channel', 'Should Enter send an announcement to a whole class?', 'The plan has Enter send everywhere. In a class channel that one key reaches 24 students, and nothing sent can be edited or deleted. The safer rule is that Enter makes a new line there and only the button sends. This page would rather have the safer rule, but it is the plan’s to change.', 'As planned: Enter sends in both. The line under the composer says who will get it.'],
+  ['Q2 · Enter in a class channel', 'Should Enter send an announcement to a whole class?', 'The plan had Enter send everywhere. In a class channel that one key reaches 24 students, and nothing sent can be edited or deleted. The first drawing followed the plan and said it would rather not.', 'In a class channel Enter makes a new line and only the button posts; the line under the composer says so. In a direct thread Enter still sends, as the plan has it. The plan’s line for T-R7.20 changes with this.', 'Thuong, 13 Nov 2026', 'Decided (Thuong, 13 Nov 2026), and redrawn:'],
   ['Q3 · A note with a file', 'May the Attach dialog take a note as well as the file?', 'The deck’s dialog sends the file alone, so “Đáp án Unit 4.pdf” arrives without a word and the teacher writes a second message. The contract already lets one message carry a body and a file.', 'Yes: one optional field, “Lời nhắn kèm theo”. The note and the chip share a bubble.'],
   ['Q4 · Who has not seen it', 'Is “21/24 học viên đã xem” enough, or will teachers want the three names?', 'The count is all the contract returns. Names would be a change to the staff read of a class channel, and a question of its own about what one student may be shown to have done.', 'The count only, as the deck draws.'],
   ['Q5 · The student’s sentence', 'What does a student read when writing is no longer allowed?', 'The plan gives the teacher’s sentence and none for the student, who meets the same refusal after leaving a class.', '“Bạn không còn học lớp nào của {name}.”'],
@@ -519,7 +521,7 @@ const HANDOFF = [
   ['AnnouncementCard', 'A chip between the text and the line that counts who has seen it.'],
   ['AttachDialog', 'Four states, the receiver’s line, the optional note (Q3), and the three refusals.'],
   ['ThreadDetails', 'A popover from 768 and a sheet below: the header, one short list, one link.'],
-  ['Composer', 'No change to the deck’s, apart from what Q2 decides.'],
+  ['Composer', 'In a class channel Enter makes a new line and only the button posts, with the sentence under it (Q2). In a direct thread it is the deck’s and the plan’s: Enter sends.'],
   ['StudentMessagesPage', 'The chip on the teacher’s side, the footer link on a channel, its own empty sentence and its own refusal (Q5).'],
   ['Locales', 'The copy table: sixty-odd strings, Vietnamese first.']
 ];
@@ -708,7 +710,7 @@ class Component extends DCLogic {
       notesTitle: 'What is new on “' + names[scr] + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
       adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
       copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
-      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
       handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
     };
   }

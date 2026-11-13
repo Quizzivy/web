@@ -439,7 +439,10 @@ To view one, start the server above and open, for example,
   replaced when the two no longer share a class or the class is archived. Both screens are in
   Vietnamese for the first time. Frames at 1280 and 360, light and dark, Vietnamese and
   English. No exported page changes and no operation of T-R7.10 to T-R7.12 changes. It is a
-  proposal until Thuong approves it, and its six questions for him are on the page.
+  proposal until Thuong approves it, and its six questions for him are on the page. He decided
+  the second the same day: in a class channel Enter makes a new line and only the button posts,
+  because an announcement reaches a whole class and cannot be edited or deleted. The class
+  composer's line says so, and T-R7.20's line in the plan changes with it.
 
 ## The brand
 

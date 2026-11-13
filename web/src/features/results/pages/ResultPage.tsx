@@ -217,7 +217,7 @@ export default function ResultPage() {
     <div className={COLUMN}>
       {wide && (
         <Link
-          to="/app"
+          to="/"
           className="text-muted-fg hover:text-fg text-ui inline-flex items-center gap-1.5 self-start leading-4.5"
         >
           <ArrowLeft aria-hidden="true" className="size-[15px]" />

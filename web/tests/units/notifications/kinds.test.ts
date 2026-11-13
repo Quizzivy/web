@@ -305,8 +305,8 @@ describe("notification kinds and sentences", () => {
     [{ route: "attempt", attemptId }, `/teacher/attempts/${attemptId}`],
     [{ route: "grading" }, "/teacher/grading"],
     [{ route: "classes" }, "/teacher/classes"],
-    [{ route: "result", attemptId }, `/app/attempts/${attemptId}/result`],
-    [{ route: "studentAssignment", assignmentId }, `/app/assignments/${assignmentId}`],
+    [{ route: "result", attemptId }, `/attempts/${attemptId}/result`],
+    [{ route: "studentAssignment", assignmentId }, `/assignments/${assignmentId}`],
   ] as const)("resolves a local %j target", (target, path) => {
     expect(notificationPath(target)).toBe(path);
   });

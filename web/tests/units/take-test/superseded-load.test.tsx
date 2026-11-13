@@ -214,11 +214,11 @@ function paper(over: Partial<AttemptSession> = {}): AttemptSession {
 function mount() {
   const router = createMemoryRouter(
     [
-      { path: "/app", element: <p>home</p> },
-      { path: "/app/classes", element: <p>classes</p> },
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
+      { path: "/classes", element: <p>classes</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
     ],
-    { initialEntries: ["/app/classes", "/app/attempts/att-1"], initialIndex: 1 },
+    { initialEntries: ["/classes", "/attempts/att-1"], initialIndex: 1 },
   );
   render(<RouterProvider router={router} />);
   return router;

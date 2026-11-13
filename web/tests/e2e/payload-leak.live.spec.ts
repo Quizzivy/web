@@ -149,7 +149,7 @@ test("E2E 9: a graded result with the score, answers and explanations hidden car
   await teacher.close();
 
   const read = apiRead(student, `/app/attempts/${attemptId}/result`);
-  await student.goto(`/app/attempts/${attemptId}/result`);
+  await student.goto(`/attempts/${attemptId}/result`);
   const response = await read;
   expect(response.status()).toBe(200);
   const body = (await response.json()) as {

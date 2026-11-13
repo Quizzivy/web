@@ -101,9 +101,9 @@ export function notificationPath(target: NotificationTarget | null): string | nu
     case "classes":
       return "/teacher/classes";
     case "result":
-      return idPath("/app/attempts", target.attemptId, "/result");
+      return idPath("/attempts", target.attemptId, "/result");
     case "studentAssignment":
-      return idPath("/app/assignments", target.assignmentId);
+      return idPath("/assignments", target.assignmentId);
     default:
       return null;
   }

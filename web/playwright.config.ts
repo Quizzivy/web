@@ -29,6 +29,14 @@ process.env["EMAIL_SINK_DIR"] = EMAIL_SINK_DIR;
  */
 const SLOW = /timer-expiry\.live\.spec\.ts$/;
 
+/**
+ * The two hosts of the hosts specs (tests/e2e/support/hosts.ts). The live API
+ * is started with the same two origins as STUDENT_APP_URL and STAFF_APP_URL,
+ * and with all three in CORS_ALLOWED_ORIGINS (docs/ci.md).
+ */
+const STUDENT_HOST = "http://localhost:4174";
+const STAFF_HOST = "http://localhost:4175";
+
 export default defineConfig({
   testDir: "./tests/e2e",
   fullyParallel: true,
@@ -95,7 +103,7 @@ export default defineConfig({
   ],
 
   webServer: {
-    command: "pnpm build && pnpm preview --port 4173 --strictPort",
+    command: "pnpm build && node tests/e2e/support/serve-hosts.mjs",
     url: "http://localhost:4173",
     reuseExistingServer: !process.env["CI"],
     timeout: 120_000,
@@ -111,6 +119,12 @@ export default defineConfig({
       // files, and process.env wins.
       VITE_API_BASE_URL: "http://localhost:8080",
       VITE_RICH_OPTION_EDITOR: "true",
+      // The one build is served on three ports (tests/e2e/support/serve-hosts.mjs).
+      // It reads its own origin against these two: on 4174 it is the student
+      // host, on 4175 the staff host, and on 4173, the baseURL every other
+      // spec uses, one host for every page.
+      VITE_STUDENT_APP_URL: STUDENT_HOST,
+      VITE_STAFF_APP_URL: STAFF_HOST,
     },
   },
 });

@@ -10,6 +10,8 @@ import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
 import { callbackUrl, statesMatch, takePending } from "@/features/auth/google/pkce";
 import { destinationAfterSignIn, preloadStudentHome } from "@/features/auth/home";
+import { OtherHostLink } from "@/features/auth/components/OtherHostLink";
+import { isWrongHost } from "@/features/auth/wrongHost";
 import { authStore } from "@/stores/auth";
 import { useAppState } from "@/stores/appState";
 import { runAccountMutation, signInAccount } from "@/features/auth/accountPreferences";
@@ -31,6 +33,7 @@ export default function GoogleCallbackPage() {
   const [params] = useSearchParams();
   const mounted = useRef(true);
   const [error, setError] = useState<string | null>(null);
+  const [elsewhere, setElsewhere] = useState(false);
   // Effects run twice under StrictMode, and this one redeems a single-use code.
   const started = useRef(false);
 
@@ -102,6 +105,7 @@ export default function GoogleCallbackPage() {
         });
       } catch (cause) {
         if (!mounted.current || !authStore.isCurrent(lease)) return;
+        setElsewhere(isWrongHost(cause));
         setError(callbackError(cause, t));
       }
     })();
@@ -118,7 +122,15 @@ export default function GoogleCallbackPage() {
         </div>
         <Alert variant="danger" className="text-ui flex gap-2.5">
           <CircleAlert aria-hidden="true" className="mt-px size-4 shrink-0" />
-          <span>{error}</span>
+          <span>
+            {error}
+            {elsewhere && (
+              <>
+                {" "}
+                <OtherHostLink />
+              </>
+            )}
+          </span>
         </Alert>
         <Button
           asChild

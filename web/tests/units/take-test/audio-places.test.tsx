@@ -85,8 +85,8 @@ function twoAudioQuestions(attemptId = DECK_ATTEMPT): AttemptSession {
 async function open(paper: AttemptSession) {
   vi.mocked(getAttempt).mockResolvedValue(paper);
   const router = createMemoryRouter(
-    [{ path: "/app/attempts/:attemptId", element: <TakeTestPage /> }],
-    { initialEntries: [`/app/attempts/${paper.attempt.id}`] },
+    [{ path: "/attempts/:attemptId", element: <TakeTestPage /> }],
+    { initialEntries: [`/attempts/${paper.attempt.id}`] },
   );
   const view = render(<RouterProvider router={router} />);
   await screen.findByRole("main");

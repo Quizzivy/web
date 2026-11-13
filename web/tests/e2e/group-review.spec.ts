@@ -140,7 +140,7 @@ async function setup(page: Page, teacher: boolean) {
     route.fulfill({ path: audio, contentType: "audio/mpeg" }),
   );
   await page.goto(
-    teacher ? `/teacher/attempts/${attemptId}` : `/app/attempts/${attemptId}/result`,
+    teacher ? `/teacher/attempts/${attemptId}` : `/attempts/${attemptId}/result`,
   );
   return () => newPlays;
 }

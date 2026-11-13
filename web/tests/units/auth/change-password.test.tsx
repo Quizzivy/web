@@ -52,8 +52,8 @@ function renderPage(entry = "/change-password") {
   const router = createMemoryRouter(
     [
       { path: "/change-password", element: <ChangePasswordPage /> },
-      { path: "/app", element: <p>student home</p> },
-      { path: "/app/tests", element: <p>tests</p> },
+      { path: "/", element: <p>student home</p> },
+      { path: "/tests", element: <p>tests</p> },
       { path: "/join/:code", element: <p>join page</p> },
     ],
     { initialEntries: [entry] },
@@ -150,14 +150,14 @@ describe("the forced password change", () => {
   it("sends no current password and goes on once it is saved", async () => {
     changeAnswers(204);
     const user = userEvent.setup();
-    const router = renderPage("/change-password?next=/app/tests");
+    const router = renderPage("/change-password?next=/tests");
     await user.type(newField(), "matkhau1");
     await user.type(againField(), "matkhau1");
     expect(save()).not.toHaveAttribute("aria-disabled");
     await user.click(save());
 
     expect(await screen.findByText("tests")).toBeInTheDocument();
-    expect(router.state.location.pathname).toBe("/app/tests");
+    expect(router.state.location.pathname).toBe("/tests");
     expect(bodies).toEqual([{ newPassword: "matkhau1" }]);
     expect(useAuthStore.getState().user?.mustChangePassword).toBe(false);
   });

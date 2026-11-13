@@ -36,6 +36,11 @@ env:
   # Where the SPA is told to find the API. Baked into the bundle at build time,
   # so it is a build input rather than runtime configuration.
   API_ORIGIN: https://api.quizzivy.com
+  # The two hosts the one build is served on (docs/deploy.md). They are build
+  # inputs too: the bundle reads its own origin against them to know which
+  # pages it serves, and a teacher's join link names the student host.
+  STUDENT_ORIGIN: https://my.quizzivy.com
+  STAFF_ORIGIN: https://portal.quizzivy.com
   PAGES_PROJECT: quizzivy-web
   # The version that has deployed this project; bump deliberately.
   WRANGLER_VERSION: 3.90.0
@@ -165,6 +170,8 @@ jobs:
         working-directory: web
         env:
           VITE_API_BASE_URL: ${{ env.API_ORIGIN }}
+          VITE_STUDENT_APP_URL: ${{ env.STUDENT_ORIGIN }}
+          VITE_STAFF_APP_URL: ${{ env.STAFF_ORIGIN }}
           VITE_GOOGLE_CLIENT_ID: ${{ vars.VITE_GOOGLE_CLIENT_ID }}
           VITE_DEFAULT_LOCALE: vi
           VITE_ORG_NAME: ${{ vars.VITE_ORG_NAME }}
@@ -184,6 +191,14 @@ jobs:
             echo "::error::$API_ORIGIN is not in the bundle -- VITE_API_BASE_URL did not reach the build"
             exit 1; }
           echo "bundle targets $API_ORIGIN"
+          # Without the two hosts the bundle serves every page from whatever
+          # origin it is opened at, and a join link names the staff host.
+          for origin in "$STUDENT_ORIGIN" "$STAFF_ORIGIN"; do
+            grep -rq "$origin" dist/assets/*.js || {
+              echo "::error::$origin is not in the bundle -- its VITE_ variable did not reach the build"
+              exit 1; }
+          done
+          echo "bundle serves $STUDENT_ORIGIN and $STAFF_ORIGIN"
 
       - name: Assert security headers are included
         run: cmp web/public/_headers web/dist/_headers

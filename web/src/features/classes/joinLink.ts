@@ -1,14 +1,21 @@
 import { useCallback } from "react";
 import { useTranslation } from "react-i18next";
 import { toast } from "@/components/ui/sonner";
+import { studentOrigin } from "@/app/host";
 
 /**
- * joinLinkOf is the one join link format (DG-01): the app's origin, `/join/`
- * and the code as it is grouped, dash kept, so a link and a card read alike.
- * The join page reads it with or without the dash.
+ * joinLinkOf is the one join link format (DG-01): the student host's origin,
+ * whatever host the teacher has open (§5.8), `/join/` and the code as it is
+ * grouped, dash kept, so a link and a card read alike. The join page reads it
+ * with or without the dash.
  */
 export function joinLinkOf(code: string): string {
-  return `${window.location.origin}/join/${code}`;
+  return `${studentOrigin()}/join/${code}`;
+}
+
+/** joinSite is the student host as a person types it: no scheme. */
+export function joinSite(): string {
+  return new URL(studentOrigin()).host;
 }
 
 /**
@@ -16,7 +23,7 @@ export function joinLinkOf(code: string): string {
  * code: the link without its scheme, so it reads as the deck draws it.
  */
 export function joinLinkLabel(code: string): string {
-  return `${window.location.host}/join/${code}`;
+  return `${joinSite()}/join/${code}`;
 }
 
 /**

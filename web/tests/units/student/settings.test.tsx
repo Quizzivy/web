@@ -61,7 +61,7 @@ function account(over: Partial<User> = {}): User {
   return { ...STUDENT, ...over };
 }
 
-function open(path = "/app/settings", over: Partial<User> = {}) {
+function open(path = "/settings", over: Partial<User> = {}) {
   useAuthStore.getState().setSession("token", account(over));
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const router = createMemoryRouter(
@@ -70,8 +70,8 @@ function open(path = "/app/settings", over: Partial<User> = {}) {
         element: <StudentLayout />,
         children: [
           {
-            path: "/app/settings/:section?",
-            handle: { detail: { titleKey: "nav.settings", back: "/app" } },
+            path: "/settings/:section?",
+            handle: { detail: { titleKey: "nav.settings", back: "/" } },
             element: <StudentSettingsPage />,
           },
         ],
@@ -285,7 +285,7 @@ describe("the settings page", () => {
     await screen.findByRole("heading", { level: 1 });
 
     await user.click(switcher().getByRole("button", { name: "Đăng nhập" }));
-    expect(router.state.location.pathname).toBe("/app/settings/sign-in");
+    expect(router.state.location.pathname).toBe("/settings/sign-in");
     expect(screen.getByRole("region", { name: "Đăng nhập" })).toBeVisible();
     expect(screen.queryByRole("region", { name: "Hồ sơ" })).toBeNull();
     expect(switcher().getByRole("button", { name: "Đăng nhập" })).toHaveAttribute(
@@ -298,18 +298,18 @@ describe("the settings page", () => {
     );
 
     await user.click(switcher().getByRole("button", { name: "Giao diện" }));
-    expect(router.state.location.pathname).toBe("/app/settings/appearance");
+    expect(router.state.location.pathname).toBe("/settings/appearance");
     expect(screen.getByRole("region", { name: "Giao diện" })).toBeVisible();
     expect(screen.queryByRole("region", { name: "Đăng nhập" })).toBeNull();
 
     await user.click(switcher().getByRole("button", { name: "Hồ sơ" }));
-    expect(router.state.location.pathname).toBe("/app/settings");
+    expect(router.state.location.pathname).toBe("/settings");
     expect(screen.getByRole("region", { name: "Hồ sơ" })).toBeVisible();
   });
 
   it("adds nothing to the history when the section already on is pressed", async () => {
     const user = userEvent.setup();
-    const router = open("/app/settings/sign-in");
+    const router = open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     await user.click(switcher().getByRole("button", { name: "Giao diện" }));
     await user.click(switcher().getByRole("button", { name: "Giao diện" }));
@@ -318,13 +318,13 @@ describe("the settings page", () => {
     await act(async () => {
       await router.navigate(-1);
     });
-    expect(router.state.location.pathname).toBe("/app/settings/sign-in");
+    expect(router.state.location.pathname).toBe("/settings/sign-in");
   });
 
   it.each([
-    ["/app/settings/profile", "Hồ sơ"],
-    ["/app/settings/sign-in", "Đăng nhập"],
-    ["/app/settings/appearance", "Giao diện"],
+    ["/settings/profile", "Hồ sơ"],
+    ["/settings/sign-in", "Đăng nhập"],
+    ["/settings/appearance", "Giao diện"],
   ])("opens %s on its own section and stays there", async (path, section) => {
     const router = open(path);
     expect(await screen.findByRole("region", { name: section })).toBeVisible();
@@ -336,13 +336,13 @@ describe("the settings page", () => {
   });
 
   it.each([
-    ["security", "/app/settings/sign-in", "Đăng nhập"],
-    ["preferences", "/app/settings", "Hồ sơ"],
-    ["notifications", "/app/settings", "Hồ sơ"],
-    ["constructor", "/app/settings", "Hồ sơ"],
-    ["khong-co", "/app/settings", "Hồ sơ"],
+    ["security", "/settings/sign-in", "Đăng nhập"],
+    ["preferences", "/settings", "Hồ sơ"],
+    ["notifications", "/settings", "Hồ sơ"],
+    ["constructor", "/settings", "Hồ sơ"],
+    ["khong-co", "/settings", "Hồ sơ"],
   ])("redirects the slug %s to %s", async (slug, path, section) => {
-    const router = open(`/app/settings/${slug}`);
+    const router = open(`/settings/${slug}`);
     expect(await screen.findByRole("region", { name: section })).toBeVisible();
     await waitFor(() => expect(router.state.location.pathname).toBe(path));
     expect(router.state.historyAction).toBe("REPLACE");
@@ -745,7 +745,7 @@ describe("the language select", () => {
 
 describe("sign-in: the password", () => {
   it("draws the row closed, with no line about when it changed", async () => {
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     expect(card.getByText("Mật khẩu")).toBeInTheDocument();
 
@@ -758,7 +758,7 @@ describe("sign-in: the password", () => {
 
   it("says when the password was last changed, from the account, and nothing for an account that never has", async () => {
     const changed = new Date(Date.now() - 3 * 3_600_000).toISOString();
-    open("/app/settings/sign-in", { passwordChangedAt: changed });
+    open("/settings/sign-in", { passwordChangedAt: changed });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     expect(card.getByText("Mật khẩu").parentElement).toHaveTextContent(
       /^Mật khẩu\s*Đã đổi 3 giờ trước$/,
@@ -767,7 +767,7 @@ describe("sign-in: the password", () => {
 
   it("opens both fields with an empty meter, the rule and a button that waits", async () => {
     const user = userEvent.setup();
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -800,7 +800,7 @@ describe("sign-in: the password", () => {
     ["abcdefghijk!", 4, "success", "Rất mạnh."],
   ])("scores %s at %i bars in %s and says so", async (typed, bars, tone, hint) => {
     const user = userEvent.setup();
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -816,7 +816,7 @@ describe("sign-in: the password", () => {
   it("does nothing while the new password is shorter than 8 characters", async () => {
     const user = userEvent.setup();
     const bodies = passwordAnswers();
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -834,7 +834,7 @@ describe("sign-in: the password", () => {
     const user = userEvent.setup();
     const bodies = passwordAnswers();
     meServes(account());
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -857,7 +857,7 @@ describe("sign-in: the password", () => {
   it("lets the form's rule, not the meter, refuse a password with no number or symbol", async () => {
     const user = userEvent.setup();
     const bodies = passwordAnswers();
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -884,7 +884,7 @@ describe("sign-in: the password", () => {
     const user = userEvent.setup();
     const bodies = passwordAnswers();
     const reads = meServes(account({ fullName: "Nguyễn Văn Ân" }));
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -926,7 +926,7 @@ describe("sign-in: the password", () => {
         return Response.error();
       }),
     );
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -954,7 +954,7 @@ describe("sign-in: the password", () => {
       }),
     );
     meServes(account());
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -990,7 +990,7 @@ describe("sign-in: the password", () => {
   ])("keeps the form open with the reason for %s", async (code, message, shown) => {
     const user = userEvent.setup();
     const bodies = passwordAnswers({ code, message });
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -1011,7 +1011,7 @@ describe("sign-in: the password", () => {
       code: "INVALID_CREDENTIALS",
       message: "Mật khẩu hiện tại không đúng.",
     });
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -1032,7 +1032,7 @@ describe("sign-in: the password", () => {
 
   it("shows and hides what is typed", async () => {
     const user = userEvent.setup();
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     const form = await openPasswordForm(user);
 
@@ -1057,7 +1057,7 @@ describe("sign-in: Google", () => {
       }),
     );
     const reads = meServes(account({ linkedProviders: [] }));
-    open("/app/settings/sign-in", { linkedProviders: ["google"] });
+    open("/settings/sign-in", { linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     expect(card.getByText("Đã liên kết")).toBeInTheDocument();
     expect(card.queryByText(/an@example\.com/)).toBeNull();
@@ -1094,7 +1094,7 @@ describe("sign-in: Google", () => {
       }),
     );
     meServes(account({ linkedProviders: [] }));
-    open("/app/settings/sign-in", { linkedProviders: ["google"] });
+    open("/settings/sign-in", { linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     const unlink = card.getByRole("button", { name: "Bỏ liên kết" });
 
@@ -1118,7 +1118,7 @@ describe("sign-in: Google", () => {
         return new Response(null, { status: 204 });
       }),
     );
-    open("/app/settings/sign-in", { hasPassword: false, linkedProviders: ["google"] });
+    open("/settings/sign-in", { hasPassword: false, linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
 
     expect(card.getByText(/Google đang là cách duy nhất để đăng nhập/)).toBeVisible();
@@ -1143,7 +1143,7 @@ describe("sign-in: Google", () => {
         return new Response(null, { status: 204 });
       }),
     );
-    open("/app/settings/sign-in", { hasPassword: false, linkedProviders: ["google"] });
+    open("/settings/sign-in", { hasPassword: false, linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
 
     await user.click(
@@ -1173,7 +1173,7 @@ describe("sign-in: Google", () => {
         }),
       ),
     );
-    open("/app/settings/sign-in", { hasPassword: false, linkedProviders: ["google"] });
+    open("/settings/sign-in", { hasPassword: false, linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
 
     expect(
@@ -1187,7 +1187,7 @@ describe("sign-in: Google", () => {
   });
 
   it("offers no set-password link to an account that has a password", async () => {
-    open("/app/settings/sign-in", { linkedProviders: ["google"] });
+    open("/settings/sign-in", { linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     expect(
       card.queryByRole("button", { name: "Gửi liên kết đặt mật khẩu qua email" }),
@@ -1196,7 +1196,7 @@ describe("sign-in: Google", () => {
 
   it("starts the link through the redirect flow, never a script from Google", async () => {
     const user = userEvent.setup();
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     expect(
       card.getByText("Chưa liên kết. Liên kết để đăng nhập bằng một chạm."),
@@ -1227,7 +1227,7 @@ describe("sign-in: Google", () => {
   ])(
     "lets the button drop under the sentence of an account that is %s",
     async (_, over, sentence, action) => {
-      open("/app/settings/sign-in", over);
+      open("/settings/sign-in", over);
       const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
       const column = card.getByText(sentence).parentElement!;
       expect(column).toHaveClass("min-w-0", "flex-1", "basis-44");
@@ -1237,7 +1237,7 @@ describe("sign-in: Google", () => {
   );
 
   it("keeps a linked account's row on the deck's one line", async () => {
-    open("/app/settings/sign-in", { linkedProviders: ["google"] });
+    open("/settings/sign-in", { linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     const column = card.getByText("Đã liên kết").parentElement!;
     expect(column).not.toHaveClass("basis-44");
@@ -1249,7 +1249,7 @@ describe("sign-in: Google", () => {
 
   it("offers no link, and says why, where Google sign-in is not set up", async () => {
     google.available = false;
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     expect(card.getByText("Hiện chưa thể đăng nhập bằng Google.")).toBeInTheDocument();
     expect(card.queryByRole("button", { name: "Liên kết Google" })).toBeNull();
@@ -1257,7 +1257,7 @@ describe("sign-in: Google", () => {
 
   it("says so when the link cannot start", async () => {
     google.error = "Hiện chưa thể đăng nhập bằng Google.";
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     await screen.findByRole("region", { name: "Đăng nhập" });
     expect(screen.getByRole("alert")).toHaveTextContent(
       "Hiện chưa thể đăng nhập bằng Google.",
@@ -1266,7 +1266,7 @@ describe("sign-in: Google", () => {
 
   it("switches Link Google off while the redirect is starting", async () => {
     google.pending = true;
-    open("/app/settings/sign-in");
+    open("/settings/sign-in");
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
     expect(card.getByRole("button", { name: "Liên kết Google" })).toBeDisabled();
   });
@@ -1283,7 +1283,7 @@ describe("sign-in: Google", () => {
         ),
       ),
     );
-    open("/app/settings/sign-in", { linkedProviders: ["google"] });
+    open("/settings/sign-in", { linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
 
     await user.click(card.getByRole("button", { name: "Bỏ liên kết" }));
@@ -1314,7 +1314,7 @@ describe("sign-in: Google", () => {
       }),
     );
     meServes(account({ linkedProviders: [] }));
-    open("/app/settings/sign-in", { linkedProviders: ["google"] });
+    open("/settings/sign-in", { linkedProviders: ["google"] });
     const card = within(await screen.findByRole("region", { name: "Đăng nhập" }));
 
     await user.click(card.getByRole("button", { name: "Bỏ liên kết" }));
@@ -1338,7 +1338,7 @@ describe("appearance", () => {
       }),
     );
     const user = userEvent.setup();
-    open("/app/settings/appearance");
+    open("/settings/appearance");
     const card = within(await screen.findByRole("region", { name: "Giao diện" }));
     const themes = within(card.getByRole("group", { name: "Chủ đề" }));
     expect(themes.getAllByRole("button").map((button) => button.textContent)).toEqual([
@@ -1402,7 +1402,7 @@ describe("appearance", () => {
         }) as unknown as MediaQueryList,
     );
     const user = userEvent.setup();
-    open("/app/settings/appearance");
+    open("/settings/appearance");
     const themes = within(await screen.findByRole("group", { name: "Chủ đề" }));
 
     await user.click(themes.getByRole("button", { name: "Theo thiết bị" }));
@@ -1423,7 +1423,7 @@ describe("appearance", () => {
   });
 
   it("follows the account menu's theme item", async () => {
-    open("/app/settings/appearance");
+    open("/settings/appearance");
     const themes = within(await screen.findByRole("group", { name: "Chủ đề" }));
     act(() => writeThemePreference("system"));
     expect(themes.getByRole("button", { name: "Theo thiết bị" })).toHaveAttribute(
@@ -1442,7 +1442,7 @@ describe("appearance", () => {
   });
 
   it("paints the previews from the swatch tokens, Device as two halves", async () => {
-    open("/app/settings/appearance");
+    open("/settings/appearance");
     const themes = await screen.findByRole("group", { name: "Chủ đề" });
     const halves = (theme: string) =>
       [...themes.querySelector(`[data-swatch='${theme}']`)!.children].map(
@@ -1463,7 +1463,7 @@ describe("appearance", () => {
       }),
     );
     const user = userEvent.setup();
-    open("/app/settings/appearance");
+    open("/settings/appearance");
     const larger = await screen.findByRole("switch", {
       name: "Chữ lớn hơn khi làm bài",
     });
@@ -1490,7 +1490,7 @@ describe("appearance", () => {
 
   it("opens with larger text on when it was chosen before", async () => {
     localStorage.setItem("quizzivy.testText", "large");
-    open("/app/settings/appearance", { preferences: { largerTestText: true } });
+    open("/settings/appearance", { preferences: { largerTestText: true } });
     expect(
       await screen.findByRole("switch", { name: "Chữ lớn hơn khi làm bài" }),
     ).toBeChecked();
@@ -1546,7 +1546,7 @@ describe("in English", () => {
       ),
     );
     meServes(account({ linkedProviders: [], locale: "en" }));
-    open("/app/settings", { linkedProviders: ["google"], locale: "en" });
+    open("/settings", { linkedProviders: ["google"], locale: "en" });
     expect(
       await screen.findByRole("heading", { level: 1, name: "Settings" }),
     ).toBeInTheDocument();
@@ -1637,7 +1637,7 @@ describe("the notifications section", () => {
 
   it("sits between Sign-in and Appearance once the module ships", async () => {
     flags.notifications = true;
-    open("/app/settings/notifications");
+    open("/settings/notifications");
     await screen.findByRole("heading", { level: 1 });
     expect(
       switcher()
@@ -1657,7 +1657,7 @@ describe("the notifications section", () => {
     flags.notifications = true;
     const puts = preferences();
     const user = userEvent.setup();
-    open("/app/settings/notifications");
+    open("/settings/notifications");
     const section = await screen.findByRole("region", { name: "Thông báo" });
     await user.click(
       await within(section).findByRole("switch", { name: "Bài sắp hết hạn" }),
@@ -1694,7 +1694,7 @@ describe("the notifications section", () => {
       }),
     );
     const user = userEvent.setup();
-    open("/app/settings/notifications");
+    open("/settings/notifications");
     const section = await screen.findByRole("region", { name: "Thông báo" });
     const dueSoon = await within(section).findByRole("switch", {
       name: "Bài sắp hết hạn",
@@ -1722,7 +1722,7 @@ describe("the notifications section", () => {
     flags.notifications = true;
     preferences(true);
     const user = userEvent.setup();
-    open("/app/settings/notifications");
+    open("/settings/notifications");
     const section = await screen.findByRole("region", { name: "Thông báo" });
     const result = await within(section).findByRole("switch", {
       name: "Đã có kết quả",
@@ -1736,9 +1736,9 @@ describe("the notifications section", () => {
   });
 
   it("sends the notifications address to Profile while the module is off", async () => {
-    const router = open("/app/settings/notifications");
+    const router = open("/settings/notifications");
     expect(await screen.findByRole("region", { name: "Hồ sơ" })).toBeVisible();
-    await waitFor(() => expect(router.state.location.pathname).toBe("/app/settings"));
+    await waitFor(() => expect(router.state.location.pathname).toBe("/settings"));
     expect(screen.queryByRole("region", { name: "Thông báo" })).toBeNull();
   });
 });

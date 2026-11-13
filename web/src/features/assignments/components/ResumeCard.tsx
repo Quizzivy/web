@@ -60,7 +60,7 @@ export function ResumeCard({ card }: Readonly<{ card: StudentAssignmentCard }>) 
       const session = await (card.lastAttemptId == null
         ? startOrResumeAttempt(card.id)
         : continueAttempt(card.id, card.lastAttemptId));
-      await navigate(`/app/attempts/${session.attempt.id}`);
+      await navigate(`/attempts/${session.attempt.id}`);
     } catch (cause) {
       notify.error(
         cause instanceof ApiError ? cause.message : t("student.intro.startFailed"),

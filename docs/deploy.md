@@ -1,7 +1,8 @@
 # Deploying the web
 
-Merging `release/*` into `main` ships the web to Cloudflare Pages
-(`quizzivy-web`, `app.quizzivy.com`). Nothing deploys from `develop`.
+Merging `release/*` into `main` ships the web to Cloudflare Pages: one project,
+`quizzivy-web`, with two custom domains, `my.quizzivy.com` for students and
+`portal.quizzivy.com` for teachers and admins. Nothing deploys from `develop`.
 `.github/workflows/deploy.yml` runs on `workflow_run` after **CI** concludes on
 `main`, only for the CI run of a push, and only while its commit is still the
 tip of `main`.
@@ -38,13 +39,38 @@ gh variable set WEB_DEPLOY --body pages  # only when production switches over
 authorization URL. A build without it does not fail, it hides the Google
 button, so the job checks for it.
 
+## One build, two hosts
+
+Both domains serve the same files. The bundle reads the origin it is opened at
+against two build inputs, `VITE_STUDENT_APP_URL` and `VITE_STAFF_APP_URL`
+(`src/app/host.ts`), which `deploy.yml` sets from `STUDENT_ORIGIN` and
+`STAFF_ORIGIN` at its top:
+
+| Opened at | Serves |
+|---|---|
+| the student host | the student's pages at the root (`/`, `/classes`, `/assignments/:id`, `/settings`, `/attempts/:id`) and `/join` |
+| the staff host | `/teacher/...` and `/admin/...`; `/` goes to the user's console |
+| any other origin | every page: a preview URL, `localhost` |
+
+Each host has the sign-in pages, and a path of the other host is a 404 there.
+A teacher's join link and QR always name the student host. The API keeps a
+session per host and admits an account only at the host it belongs at
+(`Quizzivy/api`, `STUDENT_APP_URL` and `STAFF_APP_URL`), so the two origins
+here and there have to be the same two.
+
+Adding or renaming a host is three changes that go together: the two origins in
+`deploy.yml`, the custom domain on the Pages project, and the API's settings
+(its two host URLs, `CORS_ALLOWED_ORIGINS` and `GOOGLE_REDIRECT_URI`) with the
+redirect URI registered in the Google Cloud Console.
+
 ## The build-time trap
 
 `VITE_*` values are inlined at build time; there is no runtime override.
 `src/lib/api/client.ts` falls back to `http://localhost:8080` when
 `VITE_API_BASE_URL` is unset, so the job greps the bundle for
-`https://api.quizzivy.com` and fails without it, and checks that
-`public/_headers` reached `dist/`. Do not remove either step.
+`https://api.quizzivy.com` and fails without it, greps it for the two hosts'
+origins for the same reason, and checks that `public/_headers` reached `dist/`.
+Do not remove any of the three.
 
 ## Running it by hand
 
@@ -71,7 +97,9 @@ CI refuses a `-dev` SDK pin on a PR into `main`. Read the slow tail's check
 ## Verifying afterwards
 
 ```bash
-curl -o /dev/null -w '%{http_code}\n' https://app.quizzivy.com/join/K7M3-P9QR   # 200, the SPA shell
+curl -o /dev/null -w '%{http_code}\n' https://my.quizzivy.com/join/K7M3-P9QR   # 200, the SPA shell
+curl -o /dev/null -w '%{http_code}\n' https://portal.quizzivy.com/teacher      # 200, the same shell
+curl -s https://my.quizzivy.com/version.json; curl -s https://portal.quizzivy.com/version.json   # one build
 ```
 
 `web/public/_redirects` is what makes a QR-code link work on a cold load; it

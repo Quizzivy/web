@@ -1,5 +1,5 @@
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
-import { afterEach, describe, expect, it } from "vitest";
+import { afterEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http } from "msw";
@@ -10,6 +10,7 @@ import { contractJson } from "@tests/support/contractResponse";
 import { saveJoinContext } from "@/features/join/context";
 import { teacherUser } from "@tests/support/fixtures";
 import { useAuthStore } from "@/stores/auth";
+import { asHost } from "@tests/support/host";
 import "@/lib/i18n";
 
 const BASE = "http://localhost:8080";
@@ -19,7 +20,7 @@ function renderLogin(initialEntry = "/login") {
     { path: "/login", element: <LoginPage /> },
     { path: "/admin", element: <p>admin console</p> },
     { path: "/teacher", element: <p>admin home</p> },
-    { path: "/app", element: <p>student home</p> },
+    { path: "/", element: <p>student home</p> },
     { path: "/join/:code", element: <p>join page</p> },
   ];
   const router = createMemoryRouter(routes, { initialEntries: [initialEntry] });
@@ -36,6 +37,106 @@ function renderLogin(initialEntry = "/login") {
 afterEach(() => {
   useAuthStore.getState().clearSession();
   sessionStorage.clear();
+  vi.unstubAllEnvs();
+});
+
+function wrongHost(message: string) {
+  server.use(
+    http.post(`${BASE}/auth/login`, () =>
+      contractJson("/auth/login", "post", 403, {
+        error: {
+          code: "FORBIDDEN",
+          message,
+          requestId: "019535d9-3df7-79fb-b466-fa907fa17f9e",
+        },
+      }),
+    ),
+  );
+}
+
+async function signInWith(user: ReturnType<typeof userEvent.setup>) {
+  await user.type(screen.getByLabelText("Email"), "ai-do@example.com");
+  await user.type(screen.getByLabelText("Mật khẩu"), "quizzivy-dev");
+  await user.click(screen.getByRole("button", { name: "Đăng nhập" }));
+}
+
+/**
+ * An account that belongs at the other host (§5.8). Each case fails when the
+ * sign-in page stops reading the refusal: the first two when the link to the
+ * other host's sign-in is dropped or points at this host, the third when a
+ * page that is the only host offers a link to nowhere.
+ */
+describe("/login for an account of the other host", () => {
+  it.each([
+    [
+      "student",
+      "Tài khoản này dành cho giáo viên và quản trị viên. Hãy đăng nhập tại portal.quizzivy.com.",
+      "portal.quizzivy.com",
+    ],
+    [
+      "staff",
+      "Đây là tài khoản học viên. Hãy đăng nhập tại my.quizzivy.com.",
+      "my.quizzivy.com",
+    ],
+  ] as const)(
+    "at the %s host, says where the account signs in and links there",
+    async (kind, message, host) => {
+      asHost(kind);
+      wrongHost(message);
+      const user = userEvent.setup();
+      const router = renderLogin();
+      await signInWith(user);
+
+      const alert = await screen.findByRole("alert");
+      expect(alert).toHaveTextContent(message);
+      expect(
+        screen.getByRole("link", { name: `Mở trang đăng nhập của ${host}` }),
+      ).toHaveAttribute("href", `https://${host}/login`);
+      expect(router.state.location.pathname).toBe("/login");
+      expect(useAuthStore.getState().user).toBeNull();
+    },
+  );
+
+  it("offers no other host where one host serves every page", async () => {
+    asHost("all");
+    wrongHost("Bạn không có quyền truy cập chức năng này.");
+    const user = userEvent.setup();
+    renderLogin();
+    await signInWith(user);
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Bạn không có quyền truy cập chức năng này.",
+    );
+    expect(screen.queryByRole("link", { name: /Mở trang đăng nhập của/ })).toBeNull();
+  });
+
+  it("drops the link with the message when the form is sent again", async () => {
+    asHost("student");
+    wrongHost("Tài khoản này dành cho giáo viên và quản trị viên.");
+    const user = userEvent.setup();
+    renderLogin();
+    await signInWith(user);
+    expect(
+      await screen.findByRole("link", { name: /Mở trang đăng nhập của/ }),
+    ).toBeInTheDocument();
+
+    server.use(
+      http.post(`${BASE}/auth/login`, () =>
+        contractJson("/auth/login", "post", 401, {
+          error: {
+            code: "INVALID_CREDENTIALS",
+            message: "Email hoặc mật khẩu không đúng.",
+            requestId: "019535d9-3df7-79fb-b466-fa907fa17f9e",
+          },
+        }),
+      ),
+    );
+    await user.click(screen.getByRole("button", { name: "Đăng nhập" }));
+
+    await waitFor(() =>
+      expect(screen.queryByRole("link", { name: /Mở trang đăng nhập của/ })).toBeNull(),
+    );
+  });
 });
 
 describe("/login", () => {

@@ -76,13 +76,13 @@ describe("home", () => {
     permissions: adminUser.permissions.filter((key) => key !== "scope.all"),
   };
 
-  it("sends the teacher workspace to /teacher, the Admin console to /admin and everyone else to /app", () => {
+  it("sends the teacher workspace to /teacher, the Admin console to /admin and everyone else to /", () => {
     expect(homePathFor(teacherUser)).toBe("/teacher");
     expect(homePathFor(assistantUser)).toBe("/teacher");
     expect(homePathFor({ ...adminUser, workspaces: ["admin"] })).toBe("/admin");
-    expect(homePathFor(studentUser)).toBe("/app");
-    expect(homePathFor({ ...studentUser, workspaces: [] })).toBe("/app");
-    expect(homePathFor(null)).toBe("/app");
+    expect(homePathFor(studentUser)).toBe("/");
+    expect(homePathFor({ ...studentUser, workspaces: [] })).toBe("/");
+    expect(homePathFor(null)).toBe("/");
   });
 
   it("opens the Admin console for a built-in Admin who has not chosen", () => {
@@ -125,7 +125,7 @@ describe("home", () => {
     expect(destinationAfterSignIn("/admin/users", adminUser)).toBe("/admin/users");
     expect(destinationAfterSignIn("//evil.example", teacherUser)).toBe("/teacher");
     expect(destinationAfterSignIn("//evil.example", adminUser)).toBe("/admin");
-    expect(destinationAfterSignIn(null, studentUser)).toBe("/app");
+    expect(destinationAfterSignIn(null, studentUser)).toBe("/");
   });
 });
 

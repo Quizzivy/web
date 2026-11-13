@@ -1,5 +1,6 @@
 import { createBrowserRouter, redirect, type RouteObject } from "react-router";
 import { ADMIN_PATHS } from "@/app/adminPaths";
+import { hostKind, type HostKind } from "@/app/host";
 import { ErrorBoundary } from "@/app/ErrorBoundary";
 import NotFoundPage from "@/app/pages/NotFoundPage";
 import ForbiddenPage from "@/app/pages/ForbiddenPage";
@@ -18,7 +19,8 @@ import {
 
 /**
  * §3's four route trees: public, /teacher for the teacher, /admin for the
- * Admin console and /app for students.
+ * Admin console and the student's at the root. Which of them a host serves is
+ * `routesFor`'s to say (§5.8).
  *
  * Guards are pathless routes so the tree structure states who may see what,
  * rather than each page re-checking.
@@ -30,33 +32,35 @@ const page = (load: () => Promise<{ default: React.ComponentType }>) => async ()
 });
 
 /**
- * The signed-out screens. Each owns the whole viewport and draws its own brand
- * frame, so there is no shared layout route above them.
+ * The signed-out screens every host has. Each owns the whole viewport and
+ * draws its own brand frame, so there is no shared layout route above them.
  */
-const authTree: RouteObject = {
-  children: [
-    { path: "login", lazy: page(() => import("@/features/auth/pages/LoginPage")) },
-    {
-      path: "forgot-password",
-      lazy: page(() => import("@/features/auth/pages/ForgotPasswordPage")),
-    },
-    {
-      path: "set-password",
-      lazy: page(() => import("@/features/auth/pages/SetPasswordPage")),
-    },
-    {
-      path: "auth/google/callback",
-      lazy: page(() => import("@/features/auth/pages/GoogleCallbackPage")),
-    },
-    { path: "join", lazy: page(() => import("@/features/join/pages/JoinPage")) },
-    { path: "join/:code", lazy: page(() => import("@/features/join/pages/JoinPage")) },
-    {
-      path: "join/:code/confirm",
-      loader: ({ params }) =>
-        redirect(`/join/${encodeURIComponent(params["code"] ?? "")}`),
-    },
-  ],
-};
+const authRoutes: RouteObject[] = [
+  { path: "login", lazy: page(() => import("@/features/auth/pages/LoginPage")) },
+  {
+    path: "forgot-password",
+    lazy: page(() => import("@/features/auth/pages/ForgotPasswordPage")),
+  },
+  {
+    path: "set-password",
+    lazy: page(() => import("@/features/auth/pages/SetPasswordPage")),
+  },
+  {
+    path: "auth/google/callback",
+    lazy: page(() => import("@/features/auth/pages/GoogleCallbackPage")),
+  },
+];
+
+/** Joining a class makes a student, so these are the student host's. */
+const joinRoutes: RouteObject[] = [
+  { path: "join", lazy: page(() => import("@/features/join/pages/JoinPage")) },
+  { path: "join/:code", lazy: page(() => import("@/features/join/pages/JoinPage")) },
+  {
+    path: "join/:code/confirm",
+    loader: ({ params }) =>
+      redirect(`/join/${encodeURIComponent(params["code"] ?? "")}`),
+  },
+];
 
 const teacherTree: RouteObject = {
   path: "teacher",
@@ -441,12 +445,12 @@ const adminTree: RouteObject = {
 };
 
 /**
- * One student layout: a detail screen declares `handle.detail`, which below
- * 768px swaps the logo for a back arrow and that title and hides the tab bar.
- * From 768px the top bar is unchanged and the page draws its own way back.
+ * One student layout, at the root of its host: a detail screen declares
+ * `handle.detail`, which below 768px swaps the logo for a back arrow and that
+ * title and hides the tab bar. From 768px the top bar is unchanged and the
+ * page draws its own way back.
  */
 const studentTree: RouteObject = {
-  path: "app",
   element: <StudentArea />,
   children: [
     {
@@ -462,17 +466,17 @@ const studentTree: RouteObject = {
         },
         {
           path: "assignments/:id",
-          handle: { detail: { titleKey: "student.shell.test", back: "/app" } },
+          handle: { detail: { titleKey: "student.shell.test", back: "/" } },
           lazy: page(() => import("@/features/assignments/pages/AssignmentIntroPage")),
         },
         {
           path: "settings/:section?",
-          handle: { detail: { titleKey: "nav.settings", back: "/app" } },
+          handle: { detail: { titleKey: "nav.settings", back: "/" } },
           lazy: page(() => import("@/features/auth/pages/StudentSettingsPage")),
         },
         {
           path: "attempts/:attemptId/result",
-          handle: { detail: { titleKey: "result.title", back: "/app" } },
+          handle: { detail: { titleKey: "result.title", back: "/" } },
           lazy: page(() => import("@/features/results/pages/ResultPage")),
         },
       ],
@@ -481,11 +485,11 @@ const studentTree: RouteObject = {
 };
 
 /**
- * The take-test route lives under `/app` but outside StudentLayout: §9 gives it
+ * The take-test route is the student's but outside StudentLayout: §9 gives it
  * FocusLayout, a shell with nothing to click away to.
  */
 const takeTestTree: RouteObject = {
-  path: "app/attempts/:attemptId",
+  path: "attempts/:attemptId",
   handle: { focus: true },
   lazy: page(() => import("@/layouts/FocusLayout")),
   children: [
@@ -497,36 +501,44 @@ const takeTestTree: RouteObject = {
 };
 
 /**
- * Everything that needs a session. A pathless route, so the guard runs once for
- * all three trees rather than being repeated -- and so a route added to any of
+ * routesFor is the route table of one host (§5.8). The student host serves the
+ * student's pages at its root and the join pages; the staff host serves the
+ * teacher's and the Admin's, and answers `/` with the user's console; `all`,
+ * one host for everyone, serves both, with the student's home at `/`. A path
+ * of the other host matches nothing here and is this host's 404.
+ *
+ * Everything that needs a session is under one pathless guard, so it runs once
+ * for every tree rather than being repeated -- and so a route added to any of
  * them is protected without anyone remembering to protect it.
  */
-const protectedTree: RouteObject = {
-  element: <RequireSession />,
-  children: [
+export function routesFor(kind: HostKind): RouteObject[] {
+  const student = kind !== "staff";
+  const staff = kind !== "student";
+  return [
     {
-      path: "change-password",
-      lazy: page(() => import("@/features/auth/pages/ChangePasswordPage")),
+      ErrorBoundary,
+      HydrateFallback: () => null,
+      children: [
+        ...(student ? [] : [{ index: true, element: <HomeRedirect /> }]),
+        { children: student ? [...authRoutes, ...joinRoutes] : authRoutes },
+        ...(staff ? [{ path: "admin/*", element: <LegacyTeacherRedirect /> }] : []),
+        {
+          element: <RequireSession />,
+          children: [
+            {
+              path: "change-password",
+              lazy: page(() => import("@/features/auth/pages/ChangePasswordPage")),
+            },
+            ...(staff ? [teacherTree, adminTree] : []),
+            ...(student ? [studentTree, takeTestTree] : []),
+          ],
+        },
+        // Eager, like the guard that also renders it.
+        { path: "403", element: <ForbiddenPage /> },
+        { path: "*", element: <NotFoundPage /> },
+      ],
     },
-    teacherTree,
-    adminTree,
-    studentTree,
-    takeTestTree,
-  ],
-};
+  ];
+}
 
-export const router = createBrowserRouter([
-  {
-    ErrorBoundary,
-    HydrateFallback: () => null,
-    children: [
-      { index: true, element: <HomeRedirect /> },
-      authTree,
-      { path: "admin/*", element: <LegacyTeacherRedirect /> },
-      protectedTree,
-      // Eager, like the guard that also renders it.
-      { path: "403", element: <ForbiddenPage /> },
-      { path: "*", element: <NotFoundPage /> },
-    ],
-  },
-]);
+export const router = createBrowserRouter(routesFor(hostKind()));

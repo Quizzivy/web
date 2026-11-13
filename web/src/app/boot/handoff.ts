@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { consolePath } from "@/app/adminPaths";
+import { hostKind } from "@/app/host";
 
 /** Shell is the console a route belongs to. */
 export type Shell = "teacher" | "admin" | "student";
@@ -23,11 +24,14 @@ export function skeletonFor(pathname: string): ReactNode {
   return skeleton === undefined ? null : skeleton();
 }
 
+const STUDENT_PAGE =
+  /^\/(?:$|classes$|assignments\/|settings(?:\/|$)|attempts\/[^/]+\/result$)/;
+
 function shellFor(pathname: string): Shell | null {
-  if (consolePath(pathname)) return "admin";
-  if (pathname === "/teacher" || pathname.startsWith("/teacher/")) return "teacher";
-  if (pathname.startsWith("/app/attempts/") && !pathname.endsWith("/result"))
-    return null;
-  if (pathname === "/app" || pathname.startsWith("/app/")) return "student";
-  return null;
+  const kind = hostKind();
+  if (kind !== "student") {
+    if (consolePath(pathname)) return "admin";
+    if (pathname === "/teacher" || pathname.startsWith("/teacher/")) return "teacher";
+  }
+  return kind !== "staff" && STUDENT_PAGE.test(pathname) ? "student" : null;
 }

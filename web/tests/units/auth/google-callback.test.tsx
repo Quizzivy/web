@@ -40,7 +40,7 @@ function arrive(pending: { joinCode?: string } = {}) {
     [
       { path: "/auth/google/callback", element: <GoogleCallbackPage /> },
       { path: "/join/:code", element: <JoinPage /> },
-      { path: "/app", element: <p>student home</p> },
+      { path: "/", element: <p>student home</p> },
       { path: "/login", element: <p>login page</p> },
     ],
     { initialEntries: [`/auth/google/callback?code=abc&state=${state}`] },

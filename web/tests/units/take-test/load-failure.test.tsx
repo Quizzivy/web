@@ -19,10 +19,10 @@ vi.mock("@/features/take-test/api", () => ({
 function renderPage() {
   const router = createMemoryRouter(
     [
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
-      { path: "/app", element: <p>home</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
     ],
-    { initialEntries: ["/app/attempts/att-1"] },
+    { initialEntries: ["/attempts/att-1"] },
   );
   render(<RouterProvider router={router} />);
   return router;
@@ -76,6 +76,6 @@ describe("when the paper does not load", () => {
 
     await screen.findByRole("alert");
     await user.click(screen.getByRole("button", { name: "Về trang chủ" }));
-    await waitFor(() => expect(router.state.location.pathname).toBe("/app"));
+    await waitFor(() => expect(router.state.location.pathname).toBe("/"));
   });
 });

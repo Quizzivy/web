@@ -42,7 +42,7 @@ test("E2E 6: leaving the page warns the student and the count comes back from th
   // The reload is the point: this tab's own count is gone, so the spent
   // allowance it shows afterwards was read back from the server.
   await page.reload();
-  await expect(page).toHaveURL(new RegExp(`/app/attempts/${attemptId}$`));
+  await expect(page).toHaveURL(new RegExp(`/attempts/${attemptId}$`));
   await expect(page.getByText("Hết lần rời trang")).toBeVisible({ timeout: 30_000 });
   await expect(page.getByText("Còn 1 lần rời trang")).toBeHidden();
 });

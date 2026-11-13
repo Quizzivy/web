@@ -69,8 +69,8 @@ const openDrawer = () => screen.getByRole("button", { name: "Mở ngữ liệu" 
 
 function mount() {
   const router = createMemoryRouter(
-    [{ path: "/app/attempts/:attemptId", element: <TakeTestPage /> }],
-    { initialEntries: ["/app/attempts/att-1"] },
+    [{ path: "/attempts/:attemptId", element: <TakeTestPage /> }],
+    { initialEntries: ["/attempts/att-1"] },
   );
   return render(<RouterProvider router={router} />);
 }

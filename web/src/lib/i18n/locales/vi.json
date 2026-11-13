@@ -1882,6 +1882,7 @@
     "haveCode": "Bạn có mã lớp?",
     "joinClass": "Tham gia lớp",
     "googleFailedTitle": "Không đăng nhập được bằng Google",
+    "otherHost": "Mở trang đăng nhập của {{host}}",
     "noMethod": "Hiện chưa có cách đăng nhập nào dùng được. Hãy hỏi quầy lễ tân hoặc quản trị viên của trung tâm."
   },
   "join": {

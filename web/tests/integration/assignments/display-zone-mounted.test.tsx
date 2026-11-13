@@ -213,8 +213,8 @@ it("keeps preview policy dates fixed to HCM while the actual mounted student int
       ),
     ),
   );
-  renderAt(`/app/assignments/${ID}`, [
-    { path: "/app/assignments/:id", element: <AssignmentIntroPage /> },
+  renderAt(`/assignments/${ID}`, [
+    { path: "/assignments/:id", element: <AssignmentIntroPage /> },
   ]);
   await act(async () => {
     useAuthStore.getState().setUser({ ...STUDENT, timeZone: "UTC" });

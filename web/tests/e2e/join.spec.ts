@@ -93,7 +93,7 @@ test("E2E 3: an anonymous visitor joins a class from a deep link", async ({ page
   expect(exchange, "the authorization code is exchanged exactly once").toHaveLength(1);
 
   await page.getByRole("link", { name: "Đến lớp của tôi" }).click();
-  await expect(page).toHaveURL(/\/app\/classes$/);
+  await expect(page).toHaveURL(/\/classes$/);
   await expect(page.getByText(CLASS_NAME).first()).toBeVisible();
 });
 
@@ -143,8 +143,8 @@ test("a signed-out visitor never reaches the app by guessing the URL", async ({
   page,
 }) => {
   await stubApi(page, anonymous);
-  await page.goto("/app");
-  await expect(page).toHaveURL(/\/login\?next=/);
+  await page.goto("/classes");
+  await expect(page).toHaveURL(/\/login\?next=%2Fclasses$/);
 });
 
 test("a signed-in student joins from Classes with one lookup and one join", async ({
@@ -198,7 +198,7 @@ test("a signed-in student joins from Classes with one lookup and one join", asyn
       );
     },
   });
-  await page.goto("/app/classes");
+  await page.goto("/classes");
   await expect(page.getByText("Bạn chưa tham gia lớp nào.")).toBeVisible();
   await page.getByRole("button", { name: "Tham gia lớp" }).click();
   const dialog = page.getByRole("dialog", { name: "Tham gia lớp" });

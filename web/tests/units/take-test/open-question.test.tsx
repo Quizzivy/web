@@ -91,10 +91,10 @@ function reply() {
 async function open() {
   const router = createMemoryRouter(
     [
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
-      { path: "/app", element: <p>home</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
     ],
-    { initialEntries: ["/app/attempts/att-1"] },
+    { initialEntries: ["/attempts/att-1"] },
   );
   const view = render(<RouterProvider router={router} />);
   await pass(0);

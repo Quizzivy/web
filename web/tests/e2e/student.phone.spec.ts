@@ -43,7 +43,7 @@ async function signIn(page: Page) {
     [`GET /app/assignments/${open.id}`]: { body: intro },
     "GET /app/attempts/result/result": { body: gradedResult },
   });
-  await page.goto("/app");
+  await page.goto("/");
   await expect(page.getByRole("button", { name: "Tiếp tục làm bài" })).toBeVisible();
 }
 
@@ -75,7 +75,7 @@ test("the destinations are a tab bar at the foot, and each tab opens its screen"
   await expect(tabs.locator("[aria-current]")).toHaveCount(1);
 
   await classesTab.tap();
-  await expect(page).toHaveURL(/\/app\/classes$/);
+  await expect(page).toHaveURL(/\/classes$/);
   await expect(
     page.getByRole("heading", { level: 2, name: classes[0]!.name }),
   ).toBeVisible();
@@ -83,7 +83,7 @@ test("the destinations are a tab bar at the foot, and each tab opens its screen"
   await expect(tabs.locator("[aria-current]")).toHaveCount(1);
 
   await home.tap();
-  await expect(page).toHaveURL(/\/app$/);
+  await expect(page).toHaveURL(/\/$/);
   await expect(home).toHaveAttribute("aria-current", "page");
   await expect(tabs.locator("[aria-current]")).toHaveCount(1);
 });
@@ -95,7 +95,7 @@ test("Me opens settings as a detail screen, and signing out stays behind the ava
   await expect(page.getByRole("button", { name: "Đăng xuất" })).toHaveCount(0);
 
   await tabBar(page).getByRole("link", { name: "Tôi", exact: true }).tap();
-  await expect(page).toHaveURL(/\/app\/settings$/);
+  await expect(page).toHaveURL(/\/settings$/);
   await expect(
     page.getByRole("banner").getByText("Cài đặt", { exact: true }),
   ).toBeVisible();
@@ -124,14 +124,14 @@ test("a detail screen swaps the logo for a back arrow and its title, and back re
     .getByRole("main")
     .getByRole("link", { name: /Bài luyện tập 3/ })
     .tap();
-  await expect(page).toHaveURL(/\/app\/assignments\/assignment-3$/);
+  await expect(page).toHaveURL(/\/assignments\/assignment-3$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText("Bài luyện tập 3");
   await expect(banner.getByText("Bài kiểm tra", { exact: true })).toBeVisible();
   await expect(logo).toHaveCount(0);
   await expect(tabBar(page)).toHaveCount(0);
   await expect(ownBack).toHaveCount(0);
   await back.tap();
-  await expect(page).toHaveURL(/\/app$/);
+  await expect(page).toHaveURL(/\/$/);
   await expect(logo).toBeVisible();
   await expect(tabBar(page)).toBeVisible();
 
@@ -139,7 +139,7 @@ test("a detail screen swaps the logo for a back arrow and its title, and back re
     .getByRole("main")
     .getByRole("link", { name: /Bài luyện tập 4/ })
     .tap();
-  await expect(page).toHaveURL(/\/app\/attempts\/result\/result$/);
+  await expect(page).toHaveURL(/\/attempts\/result\/result$/);
   await expect(page.getByRole("heading", { level: 1 })).toHaveText(
     gradedResult.testTitle,
   );
@@ -148,7 +148,7 @@ test("a detail screen swaps the logo for a back arrow and its title, and back re
   await expect(tabBar(page)).toHaveCount(0);
   await expect(ownBack).toHaveCount(0);
   await back.tap();
-  await expect(page).toHaveURL(/\/app$/);
+  await expect(page).toHaveURL(/\/$/);
   await expect(tabBar(page)).toBeVisible();
 });
 
@@ -164,13 +164,13 @@ test("Home, Classes, the intro and the result do not scroll sideways", async ({
   ).toBeVisible();
   await fits(page);
 
-  await page.goto("/app/assignments/assignment-3");
+  await page.goto("/assignments/assignment-3");
   await expect(
     page.getByRole("button", { name: "Bắt đầu làm bài", exact: true }),
   ).toBeVisible();
   await fits(page);
 
-  await page.goto("/app/attempts/result/result");
+  await page.goto("/attempts/result/result");
   await expect(page.getByText("Câu trả lời đã chấm")).toBeVisible();
   await fits(page);
 });
@@ -188,7 +188,7 @@ test("the way Home from a paper that is not there keeps the 44px floor", async (
   page,
 }) => {
   await signIn(page);
-  await page.goto("/app/assignments/assignment-9");
+  await page.goto("/assignments/assignment-9");
   const home = page
     .getByRole("main")
     .getByRole("link", { name: "Trang chủ", exact: true });

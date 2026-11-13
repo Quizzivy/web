@@ -27,13 +27,13 @@ import { queryWrapper } from "@tests/support/queryWrapper";
 const BASE = "http://localhost:8080";
 const WINDOW = { startsAt: "2026-10-01T15:00:00Z", endsAt: "2026-10-01T16:30:00Z" };
 
-function renderAt(path = "/app/attempts/a1"): {
+function renderAt(path = "/attempts/a1"): {
   router: DataRouter;
   page: HTMLElement;
 } {
   const router = createMemoryRouter(
     [
-      { path: "/app/attempts/:id", element: <p>engine</p> },
+      { path: "/attempts/:id", element: <p>engine</p> },
       { path: "/login", element: <p>login page</p> },
     ],
     { initialEntries: [path] },
@@ -179,7 +179,7 @@ describe("the sign-in-again overlay", () => {
 
   it("drops the session and goes to sign in, coming back here after", async () => {
     const clear = vi.spyOn(queryClient, "clear");
-    const { router } = renderAt("/app/attempts/a1");
+    const { router } = renderAt("/attempts/a1");
     act(() => useAuthStore.getState().expireSession());
     act(() => useAppState.getState().showOverlay({ kind: "expired" }));
 
@@ -190,7 +190,7 @@ describe("the sign-in-again overlay", () => {
     expect(clear).toHaveBeenCalled();
     await waitFor(() => expect(router.state.location.pathname).toBe("/login"));
     expect(router.state.location.search).toBe(
-      `?next=${encodeURIComponent("/app/attempts/a1")}`,
+      `?next=${encodeURIComponent("/attempts/a1")}`,
     );
   });
 });
@@ -249,14 +249,14 @@ describe.each(["desktop", "phone"] as const)("over the engine on a %s", (width) 
     const router = createMemoryRouter(
       [
         {
-          path: "/app/attempts/:attemptId",
+          path: "/attempts/:attemptId",
           handle: { focus: true },
           element: <FocusLayout />,
           children: [{ index: true, element: <TakeTestPage /> }],
         },
         { path: "/login", element: <p>login page</p> },
       ],
-      { initialEntries: [`/app/attempts/${DECK_ATTEMPT}`] },
+      { initialEntries: [`/attempts/${DECK_ATTEMPT}`] },
     );
     const { container } = render(
       <>

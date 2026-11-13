@@ -8,7 +8,7 @@ for (const width of [320, 360, 768, 1024, 1440, 1920]) {
   }, info) => {
     await page.setViewportSize({ width, height: 900 });
     await student(page);
-    await page.goto("/app");
+    await page.goto("/");
     await expect(page.getByRole("button", { name: "Tiếp tục làm bài" })).toHaveCount(1);
     const rows = page.getByRole("main").getByRole("link");
     await expect(rows).toHaveCount(2);
@@ -51,7 +51,7 @@ test("unsaved settings survive crossing the desktop breakpoint and password visi
 }, info) => {
   await student(page);
   await page.setViewportSize({ width: 1024, height: 900 });
-  await page.goto("/app/settings");
+  await page.goto("/settings");
   const name = page.getByRole("textbox", { name: "Họ và tên" });
   await name.fill("Tên đang chỉnh sửa");
   await page.setViewportSize({ width: 320, height: 900 });
@@ -86,14 +86,14 @@ test("result filters survive resizing, explain empty results and retain the full
     "GET /app/attempts/result/result": { body: result },
   });
   await page.setViewportSize({ width: 1440, height: 900 });
-  await page.goto("/app/attempts/result/result");
+  await page.goto("/attempts/result/result");
   const wrong = page.getByRole("button", { name: /^Sai/ });
   await wrong.click();
   await page.setViewportSize({ width: 800, height: 900 });
   await expect(page.getByRole("link", { name: "Quay lại" })).toHaveCount(0);
   await expect(
     page.getByRole("main").getByRole("link", { name: "Trang chủ" }),
-  ).toHaveAttribute("href", "/app");
+  ).toHaveAttribute("href", "/");
   await page.setViewportSize({ width: 320, height: 900 });
   await expect(wrong).toHaveAttribute("aria-pressed", "true");
   await expect(
@@ -110,11 +110,11 @@ test("English student controls fit a 320px phone", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("quizzivy.locale", "en"));
   await student(page, { ...studentUser, locale: "en" });
   await page.setViewportSize({ width: 320, height: 900 });
-  await page.goto("/app");
+  await page.goto("/");
   await expect(page.getByRole("button", { name: "Continue test" })).toHaveCount(1);
   await expect(page.getByText("In progress", { exact: true })).toBeVisible();
   await fits(page);
-  await page.goto("/app/settings");
+  await page.goto("/settings");
   await expect(
     page.getByRole("banner").getByText("Settings", { exact: true }),
   ).toBeVisible();
@@ -128,7 +128,7 @@ for (const width of [767, 768]) {
   }) => {
     await page.setViewportSize({ width, height: 900 });
     await student(page);
-    await page.goto("/app");
+    await page.goto("/");
     const destinations = page.getByRole("navigation", { name: "Điều hướng chính" });
     await expect(destinations).toHaveCount(1);
     const box = (await destinations.boundingBox())!;
@@ -161,7 +161,7 @@ test("a toast clears the tab bar, and sits at the edge where there is none", asy
     );
   await page.setViewportSize({ width: 390, height: 844 });
   await student(page);
-  await page.goto("/app");
+  await page.goto("/");
   await expect(page.getByRole("link", { name: "Tôi", exact: true })).toBeVisible();
   expect(await lift()).toBe("84px");
 
@@ -170,7 +170,7 @@ test("a toast clears the tab bar, and sits at the edge where there is none", asy
   expect(await lift()).toBe("");
 
   await page.setViewportSize({ width: 1280, height: 900 });
-  await page.goto("/app");
+  await page.goto("/");
   await expect(page.getByRole("link", { name: "Trang chủ Quizzivy" })).toBeVisible();
   expect(await lift()).toBe("");
 });
@@ -179,7 +179,7 @@ test("the student console follows the dark theme", async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem("quizzivy.theme", "dark"));
   await page.setViewportSize({ width: 1280, height: 900 });
   await student(page, { ...studentUser, preferences: { theme: "dark" } });
-  await page.goto("/app");
+  await page.goto("/");
   await expect(page.getByRole("link", { name: "Trang chủ Quizzivy" })).toBeVisible();
   await expect(page.locator("html")).toHaveClass(/dark/);
   const colours = await page.evaluate(() => {
@@ -200,7 +200,7 @@ test("the student console follows the dark theme", async ({ page }) => {
 test("a destination whose module has not shipped is not a page", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await student(page);
-  for (const path of ["/app/learn", "/app/grades", "/app/messages"]) {
+  for (const path of ["/learn", "/grades", "/messages"]) {
     await page.goto(path);
     await expect(
       page.getByRole("heading", { name: "Trang này không tồn tại" }),

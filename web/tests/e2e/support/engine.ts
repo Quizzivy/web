@@ -85,7 +85,7 @@ export async function start(page: Page, data: Session = paper()) {
     },
     "POST /app/attempts/paper/events": { body: {} },
   });
-  await page.goto("/app/attempts/paper");
+  await page.goto("/attempts/paper");
   await expect(page.getByRole("radio", { name: "Đáp án A" })).toBeVisible();
 }
 
@@ -166,7 +166,7 @@ export async function startGroupPaper(
       ? fulfillWithRanges(route, audio)
       : route.fulfill({ path: audio, contentType: "audio/mpeg" }),
   );
-  await page.goto(`/app/attempts/${groupAttemptId}`);
+  await page.goto(`/attempts/${groupAttemptId}`);
   return seen;
 }
 

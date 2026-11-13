@@ -13,6 +13,7 @@ import { setLocale } from "@/lib/i18n";
 import { useAuthStore } from "@/stores/auth";
 import { assertContractRequest, contractJson } from "@tests/support/contractResponse";
 import { studentUser, teacherUser } from "@tests/support/fixtures";
+import { asHost } from "@tests/support/host";
 import { server } from "@tests/support/server";
 
 const CARRIED = "carried-in-the-fragment_0123456789-abcdefg";
@@ -99,7 +100,7 @@ function land(
     [
       { path: "/set-password", element: <SetPasswordPage /> },
       { path: "/teacher", element: <p>teacher home</p> },
-      { path: "/app", element: <p>student home</p> },
+      { path: "/", element: <p>student home</p> },
       { path: "/change-password", element: <p>change password</p> },
       { path: "/login", element: <p>sign in page</p> },
     ],
@@ -136,6 +137,7 @@ beforeEach(() => {
 
 afterEach(async () => {
   cleanup();
+  vi.unstubAllEnvs();
   useAuthStore.getState().clearSession();
   window.history.replaceState(null, "", "/");
   await setLocale("vi");
@@ -531,7 +533,7 @@ describe("setting the password", () => {
     const user = await fillIn();
     await user.click(submit());
     expect(await screen.findByText("student home")).toBeInTheDocument();
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
   });
 
   it("works from the keyboard alone: the fields, their show buttons, then Enter", async () => {
@@ -629,6 +631,38 @@ describe("setting the password", () => {
     });
     await waitFor(() => expect(heading).toHaveFocus());
     expect(screen.getByText(INVALID)).toBeVisible();
+  });
+
+  // Fails when the page drops the link to the other host for a set-password
+  // link opened at the host its account does not belong at (§5.8), or sends
+  // the account somewhere although nothing was set.
+  it("says where the account signs in when the link is opened at the other host", async () => {
+    asHost("staff");
+    checkAnswers(validLink);
+    setAnswers(() =>
+      contractJson(
+        "/auth/set-password",
+        "post",
+        403,
+        refusal(
+          "FORBIDDEN",
+          "Đây là tài khoản học viên. Hãy đăng nhập tại my.quizzivy.com.",
+        ),
+      ),
+    );
+    const router = land();
+    const user = await fillIn();
+    await user.click(submit());
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Đây là tài khoản học viên. Hãy đăng nhập tại my.quizzivy.com.",
+    );
+    expect(
+      screen.getByRole("link", { name: "Mở trang đăng nhập của my.quizzivy.com" }),
+    ).toHaveAttribute("href", "https://my.quizzivy.com/login");
+    expect(router.state.location.pathname).toBe("/set-password");
+    expect(useAuthStore.getState().accessToken).toBeNull();
+    expect(newField()).toHaveValue("mật-khẩu-mới-9");
   });
 
   it("keeps what was typed after a failure, and sends again on the next press", async () => {

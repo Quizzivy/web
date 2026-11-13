@@ -44,12 +44,12 @@ it("records nothing on a paper another tab took over", async () => {
   const router = createMemoryRouter(
     [
       {
-        path: "/app/attempts/:attemptId",
+        path: "/attempts/:attemptId",
         element: <FocusLayout />,
         children: [{ index: true, element: <TakeTestPage /> }],
       },
     ],
-    { initialEntries: [`/app/attempts/${DECK_ATTEMPT}`] },
+    { initialEntries: [`/attempts/${DECK_ATTEMPT}`] },
   );
   render(<RouterProvider router={router} />);
   await pass(0);

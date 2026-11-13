@@ -54,7 +54,7 @@ function Away({ sentence, detail }: Readonly<{ sentence: string; detail?: string
       <p className="text-base">{sentence}</p>
       {detail !== undefined && <p className="text-muted-fg text-sm">{detail}</p>}
       <Button asChild className="mt-3 w-full">
-        <Link to="/app">{t("takeTest.backHome")}</Link>
+        <Link to="/">{t("takeTest.backHome")}</Link>
       </Button>
     </div>
   );

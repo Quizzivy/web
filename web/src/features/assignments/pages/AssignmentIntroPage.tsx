@@ -139,7 +139,7 @@ export default function AssignmentIntroPage() {
   }, [over, refetch]);
   const back = wide ? (
     <Link
-      to="/app"
+      to="/"
       className="text-muted-fg hover:text-fg text-ui inline-flex items-center gap-1.5 self-start leading-4.5"
     >
       <ArrowLeft aria-hidden="true" className="size-[15px]" />
@@ -160,7 +160,7 @@ export default function AssignmentIntroPage() {
           <EmptyState
             action={
               <Button asChild>
-                <Link to="/app">{t("student.shell.home")}</Link>
+                <Link to="/">{t("student.shell.home")}</Link>
               </Button>
             }
           >
@@ -384,7 +384,7 @@ function Action({
       const session = await (live && a.lastAttemptId != null
         ? continueAttempt(a.id, a.lastAttemptId)
         : startOrResumeAttempt(a.id));
-      await navigate(`/app/attempts/${session.attempt.id}`);
+      await navigate(`/attempts/${session.attempt.id}`);
       queryClient.removeQueries({ queryKey: ["my-assignment", a.id] });
     } catch (cause) {
       setError(refusal(cause, t));

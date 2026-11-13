@@ -126,7 +126,7 @@ export function renderAt(
 ) {
   useAuthStore.getState().setSession("token", user);
   const router = createMemoryRouter(
-    [...routes, { path: "/app/attempts/:id", element: <p>engine</p> }],
+    [...routes, { path: "/attempts/:id", element: <p>engine</p> }],
     { initialEntries: [path] },
   );
   render(

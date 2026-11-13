@@ -60,6 +60,28 @@ that needs it. Locally: run the API from a `Quizzivy/api` checkout (`make up`,
 `make migrate seed`, `make dev`), set `EMAIL_SINK_DIR` to the same directory
 for both, and run `make e2e-live` here.
 
+### Three origins, one build
+
+Playwright builds once and serves the build on three ports
+(`web/tests/e2e/support/serve-hosts.mjs`). The build is given
+`http://localhost:4174` as the student host and `http://localhost:4175` as the
+staff host, so it is the student host on 4174, the staff host on 4175, and one
+host for every page on 4173, the `baseURL` every spec that names no host runs
+on. `hosts.spec.ts` (stubbed) and `hosts.live.spec.ts` are the specs that open
+4174 and 4175.
+
+The live API is started to match: `STUDENT_APP_URL` and `STAFF_APP_URL` are
+those two origins and `CORS_ALLOWED_ORIGINS` lists all three, in the job's
+`env` here and in the slow tail's. A local API needs the same three settings
+for the live hosts spec; the rest of the live suite needs only 4173 in
+`CORS_ALLOWED_ORIGINS`.
+
+They are ports and not `my.localhost` and `portal.localhost` because of the
+refresh cookie: it is `SameSite=Lax` on the API's host, two ports of
+`localhost` are two origins of one site, as `my.` and `portal.` are to `api.`
+in production, and `x.localhost` is a different site from `localhost`, from
+which the browser would not send it.
+
 ## The slow tail
 
 `.github/workflows/slow-tail.yml` runs the specs of the `slow` Playwright

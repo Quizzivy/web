@@ -1,0 +1,412 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R8 Schedule · Terms · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Terms, in System settings</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">R8 measures attendance “this term”, and R9’s gradebook is kept by term. A term is a name and two dates that an admin sets once for the whole centre. The deck has no screen for it (DG-93, DG-57); R8’s plan puts it in Admin › System settings as a fifth section and builds it from deck parts (T-R8.13). This page draws that section: the list, the dialog that adds and edits a term, the two ways a date can be refused, the confirm to delete, and the empty, loading and failed states. One sentence goes beyond the plan and is a question below: what the form says when a term’s end date is moved.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Where it lives</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A fifth section of System settings, after “Tổ chức”.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The plan’s place and the plan’s icon. The other four sections are the product’s, untouched.</li>
+      <li><span style="color:var(--fg)">It saves itself</span>: a dialog adds or changes one term and closes. The page’s unsaved-changes bar never shows for this section, so “Thêm học kỳ” sits in the card’s own header.</li>
+      <li>The card says in one line what a term is for, since nothing else on the Admin side mentions it.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The list</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A name, two dates, and where today falls.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>Newest first, as the read returns them. <span style="color:var(--fg)">A pill says “Đang diễn ra”, “Sắp tới” or “Đã qua”</span>, worked out by the server in the admin’s time zone.</li>
+      <li>Each row has the product’s row menu, with “Sửa” and “Xoá”. On a phone a row becomes two lines and keeps its menu.</li>
+      <li>Terms may leave gaps between them and may not overlap. A day in no term counts attendance “overall”.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">When a date is refused</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The form says which term is in the way.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li><span style="color:var(--fg)">An overlap is the server’s to find</span>: it answers with the name of the other term, and the sentence sits under the two dates.</li>
+      <li>An end before the start is caught in the form, before anything is sent.</li>
+      <li>Deleting asks first, with the plan’s sentence: attendance stays, and the rates of that term are counted over every session.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">System settings at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. The Admin console’s shell, the page’s heading and the section list are the product’s, with its own strings. Today is 24 September 2026, as in the deck. Pick a state in the bar above. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;display:flex;flex-direction:column;background:var(--sidebar);border-right:1px solid var(--border)">
+                <div style="padding:10px 8px 6px"><div style="display:flex;align-items:center;gap:10px;padding:6px"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center"><i class="icon-shield" style="font-size:16px"></i></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;line-height:1.25"><span style="font-weight:600;font-size:13.5px">Quizzivy</span><span style="font-size:12px;color:var(--muted-fg)">{{ sh.workspace }}</span></span><i class="icon-chevrons-up-down" style="font-size:15px;color:var(--muted-fg)"></i></div></div>
+                <div style="padding:4px 8px;display:flex;flex-direction:column;gap:14px"><sc-for list="{{ nav }}" as="g" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:1px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ true }}"><div style="font-size:11.5px;font-weight:500;color:var(--muted-fg);padding:4px 10px">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:7px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:20px;height:20px;padding:0 6px;border-radius:999px;display:grid;place-items:center;background:var(--warning-soft);color:var(--warning-ink);font-size:11.5px;font-weight:600">{{ n.count }}</span></sc-if></span></sc-for></div></sc-for></div>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+              <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:0 16px;border-bottom:1px solid var(--border);background:var(--bg)">
+                <span style="width:32px;height:32px;flex:none;display:grid;place-items:center;border-radius:7px"><i class="icon-{{ f.sbIcon }}" style="font-size:17px"></i></span><span style="width:1px;height:18px;background:var(--border);margin:0 4px"></span>
+                <span style="display:flex;align-items:center;gap:6px;min-width:0;font-size:13.5px"><span style="color:var(--muted-fg);white-space:nowrap">{{ sh.crumb }}</span><i class="icon-chevron-right" style="font-size:14px;color:var(--muted-fg)"></i><span style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sh.page }}</span></span>
+                <span style="margin-left:auto;display:flex;align-items:center;gap:6px"><span style="width:34px;height:34px;display:grid;place-items:center;border-radius:8px"><i class="icon-moon" style="font-size:17px"></i></span><span style="display:inline-flex;align-items:center;gap:6px;height:34px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap"><i class="icon-graduation-cap" style="font-size:15px"></i><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}">{{ sh.teacherView }}</sc-if></span></span>
+              </div>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+                <div style="width:100%;max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                  <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ sh.title }}</div><div style="margin-top:2px;color:var(--muted-fg);font-size:14px">{{ sh.hint }}</div></div>
+                  <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
+                    <div style="flex:0 1 {{ f.navW }};min-width:0;max-width:100%;display:flex;flex-direction:{{ f.navDir }};gap:2px;overflow:hidden"><sc-for list="{{ sections }}" as="sx" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:10px;height:36px;flex:none;padding:0 12px;border-radius:8px;white-space:nowrap;font-size:13.5px;background:{{ sx.bg }};color:{{ sx.fg }};font-weight:{{ sx.weight }}"><i class="icon-{{ sx.icon }}" style="font-size:16px"></i>{{ sx.label }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ sx.on }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.section.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.section.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div>
+                    <div style="flex:1 1 480px;min-width:0;display:flex;flex-direction:column;gap:14px">
+                      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow)">
+                        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;padding:16px 18px;border-bottom:1px solid var(--border)"><div style="flex:1 1 200px;min-width:0"><div style="font-size:15px;font-weight:600">{{ tx.cardTitle }}</div><div style="font-size:13px;color:var(--muted-fg)">{{ tx.cardHint }}</div></div><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.head.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.head.n }}</span></sc-if></sc-if><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.addH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13px;font-weight:500;white-space:nowrap"><i class="icon-plus" style="font-size:15px"></i>{{ tx.add }}</span></span></div>
+                        <sc-if value="{{ m.isTable }}" hint-placeholder-val="{{ true }}">
+                          <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}">
+                            <div style="display:grid;grid-template-columns:minmax(150px,1.5fr) minmax(104px,1fr) minmax(104px,1fr) 112px 34px;gap:12px;padding:0 18px;align-items:center;height:38px;font-size:12.5px;color:var(--muted-fg);font-weight:500;background:var(--muted)"><span>{{ tx.colName }}</span><span>{{ tx.colStarts }}</span><span>{{ tx.colEnds }}</span><span></span><span></span></div>
+                            <sc-if value="{{ m.hasRows }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ m.rows }}" as="r" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(150px,1.5fr) minmax(104px,1fr) minmax(104px,1fr) 112px 34px;gap:12px;padding:0 18px;align-items:center;min-height:52px;border-top:1px solid var(--border);font-size:13.5px"><span style="min-width:0;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><span style="color:var(--muted-fg);white-space:nowrap;font-variant-numeric:tabular-nums">{{ r.starts }}</span><span style="color:var(--muted-fg);white-space:nowrap;font-variant-numeric:tabular-nums">{{ r.ends }}</span><span style="display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ r.pBg }};color:{{ r.pFg }}">{{ r.state }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ r.pinPill }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pill.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.pill.n }}</span></sc-if></sc-if></sc-if></span><span style="position:relative;display:flex;justify-content:flex-end"><span role="img" aria-label="{{ tx.actions }}" style="width:{{ f.menuBtn }};height:{{ f.menuBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg);background:{{ r.menuBg }}"><i class="icon-ellipsis" style="font-size:16px"></i></span><sc-if value="{{ r.menuOpen }}" hint-placeholder-val="{{ false }}"><div role="menu" style="position:absolute;right:0;top:calc(100% + 4px);z-index:5;min-width:148px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:4px;display:flex;flex-direction:column;gap:1px"><span role="menuitem" style="display:flex;align-items:center;gap:9px;height:{{ f.itemH }};padding:0 9px;border-radius:6px;font-size:13.5px"><i class="icon-pencil" style="font-size:15px"></i><span style="flex:1">{{ tx.edit }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.menu.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.menu.n }}</span></sc-if></sc-if></span><span role="menuitem" style="display:flex;align-items:center;gap:9px;height:{{ f.itemH }};padding:0 9px;border-radius:6px;font-size:13.5px;color:var(--danger-ink)"><i class="icon-trash-2" style="font-size:15px"></i>{{ tx.delete }}</span></div></sc-if></span></div></sc-for></sc-if>
+                            <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(150px,1.5fr) minmax(104px,1fr) minmax(104px,1fr) 112px 34px;gap:12px;padding:0 18px;align-items:center;min-height:52px;border-top:1px solid var(--border)"><span><span style="display:block;height:11px;width:{{ sk.w }};border-radius:6px;background:var(--muted)"></span></span><span><span style="display:block;height:11px;width:72px;border-radius:6px;background:var(--muted)"></span></span><span><span style="display:block;height:11px;width:72px;border-radius:6px;background:var(--muted)"></span></span><span><span style="display:block;height:22px;width:80px;border-radius:6px;background:var(--muted)"></span></span><span></span></div></sc-for></div></sc-if>
+                          </sc-if>
+                          <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}">
+                            <sc-if value="{{ m.hasRows }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ m.rows }}" as="r" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;padding:12px 10px 12px 16px;border-top:{{ r.border }};font-size:13.5px"><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:3px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap"><span style="font-weight:500">{{ r.name }}</span><span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ r.pBg }};color:{{ r.pFg }}">{{ r.state }}</span></span><span style="font-size:12.5px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ r.range }}</span></span><span style="position:relative;display:flex"><span role="img" aria-label="{{ tx.actions }}" style="width:{{ f.menuBtn }};height:{{ f.menuBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg);background:{{ r.menuBg }}"><i class="icon-ellipsis" style="font-size:16px"></i></span><sc-if value="{{ r.menuOpen }}" hint-placeholder-val="{{ false }}"><div role="menu" style="position:absolute;right:0;top:calc(100% + 4px);z-index:5;min-width:148px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:4px;display:flex;flex-direction:column;gap:1px"><span role="menuitem" style="display:flex;align-items:center;gap:9px;height:{{ f.itemH }};padding:0 9px;border-radius:6px;font-size:13.5px"><i class="icon-pencil" style="font-size:15px"></i><span style="flex:1">{{ tx.edit }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.menu.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.menu.n }}</span></sc-if></sc-if></span><span role="menuitem" style="display:flex;align-items:center;gap:9px;height:{{ f.itemH }};padding:0 9px;border-radius:6px;font-size:13.5px;color:var(--danger-ink)"><i class="icon-trash-2" style="font-size:15px"></i>{{ tx.delete }}</span></div></sc-if></span></div></sc-for></sc-if>
+                            <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:8px;padding:14px 16px;border-top:{{ sk.border }}"><span style="display:block;height:11px;width:{{ sk.w }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:10px;width:60%;border-radius:6px;background:var(--muted)"></span></div></sc-for></div></sc-if>
+                          </sc-if>
+                          <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}"><div style="display:flex;justify-content:center;align-items:center;gap:8px;padding:10px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted-fg)"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if>{{ tx.loading }}</div></sc-if>
+                        </sc-if>
+                        <sc-if value="{{ m.hasMsg }}" hint-placeholder-val="{{ false }}">
+                          <div style="padding:36px 18px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center"><span style="max-width:46ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.msgIcon }}" style="font-size:14px"></i>{{ m.msgAct }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div>
+                        </sc-if>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <sc-if value="{{ dg.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:10"></div><div role="dialog" aria-label="{{ dg.title }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);z-index:11"><div style="padding:18px 14px 4px 18px;display:flex;gap:12px;align-items:flex-start"><sc-if value="{{ dg.hasIcon }}" hint-placeholder-val="{{ true }}"><span style="width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--muted)"><i class="icon-calendar-range" style="font-size:18px"></i></span></sc-if><div style="flex:1;min-width:0;align-self:center"><div style="font-size:16px;font-weight:600;line-height:1.35;overflow-wrap:anywhere">{{ dg.title }}</div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialog.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialog.n }}</span></sc-if></sc-if><span role="img" aria-label="{{ tx.close }}" style="width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:16px"></i></span></div><sc-if value="{{ dg.hasFields }}" hint-placeholder-val="{{ true }}"><div style="padding:14px 18px 4px;display:flex;flex-direction:column;gap:14px"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.colName }}</span><span style="display:flex;align-items:center;height:{{ f.inH }};border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg);color:{{ dg.nameFg }}">{{ dg.name }}</span></div><div style="display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px"><sc-for list="{{ dg.dates }}" as="fd" hint-placeholder-count="2"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ fd.label }}</span><span style="display:flex;align-items:center;gap:8px;height:{{ f.inH }};border:1px solid {{ fd.border }};border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg)"><span style="flex:1;min-width:0;color:{{ fd.fg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums">{{ fd.value }}</span><i class="icon-calendar" style="font-size:15px;color:var(--muted-fg)"></i></span></div></sc-for></div><sc-if value="{{ dg.hasErr }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;align-items:flex-start;gap:6px;margin-top:-6px;font-size:12.5px;line-height:1.5;color:var(--danger-ink)"><i class="icon-circle-alert" style="font-size:14px;margin-top:2px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ dg.err }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.err.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.err.n }}</span></sc-if></sc-if></div></sc-if><sc-if value="{{ dg.hasHint }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:flex-start;gap:6px;margin-top:-6px;font-size:12.5px;line-height:1.5;color:var(--muted-fg)"><span style="flex:1;min-width:0;text-wrap:pretty">{{ dg.hint }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></div></sc-if></div></sc-if><sc-if value="{{ dg.hasBody }}" hint-placeholder-val="{{ false }}"><div style="padding:10px 18px 0;font-size:13.5px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">{{ dg.body }}</div></sc-if><div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:16px 18px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap">{{ tx.cancel }}</span><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:{{ dg.btnBg }};color:{{ dg.btnFg }};font-size:13.5px;font-weight:600;white-space:nowrap">{{ dg.submit }}</span></div></div></sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is the product’s System settings, or the deck’s Admin shell.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What exists, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck and the product as they are. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck and the product</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the operation of T-R8.3 behind it, or the rule that decides.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Operation or rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Plan” says the English is the plan’s, “As today” that both strings are in the locale files now, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R8.13</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan names two new components and the page they join. This is what each takes from this page. No operation of T-R8.3 changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R8 · Terms, in System settings. A proposal page for DG-93, DG-57 and T-R8.13.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['secTerms', 'Section list', 'Học kỳ', 'Terms', 'Plan'],
+  ['cardTitle', 'Card', 'Học kỳ', 'Terms', 'Plan'],
+  ['cardHint', 'Card', 'Dùng cho điểm danh và sổ điểm.', 'Used by attendance and the gradebook.', 'Plan'],
+  ['add', 'Card, dialog', 'Thêm học kỳ', 'Add term', 'Plan'],
+  ['colName', 'Table, dialog', 'Tên', 'Name', 'Plan'],
+  ['colStarts', 'Table, dialog', 'Bắt đầu', 'Starts', 'Plan'],
+  ['colEnds', 'Table, dialog', 'Kết thúc', 'Ends', 'Plan'],
+  ['stCurrent', 'Table', 'Đang diễn ra', 'Current', 'Plan'],
+  ['stUpcoming', 'Table', 'Sắp tới', 'Upcoming', 'Plan'],
+  ['stPast', 'Table', 'Đã qua', 'Past', 'Plan'],
+  ['actions', 'Row menu', 'Thao tác', 'Actions', 'As today'],
+  ['edit', 'Row menu', 'Sửa', 'Edit', 'Plan'],
+  ['delete', 'Row menu', 'Xoá', 'Delete', 'As today'],
+  ['editTitle', 'Dialog', 'Sửa học kỳ', 'Edit term', 'New'],
+  ['namePh', 'Dialog', 'Ví dụ: Thu 2026', 'For example: Autumn 2026', 'New'],
+  ['save', 'Dialog', 'Lưu', 'Save', 'As today'],
+  ['cancel', 'Dialog', 'Huỷ', 'Cancel', 'As today'],
+  ['close', 'Dialog', 'Đóng', 'Close', 'As today'],
+  ['errOverlap', 'Dialog', 'Trùng với {name}', 'Overlaps {name}', 'Plan'],
+  ['errRange', 'Dialog', 'Ngày kết thúc phải sau ngày bắt đầu.', 'The end date must be after the start date.', 'New'],
+  ['endHint', 'Dialog', 'Buổi học lặp lại đã tạo vẫn dừng ở ngày kết thúc cũ.', 'Repeating sessions already made still stop at the old end date.', 'New'],
+  ['delTitle', 'Delete', 'Xoá học kỳ “{name}”?', 'Delete “{name}”?', 'New'],
+  ['delBody', 'Delete', 'Khi đó, tỉ lệ điểm danh trong học kỳ này sẽ tính trên mọi buổi học.', 'Attendance rates in this term then cover all sessions.', 'Plan'],
+  ['delDo', 'Delete', 'Xoá học kỳ', 'Delete term', 'New'],
+  ['empty', 'States', 'Chưa có học kỳ nào. Tỉ lệ điểm danh tính trên mọi buổi học cho đến khi bạn thêm học kỳ.', 'No terms yet. Attendance rates cover all sessions until you add one.', 'Plan'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today'],
+  ['loadFailed', 'States', 'Không tải được danh sách học kỳ.', 'Could not load the terms.', 'New'],
+  ['retry', 'States', 'Thử lại', 'Retry', 'As today'],
+  ['toastAdded', 'Toast', 'Đã thêm học kỳ {name}', 'Term {name} added', 'New'],
+  ['toastSaved', 'Toast', 'Đã lưu học kỳ {name}', 'Term {name} saved', 'New'],
+  ['toastDeleted', 'Toast', 'Đã xoá học kỳ {name}', 'Term {name} deleted', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+// the Admin console's own strings, as the locale files have them today: [Vietnamese, English]
+const SHELL = {
+  workspace: ['Bảng quản trị', 'Admin console'], crumb: ['Quản trị', 'Admin'], page: ['Cài đặt', 'Settings'], teacherView: ['Chế độ giáo viên', 'Teacher view'],
+  title: ['Cài đặt hệ thống', 'System settings'], hint: ['Áp dụng cho mọi người ở Quizzivy English Centre.', 'Applies to everyone in Quizzivy English Centre.'],
+  nav: [['', [['overview', 'layout-dashboard', ['Tổng quan', 'Overview']]]], [['Mọi người', 'People'], [['users', 'users', ['Người dùng', 'Users'], 4], ['roles', 'key-round', ['Vai trò & quyền', 'Roles & permissions']]]], [['Giảng dạy', 'Teaching'], [['classes', 'graduation-cap', ['Lớp học', 'Classes']]]],
+    [['Hệ thống', 'System'], [['ai', 'sparkles', ['Tín dụng AI', 'AI credits']], ['audit', 'scroll-text', ['Nhật ký kiểm tra', 'Audit log']], ['api', 'book-open-text', ['Tài liệu API', 'API reference']], ['settings', 'settings', ['Cài đặt', 'Settings']]]]],
+  sections: [['building-2', ['Tổ chức', 'Organization']], ['calendar-range', null], ['log-in', ['Đăng nhập', 'Sign-in']], ['shield-check', ['Dữ liệu và quyền riêng tư', 'Data & privacy']], ['gauge', ['Gói và mức dùng', 'Plan & usage']]]
+};
+// today is 24 September 2026, as in the deck; newest first, as the read returns them
+// [id, name, starts, ends, state, starts in a field, ends in a field]
+const TERMS = [
+  ['t3', ['Xuân 2027', 'Spring 2027'], ['4 thg 1, 2027', '4 Jan 2027'], ['25 thg 4, 2027', '25 Apr 2027'], 'upcoming'],
+  ['t2', ['Thu 2026', 'Autumn 2026'], ['1 thg 9, 2026', '1 Sep 2026'], ['20 thg 12, 2026', '20 Dec 2026'], 'current'],
+  ['t1', ['Hè 2026', 'Summer 2026'], ['1 thg 6, 2026', '1 Jun 2026'], ['22 thg 8, 2026', '22 Aug 2026'], 'past']
+];
+const STATES = [['list', 'The list'], ['menu', 'A row’s menu'], ['add', 'Add a term'], ['overlap', 'Dates overlap'], ['badRange', 'End before start'], ['edit', 'Edit a term'], ['delete', 'Delete'], ['empty', 'No terms yet'], ['loading', 'Loading'], ['error', 'Could not load']];
+const NOTES = {
+  list: [['section', 'A fifth section, “Học kỳ”, after “Tổ chức” (T-R8.13). The other four are as the product has them.'], ['head', 'One line says what a term is for. “Thêm học kỳ” sits in the card’s header: this section saves itself and takes no part in the page’s unsaved-changes bar.'], ['pill', 'The read says which term is current, upcoming or past. Terms cannot overlap, so one at most is current.']],
+  menu: [['menu', 'The product’s row menu, with “Sửa” and “Xoá”. Every term has both, the current one too.']],
+  add: [['dialog', 'The deck’s form dialog. A name the centre chooses, and two dates on the product’s date picker.']],
+  overlap: [['err', 'The server refuses a term that overlaps another and names it (409 TERM_OVERLAPS). The sentence sits under the two dates, both are marked, and the dialog stays open.']],
+  badRange: [['err', 'An end before the start is caught in the form, before anything is sent.']],
+  edit: [['hint', 'New on this page. When the end date changes, the form says what does not follow it: a session set to repeat took its last date from the term on the day it was made (Q2).']],
+  delete: [['dialog', 'The plan’s sentence: attendance stays, and that term’s rates are counted over every session. A danger confirm, because it changes what every teacher sees.']],
+  empty: [['msg', 'The plan’s sentence, with the same action as the header’s.']],
+  loading: [['skeleton', 'Three rows of the table’s shape, under its header.']],
+  error: [['msg', 'One sentence and “Thử lại”, inside the card. The section list stays.']]
+};
+const PIN_KEYS = ['section', 'head', 'pill', 'menu', 'dialog', 'err', 'hint', 'msg', 'skeleton'];
+// [part, the deck and the product, this page]
+const ADDS = [
+  ['Where terms are managed', 'Nowhere: the deck’s System settings has four sections and none for terms (DG-57, DG-93).', 'A fifth section, “Học kỳ”, after “Tổ chức”, as T-R8.13 places it.'],
+  ['The list', 'Not drawn.', 'A card with a table: name, start, end, and a pill for current, upcoming or past. A row menu with “Sửa” and “Xoá”.'],
+  ['Adding and editing', 'Not drawn.', 'One dialog for both, in the deck’s form dialog: a name and two dates.'],
+  ['A refused date', 'Not drawn.', 'Two sentences under the dates: “Trùng với {name}” from the server, and the end before the start from the form.'],
+  ['Moving a term’s end', 'Not drawn, and not in the plan.', 'One line in the dialog that says repeating sessions already made keep their old last date (Q2).'],
+  ['Deleting', 'Not drawn.', 'A danger confirm with the plan’s sentence.'],
+  ['Empty, loading, failed', 'Not drawn.', 'The plan’s empty sentence with its action, three skeleton rows, and one sentence with “Thử lại”.'],
+  ['A phone', 'The deck’s settings turn the section list into a row.', 'The same, and each term becomes two lines with its menu.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, operation or rule]
+const WHENS = [
+  ['The list is loading', 'Three skeleton rows under the table’s header.', 'GET /admin/settings/terms.'],
+  ['No term exists', 'The empty sentence and “Thêm học kỳ”.', 'items is empty. Attendance then reads “overall”, and a session set to repeat runs until it is stopped.'],
+  ['The list cannot load', 'One sentence and “Thử lại” in the card.', 'The server did not answer.'],
+  ['Today is inside a term', 'That row reads “Đang diễn ra”. Later terms read “Sắp tới”, earlier ones “Đã qua”.', 'state, worked out in the admin’s time zone.'],
+  ['“Thêm học kỳ” is saved', 'The dialog closes, the row joins the list, and a toast names the term.', 'POST /admin/settings/terms. The section is not part of the page’s unsaved changes.'],
+  ['The dates overlap another term', '“Trùng với Thu 2026” under the dates, and both are marked. The dialog stays open.', '409 TERM_OVERLAPS, with the other term’s name. It is not checked before sending.'],
+  ['The end is before the start', '“Ngày kết thúc phải sau ngày bắt đầu.” under the dates.', 'Caught in the form. The server would answer 400.'],
+  ['A term’s end date is changed', 'A line says that repeating sessions already made stop at the old end.', 'A series takes its last date from the term when it is made (T-R8.4). Nothing moves it afterwards (Q2).'],
+  ['“Xoá học kỳ” is confirmed', 'The row leaves, and a toast names the term.', 'DELETE /admin/settings/terms/{id}. Attendance stays; that term’s rates are counted over every session.'],
+  ['Someone without the permission opens the address', 'The Admin console’s own “no access” page.', 'Every operation needs system.settings.write.'],
+  ['Below 768px', 'The section list is a row that scrolls, and each term is two lines with its menu.', 'The product’s settings layout. The table’s four columns do not fit 360.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · The word', 'Is “Học kỳ” the word for a term?', 'It is what schools call a term. A language centre may say “khoá” or “đợt” for the same thing, but “Khoá học” is already the product’s word for a course, which R10 builds.', '“Học kỳ”, and “Học kỳ này” wherever attendance says “this term”.'],
+  ['Q2 · Moving a term’s end', 'When a term’s end date moves, should sessions that repeat follow it?', 'A session set to repeat takes its last date from the term on the day it is made, and no operation moves that date later. A centre that extends its term by two weeks would see every class’s schedule stop two weeks early, and each teacher would add the sessions again.', 'As planned: they do not follow. The dialog says so in one line when the end date changes. Making them follow would be a change to T-R8.3 and T-R8.4, and is not drawn.'],
+  ['Q3 · Holidays', 'Do holidays belong in this section?', 'Nothing cancels a range of dates at once: a teacher cancels each date (O-R8.2). A holiday list beside the terms would let an admin do it for the whole centre, and it would be a new feature.', 'Not drawn. Per-date cancelling, as planned.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['systemSections.ts', 'A fifth section after “organization”, with the calendar-range icon. It owns no part of the settings form, so the unsaved-changes bar never counts it.'],
+  ['Terms.tsx', 'The card with its line and “Thêm học kỳ” in its header; the table with the pill and the row menu; two lines per term below 768px; the empty, loading and failed states.'],
+  ['TermDialog.tsx', 'A name and two dates on the product’s date picker; the two sentences under the dates; and the line about repeating sessions when the end date changes (Q2).'],
+  ['ConfirmDialog', 'Delete, as a danger confirm with the plan’s sentence.'],
+  ['Locales', 'The copy table: thirty-one strings, Vietnamese first.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'R8’s plan (docs/plan/78-r8.md: T-R8.3, T-R8.4, T-R8.13 and O-R8.2), the register (DG-93, DG-57), the deck’s Admin page (the shell, System settings and the form dialog), and the product’s System settings for its sections and strings. Terms are not built yet, so there was no screen to run.'],
+  ['What it leaves alone.', 'The Admin shell, the page’s heading and the other four sections are the product’s. No operation of T-R8.3 changes.'],
+  ['What is not drawn.', 'Where a term is used: the “this term” rate in Attendance (T-R8.12), the hint under “Repeat every week” (T-R8.10) and the gradebook’s term menu (R9). And holidays (Q3).']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', st: 'list', anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const st = s.st;
+    const noteList = NOTES[st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+
+    // ---- the list
+    const loading = st === 'loading', failed = st === 'error', none = st === 'empty';
+    const PILLS = { current: [tx.stCurrent, 'var(--success-soft)', 'var(--success-ink)'], upcoming: [tx.stUpcoming, 'var(--info-soft)', 'var(--info-ink)'], past: [tx.stPast, 'var(--muted)', 'var(--muted-fg)'] };
+    const rows = loading || failed || none ? [] : TERMS.map((t, i) => { const pl = PILLS[t[4]], open = st === 'menu' && t[4] === 'current';
+      return { name: t[1][li], starts: t[2][li], ends: t[3][li], range: t[2][li] + ' – ' + t[3][li], state: pl[0], pBg: pl[1], pFg: pl[2], pinPill: t[4] === 'current', menuOpen: open, menuBg: open ? 'var(--hover)' : 'transparent', border: i ? '1px solid var(--border)' : '0' }; });
+    const msg = none ? [tx.empty, tx.add, 'plus'] : failed ? [tx.loadFailed, tx.retry, 'rotate-cw'] : null;
+    const m = { isTable: !msg, hasRows: rows.length > 0, rows, loading, skel: [0, 1, 2].map(i => ({ w: ['46%', '38%', '42%'][i], border: i ? '1px solid var(--border)' : '0' })),
+      hasMsg: !!msg, msg: msg ? msg[0] : '', msgAct: msg ? msg[1] : '', msgIcon: msg ? msg[2] : '' };
+
+    // ---- the dialog
+    const plain = { btnBg: 'var(--primary)', btnFg: 'var(--primary-fg)' }, danger = { btnBg: 'var(--danger)', btnFg: '#fff' };
+    const date = (label, value, bad) => ({ label, value, fg: 'var(--fg)', border: bad ? 'var(--danger)' : 'var(--border)' });
+    const D = (a, b) => (vi ? a : b);
+    const form = o => ({ open: true, hasIcon: true, hasFields: true, hasBody: false, body: '', hasErr: false, err: '', hasHint: false, hint: '', nameFg: 'var(--fg)', ...plain, ...o });
+    const dg = {
+      add: form({ title: tx.add, name: D('Hè 2027', 'Summer 2027'), dates: [date(tx.colStarts, D('01/06/2027', '1 Jun 2027')), date(tx.colEnds, D('21/08/2027', '21 Aug 2027'))], submit: tx.add }),
+      overlap: form({ title: tx.add, name: D('Đông 2026', 'Winter 2026'), dates: [date(tx.colStarts, D('01/12/2026', '1 Dec 2026'), true), date(tx.colEnds, D('28/02/2027', '28 Feb 2027'), true)], submit: tx.add, hasErr: true, err: fmt(tx.errOverlap, { name: TERMS[1][1][li] }) }),
+      badRange: form({ title: tx.add, name: D('Hè 2027', 'Summer 2027'), dates: [date(tx.colStarts, D('01/06/2027', '1 Jun 2027')), date(tx.colEnds, D('21/05/2027', '21 May 2027'), true)], submit: tx.add, hasErr: true, err: tx.errRange }),
+      edit: form({ title: tx.editTitle, name: TERMS[1][1][li], dates: [date(tx.colStarts, D('01/09/2026', '1 Sep 2026')), date(tx.colEnds, D('27/12/2026', '27 Dec 2026'))], submit: tx.save, hasHint: true, hint: tx.endHint }),
+      delete: { open: true, hasIcon: false, hasFields: false, title: fmt(tx.delTitle, { name: TERMS[2][1][li] }), name: '', nameFg: '', dates: [], hasErr: false, err: '', hasHint: false, hint: '', hasBody: true, body: tx.delBody, submit: tx.delDo, ...danger }
+    }[st] || { open: false, hasIcon: false, hasFields: false, title: '', name: '', nameFg: '', dates: [], hasErr: false, err: '', hasHint: false, hint: '', hasBody: false, body: '', submit: '', ...plain };
+
+    // ---- the shell
+    const sh = {}; ['workspace', 'crumb', 'page', 'teacherView', 'title', 'hint'].forEach(k => { sh[k] = SHELL[k][li]; });
+    const nav = SHELL.nav.map(g => ({ hasLabel: !!g[0], label: g[0] ? g[0][li] : '', items: g[1].map(n => { const on = n[0] === 'settings'; return { icon: n[1], label: n[2][li], bg: on ? 'var(--hover)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', weight: on ? 600 : 500, hasCount: !!n[3], count: String(n[3] || '') }; }) }));
+    const sections = SHELL.sections.map(x => { const on = x[1] === null; return { icon: x[0], label: on ? tx.secTerms : x[1][li], on, bg: on ? 'var(--hover)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', weight: on ? 600 : 500 }; });
+
+    const W = s.stageW || 1280;
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Admin · System settings · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: !phone, sbIcon: phone ? 'menu' : 'panel-left',
+      pad: phone ? '16px 14px 24px' : '24px 28px 40px', h1: phone ? '20px' : '24px', navW: phone ? '100%' : '200px', navDir: phone ? 'row' : 'column',
+      addH: phone ? '40px' : '34px', menuBtn: phone ? '40px' : '30px', itemH: phone ? '44px' : '34px', inH: phone ? '44px' : '38px', btnH: phone ? '44px' : '36px',
+      dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '440px', dlgR: phone ? '16px 16px 0 0' : '12px'
+    });
+    const frames = [mk(1280, 660, Math.min(1, W / 1280), false, 'the Admin console, with the section list beside the card'), mk(360, 720, Math.min(1, W / 360), true, 'the section list becomes a row; a term takes two lines')];
+    const ctl = [
+      { label: 'State', opts: this.seg(STATES, st, v => this.setState({ st: v })) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const tone = { New: 'var(--accent-ink)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const stLabel = (STATES.find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, sh, m, dg, pin, nav, sections, frames, ctl, stageRef: this.stageRef,
+      chips: ['R8 · v0.15.0', 'T-R8.13', 'DG-93, DG-57', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, st: 'list' }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

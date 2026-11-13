@@ -1,0 +1,536 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R9 Insights · Reports and Grades · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Reports and Grades, in the states the deck does not draw</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">Two screens R9 builds from full drawings. The teacher’s Reports is drawn with eight weeks of results and four students to check in with. The student’s Grades is drawn with six results and a tile that joins grammar and vocabulary. This page draws what R9 adds to each (T-R9.8, T-R9.9): a week with no result, a figure with no change, a range that cannot be chosen, twelve weeks on a phone, the cards with nothing, loading and failed; and for the student, one tile per skill, a result whose score is held back, more results to load, and the page with none. Both are in Vietnamese first, and nothing here changes an operation.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Reports, when a number is missing</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A gap is shown as a gap.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>A week with no result has no bar and reads “—” above its place. The other weeks keep their heights.</li>
+      <li><span style="color:var(--fg)">A figure that did not change shows no arrow and no number beside it</span>: an arrow at zero would say “up” or “down” about nothing.</li>
+      <li>“Học kỳ này” is in the range menu even with no term running, dimmed, with one line that says why.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Reports, with nothing to show</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One read fills the screen, and each card says what it lacks.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>While the read is on its way, each card waits in its own shape. The heading, the two buttons and the cards’ titles are there at once.</li>
+      <li><span style="color:var(--fg)">With nothing handed in during the range</span>, the average and the rate read “—”, the chart and the skills give the plan’s sentence, and the list has its own. “Học viên hoạt động” keeps its number: it is about this week, whatever the range.</li>
+      <li>When the read fails, the cards can only fail together. One sentence and one “Thử lại” stand where they were (Q2).</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Grades, for the student</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One tile per skill, and never a score that is being held back.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The deck joins grammar and vocabulary in one tile. R9 shows each skill that has results on its own tile, after the average (DG-97).</li>
+      <li><span style="color:var(--fg)">A result whose score is not shown yet reads “Đã nộp”</span>, as it does on Home, with no number and no bar. It is not in the average or in the tiles either, so nothing can be worked out from them.</li>
+      <li>“Xem thêm” brings the next results. With none at all, one sentence says where they will come from.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The two screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick who is looking and the state in the bar above. The cards, the tiles and the rows are the deck’s. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ f.sBar }}" hint-placeholder-val="{{ false }}">
+                <div style="height:60px;flex:none;display:flex;align-items:center;gap:14px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></span>
+                  <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:2px;margin-left:14px"><sc-for list="{{ sNav }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;font-size:14px;white-space:nowrap;color:{{ n.fg }};background:{{ n.bg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px"></i>{{ n.label }}</span></sc-for></span></sc-if>
+                  <span style="margin-left:auto;display:flex;align-items:center;gap:4px"><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-bell" style="font-size:18px"></i></span><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;font-weight:600">BN</span></span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+
+                <sc-if value="{{ m.isReports }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                      <div style="min-width:0"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.repTitle }}</div><sc-if value="{{ rp.hasSub }}" hint-placeholder-val="{{ true }}"><div style="margin-top:2px;color:var(--muted-fg);font-size:14px">{{ rp.sub }}</div></sc-if></div>
+                      <sc-if value="{{ rp.hasMenus }}" hint-placeholder-val="{{ true }}"><div style="position:relative;display:flex;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;white-space:nowrap">{{ tx.allClasses }}<i class="icon-chevron-down" style="font-size:14px;color:var(--muted-fg)"></i></span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;white-space:nowrap;background:{{ rp.rangeBg }}"><i class="icon-calendar" style="font-size:14px;color:var(--muted-fg)"></i>{{ rp.rangeLabel }}</span><sc-if value="{{ rp.menuOpen }}" hint-placeholder-val="{{ false }}"><div role="menu" style="position:absolute;right:{{ f.menuR }};left:{{ f.menuL }};top:calc(100% + 4px);width:276px;z-index:6;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:5px;text-align:left"><sc-for list="{{ rp.ranges }}" as="mi" hint-placeholder-count="4"><span role="menuitemradio" aria-checked="{{ mi.on }}" aria-disabled="{{ mi.off }}" style="display:flex;align-items:center;gap:9px;min-height:{{ f.itemH }};padding:6px 8px;border-radius:6px;font-size:13px"><span style="flex:1;min-width:0"><span style="display:block;font-weight:{{ mi.weight }};color:{{ mi.fg }}">{{ mi.label }}</span><sc-if value="{{ mi.off }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-size:12px;color:var(--muted-fg);text-wrap:pretty">{{ tx.termOff }}</span></sc-if></span><sc-if value="{{ mi.on }}" hint-placeholder-val="{{ false }}"><i class="icon-check" style="font-size:14px"></i></sc-if><sc-if value="{{ mi.off }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.menu.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.menu.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-if></div></sc-if>
+                    </div>
+                    <sc-if value="{{ rp.hasCards }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax({{ f.kpiMin }},1fr));gap:12px"><sc-for list="{{ rp.kpis }}" as="k" hint-placeholder-count="4"><div style="padding:16px 18px;border-radius:12px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)"><div style="font-size:13px;color:var(--muted-fg);font-weight:500">{{ k.label }}</div><sc-if value="{{ rp.ready }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:baseline;gap:8px;margin-top:4px"><span style="font-size:28px;font-weight:600;letter-spacing:-0.02em;font-variant-numeric:tabular-nums">{{ k.value }}</span><sc-if value="{{ k.hasDelta }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;font-weight:500;color:{{ k.deltaFg }};display:flex;align-items:center;gap:2px"><i class="icon-{{ k.deltaIcon }}" style="font-size:13px"></i>{{ k.delta }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ k.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.delta.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.delta.n }}</span></sc-if></sc-if></sc-if></div><div style="font-size:12.5px;color:var(--muted-fg)">{{ k.hint }}</div></sc-if><sc-if value="{{ rp.loading }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:9px;margin-top:10px"><span style="display:block;height:24px;width:64px;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:10px;width:70%;border-radius:6px;background:var(--muted)"></span></div></sc-if></div></sc-for></div>
+                      <div style="display:flex;flex-wrap:wrap;gap:12px">
+                        <div style="flex:2 1 460px;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px"><div style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600">{{ tx.chartTitle }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.weeks.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.weeks.n }}</span></sc-if></sc-if></div>
+                          <sc-if value="{{ rp.chartOn }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:flex-end;gap:{{ f.barGap }};height:180px;margin-top:18px;border-bottom:1px solid var(--border)"><sc-for list="{{ rp.trend }}" as="b" hint-placeholder-count="8"><div style="flex:1;min-width:0;display:flex;flex-direction:column;justify-content:flex-end;align-items:center;height:100%;gap:4px"><span style="display:flex;align-items:center;gap:4px;font-size:11.5px;color:var(--muted-fg);font-variant-numeric:tabular-nums;white-space:nowrap"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}">{{ b.v }}</sc-if><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}">{{ b.vPhone }}</sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ b.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.gap.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.gap.n }}</span></sc-if></sc-if></sc-if></span><div style="width:100%;max-width:44px;height:{{ b.h }};min-height:{{ b.minH }};background:{{ b.color }};border-radius:4px 4px 2px 2px"></div></div></sc-for></div><div style="display:flex;gap:{{ f.barGap }};margin-top:6px"><sc-for list="{{ rp.trend }}" as="b" hint-placeholder-count="8"><span style="flex:1;min-width:0;display:flex;justify-content:center;align-items:center;gap:4px;font-size:11px;color:var(--muted-fg);white-space:nowrap"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}">{{ b.label }}</sc-if><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}">{{ b.labelPhone }}</sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ b.pinLabel }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.label.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.label.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-if>
+                          <sc-if value="{{ rp.chartSkel }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:flex-end;gap:{{ f.barGap }};height:180px;margin-top:18px;border-bottom:1px solid var(--border)"><sc-for list="{{ rp.skelBars }}" as="sb" hint-placeholder-count="8"><div style="flex:1;display:flex;justify-content:center;align-items:flex-end;height:100%"><div style="width:100%;max-width:44px;height:{{ sb }};background:var(--muted);border-radius:4px 4px 2px 2px"></div></div></sc-for></div><div style="display:flex;justify-content:center;padding-top:10px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></sc-if>
+                          <sc-if value="{{ rp.chart.has }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px 12px"><span style="max-width:40ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ rp.chart.msg }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chart.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.chart.n }}</span></sc-if></sc-if></div></sc-if>
+                        </div>
+                        <div style="flex:1 1 300px;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px"><div style="font-size:15px;font-weight:600;margin-bottom:14px">{{ tx.skillTitle }}</div>
+                          <sc-if value="{{ rp.skillsOn }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:14px"><sc-for list="{{ rp.skills }}" as="sk" hint-placeholder-count="5"><div><div style="display:flex;justify-content:space-between;font-size:13px;margin-bottom:6px"><span>{{ sk.label }}</span><span style="font-variant-numeric:tabular-nums;font-weight:500">{{ sk.pct }}</span></div><div style="height:8px;background:var(--muted);border-radius:8px;overflow:hidden"><div style="height:100%;width:{{ sk.pct }};background:{{ sk.color }};border-radius:8px"></div></div></div></sc-for></div></sc-if>
+                          <sc-if value="{{ rp.loading }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:16px"><sc-for list="{{ rp.skelRows }}" as="sr" hint-placeholder-count="4"><div style="display:flex;flex-direction:column;gap:7px"><span style="display:block;height:11px;width:{{ sr }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:8px;width:100%;border-radius:6px;background:var(--muted)"></span></div></sc-for></div></sc-if>
+                          <sc-if value="{{ rp.skill.has }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:26px 12px"><span style="max-width:40ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ rp.skill.msg }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.none.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.none.n }}</span></sc-if></sc-if></div></sc-if>
+                        </div>
+                      </div>
+                      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden"><div style="padding:16px 18px 12px;font-size:15px;font-weight:600">{{ tx.watchTitle }}</div>
+                        <sc-if value="{{ rp.watchOn }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ rp.watch }}" as="wt" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:12px;padding:{{ f.rowPad }};border-top:1px solid var(--border);flex-wrap:wrap"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">{{ wt.initials }}</span><span style="flex:1 1 200px;min-width:0"><span style="display:block;font-weight:500;font-size:13.5px">{{ wt.name }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ wt.cls }}</span></span><span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:{{ wt.fg }};background:{{ wt.bg }};border-radius:999px;padding:2px 10px;white-space:nowrap"><i class="icon-{{ wt.icon }}" style="font-size:13px"></i>{{ wt.reason }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.rowBtnH }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-message-square" style="font-size:13px"></i>{{ tx.message }}</span></div></sc-for></sc-if>
+                        <sc-if value="{{ rp.loading }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ rp.skelRows }}" as="sr" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:12px;padding:13px 18px;border-top:1px solid var(--border)"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted)"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px"><span style="display:block;height:12px;width:{{ sr }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:10px;width:28%;border-radius:6px;background:var(--muted)"></span></span><span style="display:block;height:22px;width:120px;border-radius:6px;background:var(--muted)"></span></div></sc-for></sc-if>
+                        <sc-if value="{{ rp.watchMsg.has }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;padding:16px 18px;border-top:1px solid var(--border);font-size:13.5px;color:var(--muted-fg)">{{ rp.watchMsg.msg }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.watch.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.watch.n }}</span></sc-if></sc-if></div></sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ rp.page.has }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:12px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:44px 18px"><span style="max-width:46ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ rp.page.msg }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ rp.page.icon }}" style="font-size:14px"></i>{{ rp.page.act }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.page.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.page.n }}</span></sc-if></sc-if></div></sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isGrades }}" hint-placeholder-val="{{ false }}">
+                  <div style="max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                    <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.grTitle }}</div><div style="margin-top:4px;display:flex;align-items:center;gap:8px;color:var(--muted-fg);font-size:14px">{{ tx.grLead }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.lead.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.lead.n }}</span></sc-if></sc-if></div></div>
+                    <sc-if value="{{ gr.hasTabs }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:8px;max-width:100%"><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;min-width:0;overflow:hidden"><sc-for list="{{ gr.tabs }}" as="tb" hint-placeholder-count="3"><span style="border-radius:7px;height:32px;padding:0 14px;font-size:13.5px;white-space:nowrap;display:grid;place-items:center;background:{{ tb.bg }};color:{{ tb.fg }};box-shadow:{{ tb.ring }};font-weight:500">{{ tb.label }}</span></sc-for></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.tabs.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.tabs.n }}</span></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ gr.hasTiles }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:repeat({{ f.tileCols }},minmax(0,1fr));gap:12px"><sc-for list="{{ gr.tiles }}" as="sk" hint-placeholder-count="4"><div style="background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted-fg)">{{ sk.label }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ sk.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.tile.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.tile.n }}</span></sc-if></sc-if></sc-if></span><span style="font-size:22px;font-weight:600;font-variant-numeric:tabular-nums">{{ sk.value }}</span><span style="display:block;height:6px;border-radius:6px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ sk.pct }};background:{{ sk.color }}"></span></span></div></sc-for></div></sc-if>
+                    <sc-if value="{{ gr.hasRows }}" hint-placeholder-val="{{ true }}"><div style="background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden"><sc-for list="{{ gr.rows }}" as="g" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-top:{{ g.border }}"><span style="flex:1;min-width:0"><span style="display:block;font-size:14.5px;font-weight:500;line-height:1.35">{{ g.title }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ g.meta }}</span></span><sc-if value="{{ g.graded }}" hint-placeholder-val="{{ true }}"><span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:84px"><span style="font-size:15px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap">{{ g.score }}</span><span style="width:84px"><span style="display:block;height:6px;border-radius:6px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ g.pct }};background:{{ g.color }}"></span></span></span></span></sc-if><sc-if value="{{ g.pending }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12.5px;color:var(--warning-ink);background:var(--warning-soft);border-radius:999px;padding:2px 9px;white-space:nowrap"><i class="icon-hourglass" style="font-size:12px"></i>{{ tx.beingGraded }}</span></sc-if><sc-if value="{{ g.held }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.held.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.held.n }}</span></sc-if></sc-if><span style="font-size:14px;color:var(--muted-fg);white-space:nowrap">{{ tx.submitted }}</span></span></sc-if><i class="icon-chevron-right" style="font-size:16px;color:var(--muted-fg)"></i></div></sc-for><sc-if value="{{ gr.hasMore }}" hint-placeholder-val="{{ true }}"><div style="display:flex;justify-content:center;align-items:center;gap:8px;padding:12px 16px;border-top:1px solid var(--border)"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500">{{ tx.loadMore }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.more.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.more.n }}</span></sc-if></sc-if></div></sc-if></div></sc-if>
+                    <sc-if value="{{ gr.loading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}" style="display:flex;flex-direction:column;gap:18px"><span style="display:block;height:38px;width:280px;border-radius:6px;background:var(--muted)"></span><div style="display:grid;grid-template-columns:repeat({{ f.tileCols }},minmax(0,1fr));gap:12px"><sc-for list="{{ gr.skelTiles }}" as="st" hint-placeholder-count="4"><div style="border:1px solid var(--border);border-radius:14px;padding:14px 16px;display:flex;flex-direction:column;gap:10px"><span style="display:block;height:11px;width:{{ st }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:20px;width:48px;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:6px;width:100%;border-radius:6px;background:var(--muted)"></span></div></sc-for></div><div style="border:1px solid var(--border);border-radius:14px;overflow:hidden"><sc-for list="{{ gr.skelTiles }}" as="st" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:14px;padding:16px;border-top:1px solid var(--border)"><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px"><span style="display:block;height:13px;width:{{ st }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:10px;width:32%;border-radius:6px;background:var(--muted)"></span></span><span style="display:block;height:18px;width:84px;border-radius:6px;background:var(--muted)"></span></div></sc-for></div><div style="display:flex;justify-content:center"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></div></sc-if>
+                    <sc-if value="{{ gr.msg.has }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:14px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:44px 18px"><span style="max-width:44ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ gr.msg.msg }}</span><sc-if value="{{ gr.msg.retry }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.page.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.page.n }}</span></sc-if></sc-if></div></sc-if>
+                  </div>
+                </sc-if>
+              </div>
+
+              <sc-if value="{{ f.tabBar }}" hint-placeholder-val="{{ false }}"><div style="height:60px;flex:none;display:flex;border-top:1px solid var(--border);background:var(--bg)"><sc-for list="{{ sTabs }}" as="n" hint-placeholder-count="4"><span style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:3px;font-size:11.5px;color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:19px"></i>{{ n.label }}</span></sc-for></div></sc-if>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is drawn as the deck draws it.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Teacher and Student pages as they are. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule of R9’s plan, or the part of the read, behind it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R9.8 and T-R9.9</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each component the plan names takes from this page. No operation of T-R9.4 or T-R9.5 changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R9 · Reports and Grades, in the states the deck does not draw. A proposal page for T-R9.8 and T-R9.9.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['repTitle', 'Reports', 'Báo cáo', 'Reports', 'Deck'],
+  ['repSub', 'Reports, heading', '{scope} · {count} tuần qua', '{scope} · last {count} weeks', 'Deck'],
+  ['allClasses', 'Reports, Grades', 'Tất cả lớp', 'All classes', 'Deck'],
+  ['weeks', 'Range menu', '{count} tuần', '{count} weeks', 'Deck'],
+  ['thisTerm', 'Range menu', 'Học kỳ này', 'This term', 'Deck'],
+  ['termOff', 'Range menu', 'Chưa có học kỳ nào đang diễn ra.', 'No term is running now.', 'New'],
+  ['kpiAvg', 'Figures', 'Điểm trung bình', 'Average score', 'Deck'],
+  ['kpiAvgHint', 'Figures', 'so với {count} tuần trước đó', 'vs previous {count} weeks', 'Deck'],
+  ['kpiDone', 'Figures', 'Tỷ lệ hoàn thành', 'Completion rate', 'Deck'],
+  ['kpiDoneHint', 'Figures', 'Bài giao nộp đúng hạn', 'Assignments submitted on time', 'Deck'],
+  ['kpiActive', 'Figures', 'Học viên hoạt động', 'Active students', 'Deck'],
+  ['kpiActiveHint', 'Figures', 'Đăng nhập trong tuần này', 'Signed in this week', 'Deck'],
+  ['kpiAtt', 'Figures', 'Điểm danh', 'Attendance', 'Deck'],
+  ['kpiAttHint', 'Figures', 'Trên {count} buổi học', 'Across {count} sessions', 'Deck'],
+  ['kpiAttNone', 'Figures', 'Chưa điểm danh buổi nào', 'No attendance taken', 'New'],
+  ['pts', 'Figures', '{count} điểm', '{count} pts', 'Deck'],
+  ['chartTitle', 'Chart', 'Điểm trung bình theo tuần', 'Average score by week', 'Deck'],
+  ['skillTitle', 'Skills', 'Theo kỹ năng', 'By skill', 'Deck'],
+  ['grammar', 'Skills, tiles', 'Ngữ pháp', 'Grammar', 'As today'],
+  ['vocabulary', 'Skills, tiles', 'Từ vựng', 'Vocabulary', 'As today'],
+  ['reading', 'Skills, tiles', 'Đọc', 'Reading', 'As today'],
+  ['listening', 'Skills, tiles', 'Nghe', 'Listening', 'As today'],
+  ['writing', 'Skills, tiles', 'Viết', 'Writing', 'As today'],
+  ['watchTitle', 'Watch list', 'Học viên cần quan tâm', 'Students to check in with', 'Deck'],
+  ['rDropped', 'Watch list', 'Trung bình giảm {count} điểm', 'Average dropped {count} pts', 'Deck'],
+  ['rFlagged', 'Watch list', '{count} lượt làm bài bị gắn cờ', '{count} flagged attempts', 'Deck'],
+  ['rMissed', 'Watch list', 'Bỏ lỡ {count} bài giao', 'Missed {count} assignments', 'Deck'],
+  ['rNever', 'Watch list', 'Chưa từng đăng nhập', 'Has never signed in', 'Deck'],
+  ['message', 'Watch list', 'Nhắn tin', 'Message', 'Deck'],
+  ['noResults', 'Reports, states', 'Chưa có kết quả nào trong khoảng này.', 'No results in this range yet.', 'Plan'],
+  ['watchEmpty', 'Reports, states', 'Hiện chưa có ai cần quan tâm.', 'No one to check in with right now.', 'Plan'],
+  ['repNoClasses', 'Reports, states', 'Tạo lớp để xem báo cáo.', 'Create a class to see reports.', 'New'],
+  ['newClass', 'Reports, states', 'Lớp mới', 'New class', 'As today'],
+  ['repFailed', 'Reports, states', 'Không tải được báo cáo.', 'Could not load the reports.', 'New'],
+  ['retry', 'States', 'Thử lại', 'Retry', 'As today'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today'],
+  ['grTitle', 'Grades', 'Điểm số', 'Grades', 'As today'],
+  ['grLead', 'Grades', 'Mọi kết quả, theo từng lớp.', 'Every result, by class.', 'Deck'],
+  ['average', 'Grades, tiles', 'Trung bình', 'Average', 'Deck'],
+  ['score', 'Grades, rows', '{earned} / {total}', '{earned} / {total}', 'As today'],
+  ['band', 'Grades, rows', 'Band {band}', 'Band {band}', 'As today'],
+  ['beingGraded', 'Grades, rows', 'Chờ chấm', 'Being graded', 'As today'],
+  ['submitted', 'Grades, rows', 'Đã nộp', 'Submitted', 'As today'],
+  ['loadMore', 'Grades, rows', 'Xem thêm', 'Load more', 'As today'],
+  ['grEmpty', 'Grades, states', 'Chưa có kết quả nào. Kết quả sẽ hiện ở đây sau khi bạn nộp bài.', 'No results yet. They appear here after you hand in a test.', 'Plan'],
+  ['grFailed', 'Grades, states', 'Không tải được điểm số.', 'Could not load your grades.', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+const INIT = n => { const p = n.split(' '); return (p[p.length - 1][0] + p[0][0]).toUpperCase(); };
+
+// ---- Reports. The deck's eight weeks end on Monday 22 September; twelve reach back to 7 July.
+const MONDAYS = [[7, 7], [14, 7], [21, 7], [28, 7], [4, 8], [11, 8], [18, 8], [25, 8], [1, 9], [8, 9], [15, 9], [22, 9]];   // [day, month]
+const MONTH_EN = { 7: 'Jul', 8: 'Aug', 9: 'Sep' };
+const TREND12 = [61, 63, 60, 62, 64, 66, 65, 69, null, 71, 70, 74];   // the deck's last eight, with the week of 1 September left empty
+// per range: [average, its change in points, completion, its change, attendance, its change, sessions]
+const KPI = { 8: ['72%', 4, '88%', 2, '91%', 0, 42], 12: ['70%', 3, '86%', 1, '90%', -1, 61] };
+const SKILLS = [['grammar', 81], ['vocabulary', 77], ['reading', 74], ['listening', 68], ['writing', 62]];
+const WATCH = [['Đặng Quốc Huy', 'IELTS 6.5 Evening', 'rDropped', 12, 'trending-down', 'danger'], ['Lê Hoàng Nam', 'IELTS 6.5 Evening', 'rFlagged', 3, 'flag', 'danger'], ['Ngô Thanh Tùng', 'IELTS 6.5 Evening', 'rMissed', 2, 'circle-alert', 'warning'], ['Hoàng Đức Minh', 'Kids Starters B', 'rNever', 0, 'user-x', 'warning']];
+
+// ---- Grades. The deck's six results, newest first, and one whose score the teacher shows after the test closes.
+// [title, class, [date vi, date en], what the row shows, [earned, total] or a band, percent, skill]
+const CLASSES = ['IELTS 6.5 Evening', 'IELTS Foundation A'];
+const RESULTS = [
+  ['Writing Task 1 Practice', 0, ['CN, 21 thg 9', 'Sun 21 Sep'], 'score', '6.0', 67, 'writing'],
+  ['Mock test 2 · Reading', 0, ['Th 7, 20 thg 9', 'Sat 20 Sep'], 'submitted', null, null, 'reading'],
+  ['Unit 3 · Grammar check', 1, ['Th 6, 19 thg 9', 'Fri 19 Sep'], 'score', [8, 10], 80, 'grammar'],
+  ['Reading · TFNG Practice A', 0, ['Th 4, 17 thg 9', 'Wed 17 Sep'], 'pending', null, null, 'reading'],
+  ['Unit 2 · Listening: Numbers', 1, ['Th 3, 16 thg 9', 'Tue 16 Sep'], 'score', [17, 20], 85, 'listening'],
+  ['Vocabulary check · Unit 1', 1, ['Th 5, 11 thg 9', 'Thu 11 Sep'], 'score', [13, 15], 87, 'vocabulary'],
+  ['Reading · Skimming check', 0, ['Th 2, 8 thg 9', 'Mon 8 Sep'], 'score', [7, 10], 70, 'reading']
+];
+const SKILL_ORDER = ['grammar', 'vocabulary', 'reading', 'listening', 'writing', 'speaking'];
+
+const STATES = {
+  teacher: [['gaps', 'A week with no result'], ['menu', 'The range menu'], ['twelve', '12 weeks'], ['none', 'Nothing in the range'], ['noClasses', 'No class'], ['loading', 'Loading'], ['error', 'Could not load']],
+  student: [['list', 'Every skill'], ['oneClass', 'A class chosen'], ['few', 'Two results'], ['empty', 'No results yet'], ['loading', 'Loading'], ['error', 'Could not load']]
+};
+const START = { teacher: 'gaps', student: 'list' };
+const NOTES = {
+  'teacher:gaps': [['gap', 'Nothing was handed in that week, so there is no bar, and a dash stands where the value would be. The week keeps its place and its date.'], ['delta', 'The rate is what it was in the eight weeks before. No arrow and no number: there is no change to show.'], ['label', 'New on this page: a week is named by its Monday. The deck writes “W32” (Q1).']],
+  'teacher:menu': [['menu', 'No term is running today, so “Học kỳ này” cannot be chosen. It stays in the list with the reason under it, where a phone shows it too.']],
+  'teacher:twelve': [['weeks', 'Twelve bars keep every value and every date at 1280. At 360 a bar is about 20px wide, so a value and a date show on every other bar. The plan asks that of the dates only.'], ['gap', 'A week at the bottom of the scale keeps a bar 4px high. By the plan’s rule it would have none, and would look like the week with no result.']],
+  'teacher:none': [['delta', 'Nothing was handed in, so there is no average and no rate: a dash, and no arrow. The hint stays, so the tile still says what it measures.'], ['chart', 'The chart and the skills each give the plan’s sentence where their bars would be.'], ['watch', 'The list’s own sentence, when no student meets one of the four reasons.']],
+  'teacher:noClasses': [['page', 'A teacher with no class has nothing to report on. One sentence and the way to make a class, as the gradebook has it.']],
+  'teacher:loading': [['skeleton', 'Each card waits in its own shape. The heading, the two buttons and the cards’ titles are known before the read answers.']],
+  'teacher:error': [['page', 'One read fills every card, so they fail together. One sentence and “Thử lại” stand where the cards were. The heading and the two buttons stay, so another class or range can be tried (Q2).']],
+  'student:list': [['tile', 'After the average, each skill with a result has its own tile. The deck joins two of them as “Grammar & vocab”. Six tiles make a second row (Q3).'], ['held', 'The teacher shows this score after the test closes. Until then the row reads “Đã nộp”, as on Home, and the average and the tiles leave it out.'], ['more', '“Xem thêm” adds the next results under these. It is there only while there are more.']],
+  'student:oneClass': [['tabs', 'A class is chosen: the rows, the average and the tiles are that class’s alone. The address keeps the class.'], ['tile', 'Only the skills this class has a shown score in.']],
+  'student:few': [['lead', 'Every result is in one class, so there are no tabs: “Tất cả lớp” and the class would show the same list (Q4).'], ['tile', 'Two skills have results, so two tiles follow the average. A skill with none has no tile; it is not shown at 0%.']],
+  'student:empty': [['page', 'A student who has handed nothing in reads the plan’s sentence. No tabs and no tiles: there is nothing to total.']],
+  'student:loading': [['skeleton', 'The tabs, the tiles and the rows in their own shapes. The title and its sentence are there at once.']],
+  'student:error': [['page', 'One sentence and “Thử lại”. The title stays.']]
+};
+const PIN_KEYS = ['gap', 'delta', 'label', 'menu', 'weeks', 'chart', 'none', 'watch', 'page', 'skeleton', 'tile', 'held', 'more', 'tabs', 'lead', 'nav', 'newAnn'];
+// [part, the deck, this page]
+const ADDS = [
+  ['A week with no result', 'Every week has a bar.', 'No bar, and “—” where the value would be.'],
+  ['A figure that did not change', 'Every figure has an arrow and a change.', 'No arrow and no number when the change is zero or cannot be worked out.'],
+  ['Choosing the range', 'A button that reads “8 weeks”. The numbers do not follow it (DG-70).', 'A menu of 4, 8 and 12 weeks and “Học kỳ này”, the last unavailable, with its reason, when no term is running.'],
+  ['A week’s name', '“W39”.', 'The week’s Monday, “22/9” (Q1).'],
+  ['Twelve weeks', 'Eight bars.', 'Twelve at 1280 with every value. At 360 a value and a date on every other bar.'],
+  ['Nothing in the range', 'Not drawn.', '“—” for the average and the rate, the plan’s sentence in the chart and in the skills, and the list’s own sentence.'],
+  ['No class', 'Not drawn.', 'One sentence and “Lớp mới”.'],
+  ['Reports loading', 'Not drawn.', 'Each card in its own shape.'],
+  ['Reports failing', 'Not drawn.', 'One sentence and “Thử lại” where the cards were (Q2).'],
+  ['The tiles of Grades', 'Average, Reading, Listening, “Grammar & vocab”.', 'The average, then a tile for each skill with a result (DG-97, Q3).'],
+  ['A score that is held back', 'Not drawn. “Being graded” is the only row without a score.', '“Đã nộp” in plain text, as Home has it. No number, no bar.'],
+  ['A band', '“6.0 band”.', '“Band 6.0”, the product’s string.'],
+  ['A class chosen', 'Three tabs, the first chosen.', 'The tiles follow the tab. With results in one class there are no tabs (Q4).'],
+  ['More results', 'Six rows.', '“Xem thêm” under the rows.'],
+  ['Grades empty, loading, failing', 'Not drawn.', 'The plan’s sentence; the page’s own shape; one sentence and “Thử lại”.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, rule]
+const WHENS = [
+  ['A week of the range has no counted attempt', 'No bar, and “—” above its place, on a phone too.', 'weekly[].average is null (T-R9.4).'],
+  ['A week’s average is the lowest on the scale', 'A bar 4px high, with its value.', 'The plan scales the bars over the data’s range rounded out to tens, so a week at exactly 60% would have no height. New on this page.'],
+  ['A figure’s change is zero, or there is nothing to compare with', 'The value and the hint. No arrow.', 'T-R9.8.'],
+  ['The change is up, or down', 'The deck’s arrow in success ink or danger ink: “+4 điểm”, “+2%”, “−3”.', 'The deck’s formats.'],
+  ['No term contains today', '“Học kỳ này” cannot be chosen and says “Chưa có học kỳ nào đang diễn ra.”', 'The range “term” would answer 422 NO_CURRENT_TERM.'],
+  ['A term is running and is chosen', 'The sub-line reads “{class} · {term}”. The bars are the term’s weeks up to today, and the changes compare with the term before, or do not show when there is none.', 'T-R9.4 and the plan’s definitions. Not drawn.'],
+  ['More than eight weeks, on a phone', 'A value and a date on every other bar.', 'The plan asks this of the dates only. New on this page.'],
+  ['Nothing was handed in during the range', '“—” for the average and the rate; “Chưa có kết quả nào trong khoảng này.” in the chart and in the skills.', 'T-R9.8, DG-83.'],
+  ['No register was taken in the range', '“—” for attendance, and “Chưa điểm danh buổi nào”.', 'attendance is null (the plan’s definition).'],
+  ['No student meets a reason', '“Hiện chưa có ai cần quan tâm.”', 'watchList is empty.'],
+  ['The teacher has no class', '“Tạo lớp để xem báo cáo.” and “Lớp mới”.', 'T-R9.8 names the state. The words follow the gradebook’s.'],
+  ['The report has not answered yet', 'Each card in its own shape.', 'DG-83.'],
+  ['The report fails', '“Không tải được báo cáo.” and “Thử lại”.', 'One read (T-R9.4). The plan asks for a retry in every card (Q2).'],
+  ['A skill has a shown score', 'A tile after the average.', 'skills[] of T-R9.5 uses only results whose score is shown.'],
+  ['A result’s score is not shown yet', '“Đã nộp”. No number, no bar. Left out of the average and the tiles.', 'display is “submitted”: the review policy holds the score.'],
+  ['An answer waits for the teacher', '“Chờ chấm”, the deck’s chip. No bar.', 'display is “pending”.'],
+  ['The result shows a band', '“Band 6.0”, and a bar at its percentage.', 'R6’s band on the item.'],
+  ['A class tab is chosen', 'That class’s rows, average and tiles.', 'classId on the read. The address keeps it.'],
+  ['Every result is in one class', 'No tabs.', 'New on this page (Q4).'],
+  ['There are more results', '“Xem thêm” under the rows.', 'nextBefore is present.'],
+  ['Nothing handed in yet', 'The plan’s sentence, alone.', 'items is empty.'],
+  ['Grades fails', '“Không tải được điểm số.” and “Thử lại”.', 'DG-83.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · A week’s name', 'How is a week named under its bar?', 'The deck writes “W39”, the week’s number in the year. Few people at a centre count weeks that way, and its Vietnamese short form, “T39”, reads like a weekday (T2 to T7). The report already gives each week’s first day.', 'The week’s Monday: “22/9”, and “22 Sep” in English.'],
+  ['Q2 · When Reports cannot load', 'When the report fails, does each card carry its own “Thử lại”?', 'The plan asks for an error with a retry in every card. T-R9.4 answers the whole screen in one read, so the cards can only fail together: seven cards would say the same sentence, with seven buttons that do the same thing.', 'One sentence and one “Thử lại” where the cards were. The heading and the two buttons stay.'],
+  ['Q3 · Up to seven tiles', 'With a tile for each skill, is a second row of tiles fine?', 'The deck fits its four tiles in one row. With the skills apart there can be seven: the average and six skills. Four across leaves a second row of one to three tiles, and on a phone up to four rows of two before the first result.', 'As planned: four across, two on a phone, and the rest wrap.'],
+  ['Q4 · One class', 'Do the tabs show when every result is in one class?', 'The plan has “Tất cả lớp” and the student’s classes as tabs. With one class the two tabs show the same list.', 'No tabs until there are results in two classes.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['ReportKpis', 'No arrow at zero or null. “—” for a figure with nothing to count, with its hint kept. The hint of attendance when no register was taken.'],
+  ['WeeklyAverageChart', 'An empty week. A 4px floor for the lowest bar. The week named by its Monday (Q1). Every other value and date on a phone past eight weeks.'],
+  ['RangeMenu', '“Học kỳ này” unavailable, with its reason as a second line. The menu has to know whether a term is running before it opens; T-R9.8 does not name the read that tells it.'],
+  ['SkillBars, WatchList', 'The sentence each shows when it has nothing. The Vietnamese of the four reasons.'],
+  ['ReportsPage', 'A skeleton per card. One sentence for no class, and one for a failed read (Q2).'],
+  ['SkillTiles', 'A tile for each skill with a result, after the average. Four across, two on a phone (Q3).'],
+  ['GradeRow', '“Đã nộp” as plain text and “Chờ chấm” as the deck’s chip, neither with a bar. “Band 6.0”.'],
+  ['GradesPage', 'No tabs with one class (Q4). “Xem thêm”. The empty sentence, the skeleton and the failed state.'],
+  ['Locales', 'The copy table: forty-six strings, Vietnamese first. Fourteen are in the locale files today.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher page (Reports) and Student page (Grades); R9’s plan (docs/plan/79-r9.md: its definitions of the four figures and of what a student may see, T-R9.4, T-R9.5, T-R9.8, T-R9.9); and the product’s student shell and Home, for the words they already have. Neither screen is built, so there was no screen to run.'],
+  ['What it leaves alone.', 'The tiles, the bars, the chips and the rows are the deck’s. No operation changes.'],
+  ['What the plan does not say.', 'Whether the average and the completion rate of T-R9.4 may be null. A range with nothing handed in has no mean, and this page draws “—” for both.'],
+  ['What is not drawn.', 'One class chosen in Reports, and a term as the range: the same cards with other numbers, and the table above gives their sub-line. “Xem thêm” while it loads. The palette, which does not gain Reports (O-R9.4).']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', role: 'teacher', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const D = (a, b) => (vi ? a : b);
+    const role = s.role, teacher = role === 'teacher', st = s.st[role], key = role + ':' + st;
+    const noteList = NOTES[key] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    tx.title = tx.repTitle;
+    const loading = st === 'loading', failed = st === 'error';
+    const none = { has: false, msg: '' };
+
+    // ---- Reports
+    const noClasses = teacher && st === 'noClasses', empty = teacher && st === 'none';
+    const n = st === 'twelve' ? 12 : empty ? 4 : 8;
+    const signed = (v, unit) => (v > 0 ? '+' : '−') + Math.abs(v) + unit;
+    const k = KPI[n] || KPI[8];
+    const delta = (v, text) => ({ hasDelta: !!v, delta: v ? text : '', deltaIcon: v > 0 ? 'trending-up' : 'trending-down', deltaFg: v > 0 ? 'var(--success-ink)' : 'var(--danger-ink)' });
+    const kpis = (empty
+      ? [[tx.kpiAvg, '—', 0, '', fmt(tx.kpiAvgHint, { count: n }), true], [tx.kpiDone, '—', 0, '', tx.kpiDoneHint], [tx.kpiActive, '21 / 24', 0, '', tx.kpiActiveHint], [tx.kpiAtt, '—', 0, '', tx.kpiAttNone]]
+      : [[tx.kpiAvg, k[0], k[1], signed(k[1], ' ' + fmt(tx.pts, { count: '' }).trim()), fmt(tx.kpiAvgHint, { count: n })], [tx.kpiDone, k[2], k[3], signed(k[3], '%'), tx.kpiDoneHint], [tx.kpiActive, '79 / 86', -3, signed(-3, ''), tx.kpiActiveHint], [tx.kpiAtt, k[4], k[5], signed(k[5], '%'), fmt(tx.kpiAttHint, { count: k[6] }), st === 'gaps']]
+    ).map(x => ({ label: x[0], value: x[1], ...delta(x[2], x[3]), hint: x[4], pin: !!x[5] }));
+    const vals = TREND12.slice(12 - n), mons = MONDAYS.slice(12 - n);
+    const nums = vals.filter(v => v != null), lo = Math.floor(Math.min(...nums) / 10) * 10, hi = Math.max(lo + 10, Math.ceil(Math.max(...nums) / 10) * 10);
+    const thin = n > 8;   // on a phone, past eight weeks, every other bar carries its value and its date
+    const trend = vals.map((v, i) => { const label = vi ? mons[i][0] + '/' + mons[i][1] : mons[i][0] + ' ' + MONTH_EN[mons[i][1]], every = (n - 1 - i) % 2 === 0, val = v == null ? '—' : v + '%';
+      return { v: val, vPhone: v == null ? '—' : thin ? (every ? String(v) : '') : val, h: v == null ? '0' : Math.round((v - lo) / (hi - lo) * 100) + '%', minH: v == null ? '0' : '4px', color: i === n - 1 ? 'var(--accent-c)' : 'var(--hover)',
+        label, labelPhone: every ? label : '', pin: st === 'gaps' ? v == null : st === 'twelve' && v === lo, pinLabel: st === 'gaps' && i === 0 }; });
+    const page = noClasses ? [tx.repNoClasses, tx.newClass, 'plus'] : teacher && failed ? [tx.repFailed, tx.retry, 'rotate-cw'] : null;
+    const rp = {
+      hasSub: !noClasses, sub: fmt(tx.repSub, { scope: tx.allClasses, count: n }), hasMenus: !noClasses, rangeLabel: fmt(tx.weeks, { count: n }), rangeBg: st === 'menu' ? 'var(--hover)' : 'var(--card)', menuOpen: teacher && st === 'menu',
+      ranges: [4, 8, 12].map(c => ({ label: fmt(tx.weeks, { count: c }), on: c === n, off: false, weight: c === n ? 600 : 400, fg: 'var(--fg)' })).concat([{ label: tx.thisTerm, on: false, off: true, weight: 400, fg: 'var(--muted-fg)' }]),
+      hasCards: !page, ready: !loading, loading, kpis,
+      chartOn: !loading && !empty, trend, chartSkel: loading, skelBars: ['34%', '46%', '40%', '58%', '52%', '66%', '60%', '78%'], chart: empty ? { has: true, msg: tx.noResults } : none,
+      skillsOn: !loading && !empty, skills: SKILLS.map(x => ({ label: tx[x[0]], pct: x[1] + '%', color: x[1] < 65 ? 'var(--warning)' : 'var(--accent-c)' })), skelRows: ['46%', '38%', '52%', '42%'], skill: empty ? { has: true, msg: tx.noResults } : none,
+      watchOn: !loading && !empty, watch: WATCH.map(w => ({ name: w[0], initials: INIT(w[0]), cls: w[1], reason: fmt(tx[w[2]], { count: w[3] }), icon: w[4], bg: 'var(--' + w[5] + '-soft)', fg: 'var(--' + w[5] + '-ink)' })), watchMsg: empty ? { has: true, msg: tx.watchEmpty } : none,
+      page: page ? { has: true, msg: page[0], act: page[1], icon: page[2] } : { has: false, msg: '', act: '', icon: 'plus' }
+    };
+
+    // ---- Grades
+    const picked = st === 'oneClass' ? 0 : -1;
+    const shown = !teacher && (st === 'list' || st === 'oneClass' || st === 'few');
+    const mine = st === 'few' ? RESULTS.filter((r, i) => i === 2 || i === 4) : RESULTS.filter(r => picked < 0 || r[1] === picked);
+    const scored = mine.filter(r => r[3] === 'score');
+    const mean = a => Math.round(a.reduce((x, y) => x + y, 0) / a.length);
+    const tone = v => (v >= 80 ? 'var(--success)' : 'var(--accent-c)');
+    const tiles = scored.length ? [[tx.average, mean(scored.map(r => r[5]))]].concat(SKILL_ORDER.filter(sk => scored.some(r => r[6] === sk)).map(sk => [tx[sk], mean(scored.filter(r => r[6] === sk).map(r => r[5]))])).map((x, i) => ({ label: x[0], value: x[1] + '%', pct: x[1] + '%', color: tone(x[1]), pin: i === 1 })) : [];
+    const gMsg = teacher ? null : st === 'empty' ? [tx.grEmpty, false] : failed ? [tx.grFailed, true] : null;
+    const gr = {
+      hasTabs: shown && st !== 'few', tabs: [tx.allClasses].concat(CLASSES).map((label, i) => { const on = i - 1 === picked; return { label, bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; }),
+      hasTiles: shown && tiles.length > 0, tiles,
+      hasRows: shown, rows: mine.map((r, i) => ({ title: r[0], meta: CLASSES[r[1]] + ' · ' + r[2][li], graded: r[3] === 'score', pending: r[3] === 'pending', held: r[3] === 'submitted',
+        score: r[3] !== 'score' ? '' : Array.isArray(r[4]) ? fmt(tx.score, { earned: r[4][0], total: r[4][1] }) : fmt(tx.band, { band: r[4] }), pct: (r[5] || 0) + '%', color: (r[5] || 0) >= 80 ? 'var(--success)' : (r[5] || 0) >= 60 ? 'var(--accent-c)' : 'var(--warning)', border: i ? '1px solid var(--border)' : '0' })),
+      hasMore: st === 'list', loading: !teacher && loading, skelTiles: ['52%', '44%', '58%', '48%'],
+      msg: gMsg ? { has: true, msg: gMsg[0], retry: gMsg[1] } : { has: false, msg: '', retry: false }
+    };
+
+    // ---- the shells
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === 'reports' ? 'var(--hover)' : 'transparent', fg: id === 'reports' ? 'var(--fg)' : 'var(--muted-fg)', weight: id === 'reports' ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: false });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', D('Tổng quan', 'Dashboard')), item('calendar', 'calendar-days', D('Lịch', 'Calendar')), item('messages', 'message-square', D('Tin nhắn', 'Messages'))] },
+      { hasLabel: true, label: D('Giảng dạy', 'Teaching'), items: [item('assignments', 'clipboard-list', D('Bài giao', 'Assignments')), item('grading', 'square-pen', D('Chấm bài', 'Grading')), item('classes', 'graduation-cap', D('Lớp học', 'Classes')), item('students', 'users', D('Học viên', 'Students')), item('attendance', 'calendar-check', tx.kpiAtt)] },
+      { hasLabel: true, label: D('Nội dung', 'Content'), items: [item('tests', 'file-text', D('Đề thi', 'Tests')), item('shared', 'share-2', D('Được chia sẻ với tôi', 'Shared with me'), 2), item('bank', 'library', D('Ngân hàng câu hỏi', 'Question bank')), item('media', 'image', D('Thư viện media', 'Media'))] },
+      { hasLabel: true, label: D('Thống kê', 'Insights'), items: [item('gradebook', 'table', D('Sổ điểm', 'Gradebook')), item('reports', 'chart-column', tx.repTitle)] }
+    ];
+    // the student's shell as R9 leaves it: Learn stays out until R10, and “Tôi” is a tab on a phone
+    const dest = [['house', D('Trang chủ', 'Home'), false], ['users', D('Lớp', 'Classes'), false], ['chart-column', tx.grTitle, true]];
+    const tab = x => ({ icon: x[0], label: x[1], fg: x[2] ? 'var(--fg)' : 'var(--muted-fg)', bg: x[2] ? 'var(--hover)' : 'transparent', weight: x[2] ? 600 : 400 });
+    const sNav = dest.map(tab), sTabs = dest.concat([['circle-user', D('Tôi', 'Me'), false]]).map(tab);
+
+    const W = s.stageW || 1280;
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: (teacher ? 'Teacher · Reports · ' : 'Student · Grades · ') + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: teacher && !phone, tBar: teacher, sBar: !teacher, tabBar: !teacher && phone,
+      barPad: phone ? '0 14px' : teacher ? '0 28px' : '0 32px', pad: phone ? '14px' : teacher ? '24px 28px 28px' : '28px 32px', h1: phone ? '20px' : '24px', btnH: phone ? '40px' : '36px', itemH: phone ? '44px' : '34px',
+      kpiMin: '210px', barGap: phone ? (thin ? '4px' : '6px') : '10px', rowPad: phone ? '12px 14px' : '12px 18px', rowBtnH: phone ? '36px' : '30px', menuR: phone ? 'auto' : '0', menuL: phone ? '0' : 'auto',
+      tileCols: phone ? 2 : 4
+    });
+    const cards = teacher && !noClasses && !failed;
+    const tall = { list: [1024, 1360], oneClass: [650, 884], few: [480, 660] }[st] || [420, 400];
+    const dh = teacher ? (cards && !empty ? 940 : 690) : (loading ? 660 : tall[0]), ph = teacher ? (cards ? (empty ? 1144 : loading ? 1500 : 1836) : 400) : (loading ? 760 : tall[1]);
+    const frames = [mk(1280, dh, Math.min(1, W / 1280), false, teacher ? 'the teacher’s shell' : 'the page is at most 960 wide'), mk(360, ph, Math.min(1, W / 360), true, 'the same state on a phone')];
+
+    const ctl = [
+      { label: 'Who', opts: this.seg([['teacher', 'Teacher · Reports'], ['student', 'Student · Grades']], role, v => this.setState({ role: v })) },
+      { label: 'State', opts: this.seg(STATES[role], st, v => this.setState(x => ({ st: { ...x.st, [role]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const ink = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const stLabel = (STATES[role].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m: { isReports: teacher, isGrades: !teacher }, rp, gr, pin, nav, sNav, sTabs, frames, ctl, stageRef: this.stageRef,
+      chips: ['R9 · v0.16.0', 'T-R9.8, T-R9.9', 'DG-70, DG-83, DG-97', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, role: 'teacher', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + (teacher ? 'Reports' : 'Grades') + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: ink[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

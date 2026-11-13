@@ -535,6 +535,17 @@ To view one, start the server above and open, for example,
   failed. Ten states, at 1280 and 360, light and dark, Vietnamese and English. No operation
   changes. The phone frame is new throughout: the student column loses its avatar and narrows
   so two grades show beside a name. Its three questions for Thuong are on the page.
+- 2026-11-13 — Fourteenth proposal page: `proposals/R9 Reports and Grades.dc.html`, for DG-70,
+  DG-83 and DG-97 (R9; T-R9.8, T-R9.9). The deck draws Reports with eight full weeks and the
+  student's Grades with six results. The page draws what R9 adds. For Reports: a week with no
+  result, a figure with no change, the range menu with "Học kỳ này" unavailable, twelve weeks,
+  nothing in the range, no class, loading and failed. For Grades: a tile for each skill, a score
+  that is held back, a class chosen, two results, none, loading and failed. Thirteen states, at
+  1280 and 360, light and dark, Vietnamese and English. No operation changes. Its four
+  questions for Thuong are on the page: how a week is named, one "Thử lại" or seven when the
+  report fails, a second row of tiles, and tabs with one class. The same change puts the
+  sidebar of the two gradebook pages in the deck's order, with Attendance, Shared with me and
+  Reports in it.
 
 ## The brand
 

@@ -31,7 +31,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R7 Collaboration · Messages · Proposal · 13 Nov 2026</span>
   </div>
   <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Messages, in the states the deck does not draw</h1>
-  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws Messages twice, for a teacher and for a student, with every thread full and every send working. R7 builds both screens (T-R7.20, T-R7.21), and its plan names what the drawing leaves out: a file in a message, the Details popover, a list that is loading, empty or broken, a send that fails, and a thread nobody may write in any more. This page draws those from the deck’s own parts and puts the screens in Vietnamese for the first time. Two things the deck drew change, both on the owner’s word: the Attach dialog attaches and no longer sends, and Enter does not send in a class channel.</p>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws Messages twice, for a teacher and for a student, with every thread full and every send working. R7 builds both screens (T-R7.20, T-R7.21), and its plan names what the drawing leaves out: a file in a message, the Details popover, a list that is loading, empty or broken, a send that fails, and a thread nobody may write in any more. This page draws those from the deck’s own parts and puts the screens in Vietnamese for the first time. Three things the deck drew change, all on the owner’s word: the Attach dialog attaches and no longer sends, Enter does not send in a class channel, and a Word file can be attached.</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px">
     <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
   </div>
@@ -44,6 +44,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
       <li>The deck writes “Attachment · name” in a bubble. A chip says what the file is before it is opened: its kind, its name, its size, and Download.</li>
       <li><span style="color:var(--fg)">It follows the sender (DG-91)</span>: in the teacher’s bubble on the right, in the announcement’s card for a class, on the left for the student who receives it.</li>
+      <li>PDF, Word, pictures and audio can be attached. Word files were added by the owner; the deck’s dialog names the other three.</li>
       <li>A file is a download and nothing more. No picture is shown in the thread and no audio plays there, as the server serves every attachment as a download.</li>
     </ul>
   </div>
@@ -294,7 +295,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q2 and Q3 are decided, neither as first drawn, and the frames were redrawn for both. The other four are open.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q1 is decided as drawn. Q2 and Q3 are decided, neither as first drawn, and the frames were redrawn for both. Q7 came with the owner’s request for Word files. Four are open: Q4 to Q7.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -304,7 +305,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R7.20 and T-R7.21</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists the components. This is what each takes from this page. Nothing here changes the contract of T-R7.10 to T-R7.12. Two lines of T-R7.20 change: Enter in a class channel (Q2), and what the Attach dialog does (Q3).</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists the components. This is what each takes from this page. No operation of T-R7.10 to T-R7.12 changes its shape. The upload of T-R7.11 accepts two more kinds of file, DOC and DOCX, and two lines of T-R7.20 change: Enter in a class channel (Q2), and what the Attach dialog does (Q3).</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:720px">
@@ -371,11 +372,12 @@ const STR = [
   ['attachTitle', 'Attach', 'Đính kèm tệp', 'Attach a file', 'Deck'],
   ['attachDo', 'Attach', 'Đính kèm', 'Attach', 'As today'],
   ['chooseFile', 'Attach', 'Chọn tệp', 'Choose file', 'As today'],
-  ['attachAccept', 'Attach', 'PDF, ảnh hoặc âm thanh · tối đa 20 MB', 'PDF, image or audio · up to 20 MB', 'Deck'],
+  ['attachAccept', 'Attach', 'PDF, Word, ảnh hoặc âm thanh · tối đa 20 MB', 'PDF, Word, image or audio · up to 20 MB', 'New'],
   ['attachUploading', 'Attach', 'Đang tải lên… {percent}%', 'Uploading… {percent}%', 'New'],
   ['attachRemove', 'Attach, composer', 'Bỏ tệp', 'Remove file', 'New'],
   ['attachTooBig', 'Attach', 'Tệp lớn hơn 20 MB. Hãy chọn tệp nhỏ hơn.', 'The file is larger than 20 MB. Choose a smaller one.', 'New'],
-  ['attachBadType', 'Attach', 'Chỉ nhận tệp PDF, PNG, JPEG, MP3 hoặc M4A.', 'Only PDF, PNG, JPEG, MP3 or M4A files are accepted.', 'New'],
+  ['attachBadType', 'Attach', 'Chỉ nhận tệp PDF, Word (DOC, DOCX), PNG, JPEG, MP3 hoặc M4A.', 'Only PDF, Word (DOC, DOCX), PNG, JPEG, MP3 or M4A files are accepted.', 'New'],
+  ['attachMacro', 'Attach', 'Tệp Word có macro không gửi được. Hãy lưu lại thành tệp DOCX không có macro.', 'A Word file with macros cannot be sent. Save it as a DOCX without macros.', 'New'],
   ['attachLimit', 'Attach', 'Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.', 'Too many uploads in an hour. Try again later.', 'New'],
   ['cancel', 'Attach', 'Huỷ', 'Cancel', 'As today'],
   ['close', 'Attach', 'Đóng', 'Close', 'As today'],
@@ -402,7 +404,7 @@ const CONVS = [
   { id: 'c3', kind: 'class', name: 'TOEIC 600 Weekend', time: ['CN', 'Sun'], unread: 0, mine: true, pv: ['Chủ nhật này lớp nghỉ, học bù chiều thứ Bảy.', 'No class this Sunday. We make it up on Saturday afternoon.'] }
 ];
 const FILE_GUIDE = { icon: 'file-text', name: ['Hướng dẫn thi thử.pdf', 'Mock test guide.pdf'], meta: ['PDF · 1,2 MB', 'PDF · 1.2 MB'] };
-const FILE_KEY = { icon: 'file-text', name: ['Đáp án Unit 4.pdf', 'Unit 4 answer key.pdf'], meta: ['PDF · 340 KB', 'PDF · 340 KB'] };
+const FILE_KEY = { icon: 'file-type', name: ['Đáp án Unit 4.docx', 'Unit 4 answer key.docx'], meta: ['Word · 340 KB', 'Word · 340 KB'] };
 const FILE_VOCAB = { icon: 'file-text', name: ['Từ vựng Unit 4.pdf', 'Unit 4 vocabulary.pdf'], meta: ['PDF · 280 KB', 'PDF · 280 KB'] };
 const LINK = 'https://example.edu.vn/thi-thu';
 const SAY = {
@@ -446,7 +448,7 @@ const NOTES = {
   'teacher:direct:failed': [['status', 'A send that fails keeps its bubble and its words. “Thử lại” sends it under the same id, so it cannot arrive twice.']],
   'teacher:direct:blocked': [['blocked', 'The student left the teacher’s last class. The thread stays readable and the composer gives its place to the reason (409 MESSAGING_NOT_ALLOWED).']],
   'teacher:direct:empty': [['empty', 'A thread opened from Students before anything is said. The conversation exists from its first message.']],
-  'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it.']],
+  'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it. This one is a Word file: PDF, Word, pictures and audio can be attached.']],
   'teacher:channel:details': [['details', 'For a class: how many students it has, and one link to its page.']],
   'teacher:channel:empty': [['empty', 'A class is listed from the day it exists, so its channel can be empty.']],
   'teacher:channel:archived': [['blocked', 'An archived class cannot be posted to (409 CLASS_ARCHIVED). Its announcements stay readable.']],
@@ -454,7 +456,7 @@ const NOTES = {
   'teacher:attach:uploading': [['dialogDo', '“Đính kèm” stays off until the file is up.']],
   'teacher:attach:ready': [['dialogDo', '“Đính kèm” closes the dialog and puts the file in the composer, where it waits for Send.']],
   'teacher:attach:tooBig': [['dialogErr', 'More than 20 MB (413). The field stays open for another file.']],
-  'teacher:attach:badType': [['dialogErr', 'The server reads the file’s content, not its name (415). WebP is refused too, which is why the sentence lists the five kinds.']],
+  'teacher:attach:badType': [['dialogErr', 'The server reads the file’s content, not its name (415). WebP is refused too, which is why the sentence lists every kind that is accepted.']],
   'teacher:list:loading': [['skeleton', 'Six rows of the list’s own shape while it loads. The thread pane is quiet.']],
   'teacher:list:empty': [['newAnn', 'With no class to post to, “Thông báo mới” is off and the reason is beside it.'], ['listMsg', 'The plan’s sentence. It names the two ways a first message starts.']],
   'teacher:list:error': [['listMsg', 'One sentence and “Thử lại”, inside the list. The search and the tabs stay.']],
@@ -463,7 +465,7 @@ const NOTES = {
   'student:direct:failed': [['status', 'The same as for a teacher: the bubble stays, with “Thử lại”.']],
   'student:direct:blocked': [['blocked', 'The student left the teacher’s class. The thread stays, and the composer gives its place to the reason.']],
   'student:direct:empty': [['empty', 'Opened from the class card’s message button, before anything is said.']],
-  'student:channel:normal': [['msgBtn', 'A message from the teacher stays unread while the student reads the class channel.'], ['chip', 'An announcement can carry a file too.'], ['readonly', 'The footer’s second half is a link to the teacher’s thread.']],
+  'student:channel:normal': [['msgBtn', 'A message from the teacher stays unread while the student reads the class channel.'], ['chip', 'An announcement can carry a file too, here a Word file.'], ['readonly', 'The footer’s second half is a link to the teacher’s thread.']],
   'student:list:loading': [['skeleton', 'Three rows of the list’s own shape.']],
   'student:list:empty': [['listMsg', 'The plan’s sentence for a student. A class channel appears here with its first announcement.']],
   'student:list:error': [['listMsg', 'One sentence and “Thử lại”.']]
@@ -473,6 +475,7 @@ const PIN_KEYS = ['nav', 'msgBtn', 'newAnn', 'skeleton', 'listMsg', 'details', '
 // [part, the deck, this page]
 const ADDS = [
   ['A file in a message', 'A bubble that reads “Attachment · name”, always on the teacher’s own side.', 'A chip in the sender’s bubble, or in the announcement’s card: its kind, name and size, and Download. A message written with it shares the bubble.'],
+  ['The kinds of file', 'PDF, image or audio.', 'PDF, Word (DOC and DOCX), PNG or JPEG pictures, MP3 or M4A audio. Word was added by the owner on 13 Nov 2026, and the upload of T-R7.11 changes for it.'],
   ['The Attach dialog', 'One file field and Send: the file leaves at once, alone.', 'Its states: nothing chosen, uploading, ready, and refused for size or kind. Its button reads “Đính kèm” and sends nothing (Q3).'],
   ['The composer with a file', 'Not drawn.', 'The attached file waits above the text as a chip with a ×. Send is on. A message can be typed with it, and both leave as one message.'],
   ['Details', 'An info button that leaves for Students or Classes.', 'A popover (DG-91): a student’s classes and a link to Students; a class’s member count and a link to its page. A sheet on a phone.'],
@@ -501,35 +504,38 @@ const WHENS = [
   ['The two no longer share a class', 'The composer gives its place to the sentence. The thread stays readable.', '409 MESSAGING_NOT_ALLOWED on a post.'],
   ['The class is archived', 'The composer gives its place to the sentence.', '409 CLASS_ARCHIVED on a post.'],
   ['A file is over 20 MB', '“Tệp lớn hơn 20 MB.” in the dialog; the field opens again.', '413 on the upload.'],
-  ['A file is of another kind', '“Chỉ nhận tệp PDF, PNG, JPEG, MP3 hoặc M4A.” in the dialog.', '415 on the upload: the content is read, not the name. WebP is refused.'],
+  ['A file is of another kind', '“Chỉ nhận tệp PDF, Word (DOC, DOCX), PNG, JPEG, MP3 hoặc M4A.” in the dialog.', '415 on the upload: the content is read, not the name. WebP is refused.'],
+  ['A Word file carries macros', '“Tệp Word có macro không gửi được.” in the dialog, with how to save it without them. Not drawn.', '415 on the upload, if the owner agrees to refuse them (Q7).'],
   ['Too many files in an hour', '“Bạn đã tải lên quá nhiều tệp trong một giờ.” in the dialog. Not drawn.', '429: twenty uploads an hour for each user.'],
   ['Download is pressed', 'The browser saves the file.', 'A signed link that lives five minutes, made at each press.']
 ];
 // [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
 const QUESTIONS = [
-  ['Q1 · One word, two things', 'Is “thông báo” the word for a class announcement, when Settings and the bell already call a notification “Thông báo”?', 'It is the word Vietnamese teachers use for both. Inside Messages the context separates them: “Thông báo mới”, “Thông báo · 17:30”, “Thông báo lớp”. In Settings › Thông báo, the row for new messages has to say “tin nhắn” to stay clear. The other choice is a word of its own, such as “Bảng tin lớp”.', '“Thông báo” for an announcement, and “thông báo lớp” wherever the two could be confused.'],
+  ['Q1 · One word, two things', 'Is “thông báo” the word for a class announcement, when Settings and the bell already call a notification “Thông báo”?', 'It is the word Vietnamese teachers use for both. Inside Messages the context separates them: “Thông báo mới”, “Thông báo · 17:30”, “Thông báo lớp”. In Settings › Thông báo, the row for new messages has to say “tin nhắn” to stay clear. The other choice is a word of its own, such as “Bảng tin lớp”.', '“Thông báo” for an announcement, and “thông báo lớp” wherever the two could be confused.', 'Thuong, 13 Nov 2026'],
   ['Q2 · Enter in a class channel', 'Should Enter send an announcement to a whole class?', 'The plan had Enter send everywhere. In a class channel that one key reaches 24 students, and nothing sent can be edited or deleted. The first drawing followed the plan and said it would rather not.', 'In a class channel Enter makes a new line and only the button posts. Nothing on the screen spells the rule out: the owner had the sentence that did taken off the same day. In a direct thread Enter still sends, as the plan has it. The plan’s line for T-R7.20 changes with this.', 'Thuong, 13 Nov 2026', 'Decided (Thuong, 13 Nov 2026):'],
   ['Q3 · A message with a file', 'May a file be sent with a message, and where is the message written?', 'The deck’s dialog sends the file alone, so “Đáp án Unit 4.pdf” arrives without a word and the teacher writes a second message. The contract already lets one message carry a body and a file. The first drawing put a note field in the dialog.', 'No field in the dialog. The dialog attaches and does not send: the file waits in the composer as a chip, the teacher writes a message as usual or presses Send as it is, and both leave as one message.', 'Thuong, 13 Nov 2026', 'Decided another way (Thuong, 13 Nov 2026), and redrawn:'],
   ['Q4 · Who has not seen it', 'Is “21/24 học viên đã xem” enough, or will teachers want the three names?', 'The count is all the contract returns. Names would be a change to the staff read of a class channel, and a question of its own about what one student may be shown to have done.', 'The count only, as the deck draws.'],
   ['Q5 · The student’s sentence', 'What does a student read when writing is no longer allowed?', 'The plan gives the teacher’s sentence and none for the student, who meets the same refusal after leaving a class.', '“Bạn không còn học lớp nào của {name}.”'],
-  ['Q6 · How long messages are kept', 'Does Data & privacy say that messages are kept?', 'DG-96 answers that they are, and that anonymising an account deletes its direct messages. The plan leaves the row to a design (O-R7.2). It is one read-only row in Admin › System settings › Data & privacy, and it is not drawn here.', 'One row, “Tin nhắn: được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.”, when R7 touches that page.']
+  ['Q6 · How long messages are kept', 'Does Data & privacy say that messages are kept?', 'DG-96 answers that they are, and that anonymising an account deletes its direct messages. The plan leaves the row to a design (O-R7.2). It is one read-only row in Admin › System settings › Data & privacy, and it is not drawn here.', 'One row, “Tin nhắn: được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.”, when R7 touches that page.'],
+  ['Q7 · Word files with macros', 'Should a Word file that carries macros be refused?', 'The owner added DOC and DOCX to what a teacher may attach. A DOC or a DOCM can carry macros, which run on the computer that opens the file. Students download what a teacher attaches, and most are minors. Refusing such a file costs the teacher one “Save as”.', 'Refused, with a sentence that says how to save it without macros. A plain DOC or DOCX is accepted.']
 ];
 // [component in the plan, what it takes from this page]
 const HANDOFF = [
   ['ThreadList', 'Its skeleton, the empty sentence, the error with “Thử lại”, and the no-match sentence. “Thông báo mới” off with its reason.'],
   ['ThreadView', '“Xem tin nhắn cũ hơn”, the empty sentence for a thread and for a channel, and the composer’s two replacements.'],
   ['MessageBubble', 'The sending and failed lines under a bubble, links in a body, and a message sharing a bubble with its file.'],
-  ['AttachmentChip', 'New from this page: kind tile, name, kind and size, Download. In a bubble it takes the bubble’s colours; in a card it is bordered.'],
+  ['AttachmentChip', 'New from this page: kind tile (document, Word, picture, audio), name, kind and size, Download. In a bubble it takes the bubble’s colours; in a card it is bordered.'],
   ['AnnouncementCard', 'A chip between the text and the line that counts who has seen it.'],
   ['AttachDialog', 'Four states and the three refusals. Its button is “Đính kèm”: it hands the uploaded file to the composer and sends nothing (Q3).'],
   ['ThreadDetails', 'A popover from 768 and a sheet below: the header, one short list, one link.'],
   ['Composer', 'A waiting file as a chip above the text, with a ×; Send on while a file waits; the file kept with the thread’s draft (Q3). In a class channel Enter makes a new line and only the button posts, with no sentence about it (Q2). In a direct thread Enter sends.'],
+  ['T-R7.11, on the server', 'The upload accepts DOCX and DOC as well, read by content like the rest. Whether one that carries macros is refused is Q7.'],
   ['StudentMessagesPage', 'The chip on the teacher’s side, the footer link on a channel, its own empty sentence and its own refusal (Q5).'],
   ['Locales', 'The copy table: some sixty strings, Vietnamese first.']
 ];
 const METHOD = [
   ['What this was drawn from.', 'The deck’s Teacher and Student pages (r.messages and “Student messages”), R7’s plan (docs/plan/77-r7.md: its decisions on messaging, T-R7.10a to T-R7.12 and T-R7.20 to T-R7.22) and the register (DG-08, DG-83, DG-91, DG-96). Messages is not built yet, so there was no screen to run.'],
-  ['What it leaves alone.', 'The layout, the sizes, the list’s rows, the bubbles, the announcement and attempt cards and every rule of who may read or write. No operation of T-R7.10 to T-R7.12 changes. Two behaviours of the deck’s composer change, both decided by the owner: the Attach dialog no longer sends, and Enter does not send in a class channel.'],
+  ['What it leaves alone.', 'The layout, the sizes, the list’s rows, the bubbles, the announcement and attempt cards and every rule of who may read or write. No operation changes its shape. Three things change on the owner’s word: the Attach dialog no longer sends, Enter does not send in a class channel, and the upload takes Word files.'],
   ['What is not drawn.', 'The entry points of T-R7.22 outside this page (the Students row menu, the class member menu, the palette), the notification settings of T-R7.23, and the Data & privacy row (Q6).']
 ];
 
@@ -712,7 +718,7 @@ class Component extends DCLogic {
     const stLabel = (STATES[key].find(x => x[0] === st) || ['', ''])[1];
     return {
       theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, sNav, frames, ctl, stageRef: this.stageRef,
-      chips: ['R7 · v0.14.0', 'T-R7.20 and T-R7.21', 'DG-83, DG-91', 'No contract change', 'Vietnamese first'],
+      chips: ['R7 · v0.14.0', 'T-R7.20 and T-R7.21', 'DG-83, DG-91', 'One change to the server’s plan: Word files', 'Vietnamese first'],
       reset: () => this.setState({ lang: 'vi', theme: null, role: 'teacher', screen: { teacher: 'direct', student: 'direct' }, st: { ...START } }),
       anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
       notesTitle: 'What is new on “' + names[scr] + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),

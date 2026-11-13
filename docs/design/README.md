@@ -444,8 +444,11 @@ To view one, start the server above and open, for example,
   the button posts, because an announcement reaches a whole class and cannot be edited or
   deleted; no sentence on the screen says so. And the Attach dialog attaches and no longer
   sends: the file waits in the composer as a chip, the teacher writes a message with it or
-  presses Send as it is, and both leave as one message. These are the two things the page
-  changes in what the deck draws, and two lines of T-R7.20 in the plan change with them.
+  presses Send as it is, and both leave as one message. He kept "thông báo" as the
+  word for an announcement, and asked that a Word file (DOC or DOCX) can be attached beside PDF,
+  pictures and audio. So the page changes three things the deck draws, and the plan changes
+  with them: two lines of T-R7.20, and the kinds of file T-R7.11's upload accepts. The page
+  asks in return whether a Word file that carries macros is refused (Q7).
 
 ## The brand
 

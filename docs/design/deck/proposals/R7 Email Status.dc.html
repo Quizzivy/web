@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R7 Collaboration · Email status · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">When email stops reaching someone</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">R7 sends email in earnest: reminders, results, messages, weekly summaries. When a message bounces hard, or the person reports it as spam, the server stops sending to that address for good (T-R7.15). No screen says so. An admin who is asked why a student gets no reminders has nowhere to look, and the plan asks for a design (O-R7.3, DG-96). This page proposes one notice in the Admin user sheet, drawn with the product’s own callout. It adds no action, and it names what it would need from the server. R7’s plan does not build it; the last question asks when.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Where it shows</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">In the one place an admin already opens to ask about a person.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The Admin user sheet, first in its body, above the role. <span style="color:var(--fg)">It is there only while the address is stopped</span>; a sheet with nothing to report is the sheet of today.</li>
+      <li>It is the product’s warning callout, the one the data export and the password reset already use. No new part.</li>
+      <li>The Users list, the teacher’s Students and the person’s own Settings do not show it here. Each is a question below.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What it says</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">What happened, since when, and what still works.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>A bounce and a complaint read differently: <span style="color:var(--fg)">one is an address that refuses mail, the other is a person who asked not to get it</span>.</li>
+      <li>It claims no cause it cannot know. A hard bounce means the address refused the message; whether it is mistyped or closed, the server is not told.</li>
+      <li>In-app notifications are not touched, and the notice says so, so nobody thinks the person is cut off.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What it does not do</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">No button: the way back is another address.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The list is kept by address. Give the account an address that works, and mail flows again with nothing else to do.</li>
+      <li><span style="color:var(--fg)">Nothing here sends to the stopped address again</span>. Retrying a hard bounce harms the centre’s sending name, and writing to someone who reported spam goes against what they asked.</li>
+      <li>The Admin sheet has no action that changes an email today. That gap is the first question.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The user sheet at 440 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The sheet alone, as the product has it, with its own strings. It is 440px wide from the right edge of Admin › Users, and the full width of a phone. Pick the state in the bar above. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--card)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;zoom:{{ f.s }};display:flex;flex-direction:column;background:var(--card);color:var(--fg);font-size:14px">
+            <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border)">
+              <span style="width:42px;height:42px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:13px;font-weight:600">{{ u.initials }}</span>
+              <span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:15px">{{ u.name }}</span><span style="display:flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted-fg)"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap">{{ u.email }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.email.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.email.n }}</span></sc-if></sc-if></span></span>
+              <span role="img" aria-label="{{ tx.close }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;display:grid;place-items:center;border-radius:7px"><i class="icon-x" style="font-size:17px"></i></span>
+            </div>
+            <div style="padding:18px;display:flex;flex-direction:column;gap:20px">
+              <sc-if value="{{ m.hasNotice }}" hint-placeholder-val="{{ false }}">
+                <div role="status" style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--warning-soft);font-size:13px;line-height:1.55"><i class="icon-{{ m.noticeIcon }}" style="font-size:16px;margin-top:2px;flex:none;color:var(--warning-ink)"></i><span style="flex:1;min-width:0;text-wrap:pretty"><b style="font-weight:600">{{ m.noticeLead }}</b> {{ m.noticeText }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.notice.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.notice.n }}</span></sc-if></sc-if></div>
+              </sc-if>
+              <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:600">{{ tx.role }}</span>
+                <div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ u.roles }}" as="ro" hint-placeholder-count="4"><span style="flex:1;border-radius:7px;height:30px;padding:0 6px;font-size:12.5px;white-space:nowrap;font-weight:500;display:grid;place-items:center;background:{{ ro.bg }};color:{{ ro.fg }};box-shadow:{{ ro.ring }}">{{ ro.label }}</span></sc-for></div>
+              </div>
+              <div style="display:flex;flex-direction:column;border:1px solid var(--border);border-radius:10px;overflow:hidden">
+                <sc-for list="{{ u.facts }}" as="fa" hint-placeholder-count="5"><div style="display:flex;justify-content:space-between;gap:12px;padding:10px 12px;border-top:{{ fa.border }};font-size:13px"><span style="color:var(--muted-fg)">{{ fa.label }}</span><span style="min-width:0;font-weight:500;text-align:right;overflow-wrap:anywhere">{{ fa.value }}</span></div></sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:600">{{ tx.actions }}</span>
+                <sc-for list="{{ u.actions }}" as="ac" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border:1px solid var(--border);border-radius:9px;background:var(--card);color:{{ ac.color }}"><i class="icon-{{ ac.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500">{{ ac.label }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ ac.hint }}</span></span></div></sc-for>
+              </div>
+              <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:600">{{ tx.activity }}</span>
+                <sc-for list="{{ u.events }}" as="ev" hint-placeholder-count="3"><div style="display:flex;gap:10px;font-size:13px"><span style="width:8px;height:8px;flex:none;border-radius:50%;margin-top:6px;background:{{ ev.dot }}"></span><span style="flex:1"><span style="display:block">{{ ev.text }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ ev.time }}</span></span></div></sc-for>
+              </div>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="2"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">{{ noteFoot }}</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What happens today, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the product and R7’s plan as they are. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>Today, with R7’s plan</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is what the plan says about the cause, and what the server would have to tell the screen.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Cause</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The notice’s four strings are new. The rest of the sheet uses the product’s strings as they are today, and they are not listed.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. The last one is about the plan, not the drawing.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What it would take</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Nothing in R7’s plan builds this. If it is taken, this is what changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R7 · When email stops reaching someone. A proposal page for O-R7.3 and DG-96.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['bouncedLead', 'Notice', 'Email không tới được địa chỉ này.', 'Email does not reach this address.', 'New'],
+  ['bouncedText', 'Notice', 'Một thư gửi ngày {date} bị trả lại, nên Quizzivy đã ngừng gửi email cho tài khoản này. Thông báo trong ứng dụng vẫn đến bình thường. Khi tài khoản có địa chỉ email khác, thư sẽ được gửi lại.', 'A message sent on {date} bounced, so Quizzivy stopped sending email to this account. In-app notifications still arrive. Mail is sent again once the account has another address.', 'New'],
+  ['complainedLead', 'Notice', 'Người này đã báo email của Quizzivy là thư rác.', 'This person reported Quizzivy’s email as spam.', 'New'],
+  ['complainedText', 'Notice', 'Từ ngày {date}, Quizzivy không gửi email cho tài khoản này nữa. Thông báo trong ứng dụng vẫn đến bình thường.', 'Since {date}, Quizzivy sends no email to this account. In-app notifications still arrive.', 'New']
+];
+// the sheet's own strings, as the locale files have them today: [Vietnamese, English]
+const SHEET = {
+  close: ['Đóng', 'Close'], role: ['Vai trò', 'Role'], actions: ['Thao tác', 'Actions'], activity: ['Hoạt động gần đây', 'Recent activity'],
+  roles: [['Học viên', 'Student'], ['Giáo viên', 'Teacher'], ['Trợ giảng', 'Assistant'], ['Quản trị viên', 'Admin']],
+  facts: [[['Trạng thái', 'Status'], ['Đang hoạt động', 'Active']], [['Đăng nhập', 'Sign-in'], ['Mật khẩu', 'Password']], [['Lớp', 'Classes'], ['IELTS 6.5 Evening', 'IELTS 6.5 Evening']], [['Hoạt động cuối', 'Last active'], ['Hôm nay 20:02', 'Today 20:02']], [['Ngày tạo', 'Created'], ['12 thg 8, 2026', '12 Aug 2026']]],
+  acts: [['key-round', ['Đặt lại mật khẩu', 'Reset password'], ['Gửi liên kết hoặc đặt mật khẩu tạm thời', 'Send a link or set a temporary password'], false], ['log-out', ['Đăng xuất khỏi mọi thiết bị', 'Sign out everywhere'], ['Kết thúc mọi phiên đăng nhập trên mọi thiết bị', 'Ends every session on every device'], false], ['user-x', ['Vô hiệu hoá tài khoản', 'Disable account'], ['Đăng xuất họ. Kết quả vẫn được giữ.', 'Signs them out. Results are kept.'], true]],
+  events: [[['Đăng nhập bằng mật khẩu', 'Signed in with password'], ['Hôm nay 19:48', 'Today 19:48'], 'var(--success)'], [['Đã nộp Mid-term Reading Mock', 'Submitted Mid-term Reading Mock'], ['Hôm nay 20:02', 'Today 20:02'], 'var(--info-ink)'], [['Đã vào IELTS 6.5 Evening', 'Joined IELTS 6.5 Evening'], ['12 thg 8, 2026', '12 Aug 2026'], 'var(--muted-fg)']]
+};
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+const USER = { name: 'Đặng Quốc Huy', initials: 'HĐ', email: 'huy.dang2011@gmail.com' };
+const SINCE = ['10 thg 11', '10 Nov'];
+const STATES = [['bounced', 'A bounce'], ['complained', 'A spam report'], ['ok', 'Mail arrives']];
+const NOTES = {
+  bounced: [['notice', 'The product’s warning callout, first in the sheet. It says what happened, since when, what still works, and the one way back. It gives no reason for the bounce, because the server is told none.'], ['email', 'This is the address that refused the mail. Nothing in the sheet changes it today (Q1).']],
+  complained: [['notice', 'A report of spam is the person’s own choice, so the notice says who chose and offers no way round it.']],
+  ok: []
+};
+const FOOT = {
+  bounced: 'Everything without a number is the sheet as the product has it.',
+  complained: 'Everything without a number is the sheet as the product has it.',
+  ok: 'Nothing is new here: while mail arrives, the sheet is the one of today, with no row and no notice.'
+};
+const PIN_KEYS = ['notice', 'email'];
+// [part, today with R7's plan, this page]
+const ADDS = [
+  ['Mail that bounced', 'The dispatcher stops sending to the address (T-R7.15), and the outbox row closes as SUPPRESSED. No screen says so.', 'A warning callout in the Admin user sheet: what happened, since when, what still works, and the way back.'],
+  ['Mail reported as spam', 'The same.', 'The same callout, saying that the person reported it. It offers no way back.'],
+  ['Mail that arrives', 'The sheet as the product has it.', 'No change.'],
+  ['Admin › Users, the list', 'No sign of it.', 'Not drawn. Whether the list marks or filters these accounts is a question (Q3).'],
+  ['The teacher’s Students', 'No sign of it.', 'Not drawn. Whether a teacher is told is a question (Q2).'],
+  ['The person’s own Settings', 'The email is read-only and nothing is said.', 'Not drawn, and not proposed: a person whose mail bounces would have to be told in the app, which is its own design.']
+];
+// [when, what shows, cause]
+const WHENS = [
+  ['The account’s address is on the list as bounced', 'The notice “Email không tới được địa chỉ này.”', 'email_suppressions.reason is bounced (T-R7.15). The read of an admin user would have to return it; it does not today.'],
+  ['The address is on the list as complained', 'The notice “Người này đã báo email của Quizzivy là thư rác.”', 'reason is complained.'],
+  ['The account is given another address', 'The notice goes, and mail is sent again.', 'The list is kept by address, and the new one is not on it (T-R7.15).'],
+  ['Two accounts share one stopped address', 'Each account’s sheet shows the notice.', 'The same: by address, not by account. Addresses are unique today, so this is only a rule for later.'],
+  ['The centre has no webhook secret', 'No notice, ever.', 'The webhook answers 501 and nothing is put on the list.'],
+  ['The account is disabled', 'The notice shows as for any account.', 'A disabled account gets no mail anyway; the fact is still true of the address.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · Changing the address', 'Where does an admin correct an address that bounced?', 'The sheet has four actions: reset the password, sign out everywhere, disable, and transfer content. None changes an email. A teacher can change a student’s email in Học viên › Sửa thông tin, when no other teacher reaches that student. A person cannot change their own: Settings shows it read-only.', 'The notice says that another address is the way back, and gives no button. An action that changes an email in this sheet would be new, and is not drawn.'],
+  ['Q2 · The teacher', 'Should a student’s teacher be told?', 'The plan’s own note is that a teacher cannot tell when a student’s reminders stop arriving, and the teacher is the one who can correct a student’s address. Telling the teacher also tells them that the student reported the centre’s mail as spam.', 'Not shown to teachers. If it is wanted: one line under the email in the student’s drawer, saying only that email does not reach the address, for a bounce and not for a report.'],
+  ['Q3 · The list', 'Should Admin › Users mark these accounts, or filter for them?', 'With the notice only in the sheet, an admin finds a stopped address by opening the person. A centre with many bounces after an import would want them all at once.', 'The sheet only. A filter is a later step if bounces turn out to be common.'],
+  ['Q4 · Sending again', 'Should an admin be able to allow email to the same address again?', 'A mailbox can be reopened, and the list has no way out but a new address. But sending to an address that bounced hard counts against the centre with the mail provider, and sending to someone who reported spam goes against what they asked.', 'No. Another address is the only way back.'],
+  ['Q5 · When', 'Is this built in R7?', 'R7’s plan logs a stopped address and shows nothing (O-R7.3). This needs one field on the read of an admin user and the callout in the sheet. It is small, and it is what answers “why does this student get no email”.', 'The plan is unchanged until the owner says. The page is ready for the release that takes it.']
+];
+// [part, what changes]
+const HANDOFF = [
+  ['UserSheet', 'One warning Callout, first in the body, while the account’s address is on the list. Two leads and two texts, with the date.'],
+  ['The read of an admin user', 'A field that says whether the address is stopped, why (bounced or complained) and since when. It is not in the contract today; the list it reads is T-R7.15’s.'],
+  ['T-R7.15', 'Nothing changes. The list stays keyed by address, and a new address clears the notice by itself.'],
+  ['Locales', 'Four strings, in the copy table.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'R7’s plan (docs/plan/77-r7.md: T-R7.15 and O-R7.3), the register (DG-96), the product’s user sheet (web/src/features/users/components/UserSheet.tsx) and its Callout, and the locale files for the sheet’s strings. Sending and the list are not built yet, so there was no notice to run.'],
+  ['What it leaves alone.', 'The sheet’s header, role, facts, actions and activity are the product’s. No operation is proposed; one read would gain a field.'],
+  ['What is not drawn.', 'The Users list, the teacher’s student drawer and the person’s own Settings (Q2, Q3), and an action that changes an email (Q1).']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', st: 'bounced', anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    ['close', 'role', 'actions', 'activity'].forEach(k => { tx[k] = SHEET[k][li]; });
+    const st = s.st;
+    const noteList = NOTES[st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+
+    const notice = { bounced: ['mail-x', tx.bouncedLead, fmt(tx.bouncedText, { date: SINCE[li] })], complained: ['mail-warning', tx.complainedLead, fmt(tx.complainedText, { date: SINCE[li] })] }[st];
+    const m = { hasNotice: !!notice, noticeIcon: notice ? notice[0] : '', noticeLead: notice ? notice[1] : '', noticeText: notice ? notice[2] : '' };
+    const on = x => ({ bg: x ? 'var(--card)' : 'transparent', fg: x ? 'var(--fg)' : 'var(--muted-fg)', ring: x ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' });
+    const u = {
+      ...USER,
+      roles: SHEET.roles.map((r, i) => ({ label: r[li], ...on(i === 0) })),
+      facts: SHEET.facts.map((x, i) => ({ label: x[0][li], value: x[1][li], border: i ? '1px solid var(--border)' : '0' })),
+      actions: SHEET.acts.map(a => ({ icon: a[0], label: a[1][li], hint: a[2][li], color: a[3] ? 'var(--danger-ink)' : 'var(--fg)' })),
+      events: SHEET.events.map(e => ({ text: e[0][li], time: e[1][li], dot: e[2] }))
+    };
+
+    const W = s.stageW || 1280;
+    const mk = (w, phone, sub) => { const sc = Math.min(1, W / w); return { w, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Admin · User sheet · ' + w, pins: s.anno && !phone, iconBtn: phone ? '44px' : '32px' }; };
+    const frames = [mk(440, false, 'the sheet beside Admin › Users'), mk(360, true, 'the sheet fills a phone')];
+    const ctl = [
+      { label: 'State', opts: this.seg(STATES, st, v => this.setState({ st: v })) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const stLabel = (STATES.find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, u, pin, frames, ctl, stageRef: this.stageRef,
+      chips: ['R7 · v0.14.0', 'O-R7.3 · DG-96', 'Not in R7’s plan', 'One field from the server', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, st: 'bounced' }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })), noteFoot: FOOT[st],
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: 'var(--accent-ink)' })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

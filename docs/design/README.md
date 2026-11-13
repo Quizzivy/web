@@ -438,11 +438,14 @@ To view one, start the server above and open, for example,
   thread and channel, "Load earlier", a send on its way and one that failed, and the composer
   replaced when the two no longer share a class or the class is archived. Both screens are in
   Vietnamese for the first time. Frames at 1280 and 360, light and dark, Vietnamese and
-  English. No exported page changes and no operation of T-R7.10 to T-R7.12 changes. It is a
+  English. No exported page is edited and no operation of T-R7.10 to T-R7.12 changes. It is a
   proposal until Thuong approves it, and its six questions for him are on the page. He decided
-  the second the same day: in a class channel Enter makes a new line and only the button posts,
-  because an announcement reaches a whole class and cannot be edited or deleted. The class
-  composer's line says so, and T-R7.20's line in the plan changes with it.
+  two the same day, neither as first drawn. In a class channel Enter makes a new line and only
+  the button posts, because an announcement reaches a whole class and cannot be edited or
+  deleted; no sentence on the screen says so. And the Attach dialog attaches and no longer
+  sends: the file waits in the composer as a chip, the teacher writes a message with it or
+  presses Send as it is, and both leave as one message. These are the two things the page
+  changes in what the deck draws, and two lines of T-R7.20 in the plan change with them.
 
 ## The brand
 

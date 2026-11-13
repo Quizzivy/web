@@ -31,7 +31,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R7 Collaboration · Messages · Proposal · 13 Nov 2026</span>
   </div>
   <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Messages, in the states the deck does not draw</h1>
-  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws Messages twice, for a teacher and for a student, with every thread full and every send working. R7 builds both screens (T-R7.20, T-R7.21), and its plan names what the drawing leaves out: a file in a message, the Details popover, a list that is loading, empty or broken, a send that fails, and a thread nobody may write in any more. This page draws those from the deck’s own parts and puts the screens in Vietnamese for the first time. It moves nothing the deck drew.</p>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws Messages twice, for a teacher and for a student, with every thread full and every send working. R7 builds both screens (T-R7.20, T-R7.21), and its plan names what the drawing leaves out: a file in a message, the Details popover, a list that is loading, empty or broken, a send that fails, and a thread nobody may write in any more. This page draws those from the deck’s own parts and puts the screens in Vietnamese for the first time. Two things the deck drew change, both on the owner’s word: the Attach dialog attaches and no longer sends, and Enter does not send in a class channel.</p>
   <div style="display:flex;flex-wrap:wrap;gap:8px">
     <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
   </div>
@@ -61,8 +61,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
     <strong style="font-size:17px;font-weight:600;line-height:1.35">Nothing sent can be edited or deleted, so the screen says who will get it.</strong>
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
       <li>Messages are kept as written, to protect both sides: most students are minors. That is the plan’s decision and this page does not reopen it.</li>
-      <li>The class composer keeps the deck’s line, “Gửi tới cả 24 học viên”, and the Attach dialog names its receiver before Send.</li>
-      <li>In a class channel Enter makes a new line and only the button posts, so a slip of a key cannot reach 24 students (Q2, decided).</li>
+      <li>A file does not leave with the dialog. It waits in the composer, where the teacher writes a message with it or presses Send as it is (Q3, decided).</li>
+      <li>In a class channel Enter makes a new line and only the button posts, so a slip of a key cannot reach 24 students (Q2, decided). The class composer keeps the deck’s line, “Gửi tới cả 24 học viên”.</li>
     </ul>
   </div>
 </section>
@@ -179,12 +179,15 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 
                           <sc-if value="{{ m.hasComposer }}" hint-placeholder-val="{{ true }}">
                             <div style="padding:10px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;flex:none">
-                              <div style="display:flex;align-items:flex-end;gap:8px;border:1px solid var(--border);border-radius:10px;padding:6px 6px 6px 12px;background:var(--bg)">
-                                <span style="flex:1;min-width:0;font-size:14px;line-height:1.5;padding:5px 0;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.placeholder }}</span>
-                                <sc-if value="{{ m.canAttach }}" hint-placeholder-val="{{ true }}"><span role="img" aria-label="{{ tx.attachBtn }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg);background:{{ m.attachBg }}"><i class="icon-paperclip" style="font-size:16px"></i></span></sc-if>
-                                <span role="img" aria-label="{{ tx.send }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:8px;background:var(--primary);color:var(--primary-fg);opacity:.45"><i class="icon-arrow-up" style="font-size:16px"></i></span>
+                              <div style="display:flex;flex-direction:column;gap:8px;border:1px solid {{ m.compBorder }};border-radius:10px;padding:6px 6px 6px 12px;background:var(--bg)">
+                                <sc-if value="{{ m.staged }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;padding-top:4px"><div style="flex:0 1 340px;min-width:0;display:flex;align-items:center;gap:10px;padding:6px 6px 6px 8px;border-radius:9px;border:1px solid var(--border);background:var(--card)"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ m.stIcon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.stName }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ m.stMeta }}</span></span><span role="img" aria-label="{{ tx.attachRemove }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.staged.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.staged.n }}</span></sc-if></sc-if></div></sc-if>
+                                <div style="display:flex;align-items:flex-end;gap:8px">
+                                  <span style="flex:1;min-width:0;font-size:14px;line-height:1.5;padding:5px 0;color:{{ m.draftFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.draftText }}</span>
+                                  <sc-if value="{{ m.canAttach }}" hint-placeholder-val="{{ true }}"><span role="img" aria-label="{{ tx.attachBtn }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg);background:{{ m.attachBg }}"><i class="icon-paperclip" style="font-size:16px"></i></span></sc-if>
+                                  <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.send.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.send.n }}</span></sc-if></sc-if><span role="img" aria-label="{{ tx.send }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:8px;background:var(--primary);color:var(--primary-fg);opacity:{{ m.sendOp }}"><i class="icon-arrow-up" style="font-size:16px"></i></span>
+                                </div>
                               </div>
-                              <sc-if value="{{ m.hasHint }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg);padding:0 4px"><span style="min-width:0;text-wrap:pretty">{{ m.hint }} <span style="color:var(--fg);font-weight:500">{{ tx.classKeys }}</span></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></span></sc-if>
+                              <sc-if value="{{ m.hasHint }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg);padding:0 4px"><span style="min-width:0;text-wrap:pretty">{{ m.hint }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></span></sc-if>
                             </div>
                           </sc-if>
                           <sc-if value="{{ m.hasNotice }}" hint-placeholder-val="{{ false }}">
@@ -221,7 +224,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
               <sc-if value="{{ m.dlg.open }}" hint-placeholder-val="{{ false }}">
                 <div style="position:absolute;inset:0;background:var(--overlay);z-index:6"></div>
                 <div role="dialog" aria-label="{{ tx.attachTitle }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};z-index:7;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);display:flex;flex-direction:column">
-                  <div style="display:flex;align-items:flex-start;gap:12px;padding:18px 20px 0"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-paperclip" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:16px;font-weight:600;line-height:1.3">{{ tx.attachTitle }}</span><span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted-fg);text-wrap:pretty">{{ m.dlg.to }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogTo.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogTo.n }}</span></sc-if></sc-if></span></span><span role="img" aria-label="{{ tx.close }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;margin:-6px -8px 0 0;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:17px"></i></span></div>
+                  <div style="display:flex;align-items:center;gap:12px;padding:18px 20px 0"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-paperclip" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:16px;font-weight:600;line-height:1.3">{{ tx.attachTitle }}</span></span><span role="img" aria-label="{{ tx.close }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;margin:0 -8px 0 0;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:17px"></i></span></div>
                   <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px">
                     <sc-if value="{{ m.dlg.pick }}" hint-placeholder-val="{{ true }}">
                       <div style="border:1px dashed {{ m.dlg.dropBorder }};border-radius:10px;padding:22px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-upload" style="font-size:15px"></i>{{ tx.chooseFile }}</span><span style="font-size:12.5px;color:var(--muted-fg)">{{ tx.attachAccept }}</span></div>
@@ -230,9 +233,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                       <div style="border:1px solid var(--border);border-radius:10px;padding:10px 10px 10px 12px;display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-file-text" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.dlg.name }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ m.dlg.meta }}</span></span><span role="img" aria-label="{{ tx.attachRemove }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></div><sc-if value="{{ m.dlg.uploading }}" hint-placeholder-val="{{ false }}"><div role="progressbar" aria-valuenow="{{ m.dlg.pct }}" aria-valuemin="0" aria-valuemax="100" style="height:4px;border-radius:4px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ m.dlg.pctW }};background:var(--accent-c)"></span></div></sc-if></div>
                     </sc-if>
                     <sc-if value="{{ m.dlg.hasErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:flex-start;gap:6px;font-size:12.5px;color:var(--danger-ink)"><i class="icon-circle-alert" style="font-size:14px;margin-top:2px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ m.dlg.err }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogErr.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogErr.n }}</span></sc-if></sc-if></span></sc-if>
-                    <div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:8px;font-size:12.5px;font-weight:500">{{ tx.attachNote }} <span style="font-weight:400;color:var(--muted-fg)">· {{ tx.optional }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogNote.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogNote.n }}</span></sc-if></sc-if></span><span style="display:flex;align-items:flex-start;min-height:64px;border:1px solid var(--border);border-radius:8px;padding:8px 12px;font-size:14px;line-height:1.5;background:var(--bg);color:{{ m.dlg.noteFg }}">{{ m.dlg.note }}</span></div>
                   </div>
-                  <div style="display:flex;justify-content:flex-end;gap:8px;padding:0 20px 18px"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500">{{ tx.cancel }}</span><span aria-disabled="{{ m.dlg.sendOff }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;opacity:{{ m.dlg.sendOp }}">{{ tx.send }}</span></div>
+                  <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:0 20px 18px"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500">{{ tx.cancel }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogDo.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogDo.n }}</span></sc-if></sc-if><span aria-disabled="{{ m.dlg.sendOff }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;opacity:{{ m.dlg.sendOp }}"><i class="icon-paperclip" style="font-size:15px"></i>{{ tx.attachDo }}</span></div>
                 </div>
               </sc-if>
             </div>
@@ -292,7 +294,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q2 is decided, against its first default, and the class composer was redrawn for it. The other five are open.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. Q2 and Q3 are decided, neither as first drawn, and the frames were redrawn for both. The other four are open.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -302,7 +304,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R7.20 and T-R7.21</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists the components. This is what each takes from this page. Nothing here changes the contract of T-R7.10 to T-R7.12. One line of T-R7.20 changes: Enter in a class channel (Q2).</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists the components. This is what each takes from this page. Nothing here changes the contract of T-R7.10 to T-R7.12. Two lines of T-R7.20 change: Enter in a class channel (Q2), and what the Attach dialog does (Q3).</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:720px">
@@ -364,22 +366,17 @@ const STR = [
   ['attachBtn', 'Composer', 'Đính kèm tệp', 'Attach file', 'Deck'],
   ['send', 'Composer', 'Gửi', 'Send', 'Deck'],
   ['classHint', 'Composer', 'Gửi tới cả {count} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.', 'Sent to all {count} students. Replies come to you as direct messages.', 'Deck'],
-  ['classKeys', 'Composer', 'Enter để xuống dòng. Bấm nút gửi để đăng.', 'Enter makes a new line. Press the button to post.', 'New'],
   ['notAllowed', 'Composer', 'Bạn không còn dạy chung lớp nào với {name}.', 'You no longer share a class with {name}.', 'Plan'],
   ['archived', 'Composer', 'Lớp này đã được lưu trữ nên không đăng thêm thông báo được.', 'This class is archived, so nothing more can be posted.', 'New'],
   ['attachTitle', 'Attach', 'Đính kèm tệp', 'Attach a file', 'Deck'],
-  ['attachToStudent', 'Attach', 'Gửi riêng cho {name}.', 'Goes to {name} only.', 'New'],
-  ['attachToClass', 'Attach', 'Gửi tới cả {count} học viên của lớp {name}.', 'Goes to all {count} students of {name}.', 'New'],
+  ['attachDo', 'Attach', 'Đính kèm', 'Attach', 'As today'],
   ['chooseFile', 'Attach', 'Chọn tệp', 'Choose file', 'As today'],
   ['attachAccept', 'Attach', 'PDF, ảnh hoặc âm thanh · tối đa 20 MB', 'PDF, image or audio · up to 20 MB', 'Deck'],
   ['attachUploading', 'Attach', 'Đang tải lên… {percent}%', 'Uploading… {percent}%', 'New'],
-  ['attachRemove', 'Attach', 'Bỏ tệp', 'Remove file', 'New'],
+  ['attachRemove', 'Attach, composer', 'Bỏ tệp', 'Remove file', 'New'],
   ['attachTooBig', 'Attach', 'Tệp lớn hơn 20 MB. Hãy chọn tệp nhỏ hơn.', 'The file is larger than 20 MB. Choose a smaller one.', 'New'],
   ['attachBadType', 'Attach', 'Chỉ nhận tệp PDF, PNG, JPEG, MP3 hoặc M4A.', 'Only PDF, PNG, JPEG, MP3 or M4A files are accepted.', 'New'],
   ['attachLimit', 'Attach', 'Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.', 'Too many uploads in an hour. Try again later.', 'New'],
-  ['attachNote', 'Attach', 'Lời nhắn kèm theo', 'A note with it', 'New'],
-  ['optional', 'Attach', 'không bắt buộc', 'optional', 'New'],
-  ['notePh', 'Attach', 'Ví dụ: Đáp án Unit 4, các em xem trước buổi thứ Năm.', 'e.g. The Unit 4 answer key, for Thursday.', 'New'],
   ['cancel', 'Attach', 'Huỷ', 'Cancel', 'As today'],
   ['close', 'Attach', 'Đóng', 'Close', 'As today'],
   ['sTeacherSub', 'Student', 'Giáo viên của bạn · {classes}', 'Your teacher · {classes}', 'Deck'],
@@ -430,9 +427,9 @@ const SCREENS = {
   student: [['direct', 'The teacher’s thread'], ['channel', 'A class channel'], ['list', 'The list']]
 };
 const STATES = {
-  'teacher:direct': [['normal', 'With a file'], ['details', 'Details open'], ['failed', 'A send failed'], ['blocked', 'No longer allowed'], ['empty', 'Nothing yet']],
+  'teacher:direct': [['normal', 'With a file'], ['staged', 'A file waiting'], ['stagedText', 'A file and a message'], ['details', 'Details open'], ['failed', 'A send failed'], ['blocked', 'No longer allowed'], ['empty', 'Nothing yet']],
   'teacher:channel': [['normal', 'Announcements'], ['details', 'Details open'], ['empty', 'Nothing yet'], ['archived', 'Class archived']],
-  'teacher:attach': [['pick', 'Nothing chosen'], ['uploading', 'Uploading'], ['ready', 'Ready to send'], ['tooBig', 'Too large'], ['badType', 'Wrong kind']],
+  'teacher:attach': [['pick', 'Nothing chosen'], ['uploading', 'Uploading'], ['ready', 'Ready to attach'], ['tooBig', 'Too large'], ['badType', 'Wrong kind']],
   'teacher:list': [['loading', 'Loading'], ['empty', 'No class, no message'], ['error', 'Could not load'], ['search', 'No match']],
   'student:direct': [['normal', 'With a file'], ['failed', 'A send failed'], ['blocked', 'No longer allowed'], ['empty', 'Nothing yet']],
   'student:channel': [['normal', 'Read only']],
@@ -442,18 +439,20 @@ const START = { 'teacher:direct': 'normal', 'teacher:channel': 'normal', 'teache
 
 // notes by who, screen and state: [the pin's place, the note]
 const NOTES = {
-  'teacher:direct:normal': [['nav', 'The nav item carries the lime count of unread messages (T-R7.22). Opening a thread reads it.'], ['load', '“Xem tin nhắn cũ hơn” brings the fifty before, and the stream stays where it was.'], ['link', 'A web address in a message is a link. Nothing else in a body is formatted.'], ['chip', 'A file sits in its sender’s bubble as a chip: its kind, name and size, and Download. A note sent with it is in the same bubble.']],
+  'teacher:direct:normal': [['nav', 'The nav item carries the lime count of unread messages (T-R7.22). Opening a thread reads it.'], ['load', '“Xem tin nhắn cũ hơn” brings the fifty before, and the stream stays where it was.'], ['link', 'A web address in a message is a link. Nothing else in a body is formatted.'], ['chip', 'A file sits in its sender’s bubble as a chip: its kind, name and size, and Download. A message written with it is in the same bubble.']],
+  'teacher:direct:staged': [['staged', 'The file is attached and waits in the composer as a chip. Nothing is sent yet, and the × takes it out.'], ['send', 'Send is on as soon as a file waits. The teacher can press it as it is, or write a message first.']],
+  'teacher:direct:stagedText': [['staged', 'A message is typed as usual, with the file above it. A class channel works the same way.'], ['send', 'The file and the message leave as one message and arrive in one bubble.']],
   'teacher:direct:details': [['details', 'Details is a popover, not a page (DG-91): the classes this student takes with the teacher, and one link to Students. On a phone it is a sheet.']],
   'teacher:direct:failed': [['status', 'A send that fails keeps its bubble and its words. “Thử lại” sends it under the same id, so it cannot arrive twice.']],
   'teacher:direct:blocked': [['blocked', 'The student left the teacher’s last class. The thread stays readable and the composer gives its place to the reason (409 MESSAGING_NOT_ALLOWED).']],
   'teacher:direct:empty': [['empty', 'A thread opened from Students before anything is said. The conversation exists from its first message.']],
-  'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it.'], ['hint', 'The deck’s line under the composer stays, and gains a sentence: here Enter makes a new line and only the button posts (Q2). An announcement goes to everyone and cannot be taken back.']],
+  'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it.']],
   'teacher:channel:details': [['details', 'For a class: how many students it has, and one link to its page.']],
   'teacher:channel:empty': [['empty', 'A class is listed from the day it exists, so its channel can be empty.']],
   'teacher:channel:archived': [['blocked', 'An archived class cannot be posted to (409 CLASS_ARCHIVED). Its announcements stay readable.']],
-  'teacher:attach:pick': [['dialogTo', 'The dialog says who will get the file before anything is chosen.'], ['dialogNote', 'A note can go with the file, in the same message. The deck’s dialog has the file only (Q3).']],
-  'teacher:attach:uploading': [['dialogTo', 'The receiver stays in view through every step.'], ['dialogNote', '“Gửi” stays off until the file is up. The note can be typed meanwhile.']],
-  'teacher:attach:ready': [['dialogTo', 'The dialog says who will get the file. For a class it counts the students.'], ['dialogNote', 'The note and the file leave as one message, which a student gets as one notification.']],
+  'teacher:attach:pick': [['dialogDo', 'The dialog chooses a file and attaches it. Its button reads “Đính kèm” where the deck’s reads “Send”: nothing is sent from here (Q3).']],
+  'teacher:attach:uploading': [['dialogDo', '“Đính kèm” stays off until the file is up.']],
+  'teacher:attach:ready': [['dialogDo', '“Đính kèm” closes the dialog and puts the file in the composer, where it waits for Send.']],
   'teacher:attach:tooBig': [['dialogErr', 'More than 20 MB (413). The field stays open for another file.']],
   'teacher:attach:badType': [['dialogErr', 'The server reads the file’s content, not its name (415). WebP is refused too, which is why the sentence lists the five kinds.']],
   'teacher:list:loading': [['skeleton', 'Six rows of the list’s own shape while it loads. The thread pane is quiet.']],
@@ -469,17 +468,18 @@ const NOTES = {
   'student:list:empty': [['listMsg', 'The plan’s sentence for a student. A class channel appears here with its first announcement.']],
   'student:list:error': [['listMsg', 'One sentence and “Thử lại”.']]
 };
-const PIN_KEYS = ['nav', 'msgBtn', 'newAnn', 'skeleton', 'listMsg', 'details', 'empty', 'load', 'chip', 'link', 'status', 'hint', 'blocked', 'readonly', 'dialogTo', 'dialogErr', 'dialogNote'];
+const PIN_KEYS = ['nav', 'msgBtn', 'newAnn', 'skeleton', 'listMsg', 'details', 'empty', 'load', 'chip', 'link', 'status', 'hint', 'staged', 'send', 'blocked', 'readonly', 'dialogDo', 'dialogErr'];
 
 // [part, the deck, this page]
 const ADDS = [
-  ['A file in a message', 'A bubble that reads “Attachment · name”, always on the teacher’s own side.', 'A chip in the sender’s bubble, or in the announcement’s card: its kind, name and size, and Download. A note can share the bubble.'],
-  ['The Attach dialog', 'One file field and Send.', 'Its states: nothing chosen, uploading, ready, and refused for size or kind. It names the receiver, and a note can go with the file.'],
+  ['A file in a message', 'A bubble that reads “Attachment · name”, always on the teacher’s own side.', 'A chip in the sender’s bubble, or in the announcement’s card: its kind, name and size, and Download. A message written with it shares the bubble.'],
+  ['The Attach dialog', 'One file field and Send: the file leaves at once, alone.', 'Its states: nothing chosen, uploading, ready, and refused for size or kind. Its button reads “Đính kèm” and sends nothing (Q3).'],
+  ['The composer with a file', 'Not drawn.', 'The attached file waits above the text as a chip with a ×. Send is on. A message can be typed with it, and both leave as one message.'],
   ['Details', 'An info button that leaves for Students or Classes.', 'A popover (DG-91): a student’s classes and a link to Students; a class’s member count and a link to its page. A sheet on a phone.'],
   ['The list', 'Six conversations.', 'A skeleton, the empty sentence, an error with “Thử lại”, and a search that matches nothing.'],
   ['A thread', 'Messages, from the first one.', '“Xem tin nhắn cũ hơn” at the top, and the empty sentence for a thread and for a channel.'],
   ['Sending', 'A message that is sent.', 'A message on its way (dimmed, “Đang gửi…”) and one that failed, with “Thử lại” under its bubble.'],
-  ['The composer', 'Always there for a teacher.', 'Replaced by one sentence when the two no longer share a class, or the class is archived.'],
+  ['The composer', 'Always there for a teacher. Enter sends.', 'Replaced by one sentence when the two no longer share a class, or the class is archived. In a class channel Enter makes a new line (Q2); nothing on the screen spells that out.'],
   ['“Thông báo mới”', 'Always on.', 'Off, with the reason beside it, when the teacher has no class.'],
   ['The student’s side', 'Text bubbles, and a footer of plain text on a channel.', 'The teacher’s file as a chip, the same failed and not-allowed states, and the footer’s second half as a link to the teacher’s thread.'],
   ['Links', 'None drawn.', 'A web address in a body is an underlined link. Bodies are plain text otherwise.'],
@@ -495,7 +495,9 @@ const WHENS = [
   ['Older messages exist', '“Xem tin nhắn cũ hơn” at the top of the stream.', 'The read returned nextBefore; a page is at most fifty.'],
   ['A message is on its way', 'Its bubble at 60%, with “Đang gửi…” in place of the time.', 'Sends are optimistic and carry a clientId.'],
   ['A send fails', '“Chưa gửi được.” and “Thử lại” under the bubble. The text stays in it.', 'No answer, a server error, or too many posts in a minute or a day.'],
-  ['Enter is pressed in a class channel', 'A new line in the composer. Nothing is sent until the button is pressed.', 'Decided by the owner on 13 Nov 2026 (Q2). A direct thread still sends on Enter.'],
+  ['A file is attached', 'The dialog closes and the file waits in the composer as a chip. Send is on, with or without a message.', 'Decided by the owner on 13 Nov 2026 (Q3). A message carries a body, a file, or both.'],
+  ['The chip’s × is pressed', 'The file leaves the composer. Nothing was sent.', 'A file that is uploaded and never sent is swept after 24 hours.'],
+  ['Enter is pressed in a class channel', 'A new line in the composer. Nothing is sent until the button is pressed, and no sentence on the screen says so.', 'Decided by the owner on 13 Nov 2026 (Q2). A direct thread still sends on Enter.'],
   ['The two no longer share a class', 'The composer gives its place to the sentence. The thread stays readable.', '409 MESSAGING_NOT_ALLOWED on a post.'],
   ['The class is archived', 'The composer gives its place to the sentence.', '409 CLASS_ARCHIVED on a post.'],
   ['A file is over 20 MB', '“Tệp lớn hơn 20 MB.” in the dialog; the field opens again.', '413 on the upload.'],
@@ -506,8 +508,8 @@ const WHENS = [
 // [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
 const QUESTIONS = [
   ['Q1 · One word, two things', 'Is “thông báo” the word for a class announcement, when Settings and the bell already call a notification “Thông báo”?', 'It is the word Vietnamese teachers use for both. Inside Messages the context separates them: “Thông báo mới”, “Thông báo · 17:30”, “Thông báo lớp”. In Settings › Thông báo, the row for new messages has to say “tin nhắn” to stay clear. The other choice is a word of its own, such as “Bảng tin lớp”.', '“Thông báo” for an announcement, and “thông báo lớp” wherever the two could be confused.'],
-  ['Q2 · Enter in a class channel', 'Should Enter send an announcement to a whole class?', 'The plan had Enter send everywhere. In a class channel that one key reaches 24 students, and nothing sent can be edited or deleted. The first drawing followed the plan and said it would rather not.', 'In a class channel Enter makes a new line and only the button posts; the line under the composer says so. In a direct thread Enter still sends, as the plan has it. The plan’s line for T-R7.20 changes with this.', 'Thuong, 13 Nov 2026', 'Decided (Thuong, 13 Nov 2026), and redrawn:'],
-  ['Q3 · A note with a file', 'May the Attach dialog take a note as well as the file?', 'The deck’s dialog sends the file alone, so “Đáp án Unit 4.pdf” arrives without a word and the teacher writes a second message. The contract already lets one message carry a body and a file.', 'Yes: one optional field, “Lời nhắn kèm theo”. The note and the chip share a bubble.'],
+  ['Q2 · Enter in a class channel', 'Should Enter send an announcement to a whole class?', 'The plan had Enter send everywhere. In a class channel that one key reaches 24 students, and nothing sent can be edited or deleted. The first drawing followed the plan and said it would rather not.', 'In a class channel Enter makes a new line and only the button posts. Nothing on the screen spells the rule out: the owner had the sentence that did taken off the same day. In a direct thread Enter still sends, as the plan has it. The plan’s line for T-R7.20 changes with this.', 'Thuong, 13 Nov 2026', 'Decided (Thuong, 13 Nov 2026):'],
+  ['Q3 · A message with a file', 'May a file be sent with a message, and where is the message written?', 'The deck’s dialog sends the file alone, so “Đáp án Unit 4.pdf” arrives without a word and the teacher writes a second message. The contract already lets one message carry a body and a file. The first drawing put a note field in the dialog.', 'No field in the dialog. The dialog attaches and does not send: the file waits in the composer as a chip, the teacher writes a message as usual or presses Send as it is, and both leave as one message.', 'Thuong, 13 Nov 2026', 'Decided another way (Thuong, 13 Nov 2026), and redrawn:'],
   ['Q4 · Who has not seen it', 'Is “21/24 học viên đã xem” enough, or will teachers want the three names?', 'The count is all the contract returns. Names would be a change to the staff read of a class channel, and a question of its own about what one student may be shown to have done.', 'The count only, as the deck draws.'],
   ['Q5 · The student’s sentence', 'What does a student read when writing is no longer allowed?', 'The plan gives the teacher’s sentence and none for the student, who meets the same refusal after leaving a class.', '“Bạn không còn học lớp nào của {name}.”'],
   ['Q6 · How long messages are kept', 'Does Data & privacy say that messages are kept?', 'DG-96 answers that they are, and that anonymising an account deletes its direct messages. The plan leaves the row to a design (O-R7.2). It is one read-only row in Admin › System settings › Data & privacy, and it is not drawn here.', 'One row, “Tin nhắn: được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.”, when R7 touches that page.']
@@ -516,18 +518,18 @@ const QUESTIONS = [
 const HANDOFF = [
   ['ThreadList', 'Its skeleton, the empty sentence, the error with “Thử lại”, and the no-match sentence. “Thông báo mới” off with its reason.'],
   ['ThreadView', '“Xem tin nhắn cũ hơn”, the empty sentence for a thread and for a channel, and the composer’s two replacements.'],
-  ['MessageBubble', 'The sending and failed lines under a bubble, links in a body, and a note sharing a bubble with a chip.'],
+  ['MessageBubble', 'The sending and failed lines under a bubble, links in a body, and a message sharing a bubble with its file.'],
   ['AttachmentChip', 'New from this page: kind tile, name, kind and size, Download. In a bubble it takes the bubble’s colours; in a card it is bordered.'],
   ['AnnouncementCard', 'A chip between the text and the line that counts who has seen it.'],
-  ['AttachDialog', 'Four states, the receiver’s line, the optional note (Q3), and the three refusals.'],
+  ['AttachDialog', 'Four states and the three refusals. Its button is “Đính kèm”: it hands the uploaded file to the composer and sends nothing (Q3).'],
   ['ThreadDetails', 'A popover from 768 and a sheet below: the header, one short list, one link.'],
-  ['Composer', 'In a class channel Enter makes a new line and only the button posts, with the sentence under it (Q2). In a direct thread it is the deck’s and the plan’s: Enter sends.'],
+  ['Composer', 'A waiting file as a chip above the text, with a ×; Send on while a file waits; the file kept with the thread’s draft (Q3). In a class channel Enter makes a new line and only the button posts, with no sentence about it (Q2). In a direct thread Enter sends.'],
   ['StudentMessagesPage', 'The chip on the teacher’s side, the footer link on a channel, its own empty sentence and its own refusal (Q5).'],
-  ['Locales', 'The copy table: sixty-odd strings, Vietnamese first.']
+  ['Locales', 'The copy table: some sixty strings, Vietnamese first.']
 ];
 const METHOD = [
   ['What this was drawn from.', 'The deck’s Teacher and Student pages (r.messages and “Student messages”), R7’s plan (docs/plan/77-r7.md: its decisions on messaging, T-R7.10a to T-R7.12 and T-R7.20 to T-R7.22) and the register (DG-08, DG-83, DG-91, DG-96). Messages is not built yet, so there was no screen to run.'],
-  ['What it leaves alone.', 'The layout, the sizes, the list’s rows, the bubbles, the announcement and attempt cards, the composer and every rule of who may read or write. No operation of T-R7.10 to T-R7.12 changes.'],
+  ['What it leaves alone.', 'The layout, the sizes, the list’s rows, the bubbles, the announcement and attempt cards and every rule of who may read or write. No operation of T-R7.10 to T-R7.12 changes. Two behaviours of the deck’s composer change, both decided by the owner: the Attach dialog no longer sends, and Enter does not send in a class channel.'],
   ['What is not drawn.', 'The entry points of T-R7.22 outside this page (the Students row menu, the class member menu, the palette), the notification settings of T-R7.23, and the Data & privacy row (Q6).']
 ];
 
@@ -575,7 +577,7 @@ class Component extends DCLogic {
     const monTime = t => (vi ? 'Th 2 ' : 'Mon ') + t;
 
     // ---- the open thread
-    let th = {}, items = [], foot = { hasComposer: true, placeholder: '', canAttach: teacher, hasHint: false, hint: '', hasNotice: false, noticeIcon: 'ban', noticeText: '', readOnly: false, roText: '', roLink: '' };
+    let th = {}, items = [], foot = { hasComposer: true, placeholder: '', draft: '', staged: false, stIcon: '', stName: '', stMeta: '', canAttach: teacher, hasHint: false, hint: '', hasNotice: false, noticeIcon: 'ban', noticeText: '', readOnly: false, roText: '', roLink: '' };
     let det = { open: false, btnBg: 'transparent', sub: '', label: '', rows: [], link: '' };
     const namThread = variant => {
       th = { hasAvatar: true, radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)', isClass: false, isDirect: true, initials: NAM.initials, name: NAM.name, sub: NAM.classes[0], hasDetails: true };
@@ -585,7 +587,12 @@ class Component extends DCLogic {
       if (variant === 'failed') items = head.concat([bubble(true, SAY.meFail[li], '', { status: 'failed' })]);
       else if (variant === 'blocked') { items = [day(tx.monday), bubble(true, SAY.old1[li], monTime('10:05')), bubble(false, SAY.old2[li], monTime('10:22'))]; foot = { ...foot, hasComposer: false, hasNotice: true, noticeIcon: 'ban', noticeText: fmt(tx.notAllowed, { name: NAM.name }) }; }
       else if (variant === 'empty') items = [center('message-square', tx.threadEmpty)];
-      else items = head.concat([bubble(true, SAY.me2[li], '20:32', { file: FILE_GUIDE, pinChip: true })]);
+      else if (variant === 'staged' || variant === 'stagedText') {
+        // a file is attached and waits for Send; a message may be typed with it
+        const f = fileOf(FILE_GUIDE);
+        items = head.map(x => ({ ...x, pinLink: false }));
+        foot = { ...foot, staged: true, stIcon: f.icon, stName: f.name, stMeta: f.meta, draft: variant === 'stagedText' ? SAY.me2[li] : '' };
+      } else items = head.concat([bubble(true, SAY.me2[li], '20:32', { file: FILE_GUIDE, pinChip: true })]);
       if (variant === 'details') det = { ...det, open: true, btnBg: 'var(--hover)' };
     };
     const classThread = variant => {
@@ -631,17 +638,17 @@ class Component extends DCLogic {
 
     // ---- which thread is open, and the dialog
     let hasThread = true, threadSkel = [];
-    let dlg = { open: false, to: '', pick: false, dropBorder: 'var(--ring)', hasFile: false, uploading: false, pct: 0, pctW: '0%', name: '', meta: '', hasErr: false, err: '', note: tx.notePh, noteFg: 'var(--muted-fg)', sendOff: true, sendOp: 0.45 };
+    let dlg = { open: false, pick: false, dropBorder: 'var(--ring)', hasFile: false, uploading: false, pct: 0, pctW: '0%', name: '', meta: '', hasErr: false, err: '', sendOff: true, sendOp: 0.45 };
     if (teacher) {
       if (scr === 'direct') namThread(st);
       if (scr === 'channel') classThread(st);
       if (scr === 'attach') {
         namThread('normal');
         items = items.slice(0, -1).map(x => ({ ...x, pinChip: false, pinLink: false }));
-        dlg = { ...dlg, open: true, to: fmt(tx.attachToStudent, { name: NAM.name }) };
+        dlg = { ...dlg, open: true };
         if (st === 'pick') dlg.pick = true;
         if (st === 'uploading') dlg = { ...dlg, hasFile: true, uploading: true, pct: 62, pctW: '62%', name: FILE_GUIDE.name[li], meta: fmt(tx.attachUploading, { percent: 62 }) };
-        if (st === 'ready') dlg = { ...dlg, hasFile: true, name: FILE_GUIDE.name[li], meta: FILE_GUIDE.meta[li], note: SAY.me2[li], noteFg: 'var(--fg)', sendOff: false, sendOp: 1 };
+        if (st === 'ready') dlg = { ...dlg, hasFile: true, name: FILE_GUIDE.name[li], meta: FILE_GUIDE.meta[li], sendOff: false, sendOp: 1 };
         if (st === 'tooBig') dlg = { ...dlg, pick: true, dropBorder: 'var(--danger)', hasErr: true, err: tx.attachTooBig };
         if (st === 'badType') dlg = { ...dlg, pick: true, dropBorder: 'var(--danger)', hasErr: true, err: tx.attachBadType };
       }
@@ -664,6 +671,7 @@ class Component extends DCLogic {
       skel: (teacher ? [0, 1, 0, 1, 0, 1] : [0, 1, 1]).map((k, i) => ({ radius: k ? '9px' : '50%', w1: ['52%', '64%', '44%', '58%', '48%', '60%'][i], w2: ['78%', '70%', '84%', '62%', '74%', '80%'][i] })),
       listMsg: !!listMsg, listIcon: listMsg ? listMsg[0] : '', listText: listMsg ? listMsg[1] : '', listRetry: listMsg ? listMsg[2] : false,
       hasThread, noThread: !hasThread, threadSkel, th, items, streamJustify: centered ? 'center' : 'flex-end', ...foot, attachBg: dlg.open ? 'var(--hover)' : 'transparent', det, dlg,
+      draftText: foot.draft || foot.placeholder, draftFg: foot.draft ? 'var(--fg)' : 'var(--muted-fg)', sendOp: foot.staged || foot.draft ? 1 : 0.45, compBorder: foot.staged ? 'var(--ring)' : 'var(--border)',
       newAnnOff: teacher && listState === 'empty', newAnnOp: teacher && listState === 'empty' ? 0.45 : 1, newAnnTitle: teacher && listState === 'empty' ? tx.newAnnOff : '',
       sUnread: !teacher && scr === 'channel' ? '1' : ''
     };

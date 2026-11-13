@@ -42,7 +42,7 @@ export function JoinedState({ outcome }: Readonly<{ outcome: JoinOutcome }>) {
         )}
       </div>
       <Button asChild size="xl" className="h-12 self-stretch">
-        <Link to="/app/classes">
+        <Link to="/classes">
           {t("join.goToClasses")}
           <ArrowRight aria-hidden="true" className="size-[17px]" />
         </Link>

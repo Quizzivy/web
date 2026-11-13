@@ -167,7 +167,7 @@ describe("the destination a path lights", () => {
     "/teacher/attemptsx/1",
     "/teacher/gradings",
     "/teachers",
-    "/app",
+    "/",
     "/",
   ])("lights nothing for %s, which only begins like a destination", (path) => {
     expect(activeNavId(path)).toBeNull();

@@ -11,7 +11,7 @@ import {
 import { InfoField } from "@/components/shared/form/fields/InfoField";
 import { JoinQr } from "@/features/classes/components/JoinQr";
 import { downloadJoinQr } from "@/features/classes/joinQrImage";
-import { useCopyJoinLink } from "@/features/classes/joinLink";
+import { joinSite, useCopyJoinLink } from "@/features/classes/joinLink";
 
 const FOOTER_BUTTON = "text-ui leading-normal shadow-none h-9 px-4";
 
@@ -41,7 +41,7 @@ export function ShowQrDialog({
     >
       <DialogShellHeader
         title={target?.name ?? ""}
-        description={t("classes.qrHint", { site: window.location.host })}
+        description={t("classes.qrHint", { site: joinSite() })}
       />
       <DialogShellBody>
         {target === null ? null : (

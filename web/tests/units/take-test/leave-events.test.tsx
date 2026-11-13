@@ -64,11 +64,11 @@ function reply() {
 function mount() {
   const router = createMemoryRouter(
     [
-      { path: "/app", element: <p>home</p> },
-      { path: "/app/classes", element: <p>classes</p> },
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
+      { path: "/classes", element: <p>classes</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
     ],
-    { initialEntries: ["/app/classes", "/app/attempts/att-1"], initialIndex: 1 },
+    { initialEntries: ["/classes", "/attempts/att-1"], initialIndex: 1 },
   );
   render(<RouterProvider router={router} />);
   return router;
@@ -148,7 +148,7 @@ describe("what the integrity monitor has buffered when the engine is left", () =
     expect(pending().map((event) => event.kind)).toEqual(ABSENCE);
 
     await leaveByTheCross(user);
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
     await screen.findByText("home", { exact: true });
 
     expect(saveAnswers).not.toHaveBeenCalled();
@@ -168,7 +168,7 @@ describe("what the integrity monitor has buffered when the engine is left", () =
     away();
 
     await act(() => router.navigate(-1));
-    await waitFor(() => expect(path(router)).toBe("/app/classes"));
+    await waitFor(() => expect(path(router)).toBe("/classes"));
 
     expect(saveAnswers).not.toHaveBeenCalled();
     const [beacon, ...others] = await beacons();
@@ -185,7 +185,7 @@ describe("what the integrity monitor has buffered when the engine is left", () =
     const router = await open();
     away();
     await leaveByTheCross(user);
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
 
     await act(() => router.navigate(-1));
     await screen.findByText(PROMPT);
@@ -203,7 +203,7 @@ describe("what the integrity monitor has buffered when the engine is left", () =
     const router = await open();
     away();
     await leaveByTheCross(user);
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
 
     vi.mocked(getAttempt).mockResolvedValue(paper("ses-2"));
     await act(() => router.navigate(-1));
@@ -234,7 +234,7 @@ describe("what the integrity monitor has buffered when the engine is left", () =
     expect(pending().map((event) => event.kind)).toEqual(ABSENCE);
 
     await user.click(await screen.findByRole("button", { name: "Về trang chủ" }));
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
 
     expect(sessionStorage.getItem(BUFFER)).toBeNull();
     expect(sent).toEqual([]);
@@ -255,7 +255,7 @@ describe("what the integrity monitor has buffered when the engine is left", () =
 
     await screen.findByRole("alert");
     await user.click(screen.getByRole("button", { name: "Về trang chủ" }));
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
 
     expect(sent).toEqual([]);
     expect(sessionStorage.getItem(BUFFER)).toBe(earlier);

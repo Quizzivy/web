@@ -17,14 +17,14 @@ function lazyRouter(): DataRouter {
   return createMemoryRouter(
     [
       {
-        path: "/app",
+        path: "/",
         lazy: async () => {
           await loaded;
           return { Component: () => <p>student home</p> };
         },
       },
     ],
-    { initialEntries: ["/app"] },
+    { initialEntries: ["/"] },
   );
 }
 

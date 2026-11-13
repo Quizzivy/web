@@ -369,7 +369,7 @@ function renderStudentMenu() {
   render(
     <QueryClientProvider client={client}>
       <MemoryRouter>
-        <AccountMenu settingsTo="/app/settings" />
+        <AccountMenu settingsTo="/settings" />
       </MemoryRouter>
     </QueryClientProvider>,
   );

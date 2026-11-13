@@ -82,7 +82,7 @@ export function RecentResults({
           return (
             <li key={card.id} className={HOME_ITEM}>
               <Link
-                to={`/app/attempts/${card.lastAttemptId}/result`}
+                to={`/attempts/${card.lastAttemptId}/result`}
                 className={cn(HOME_ROW, "hover:bg-muted")}
               >
                 <span className="min-w-0 flex-1">

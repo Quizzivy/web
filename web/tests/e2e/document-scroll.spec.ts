@@ -217,7 +217,7 @@ for (const viewport of viewports) {
         },
       },
     });
-    await page.goto("/app");
+    await page.goto("/");
     await expect(page.getByRole("button", { name: "Tiếp tục làm bài" })).toBeVisible();
     expect(await documentScroll(page)).toEqual({ down: 0, scrollbar: 0, past: 0 });
   });

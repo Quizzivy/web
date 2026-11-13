@@ -19,6 +19,8 @@ import {
   useGoogleSignIn,
 } from "@/features/auth/google/useGoogleSignIn";
 import { destinationAfterSignIn } from "@/features/auth/home";
+import { OtherHostLink } from "@/features/auth/components/OtherHostLink";
+import { isWrongHost } from "@/features/auth/wrongHost";
 import { loginSchema, type LoginValues } from "@/features/auth/loginSchema";
 import { readJoinContext } from "@/features/join/context";
 import { ApiError } from "@/lib/api/errors";
@@ -52,6 +54,7 @@ export default function LoginPage() {
   const { signIn, joinCodes } = useOrganization();
   const showGoogle = signIn.google && googleSignInAvailable();
   const [error, setError] = useState<string | null>(null);
+  const [elsewhere, setElsewhere] = useState(false);
   const [remembered] = useState(readJoinContext);
   const joining = joinCodes ? remembered : null;
 
@@ -66,6 +69,7 @@ export default function LoginPage() {
 
   const onValid = async (values: LoginValues) => {
     setError(null);
+    setElsewhere(false);
     try {
       const operation = signInAccount(
         "login",
@@ -96,6 +100,7 @@ export default function LoginPage() {
         cause instanceof TransitionPendingError ||
           transitionStatus().phase === "cleanup",
       );
+      setElsewhere(isWrongHost(cause));
       setError(messageFor(cause));
     }
   };
@@ -192,7 +197,15 @@ export default function LoginPage() {
       {shown && (
         <Alert variant="danger" className="text-ui flex gap-2.5">
           <CircleAlert aria-hidden="true" className="mt-px size-4 shrink-0" />
-          <span>{shown}</span>
+          <span>
+            {shown}
+            {elsewhere && error !== null && (
+              <>
+                {" "}
+                <OtherHostLink />
+              </>
+            )}
+          </span>
           {indeterminate && (
             <Button
               type="button"

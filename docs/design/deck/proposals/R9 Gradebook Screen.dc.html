@@ -1,0 +1,420 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R9 Insights · The gradebook · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The gradebook: which term, which class, a phone, and nothing to show</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws the gradebook once: one term named in a sentence, four classes on tabs, eight students, six columns, at a desktop’s width. R9 builds it (T-R9.7) with things the drawing leaves out: a way to choose the term, a class picker when tabs do not fit, a phone, a cell’s tooltip, the row a teacher arrives at from Students, and the screen with no class, no work, still loading, or failed. This page draws those from the deck’s own parts, in Vietnamese first. The category and weight of a column are the page before this one.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Which term</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A button in the heading, like the two on Reports.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The plan makes the term’s name a menu. The page puts it beside “Xuất” as the deck’s Reports heading puts its class and its range: a bordered button with a chevron.</li>
+      <li><span style="color:var(--fg)">The menu lists the centre’s terms, newest first, and “Tất cả học kỳ”.</span> The sentence under the title still names the term and the two shares.</li>
+      <li>A centre with no terms has no button: the sentence reads “Tất cả học kỳ”, and there is nothing to choose.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Which class</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Tabs while they fit, one select when they do not.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>Up to five classes are the deck’s tabs. From the sixth, and always below 768px, they are one select with the class’s name.</li>
+      <li><span style="color:var(--fg)">On a phone the student column gives up its avatar and half its width</span>, so two grades show beside a name, not one. The table still scrolls sideways.</li>
+      <li>A teacher who comes from Students for one person lands on that person’s row, tinted, on the page that holds it.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Nothing to show</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The heading stays, and one sentence says what to do.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>No class at all: “Tạo lớp để xem điểm.” and the way to make one.</li>
+      <li><span style="color:var(--fg)">A class with no work in the term keeps its tabs and its term button</span>, so the teacher can look at another class or another term before assigning anything.</li>
+      <li>Loading is the table’s own shape. A failed read is one sentence and “Thử lại”.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The gradebook at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick it in the bar above. The table, its cells and its legend are the deck’s. The phone frame is new in every state: the deck draws none. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+                <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                  <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                    <div style="min-width:0"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.title }}</div><sc-if value="{{ m.hasSub }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;gap:8px;margin-top:2px;color:var(--muted-fg);font-size:14px"><span style="min-width:0;text-wrap:pretty">{{ m.sub }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sub.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.sub.n }}</span></sc-if></sc-if></div></sc-if></div>
+                    <sc-if value="{{ m.hasTools }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px;align-items:center"><sc-if value="{{ m.hasTermBtn }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.term.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.term.n }}</span></sc-if></sc-if><span style="position:relative;display:inline-flex"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap;background:{{ m.termBg }}"><i class="icon-calendar-range" style="font-size:14px;color:var(--muted-fg)"></i>{{ m.termName }}<i class="icon-chevron-down" style="font-size:14px;color:var(--muted-fg)"></i></span><sc-if value="{{ m.menuOpen }}" hint-placeholder-val="{{ false }}"><div role="menu" style="position:absolute;right:0;top:calc(100% + 4px);width:232px;z-index:6;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:5px;text-align:left"><div style="display:flex;align-items:center;gap:6px;font-size:11.5px;color:var(--muted-fg);padding:4px 8px 6px">{{ tx.termLabel }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.menu.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.menu.n }}</span></sc-if></sc-if></div><sc-for list="{{ m.terms }}" as="mi" hint-placeholder-count="3"><span role="menuitemradio" aria-checked="{{ mi.on }}" style="display:flex;align-items:center;gap:9px;height:{{ f.itemH }};padding:0 8px;border-radius:6px;font-size:13px;border-top:{{ mi.border }};margin-top:{{ mi.gap }}"><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:{{ mi.weight }}">{{ mi.label }}</span><span style="font-size:12px;color:var(--muted-fg)">{{ mi.meta }}</span><sc-if value="{{ mi.on }}" hint-placeholder-val="{{ false }}"><i class="icon-check" style="font-size:14px"></i></sc-if></span></sc-for></div></sc-if></span></sc-if><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap;box-shadow:var(--shadow)"><i class="icon-download" style="font-size:15px"></i>{{ tx.export }}</span></div></sc-if>
+                  </div>
+
+                  <sc-if value="{{ m.hasTabs }}" hint-placeholder-val="{{ true }}">
+                    <sc-if value="{{ f.tabs }}" hint-placeholder-val="{{ true }}"><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;max-width:100%;align-self:flex-start;overflow:hidden"><sc-for list="{{ m.classes }}" as="gc" hint-placeholder-count="4"><span style="border-radius:7px;height:30px;padding:0 12px;font-size:13px;white-space:nowrap;display:grid;place-items:center;background:{{ gc.bg }};color:{{ gc.fg }};box-shadow:{{ gc.ring }};font-weight:500">{{ gc.label }}</span></sc-for></div></sc-if>
+                    <sc-if value="{{ f.select }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px"><span style="flex:{{ f.selFlex }};min-width:0;display:flex;align-items:center;gap:8px;height:{{ f.btnH }};padding:0 10px 0 12px;border:1px solid var(--border);border-radius:8px;background:var(--card);font-size:13.5px"><i class="icon-graduation-cap" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:500">IELTS 6.5 Evening</span><i class="icon-chevrons-up-down" style="font-size:14px;color:var(--muted-fg)"></i></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.select.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.select.n }}</span></sc-if></sc-if></div></sc-if>
+                  </sc-if>
+                  <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}"><span style="display:block;height:36px;width:320px;border-radius:6px;background:var(--muted)"></span></sc-if>
+
+                  <sc-if value="{{ m.hasTable }}" hint-placeholder-val="{{ true }}">
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                      <div style="overflow:hidden"><table style="border-collapse:separate;border-spacing:0;width:100%;min-width:{{ f.tableMin }};font-size:13.5px">
+                        <thead><tr><th style="background:var(--muted);text-align:left;font-weight:500;font-size:12.5px;color:var(--muted-fg);padding:10px {{ f.cellPad }};min-width:{{ f.stuW }}"><span style="display:flex;align-items:center;gap:6px">{{ tx.student }}<sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"></sc-if></span></th>
+                          <sc-for list="{{ m.cols }}" as="col" hint-placeholder-count="6"><th style="background:var(--muted);text-align:center;font-weight:500;font-size:12px;color:var(--muted-fg);padding:8px 4px;min-width:96px;line-height:1.3"><span style="display:block;color:var(--fg);white-space:nowrap">{{ col.name }}</span><span style="display:block;font-weight:400;white-space:nowrap">{{ col.meta }}</span></th></sc-for>
+                          <th style="background:var(--muted);text-align:right;font-weight:600;font-size:12.5px;padding:10px 16px;min-width:90px;border-left:1px solid var(--border)">{{ tx.final }}</th></tr></thead>
+                        <tbody>
+                          <sc-if value="{{ m.hasRows }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ m.rows }}" as="gr" hint-placeholder-count="8"><tr><td style="padding:0 {{ f.cellPad }};height:48px;border-top:1px solid var(--border);background:{{ gr.bg }}"><span style="display:flex;align-items:center;gap:10px"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="width:28px;height:28px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11px;font-weight:600">{{ gr.initials }}</span></sc-if><span style="min-width:0;max-width:{{ f.nameMax }};font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ gr.name }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ gr.hot }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.row.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.row.n }}</span></sc-if></sc-if></sc-if></span></td><sc-for list="{{ gr.cells }}" as="ce" hint-placeholder-count="6"><td style="border-top:1px solid var(--border);padding:6px;text-align:center;background:{{ gr.bg }}"><span style="position:relative;display:inline-flex"><span style="display:inline-flex;align-items:center;justify-content:center;min-width:56px;height:28px;border-radius:6px;font-variant-numeric:tabular-nums;font-size:13px;font-weight:500;background:{{ ce.bg }};color:{{ ce.fg }};border:{{ ce.ring }}">{{ ce.label }}</span><sc-if value="{{ ce.hasTip }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span role="tooltip" style="position:absolute;left:50%;bottom:calc(100% + 6px);transform:translateX(-50%);z-index:4;display:flex;align-items:center;gap:6px;padding:5px 9px;border-radius:7px;background:var(--fg);color:var(--bg);font-size:12px;font-weight:500;white-space:nowrap;box-shadow:var(--shadow-lg)">{{ ce.tip }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.tip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.tip.n }}</span></sc-if></sc-if></span></sc-if></sc-if></span></td></sc-for><td style="border-top:1px solid var(--border);border-left:1px solid var(--border);padding:0 16px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums;background:{{ gr.bg }}">{{ gr.final }}</td></tr></sc-for></sc-if>
+                          <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="6"><tr><td style="padding:0 {{ f.cellPad }};height:48px;border-top:1px solid var(--border)"><span style="display:flex;align-items:center;gap:10px"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="width:28px;height:28px;flex:none;border-radius:50%;background:var(--muted)"></span></sc-if><span style="display:block;height:12px;width:{{ sk.w }};border-radius:6px;background:var(--muted)"></span></span></td><sc-for list="{{ m.cols }}" as="c2" hint-placeholder-count="6"><td style="border-top:1px solid var(--border);padding:6px;text-align:center"><span style="display:inline-block;width:56px;height:28px;border-radius:6px;background:var(--muted)"></span></td></sc-for><td style="border-top:1px solid var(--border);border-left:1px solid var(--border);padding:0 16px"><span style="display:flex;justify-content:flex-end"><span style="display:block;height:12px;width:38px;border-radius:6px;background:var(--muted)"></span></span></td></tr></sc-for></sc-if>
+                        </tbody>
+                      </table></div>
+                      <sc-if value="{{ m.hasRows }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap;padding:10px 16px;border-top:1px solid var(--border);font-size:13px;color:var(--muted-fg)"><span style="font-variant-numeric:tabular-nums;white-space:nowrap">{{ m.range }}</span><span style="display:flex;align-items:center;gap:12px"><span style="white-space:nowrap;color:var(--fg);font-weight:500;font-variant-numeric:tabular-nums">{{ m.pageOf }}</span><span style="display:flex;gap:6px"><span style="width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid var(--border);border-radius:7px;background:var(--card);opacity:{{ m.prevOp }}"><i class="icon-chevron-left" style="font-size:15px"></i></span><span style="width:32px;height:32px;flex:none;display:grid;place-items:center;border:1px solid var(--border);border-radius:7px;background:var(--card);opacity:1"><i class="icon-chevron-right" style="font-size:15px"></i></span></span></span></div></sc-if>
+                      <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}"><div style="display:flex;justify-content:center;align-items:center;gap:8px;padding:10px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted-fg)"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if>{{ tx.loading }}</div></sc-if>
+                    </div>
+                    <sc-if value="{{ m.hasRows }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted-fg)"><sc-for list="{{ m.legend }}" as="lg" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;flex:none;border-radius:3px;background:{{ lg.bg }};border:{{ lg.ring }}"></span>{{ lg.label }}</span></sc-for></div></sc-if>
+                  </sc-if>
+                  <sc-if value="{{ m.hasMsg }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:12px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:44px 18px"><span style="max-width:46ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.actIcon }}" style="font-size:14px"></i>{{ m.act }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div></sc-if>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. At 360 the class is always a select, the student column has no avatar, and the table scrolls sideways under a student column that stays in place.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Gradebook as it is. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule of R9’s plan, or the part of the read, behind it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, “Earlier page” that the page before this one proposed them, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 88px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 88px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R9.7</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each component the plan names takes from this page. No operation of T-R9.2 changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R9 · The gradebook: which term, which class, a phone, and nothing to show. A proposal page for T-R9.7.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['title', 'Heading', 'Sổ điểm', 'Gradebook', 'Deck'],
+  ['sub', 'Heading', '{term} · điểm tổng kết gồm bài kiểm tra {t}%, bài tập {h}%.', '{term} · final grade weights tests {t}%, homework {h}%.', 'Deck'],
+  ['export', 'Heading', 'Xuất', 'Export', 'Deck'],
+  ['termLabel', 'Term menu', 'Học kỳ', 'Term', 'New'],
+  ['allTerms', 'Term menu', 'Tất cả học kỳ', 'All terms', 'Plan'],
+  ['termCurrent', 'Term menu', 'Đang diễn ra', 'Current', 'Earlier page'],
+  ['classLabel', 'Class select', 'Lớp', 'Class', 'New'],
+  ['student', 'Table', 'Học viên', 'Student', 'Deck'],
+  ['final', 'Table', 'Tổng kết', 'Final', 'Deck'],
+  ['catTest', 'Table', 'Bài kiểm tra', 'Test', 'Earlier page'],
+  ['catHomework', 'Table', 'Bài tập', 'Homework', 'Earlier page'],
+  ['pending', 'Table', 'Chờ chấm', 'Pending', 'Deck'],
+  ['tipGraded', 'Tooltip', '{score} / {max} · nộp {date}', '{score} / {max} · submitted {date}', 'Plan'],
+  ['tipAwaiting', 'Tooltip', '1 lượt đang chờ chấm', '1 attempt waiting for grading', 'Plan'],
+  ['tipPending', 'Tooltip', 'Chờ chấm', 'Waiting for grading', 'Plan'],
+  ['tipMissing', 'Tooltip', 'Chưa nộp', 'Not submitted', 'Plan'],
+  ['lg80', 'Legend', 'Từ 80% trở lên', '80% and above', 'Deck'],
+  ['lg60', 'Legend', 'Dưới 60%', 'Below 60%', 'Deck'],
+  ['lgWaiting', 'Legend', 'Chờ chấm', 'Waiting for grading', 'Deck'],
+  ['lgMissing', 'Legend', 'Chưa nộp', 'Not submitted', 'Deck'],
+  ['range', 'Pager', '{from}–{to} trên {total} học viên', '{from}–{to} of {total} students', 'As today'],
+  ['pageOf', 'Pager', 'Trang {page} trên {pages}', 'Page {page} of {pages}', 'As today'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today'],
+  ['noClasses', 'States', 'Tạo lớp để xem điểm.', 'Create a class to see grades.', 'Plan'],
+  ['newClass', 'States', 'Lớp mới', 'New class', 'As today'],
+  ['noWork', 'States', 'Chưa giao bài nào cho lớp này trong {term}.', 'Nothing assigned to this class in {term}.', 'Plan'],
+  ['assign', 'States', 'Giao bài', 'Assign test', 'Plan'],
+  ['failed', 'States', 'Không tải được sổ điểm.', 'Could not load the gradebook.', 'New'],
+  ['retry', 'States', 'Thử lại', 'Retry', 'As today']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+// the deck's gradebook
+const COLS = [['Unit 1 Quiz', 'test', 10], ['Unit 2 Listening', 'test', 10], ['Vocab: Travel', 'homework', 20], ['Reading Mock', 'test', 25], ['Writing T1', 'test', 15], ['Grammar: PP', 'homework', 20]];
+const GB = [['Trần Minh Anh', [92, 85, 90, 90, 'P', 88]], ['Lê Hoàng Nam', [78, 64, 70, 'P', 60, 72]], ['Phạm Thu Hà', [81, 77, null, null, 68, 80]], ['Nguyễn Gia Bảo', [66, 58, 61, 'P', 55, 70]], ['Võ Khánh Linh', [88, 90, 84, 85, 78, 86]], ['Đặng Quốc Huy', [55, 49, null, 'P', 52, 58]], ['Bùi Ngọc Mai', [74, 80, 76, null, 70, 79]], ['Đỗ Phương Thảo', [95, 92, 94, 95, 85, 93]]];
+const INIT = n => { const p = n.split(' '); return (p[p.length - 1][0] + p[0][0]).toUpperCase(); };
+const TERMS = [['Xuân 2027', 'Spring 2027'], ['Thu 2026', 'Autumn 2026'], ['Hè 2026', 'Summer 2026']];
+const STATES = [['term', 'The term menu'], ['allTerms', 'All terms'], ['noTerms', 'No terms set'], ['classes', 'Six classes'], ['student', 'From Students'], ['tip', 'A cell’s tooltip'], ['noWork', 'Nothing assigned'], ['noClasses', 'No class'], ['loading', 'Loading'], ['error', 'Could not load']];
+const NOTES = {
+  term: [['term', 'The term is a button beside “Xuất”, built like the two in the deck’s Reports heading. The plan says the term’s name is a menu and does not say where it sits (Q1).'], ['menu', 'The centre’s terms, newest first, then “Tất cả học kỳ”. The one in use is ticked, and the current term says so.'], ['sub', 'The sentence still names the term and the two shares.']],
+  allTerms: [['term', '“Tất cả học kỳ” is chosen: every assignment of the class is a column.'], ['sub', 'The shares, and the Final, are then worked out over all of them (Q3).']],
+  noTerms: [['sub', 'A centre that has set no term sees every assignment, and the sentence says “Tất cả học kỳ”. There is no button, because there is nothing to choose.']],
+  classes: [['select', 'From the sixth class the tabs give way to one select with the class’s name. Below 768px it is always the select.']],
+  student: [['row', 'The teacher pressed “Xem kết quả” on this student in Students. The gradebook opens on the student’s first class, on the page that holds the row, with the row tinted.']],
+  tip: [['tip', 'Every cell says more on hover and on focus: the score out of its maximum, and when it was handed in. A pending cell reads “Chờ chấm”, a missing one “Chưa nộp”.']],
+  noWork: [['msg', 'The class and the term stay in the heading, so another can be chosen first. “Giao bài” opens the wizard for this class.'], ['sub', 'With no column there are no shares to give: the sentence names the term only.']],
+  noClasses: [['msg', 'A teacher with no class has nothing to grade yet. One sentence, and the way to make a class.']],
+  loading: [['skeleton', 'The table’s own shape: a header and six rows of blocks. The term, the classes and the shares all come with the read, so only the title is there before it.']],
+  error: [['msg', 'One sentence and “Thử lại”. The title stays.']]
+};
+const PIN_KEYS = ['term', 'menu', 'sub', 'select', 'row', 'tip', 'msg', 'skeleton', 'nav', 'newAnn'];
+// [part, the deck, this page]
+const ADDS = [
+  ['Choosing the term', '“Term 3” in a sentence. Nothing to press.', 'A button beside “Xuất” that opens a menu of the centre’s terms and “Tất cả học kỳ”.'],
+  ['No terms set', 'Not drawn.', 'The sentence reads “Tất cả học kỳ”, and there is no button.'],
+  ['Choosing the class', 'Four tabs.', 'Tabs up to five classes; one select from the sixth, and always below 768px.'],
+  ['A phone', 'Not drawn.', 'The heading stacks, the class is a select, and the student column narrows to a name so two grades show beside it.'],
+  ['A cell’s tooltip', 'A title on the cell: the score, “Waiting for grading” or “Not submitted”.', 'The plan’s fuller line for a graded cell: the score out of its maximum, and the date.'],
+  ['Arriving from Students', 'Not drawn.', 'That student’s row, tinted.'],
+  ['The pager', 'Rows per page, the page, and four buttons.', 'The product’s pager, with “học viên” as its noun, at 25 students a page.'],
+  ['No class', 'Not drawn.', '“Tạo lớp để xem điểm.” and “Lớp mới”.'],
+  ['No work in the term', 'Not drawn.', '“Chưa giao bài nào cho lớp này trong Thu 2026.” and “Giao bài”, under the class and the term.'],
+  ['Loading and failing', 'Not drawn.', 'A skeleton table; one sentence with “Thử lại”.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, rule]
+const WHENS = [
+  ['The gradebook opens', 'On the first class and the current term.', 'Without classId the first class is used; without termId the current term, else the latest past one, else every assignment.'],
+  ['A term is chosen', 'Its assignments are the columns, and the address keeps the choice.', 'A column belongs to the term that holds its closing time. ?term= in the address.'],
+  ['“Tất cả học kỳ” is chosen', 'Every assignment of the class is a column, and the sentence says so.', 'term is null in the read.'],
+  ['The centre has no terms', 'Every assignment, the sentence “Tất cả học kỳ”, and no button.', 'terms is empty.'],
+  ['The teacher has more than five classes', 'A select in place of the tabs.', 'T-R9.7.'],
+  ['Below 768px', 'The select, the narrow student column, and the table scrolling sideways.', 'T-R9.7 for the select. The student column is this page’s (Q2).'],
+  ['The pointer or the focus is on a cell', 'Its tooltip.', '“{score} / {max} · nộp {date}”, with “1 lượt đang chờ chấm” when a later attempt waits; “Chờ chấm”; “Chưa nộp”.'],
+  ['The teacher comes from a student’s “Xem kết quả”', 'That student’s first class, the page that holds the row, and the row tinted.', '?class=&student= in the address (T-R9.7).'],
+  ['The class has no assignment in the term', 'The sentence and “Giao bài”. The class and the term can still be changed.', 'columns is empty.'],
+  ['The teacher has no class', '“Tạo lớp để xem điểm.” and “Lớp mới”.', 'classes is empty.'],
+  ['The gradebook cannot load', '“Không tải được sổ điểm.” and “Thử lại”.', 'The server did not answer.'],
+  ['The class is archived', 'It is not among the tabs. Its address still opens it, to read.', 'An archived classId still answers, read-only (T-R9.2).']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · Where the term is chosen', 'Is the term a button beside “Xuất”, or the term’s name in the sentence?', 'The plan says the term name is a menu button “in the Reports header’s pattern”. Reports puts its two buttons at the right of the heading. A name that can be pressed inside a sentence would be a new part, and easy to miss.', 'A button beside “Xuất”. The sentence stays a sentence.'],
+  ['Q2 · The student column on a phone', 'On a phone, may the student column lose its avatar and narrow to the name?', 'At 360 the deck’s 200px column leaves room for one grade. Without the avatar and at 128px, two show. A long name is cut with an ellipsis.', 'Yes: the name only, at 128px, below 768px.'],
+  ['Q3 · “Tất cả học kỳ”', 'What should the Final mean when every term is shown?', 'Weights are worked out per term, so that one term’s Final never depends on another term’s work. With every term shown, the one Final column is worked out over every column on the screen, and matches no single term’s Final.', 'The Final is over what is shown, and the sentence says “Tất cả học kỳ”. Leaving the Final out of this view would be a change to T-R9.2.']
+];
+// [component in the plan, what it takes from this page]
+const HANDOFF = [
+  ['TermMenu', 'A bordered button with the term’s name beside “Xuất”, opening a menu of the terms with the one in use ticked, and “Tất cả học kỳ” last. Absent when no term is set.'],
+  ['GradebookPage', 'The sentence in its three forms: a term with its shares, “Tất cả học kỳ”, and a term alone when there is no column. Tabs up to five classes, a select beyond and below 768px. The four states.'],
+  ['GradebookTable', 'Below 768px the student column has no avatar and is 128px. The tinted row for ?student=. The skeleton.'],
+  ['GradeCell', 'The tooltip’s four texts.'],
+  ['Pager', 'As the product has it, with “học viên” as its noun.'],
+  ['Locales', 'The copy table: twenty-nine strings, Vietnamese first. Three are the earlier pages’.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher page (Gradebook, and the heading of Reports for its buttons and menu), R9’s plan (docs/plan/79-r9.md: its decisions on terms and rows, T-R9.2, T-R9.7), and the two proposal pages before this one for their words. The gradebook is not built, so there was no screen to run.'],
+  ['What it leaves alone.', 'The table, the cells’ colours and the legend are the deck’s. No operation changes.'],
+  ['What is not drawn.', 'A column’s category and weight (the page before this one), the export dialog (the deck draws it), Reports and the student’s Grades (the pages after this one).']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', st: 'term', anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const st = s.st;
+    const noteList = NOTES[st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const on = x => ({ bg: x ? 'var(--card)' : 'transparent', fg: x ? 'var(--fg)' : 'var(--muted-fg)', ring: x ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' });
+    const D = (a, b) => (vi ? a : b);
+
+    const loading = st === 'loading', failed = st === 'error', noClasses = st === 'noClasses', noWork = st === 'noWork';
+    const bare = loading || failed || noClasses;     // nothing but the title is known
+    const all = st === 'allTerms' || st === 'noTerms';
+    const term = TERMS[1][li];
+    const catName = c => (c === 'test' ? tx.catTest : tx.catHomework);
+    const band = v => (v == null ? ['—', 'transparent', 'var(--muted-fg)', '1px dashed var(--ring)'] : v === 'P' ? [tx.pending, 'var(--warning-soft)', 'var(--warning-ink)', '0'] : [v + '%', v >= 80 ? 'var(--success-soft)' : v < 60 ? 'var(--danger-soft)' : 'transparent', v >= 80 ? 'var(--success-ink)' : v < 60 ? 'var(--danger-ink)' : 'var(--fg)', '0']);
+    const msg = noClasses ? [tx.noClasses, tx.newClass, 'plus'] : noWork ? [fmt(tx.noWork, { term }), tx.assign, 'clipboard-list'] : failed ? [tx.failed, tx.retry, 'rotate-cw'] : null;
+    const hasRows = !bare && !noWork;
+    const m = {
+      hasSub: !bare, sub: noWork ? term : fmt(tx.sub, { term: all ? tx.allTerms : term, t: all ? 58 : 60, h: all ? 42 : 40 }),
+      hasTools: !bare, hasTermBtn: !bare && st !== 'noTerms', termName: st === 'allTerms' ? tx.allTerms : term, termBg: st === 'term' ? 'var(--hover)' : 'var(--card)', menuOpen: st === 'term',
+      terms: TERMS.map((t, i) => ({ label: t[li], meta: i === 1 ? tx.termCurrent : '', on: i === 1, weight: i === 1 ? 600 : 400, border: '0', gap: '0' })).concat([{ label: tx.allTerms, meta: '', on: false, weight: 400, border: '1px solid var(--border)', gap: '4px' }]),
+      hasTabs: !bare, classes: ['IELTS 6.5 Evening', 'IELTS Foundation A', 'TOEIC 600 Weekend', 'Kids Starters B'].map((label, i) => ({ label, ...on(i === 0) })),
+      loading, hasTable: hasRows || loading, hasRows,
+      cols: COLS.map(c => ({ name: c[0], meta: catName(c[1]) + ' · ' + c[2] + '%' })),
+      rows: GB.map(([n, vals], ri) => { let sum = 0, ws = 0; vals.forEach((v, i) => { if (typeof v === 'number') { sum += v * COLS[i][2]; ws += COLS[i][2]; } }); const hot = st === 'student' && ri === 3;
+        return { name: n, initials: INIT(n), final: ws ? Math.round(sum / ws) + '%' : '—', hot, bg: hot ? 'var(--accent-soft)' : 'transparent',
+          cells: vals.map((v, ci) => { const b = band(v); const tip = st === 'tip' && ri === 2 && ci === 1; return { label: b[0], bg: b[1], fg: b[2], ring: b[3], hasTip: tip, tip: tip ? fmt(tx.tipGraded, { score: 23, max: 30, date: D('15 thg 9', '15 Sep') }) : '' }; }) }; }),
+      skel: ['58%', '46%', '52%', '62%', '44%', '54%'].map(w => ({ w })),
+      range: fmt(tx.range, { from: st === 'student' ? 1 : 1, to: 8, total: 24 }), pageOf: fmt(tx.pageOf, { page: 1, pages: 3 }), prevOp: 0.45,
+      legend: [[tx.lg80, 'var(--success-soft)', '0'], [tx.lg60, 'var(--danger-soft)', '0'], [tx.lgWaiting, 'var(--warning-soft)', '0'], [tx.lgMissing, 'transparent', '1px dashed var(--ring)']].map(x => ({ label: x[0], bg: x[1], ring: x[2] })),
+      hasMsg: !!msg, msg: msg ? msg[0] : '', act: msg ? msg[1] : '', actIcon: msg ? msg[2] : ''
+    };
+
+    // ---- the shell
+    const navOn = 'gradebook';
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: false });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', D('Tổng quan', 'Dashboard')), item('calendar', 'calendar-days', D('Lịch', 'Calendar')), item('messages', 'message-square', D('Tin nhắn', 'Messages'))] },
+      { hasLabel: true, label: D('Giảng dạy', 'Teaching'), items: [item('assignments', 'clipboard-list', D('Bài giao', 'Assignments')), item('grading', 'square-pen', D('Chấm bài', 'Grading')), item('classes', 'graduation-cap', D('Lớp học', 'Classes')), item('students', 'users', D('Học viên', 'Students')), item('attendance', 'calendar-check', D('Điểm danh', 'Attendance'))] },
+      { hasLabel: true, label: D('Nội dung', 'Content'), items: [item('tests', 'file-text', D('Đề thi', 'Tests')), item('shared', 'share-2', D('Được chia sẻ với tôi', 'Shared with me'), 2), item('bank', 'library', D('Ngân hàng câu hỏi', 'Question bank')), item('media', 'image', D('Thư viện media', 'Media'))] },
+      { hasLabel: true, label: D('Thống kê', 'Insights'), items: [item('gradebook', 'table', tx.title), item('reports', 'chart-column', D('Báo cáo', 'Reports'))] }
+    ];
+
+    const W = s.stageW || 1280;
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Teacher · Gradebook · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: !phone, tBar: true,
+      barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px' : '24px 28px 28px', h1: phone ? '20px' : '24px', btnH: phone ? '40px' : '36px', itemH: phone ? '44px' : '34px',
+      tabs: !phone && st !== 'classes', select: phone || st === 'classes', selFlex: phone ? '1 1 auto' : '0 0 280px',
+      tableMin: phone ? '0' : '860px', stuW: phone ? '128px' : '180px', cellPad: phone ? '12px' : '16px', nameMax: phone ? '104px' : 'none'
+    });
+    const frames = [mk(1280, 780, Math.min(1, W / 1280), false, 'the teacher’s shell'), mk(360, 780, Math.min(1, W / 360), true, 'new in every state: the deck draws no phone')];
+    const ctl = [
+      { label: 'State', opts: this.seg(STATES, st, v => this.setState({ st: v })) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)', 'Earlier page': 'var(--muted-fg)' };
+    const stLabel = (STATES.find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, frames, ctl, stageRef: this.stageRef,
+      chips: ['R9 · v0.16.0', 'T-R9.7', 'DG-93, DG-83', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, st: 'term' }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

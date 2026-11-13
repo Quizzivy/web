@@ -16,7 +16,7 @@ function renderMenu() {
   render(
     <QueryClientProvider client={client}>
       <MemoryRouter>
-        <AccountMenu settingsTo="/app/settings" />
+        <AccountMenu settingsTo="/settings" />
       </MemoryRouter>
     </QueryClientProvider>,
   );
@@ -52,7 +52,7 @@ describe("the account menu on a console built to the deck", () => {
     expect(itemNames()).toEqual(["Cài đặt", "Chế độ tối", "Đăng xuất"]);
     expect(within(menu).getByRole("menuitem", { name: "Cài đặt" })).toHaveAttribute(
       "href",
-      "/app/settings",
+      "/settings",
     );
     expect(menu).toHaveClass("bg-card", "shadow-float", "rounded-lg");
   });

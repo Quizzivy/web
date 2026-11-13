@@ -116,7 +116,7 @@ test("E2E 11: a paper of every type goes from the student's answers to a graded 
       new URL(r.url()).origin === "http://localhost:8080" &&
       new URL(r.url()).pathname === `/app/attempts/${attemptId}/result`,
   );
-  await student.goto(`/app/attempts/${attemptId}/result`);
+  await student.goto(`/attempts/${attemptId}/result`);
   const response = await read;
   expect(response.status()).toBe(200);
   const result = (await response.json()) as {

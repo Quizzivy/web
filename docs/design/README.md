@@ -429,6 +429,124 @@ To view one, start the server above and open, for example,
   row is enough and the pane needs no switch of kinds (Q9). All nine questions on the page are
   settled; the page itself still waits for his approval.
 
+- 2026-11-13 — Fifth proposal page: `proposals/R7 Messages.dc.html`, for DG-83 and DG-91 (R7;
+  `docs/plan/77-r7.md`, T-R7.20 and T-R7.21). The deck draws Messages for a teacher and for a
+  student with every thread full and every send working. The page adds, from the deck's parts:
+  a file as a chip in its sender's bubble or in the announcement's card, the Attach dialog's
+  states (nothing chosen, uploading, ready, refused for size or kind), Details as a popover and
+  as a sheet on a phone, the list's skeleton, empty sentence, error and no-match, an empty
+  thread and channel, "Load earlier", a send on its way and one that failed, and the composer
+  replaced when the two no longer share a class or the class is archived. Both screens are in
+  Vietnamese for the first time. Frames at 1280 and 360, light and dark, Vietnamese and
+  English. No exported page is edited and no operation of T-R7.10 to T-R7.12 changes. It is a
+  proposal until Thuong approves it, and its six questions for him are on the page. He decided
+  two the same day, neither as first drawn. In a class channel Enter makes a new line and only
+  the button posts, because an announcement reaches a whole class and cannot be edited or
+  deleted; no sentence on the screen says so. And the Attach dialog attaches and no longer
+  sends: the file waits in the composer as a chip, the teacher writes a message with it or
+  presses Send as it is, and both leave as one message. He kept "thông báo" as the
+  word for an announcement, and asked that a Word file (DOC or DOCX) can be attached beside PDF,
+  pictures and audio. So the page changes three things the deck draws, and the plan changes
+  with them: two lines of T-R7.20, and the kinds of file T-R7.11's upload accepts. The page
+  asked in return whether a Word file that carries macros is refused (Q7), and he decided that
+  it is: the dialog gains that refusal as a state. An announcement keeps the count of who has
+  seen it and shows no names (Q4). And a class ending closes no conversation (Q5): a teacher
+  and a student who have one can go on writing after the student leaves the class. The page's
+  refusal state became a disabled account, and the eligibility rule of T-R7.10a changes in the
+  plan. He then decided that a teacher may write first to a former student never written to.
+  The list gains a state for it: a search also finds the students the teacher may write to and
+  has no conversation with, under "Học viên chưa nhắn tin", a former student marked "Học viên
+  cũ". Finding a current student there was not asked; it comes with the same search. The
+  server keeps no record of a past class membership, so the plan gains one (T-R7.9, O-R7.8),
+  and a student who left before R7 is found only if they joined with a code. Asked about the
+  other side, he kept it as planned: a student cannot write first to a teacher of a class
+  they left. Last, he decided the page's Q6 as proposed: Admin › Data & privacy gets one
+  read-only row saying that messages are kept and that anonymising an account deletes its
+  direct messages. The page draws it on the card as the product has it (DG-96), and no
+  question is open on the page. Two states the page had left to its tables were then drawn at
+  his word: Details for a former student, which says so in one sentence and has no link, and
+  the student's thread and list with a former teacher.
+- 2026-11-13 — Sixth proposal page: `proposals/R7 Shared With Me.dc.html`, for DG-83 and DG-90
+  (R7; T-R7.17). It draws Shared with me as R7 ships it: two kinds, tests and question sets, on
+  three tabs, in Vietnamese for the first time, with the states the deck leaves out. Those are
+  loading, nothing shared, nothing matching, a list that cannot load, an owner whose account is
+  disabled, the Make a copy and Remove confirms, and an item that is no longer shared when the
+  teacher acts on it. Frames at 1280 and 360, light and dark, Vietnamese and English. No
+  exported page is edited and no operation changes. It is a proposal until Thuong approves it,
+  and its four questions for him are on the page.
+- 2026-11-13 — Seventh proposal page: `proposals/R7 Email Status.dc.html`, for DG-96 (O-R7.3).
+  R7 stops sending to an address after a hard bounce or a spam report, and no screen says so.
+  The page draws one notice in the Admin user sheet, with the product's warning callout: what
+  happened, since when, and what still works. It adds no action. The sheet is drawn alone at
+  440 and 360, light and dark, Vietnamese and English. R7's plan does not build it and the
+  page changes no plan: it names the one field the read of an admin user would need. Its five
+  questions for Thuong are on the page.
+- 2026-11-13 — Eighth proposal page: `proposals/R8 Session Popover.dc.html`, for DG-92 (R8;
+  T-R8.11). The deck's Calendar jumps to Attendance when a session is pressed, and R8's plan
+  asks for a popover from deck primitives. The page draws it on the week grid and as a sheet
+  on a phone: five facts and up to six actions; the dialog for one date and the one for the
+  weeks to come; stopping a series; the Cancel and Delete confirms; and a cancelled session,
+  which stays on the grid struck through. Ten states, at 1280 and 360, light and dark,
+  Vietnamese and English. No operation of T-R8.4 changes. One sentence goes beyond the plan:
+  the repeating-session dialog says, before saving, that dates already changed or cancelled
+  will follow the new schedule. Its four questions for Thuong are on the page.
+- 2026-11-13 — Ninth proposal page: `proposals/R8 Terms.dc.html`, for DG-93 and DG-57 (R8;
+  T-R8.13). The deck has no screen for terms, and R8's plan builds one from deck parts as a
+  fifth section of Admin › System settings. The page draws it in the product's settings
+  layout: the list with a pill for current, upcoming or past and a row menu; one dialog to add
+  and edit; an overlap named by the server and an end before the start; the delete confirm;
+  and the empty, loading and failed states. Ten states, at 1280 and 360, light and dark,
+  Vietnamese and English. No operation of T-R8.3 changes. One line goes beyond the plan: when
+  a term's end date moves, the dialog says that repeating sessions already made keep their old
+  last date. Its three questions for Thuong are on the page.
+- 2026-11-13 — Tenth proposal page: `proposals/R8 Week and Class Schedule.dc.html`, for DG-83
+  (R8; T-R8.10, T-R8.14, T-R8.15). Three things the deck draws only in part. The student's
+  This week gains a cancelled class, a week with nothing, and its loading and failed states.
+  Edit class shows the Schedule field read-only, with "Đổi trong Lịch", once the class has
+  sessions, and as today when it has none. The teacher's Calendar is drawn loading, empty (the
+  grid stays, with the sentence over it) and failed. Ten states in all, at 1280 and 360, light
+  and dark, Vietnamese and English. No operation changes. One line goes beyond the plan: under
+  Room in Edit class, what the room is for once sessions exist. Its four questions for Thuong
+  are on the page.
+- 2026-11-13 — Eleventh proposal page: `proposals/R8 Attendance States.dc.html`, for DG-83
+  (R8; T-R8.12). The deck draws both Attendance screens in full; the page draws the states it
+  leaves out and puts both screens in Vietnamese. In a class's Attendance tab: a register that
+  is read-only because its session has not started or was cancelled, a class with no session,
+  the skeleton and a failed read. On the Attendance page: the three cards empty, loading and
+  failed. Ten states, at 1280 and 360, light and dark, Vietnamese and English. No operation
+  changes. A row's first column on the page is 96px, where the deck has 64px, so a Vietnamese
+  date fits. Its three questions for Thuong are on the page.
+- 2026-11-13 — Twelfth proposal page: `proposals/R9 Gradebook Weights.dc.html`, for DG-93 (R9;
+  T-R9.6, T-R9.7). The deck's gradebook shows a kind and a weight on every column and nothing
+  sets them. The page draws the plan's three places with one pair of controls, "Tính là" and
+  "Trọng số": a second group in the wizard's Schedule step with a line in its summary, a sixth
+  card in the assignment's Settings tab that stays editable while the assignment is open, and
+  the dialog a gradebook column's heading opens. Nine states, at 1280 and 360, light and dark,
+  Vietnamese and English. No operation changes. It follows the plan's wording and asks four
+  questions; the first is that a weight is shown with "%" and is a percent only while a term's
+  weights add to 100. Its saved toast leaves out the Settings tab's sentence about students,
+  who never see a weight.
+- 2026-11-13 — Thirteenth proposal page: `proposals/R9 Gradebook Screen.dc.html`, for DG-93
+  and DG-83 (R9; T-R9.7). The deck draws the gradebook once, at a desktop's width, with one
+  term named in a sentence. The page draws what R9 adds: the term as a button beside Export
+  with its menu, "Tất cả học kỳ", and no button when no term is set; a select in place of the
+  class tabs from the sixth class and below 768px; a cell's tooltip; the tinted row a teacher
+  arrives at from Students; and the screen with no class, no work in the term, loading and
+  failed. Ten states, at 1280 and 360, light and dark, Vietnamese and English. No operation
+  changes. The phone frame is new throughout: the student column loses its avatar and narrows
+  so two grades show beside a name. Its three questions for Thuong are on the page.
+- 2026-11-13 — Fourteenth proposal page: `proposals/R9 Reports and Grades.dc.html`, for DG-70,
+  DG-83 and DG-97 (R9; T-R9.8, T-R9.9). The deck draws Reports with eight full weeks and the
+  student's Grades with six results. The page draws what R9 adds. For Reports: a week with no
+  result, a figure with no change, the range menu with "Học kỳ này" unavailable, twelve weeks,
+  nothing in the range, no class, loading and failed. For Grades: a tile for each skill, a score
+  that is held back, a class chosen, two results, none, loading and failed. Thirteen states, at
+  1280 and 360, light and dark, Vietnamese and English. No operation changes. Its four
+  questions for Thuong are on the page: how a week is named, one "Thử lại" or seven when the
+  report fails, a second row of tiles, and tabs with one class. The same change puts the
+  sidebar of the two gradebook pages in the deck's order, with Attendance, Shared with me and
+  Reports in it.
+
 ## The brand
 
 `brand/` is Thuong's kit, copied byte for byte from `~/Developer/designs/quizzivy-brand`. The

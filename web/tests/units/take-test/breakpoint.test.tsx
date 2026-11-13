@@ -84,8 +84,8 @@ const gridButton = () => screen.queryByRole("button", { name: /^Câu 1 · đã l
 
 function mount() {
   const router = createMemoryRouter(
-    [{ path: "/app/attempts/:attemptId", element: <TakeTestPage /> }],
-    { initialEntries: ["/app/attempts/att-1"] },
+    [{ path: "/attempts/:attemptId", element: <TakeTestPage /> }],
+    { initialEntries: ["/attempts/att-1"] },
   );
   return render(<RouterProvider router={router} />);
 }

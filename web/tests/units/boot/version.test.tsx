@@ -15,11 +15,11 @@ function published(build: string) {
 function watched(): DataRouter {
   const router = createMemoryRouter(
     [
-      { path: "/app", element: null },
-      { path: "/app/classes", element: null },
-      { path: "/app/attempts/:id", handle: { focus: true }, element: null },
+      { path: "/", element: null },
+      { path: "/classes", element: null },
+      { path: "/attempts/:id", handle: { focus: true }, element: null },
     ],
-    { initialEntries: ["/app"] },
+    { initialEntries: ["/"] },
   );
   renderHook(() => useVersionWatch(router));
   return router;
@@ -68,10 +68,10 @@ describe("watching for a newer deploy", () => {
     await waitFor(() => expect(useAppState.getState().updateReady).toBe(true));
     expect(useAppState.getState().overlay.kind).toBe("none");
 
-    await act(() => router.navigate("/app/attempts/a1"));
+    await act(() => router.navigate("/attempts/a1"));
     expect(useAppState.getState().overlay.kind).toBe("none");
 
-    await act(() => router.navigate("/app/classes"));
+    await act(() => router.navigate("/classes"));
     expect(useAppState.getState().overlay.kind).toBe("update");
   });
 
@@ -86,7 +86,7 @@ describe("watching for a newer deploy", () => {
     const router = watched();
     becomeVisible();
     await waitFor(() => expect(asked).toBe(true));
-    await act(() => router.navigate("/app/classes"));
+    await act(() => router.navigate("/classes"));
 
     expect(useAppState.getState().updateReady).toBe(false);
     expect(useAppState.getState().overlay.kind).toBe("none");
@@ -94,7 +94,7 @@ describe("watching for a newer deploy", () => {
 
   it("offers it at once when a route's code fails to load, even on a focus route", async () => {
     const router = watched();
-    await act(() => router.navigate("/app/attempts/a1"));
+    await act(() => router.navigate("/attempts/a1"));
     act(() => {
       window.dispatchEvent(new Event("vite:preloadError"));
     });

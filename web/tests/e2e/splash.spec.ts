@@ -71,7 +71,7 @@ test("an offline cold load counts down, retries on its own and lands on the page
 }) => {
   await page.clock.install();
   await page.route(`${API}/**`, (route) => route.abort("internetdisconnected"));
-  await page.goto("/app");
+  await page.goto("/");
 
   await expect(page.getByText("Mất kết nối")).toBeVisible();
   await expect(page.getByText("Tự thử lại sau 10s")).toBeVisible();
@@ -82,7 +82,7 @@ test("an offline cold load counts down, retries on its own and lands on the page
 
   await expect(page.getByRole("button", { name: "Tiếp tục làm bài" })).toBeVisible();
   await expect(page.locator(".qz-boot")).toHaveCount(0);
-  await expect(page).toHaveURL(/\/app$/);
+  await expect(page).toHaveURL(/\/$/);
 });
 
 test("maintenance at boot shows the maintenance page until the status says it is over", async ({
@@ -114,7 +114,7 @@ test("maintenance at boot shows the maintenance page until the status says it is
         json: { maintenance: over ? null : { ...window, active: true }, ai: false },
       }),
   });
-  await page.goto("/app");
+  await page.goto("/");
 
   const overlay = page.getByRole("dialog", { name: "Quizzivy đang được cập nhật" });
   await expect(overlay).toBeVisible();
@@ -138,7 +138,7 @@ test("a newer build shows the update card at the next navigation, never on the t
     [`POST /app/assignments/${assignmentId}/attempts`]: { body: session() },
     [`GET /app/attempts/${attemptId}`]: { body: session() },
   });
-  await page.goto("/app");
+  await page.goto("/");
   await expect(page.getByRole("button", { name: "Tiếp tục làm bài" })).toBeVisible();
 
   const asked = page.waitForRequest("**/version.json");
@@ -146,7 +146,7 @@ test("a newer build shows the update card at the next navigation, never on the t
   await asked;
 
   await page.getByRole("button", { name: "Tiếp tục làm bài" }).click();
-  await expect(page).toHaveURL(new RegExp(`/app/attempts/${attemptId}$`));
+  await expect(page).toHaveURL(new RegExp(`/attempts/${attemptId}$`));
   await expect(page.getByText("Bài luyện tập buổi tối").first()).toBeVisible();
   await expect(page.getByText("Quizzivy vừa được cập nhật")).toHaveCount(0);
 

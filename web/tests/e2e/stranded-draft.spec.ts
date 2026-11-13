@@ -106,7 +106,7 @@ function draftAnswers(page: Page) {
 
 async function strand(page: Page, server: Backend) {
   await serve(page, server);
-  await page.goto("/app/attempts/paper");
+  await page.goto("/attempts/paper");
   await expect(page.getByRole("radio", { name: "Đáp án A" })).toBeVisible();
   server.offline = true;
   await page.locator("label").filter({ hasText: "Đáp án A" }).click();
@@ -118,9 +118,9 @@ async function strand(page: Page, server: Backend) {
 
 async function continueFromHome(page: Page, server: Backend) {
   await serve(page, server);
-  await page.goto("/app");
+  await page.goto("/");
   await page.getByRole("button", { name: "Tiếp tục làm bài" }).click();
-  await expect(page).toHaveURL(/\/app\/attempts\/paper$/);
+  await expect(page).toHaveURL(/\/attempts\/paper$/);
   await expect(page.getByRole("radio", { name: "Đáp án A" })).toBeVisible();
 }
 

@@ -12,12 +12,12 @@ function mount() {
   const router = createMemoryRouter(
     [
       {
-        path: "/app/attempts/:attemptId",
+        path: "/attempts/:attemptId",
         element: <FocusLayout />,
         children: [{ index: true, element: <button type="button">inside</button> }],
       },
     ],
-    { initialEntries: ["/app/attempts/att-1"] },
+    { initialEntries: ["/attempts/att-1"] },
   );
   return render(<RouterProvider router={router} />);
 }
@@ -69,20 +69,20 @@ describe("the take-test route", () => {
   const matchesOf = (path: string) => matchRoutes(appRouter.routes, path) ?? [];
 
   it("declares handle.focus on the layout route above the engine", () => {
-    const matches = matchesOf("/app/attempts/018f0000-0000-7000-8000-0000000000e1");
+    const matches = matchesOf("/attempts/018f0000-0000-7000-8000-0000000000e1");
     expect(matches.at(-1)?.route.index).toBe(true);
-    expect(matches.at(-2)?.route.path).toBe("app/attempts/:attemptId");
+    expect(matches.at(-2)?.route.path).toBe("attempts/:attemptId");
     expect(matches.at(-2)?.route.handle).toEqual({ focus: true });
     expect(isFocusRoute(matches)).toBe(true);
   });
 
   it("is the only student route that does", () => {
     for (const path of [
-      "/app",
-      "/app/classes",
-      "/app/settings",
-      "/app/assignments/018f0000-0000-7000-8000-0000000000d1",
-      "/app/attempts/018f0000-0000-7000-8000-0000000000e1/result",
+      "/",
+      "/classes",
+      "/settings",
+      "/assignments/018f0000-0000-7000-8000-0000000000d1",
+      "/attempts/018f0000-0000-7000-8000-0000000000e1/result",
     ]) {
       expect(matchesOf(path).length, path).toBeGreaterThan(0);
       expect(isFocusRoute(matchesOf(path)), path).toBe(false);
@@ -90,21 +90,21 @@ describe("the take-test route", () => {
   });
 
   it("keeps the update prompt out of the engine and shows it on the way out", async () => {
-    const focus = matchesOf("/app/attempts/a1").at(-2)?.route;
+    const focus = matchesOf("/attempts/a1").at(-2)?.route;
     const router = createMemoryRouter(
       [
-        { path: "/app", element: null },
-        { path: "/app/attempts/:attemptId", handle: focus?.handle, element: null },
+        { path: "/", element: null },
+        { path: "/attempts/:attemptId", handle: focus?.handle, element: null },
       ],
-      { initialEntries: ["/app"] },
+      { initialEntries: ["/"] },
     );
     renderHook(() => useVersionWatch(router));
     act(() => useAppState.getState().setUpdateReady());
 
-    await act(() => router.navigate("/app/attempts/a1"));
+    await act(() => router.navigate("/attempts/a1"));
     expect(useAppState.getState().overlay.kind).toBe("none");
 
-    await act(() => router.navigate("/app"));
+    await act(() => router.navigate("/"));
     expect(useAppState.getState().overlay.kind).toBe("update");
   });
 });

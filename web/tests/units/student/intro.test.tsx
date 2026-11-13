@@ -33,8 +33,8 @@ import {
 const DETAIL = `${BASE}/app/assignments/${ASSIGNMENT}`;
 const START = `${DETAIL}/attempts`;
 const ROUTES = [
-  { path: "/app/assignments/:id", element: <AssignmentIntroPage /> },
-  { path: "/app", element: <p>home page</p> },
+  { path: "/assignments/:id", element: <AssignmentIntroPage /> },
+  { path: "/", element: <p>home page</p> },
 ];
 
 let asked = 0;
@@ -50,7 +50,7 @@ function serve(over: Record<string, unknown> = {}) {
 
 function show(over: Record<string, unknown> = {}, client?: QueryClient) {
   serve(over);
-  return renderAt(`/app/assignments/${ASSIGNMENT}`, ROUTES, client);
+  return renderAt(`/assignments/${ASSIGNMENT}`, ROUTES, client);
 }
 
 function refuse(code: string, message: string, status: 403 | 409 = 409) {
@@ -465,7 +465,7 @@ describe("the header and the three facts", () => {
     const user = userEvent.setup();
     const router = show();
     await user.click(await screen.findByRole("link", { name: "Trang chủ" }));
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
   });
 
   it("asks the browser for the shell's 768, not another width", async () => {
@@ -848,7 +848,7 @@ describe("loading, failing and missing", () => {
         return HttpResponse.error();
       }),
     );
-    renderAt(`/app/assignments/${ASSIGNMENT}`, ROUTES);
+    renderAt(`/assignments/${ASSIGNMENT}`, ROUTES);
     expect(
       await screen.findByRole("status", { name: "Đang tải…" }),
     ).toBeInTheDocument();
@@ -859,7 +859,7 @@ describe("loading, failing and missing", () => {
   it("offers a retry when the paper cannot be read, and reads it again", async () => {
     const user = userEvent.setup();
     server.use(http.get(DETAIL, () => HttpResponse.error()));
-    renderAt(`/app/assignments/${ASSIGNMENT}`, ROUTES);
+    renderAt(`/assignments/${ASSIGNMENT}`, ROUTES);
     expect(await screen.findByRole("alert")).toHaveTextContent(
       "Không tải được. Hãy thử lại.",
     );
@@ -874,7 +874,7 @@ describe("loading, failing and missing", () => {
       const user = userEvent.setup();
       takeAway(status);
       viewport("phone");
-      const router = renderAt(`/app/assignments/${ASSIGNMENT}`, ROUTES);
+      const router = renderAt(`/assignments/${ASSIGNMENT}`, ROUTES);
       expect(
         await screen.findByText(
           "Không tìm thấy bài này, hoặc bài không được giao cho bạn.",
@@ -883,7 +883,7 @@ describe("loading, failing and missing", () => {
       expect(screen.queryByRole("alert")).toBeNull();
       expect(screen.queryByRole("button", { name: "Thử lại" })).toBeNull();
       await user.click(screen.getByRole("link", { name: "Trang chủ" }));
-      expect(router.state.location.pathname).toBe("/app");
+      expect(router.state.location.pathname).toBe("/");
     },
   );
 
@@ -1019,7 +1019,7 @@ describe("Start now?", () => {
     fireEvent.click(confirm(dialog));
     expect(request).toHaveBeenCalledTimes(1);
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual(["start"]);
   });
@@ -1034,7 +1034,7 @@ describe("Start now?", () => {
     });
     await user.click(confirm(await ask(user)));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(sent).toEqual([null]);
   });
@@ -1045,7 +1045,7 @@ describe("Start now?", () => {
     const router = show();
     await user.click(confirm(await ask(user)));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(request).not.toHaveBeenCalled();
   });
@@ -1057,7 +1057,7 @@ describe("Start now?", () => {
     const router = show({ integrity: { ...POLICY, requireFullscreen: true } });
     await user.click(confirm(await ask(user)));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(request).not.toHaveBeenCalled();
   });
@@ -1069,7 +1069,7 @@ describe("Start now?", () => {
     const router = show({ integrity: { ...POLICY, requireFullscreen: true } });
     await user.click(confirm(await ask(user)));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
   });
 
@@ -1083,7 +1083,7 @@ describe("Start now?", () => {
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(calls).toEqual([]);
     expect(request).not.toHaveBeenCalled();
-    expect(router.state.location.pathname).toBe(`/app/assignments/${ASSIGNMENT}`);
+    expect(router.state.location.pathname).toBe(`/assignments/${ASSIGNMENT}`);
     expect(await startButton()).toHaveFocus();
   });
 
@@ -1117,7 +1117,7 @@ describe("Start now?", () => {
     expect(screen.getByRole("dialog")).toBeInTheDocument();
     release();
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual(["start"]);
   });
@@ -1151,11 +1151,11 @@ describe("Start now?", () => {
     });
     serve();
     const router = renderAt(
-      `/app/assignments/${ASSIGNMENT}`,
+      `/assignments/${ASSIGNMENT}`,
       [
         ...ROUTES,
         {
-          path: "/app/attempts/:id",
+          path: "/attempts/:id",
           lazy: async () => {
             await held;
             return { Component: () => <p>engine</p> };
@@ -1185,7 +1185,7 @@ describe("Start now?", () => {
     const router = show({}, client);
     await user.click(confirm(await ask(user)));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     await waitFor(() =>
       expect(client.getQueryData(["my-assignment", ASSIGNMENT])).toBeUndefined(),
@@ -1202,7 +1202,7 @@ describe("Start now?", () => {
     );
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(calls).toEqual(["start"]);
-    expect(router.state.location.pathname).toBe(`/app/assignments/${ASSIGNMENT}`);
+    expect(router.state.location.pathname).toBe(`/assignments/${ASSIGNMENT}`);
     await waitFor(() => expect(asked).toBe(2));
   });
 
@@ -1227,9 +1227,9 @@ describe("Start now?", () => {
     const user = userEvent.setup();
     mockStart(409);
     serve();
-    renderAt(`/app/assignments/${ASSIGNMENT}`, [
+    renderAt(`/assignments/${ASSIGNMENT}`, [
       {
-        path: "/app/assignments/:id",
+        path: "/assignments/:id",
         element: (
           <main tabIndex={-1}>
             <AssignmentIntroPage />
@@ -1320,7 +1320,7 @@ describe("Start now?", () => {
     mockStart();
     await user.click(confirm(await ask(user)));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
   });
 });
@@ -1343,7 +1343,7 @@ describe("Continue test", () => {
     expect(request).toHaveBeenCalledTimes(1);
     expect(screen.queryByRole("dialog")).toBeNull();
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual(["start"]);
   });
@@ -1353,7 +1353,7 @@ describe("Continue test", () => {
     const router = live();
     fireEvent.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(sent).toEqual([{ resume: ATTEMPT }]);
   });
@@ -1403,7 +1403,7 @@ describe("Continue test", () => {
     fireEvent.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
     expect(request).toHaveBeenCalledTimes(1);
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual([
       { call: "save", body: draft },
@@ -1430,7 +1430,7 @@ describe("Continue test", () => {
     expect(screen.queryByRole("button", { name: "Tiếp tục làm bài" })).toBeNull();
     expect(screen.queryByRole("dialog")).toBeNull();
     expect((await facts())[2]).toEqual(["Lượt làm", "1/2"]);
-    expect(router.state.location.pathname).toBe(`/app/assignments/${ASSIGNMENT}`);
+    expect(router.state.location.pathname).toBe(`/assignments/${ASSIGNMENT}`);
     expect(sent).toEqual([{ resume: ATTEMPT }]);
   });
 
@@ -1492,7 +1492,7 @@ describe("Continue test", () => {
     fireEvent.click(button);
     fireEvent.click(button);
     await waitFor(() =>
-      expect(router.state.location.pathname).toBe(`/app/attempts/${ATTEMPT}`),
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual(["start"]);
     expect(request).toHaveBeenCalledTimes(1);

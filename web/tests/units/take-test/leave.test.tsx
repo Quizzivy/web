@@ -72,11 +72,11 @@ function heldSave() {
 async function open() {
   const router = createMemoryRouter(
     [
-      { path: "/app", element: <p>home</p> },
-      { path: "/app/classes", element: <p>classes</p> },
-      { path: "/app/attempts/:attemptId", element: <TakeTestPage /> },
+      { path: "/", element: <p>home</p> },
+      { path: "/classes", element: <p>classes</p> },
+      { path: "/attempts/:attemptId", element: <TakeTestPage /> },
     ],
-    { initialEntries: ["/app/classes", "/app/attempts/att-1"], initialIndex: 1 },
+    { initialEntries: ["/classes", "/attempts/att-1"], initialIndex: 1 },
   );
   render(<RouterProvider router={router} />);
   await screen.findByText("What should cities prioritise?");
@@ -135,7 +135,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
 
     await user.click(inDialog().getByRole("button", { name: "Ở lại" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
     expect(leaveButton()).toHaveFocus();
     expect(saveAnswers).not.toHaveBeenCalled();
   });
@@ -146,7 +146,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await user.click(leaveButton());
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
   });
 
   it("goes home at once when nothing is pending", async () => {
@@ -155,7 +155,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await user.click(leaveButton());
     await user.click(inDialog().getByRole("button", { name: "Thoát" }));
 
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
     expect(saveAnswers).not.toHaveBeenCalled();
     expect(router.state.historyAction).toBe("PUSH");
   });
@@ -175,7 +175,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await user.click(leaveButton());
     await user.click(inDialog().getByRole("button", { name: "Thoát" }));
 
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
     expect(saveAnswers).not.toHaveBeenCalled();
   });
 
@@ -198,13 +198,13 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     const leaving = inDialog().getByRole("button", { name: "Thoát" });
     expect(leaving).toHaveAttribute("aria-busy", "true");
     expect(leaving).toHaveAttribute("aria-disabled", "true");
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
 
     await user.click(leaving);
     expect(saveAnswers).toHaveBeenCalledTimes(1);
 
     await save.succeed();
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
     expect(localStorage.getItem(DRAFT)).toBeNull();
   });
 
@@ -223,7 +223,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     expect(saveAnswers).toHaveBeenCalledTimes(1);
     await earlier.succeed();
 
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
     expect(saveAnswers).toHaveBeenCalledTimes(2);
     expect(vi.mocked(saveAnswers).mock.lastCall?.[1].answers).toEqual({
       q1: { type: "text", value: "parks and trees" },
@@ -248,7 +248,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
         .getAllByRole("button")
         .map((button) => button.textContent),
     ).toEqual(["Ở lại", "Thử lưu lại"]);
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
     expect(JSON.parse(localStorage.getItem(DRAFT) ?? "{}").answers).toEqual({
       q1: { type: "text", value: "public green space" },
     });
@@ -256,7 +256,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await user.click(inDialog().getByRole("button", { name: "Ở lại" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.getByRole("textbox")).toHaveValue("public green space");
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
   });
 
   it("leaves once a retry from the dialog saves the answer", async () => {
@@ -275,10 +275,10 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
       "true",
     );
     expect(inDialog().getByRole("alert")).toBeEmptyDOMElement();
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
 
     await retry.succeed();
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
     expect(saveAnswers).toHaveBeenCalledTimes(2);
   });
 
@@ -294,10 +294,10 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await act(() => store().flush());
     expect(dialog()).toHaveAccessibleName(ASK);
     expect(dialog()).toHaveAccessibleDescription(SAVED_BODY);
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
 
     await user.click(inDialog().getByRole("button", { name: "Thoát" }));
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
   });
 
   it("does not leave after all when the student stays while the save is out", async () => {
@@ -311,7 +311,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await user.click(inDialog().getByRole("button", { name: "Ở lại" }));
     await save.succeed();
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
     expect(store().dirty.size).toBe(0);
   });
 
@@ -326,7 +326,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await user.keyboard("{Escape}");
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     await save.succeed();
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
   });
 
   it("holds the back button until a pending answer is saved, then goes where it was going", async () => {
@@ -336,7 +336,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await user.type(screen.getByRole("textbox"), "parks");
 
     await act(() => router.navigate(-1));
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
     expect(saveAnswers).toHaveBeenCalledTimes(1);
     expect(dialog()).toHaveAccessibleName(ASK);
     expect(inDialog().getByRole("button", { name: "Thoát" })).toHaveAttribute(
@@ -345,7 +345,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     );
 
     await save.succeed();
-    await waitFor(() => expect(path(router)).toBe("/app/classes"));
+    await waitFor(() => expect(path(router)).toBe("/classes"));
   });
 
   it("keeps the student on the paper when the back button's save fails, until they stay or it saves", async () => {
@@ -357,7 +357,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await act(() => router.navigate(-1));
     await screen.findByRole("dialog", { name: UNSAVED });
     expect(inDialog().getByRole("alert")).toHaveTextContent(UNSAVED);
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
 
     await user.click(inDialog().getByRole("button", { name: "Ở lại" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
@@ -367,7 +367,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     expect(screen.getByRole("textbox")).toHaveValue("parks and trees");
 
     await act(() => router.navigate(-1));
-    await waitFor(() => expect(path(router)).toBe("/app/classes"));
+    await waitFor(() => expect(path(router)).toBe("/classes"));
     expect(vi.mocked(saveAnswers).mock.lastCall?.[1].answers).toEqual({
       q1: { type: "text", value: "parks and trees" },
     });
@@ -382,7 +382,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await screen.findByRole("dialog", { name: UNSAVED });
 
     await user.click(inDialog().getByRole("button", { name: "Thử lưu lại" }));
-    await waitFor(() => expect(path(router)).toBe("/app/classes"));
+    await waitFor(() => expect(path(router)).toBe("/classes"));
     expect(router.state.historyAction).toBe("POP");
   });
 
@@ -399,13 +399,13 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     await act(() => router.navigate(-1));
     await screen.findByRole("dialog", { name: UNSAVED });
     expect(inDialog().getByRole("alert")).toHaveTextContent(UNSAVED);
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
     expect(
       screen.getByRole("heading", { name: "Nộp bài?", hidden: true }),
     ).toBeInTheDocument();
 
     await user.click(inDialog().getByRole("button", { name: "Thử lưu lại" }));
-    await waitFor(() => expect(path(router)).toBe("/app/classes"));
+    await waitFor(() => expect(path(router)).toBe("/classes"));
     expect(vi.mocked(saveAnswers).mock.lastCall?.[1].answers).toEqual({
       q1: { type: "text", value: "parks" },
     });
@@ -414,7 +414,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
   it("lets the back button through without asking when nothing is pending", async () => {
     const router = await open();
     await act(() => router.navigate(-1));
-    await waitFor(() => expect(path(router)).toBe("/app/classes"));
+    await waitFor(() => expect(path(router)).toBe("/classes"));
     expect(saveAnswers).not.toHaveBeenCalled();
   });
 
@@ -452,7 +452,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
       act(() => store().lockNow(lock));
 
       await user.click(leaveButton());
-      await waitFor(() => expect(path(router)).toBe("/app"));
+      await waitFor(() => expect(path(router)).toBe("/"));
       expect(screen.queryByRole("dialog")).toBeNull();
       expect(saveAnswers).not.toHaveBeenCalled();
     },
@@ -468,7 +468,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     expect(store().dirty.size).toBe(1);
 
     await user.click(leaveButton());
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
     expect(screen.queryByRole("dialog")).toBeNull();
     expect(saveAnswers).toHaveBeenCalledTimes(1);
   });
@@ -499,10 +499,10 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     expect(store().dirty.size).toBe(1);
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByText(SAVED_BODY)).toBeNull();
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
 
     await user.click(leaveButton());
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
   });
 
   it("closes the dialog over a held back button too when the store's retry finds the paper taken over", async () => {
@@ -518,10 +518,10 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     expect(store().lock).toBe("superseded");
     await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
     expect(screen.queryByText(SAVED_BODY)).toBeNull();
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
 
     await user.click(leaveButton());
-    await waitFor(() => expect(path(router)).toBe("/app"));
+    await waitFor(() => expect(path(router)).toBe("/"));
   });
 
   it("does not ask again by itself when the paper is taken back after a lock closed the dialog", async () => {
@@ -546,7 +546,7 @@ describe.each(["desktop", "phone"] as const)("leaving the test on a %s", (width)
     );
     expect(store().lock).toBeNull();
     expect(screen.queryByRole("dialog")).toBeNull();
-    expect(path(router)).toBe("/app/attempts/att-1");
+    expect(path(router)).toBe("/attempts/att-1");
 
     await user.click(leaveButton());
     expect(dialog()).toHaveAccessibleName(ASK);

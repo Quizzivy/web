@@ -1,5 +1,6 @@
 import { Navigate, Outlet, useLocation } from "react-router";
 import { consolePath, hasTeacherTwin } from "@/app/adminPaths";
+import { hostKind } from "@/app/host";
 import { LegacyTeacherRedirect } from "@/app/LegacyTeacherRedirect";
 import { useWorkspace } from "@/features/auth/permissions";
 import { homePathFor } from "@/features/auth/home";
@@ -37,8 +38,10 @@ export function AdminWorkspace() {
 }
 
 /**
- * The student tree (§3), for anyone who may enter the student app. A staff
- * user without it is sent to their own console; anyone else gets the 403.
+ * The student tree (§3), for anyone who may enter the student app. Where one
+ * host serves every page, a staff user without it is sent to their own
+ * console; anyone else, and everyone without it at the student host, gets the
+ * 403.
  */
 export function StudentArea() {
   const student = useWorkspace("app");
@@ -48,7 +51,7 @@ export function StudentArea() {
   if (student) {
     return <Outlet />;
   }
-  if (teacher || admin) {
+  if ((teacher || admin) && hostKind() === "all") {
     return <Navigate to={home} replace />;
   }
   return <ForbiddenPage />;

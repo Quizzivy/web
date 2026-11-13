@@ -46,8 +46,8 @@ function mount(openOn = 23) {
   sessionStorage.setItem(openKey(), member(openOn).id);
   vi.mocked(getAttempt).mockResolvedValue(paper);
   const router = createMemoryRouter(
-    [{ path: "/app/attempts/:attemptId", element: <TakeTestPage /> }],
-    { initialEntries: [`/app/attempts/${paper.attempt.id}`] },
+    [{ path: "/attempts/:attemptId", element: <TakeTestPage /> }],
+    { initialEntries: [`/attempts/${paper.attempt.id}`] },
   );
   return render(<RouterProvider router={router} />);
 }
@@ -258,8 +258,8 @@ describe("a run of a cloze", () => {
     useTakeTestStore.getState().reset({ keepDraft: true });
 
     const router = createMemoryRouter(
-      [{ path: "/app/attempts/:attemptId", element: <TakeTestPage /> }],
-      { initialEntries: [`/app/attempts/${paper.attempt.id}`] },
+      [{ path: "/attempts/:attemptId", element: <TakeTestPage /> }],
+      { initialEntries: [`/attempts/${paper.attempt.id}`] },
     );
     render(<RouterProvider router={router} />);
     await screen.findByText(RUN_LINE);

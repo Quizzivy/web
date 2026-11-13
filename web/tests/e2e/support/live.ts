@@ -31,7 +31,7 @@ export async function signIn(page: Page, who: typeof ADMIN, landing: RegExp) {
   await expect(page).toHaveURL(landing);
 }
 
-export const signInAsStudent = (page: Page) => signIn(page, STUDENT, /\/app$/);
+export const signInAsStudent = (page: Page) => signIn(page, STUDENT, /\/$/);
 
 /**
  * emailSinkDir is the directory the API's email sink writes to: EMAIL_SINK_DIR,
@@ -49,7 +49,7 @@ interface SunkMessage {
   tags?: Record<string, string>;
 }
 
-const SET_PASSWORD_TOKEN = /\/set-password#token=([A-Za-z0-9_-]+)/;
+const SET_PASSWORD_LINK = /(https?:\/\/[^\s/]+)\/set-password#token=([A-Za-z0-9_-]+)/;
 
 async function sunkMessages(): Promise<SunkMessage[]> {
   const dir = emailSinkDir();
@@ -66,16 +66,16 @@ async function sunkMessages(): Promise<SunkMessage[]> {
 }
 
 /**
- * setPasswordToken waits up to 30 seconds for the sink to hold a message of
- * `template` to `email` and answers the token of the newest one's set-password
- * link: the token alone, because the link's origin is the API's APP_URL, which
- * need not be the origin the suite serves.
+ * setPasswordLink waits up to 30 seconds for the sink to hold a message of
+ * `template` to `email` and answers the newest one's set-password link in two
+ * parts: the origin it points into, which is the web host the recipient
+ * belongs at (the API's STUDENT_APP_URL or STAFF_APP_URL), and its token.
  */
-export async function setPasswordToken(
+export async function setPasswordLink(
   email: string,
   template = "account_invite",
-): Promise<string> {
-  let token = "";
+): Promise<{ origin: string; token: string }> {
+  let link = { origin: "", token: "" };
   await expect
     .poll(
       async () => {
@@ -84,8 +84,9 @@ export async function setPasswordToken(
             message.to.toLowerCase() === email.toLowerCase() &&
             message.tags?.["template"] === template,
         );
-        token = SET_PASSWORD_TOKEN.exec(sent.at(-1)?.text ?? "")?.[1] ?? "";
-        return token;
+        const found = SET_PASSWORD_LINK.exec(sent.at(-1)?.text ?? "");
+        link = { origin: found?.[1] ?? "", token: found?.[2] ?? "" };
+        return link.token;
       },
       {
         message: `a ${template} message to ${email} in ${emailSinkDir()}`,
@@ -93,7 +94,18 @@ export async function setPasswordToken(
       },
     )
     .not.toBe("");
-  return token;
+  return link;
+}
+
+/**
+ * setPasswordToken is the token of `setPasswordLink` alone, for a spec that
+ * opens the link on the origin it runs on, where one host serves every page.
+ */
+export async function setPasswordToken(
+  email: string,
+  template = "account_invite",
+): Promise<string> {
+  return (await setPasswordLink(email, template)).token;
 }
 /**
  * signInAsAdmin signs in as the seeded Admin, who opens the Admin console the
@@ -113,7 +125,7 @@ export async function signInAsAdmin(page: Page) {
  * the home offers three cards that read the same.
  */
 export async function startAttempt(page: Page, assignmentId: string): Promise<string> {
-  await page.goto(`/app/assignments/${assignmentId}`);
+  await page.goto(`/assignments/${assignmentId}`);
   const start = page.getByRole("button", {
     name: /^(Bắt đầu làm bài|Tiếp tục làm bài)$/,
   });
@@ -126,7 +138,7 @@ export async function startAttempt(page: Page, assignmentId: string): Promise<st
       .getByRole("button", { name: "Bắt đầu", exact: true })
       .click();
   }
-  await expect(page).toHaveURL(/\/app\/attempts\/[0-9a-f-]+$/);
+  await expect(page).toHaveURL(/\/attempts\/[0-9a-f-]+$/);
   return page.url().split("/").pop() ?? "";
 }
 
@@ -139,7 +151,7 @@ export async function startAttempt(page: Page, assignmentId: string): Promise<st
  * only way the product ends one.
  */
 export async function freshAttempt(page: Page, assignmentId: string): Promise<string> {
-  await page.goto(`/app/assignments/${assignmentId}`);
+  await page.goto(`/assignments/${assignmentId}`);
   // Waited for, not polled: isVisible() answers before the intro has rendered,
   // and the resume branch was silently skipped every run.
   const control = page.getByRole("button", {
@@ -148,7 +160,7 @@ export async function freshAttempt(page: Page, assignmentId: string): Promise<st
   await expect(control).toBeVisible();
   if (((await control.textContent()) ?? "").includes("Tiếp tục")) {
     await control.click();
-    await expect(page).toHaveURL(/\/app\/attempts\/[0-9a-f-]+$/);
+    await expect(page).toHaveURL(/\/attempts\/[0-9a-f-]+$/);
     await submitAttempt(page);
   }
   return startAttempt(page, assignmentId);
@@ -167,7 +179,7 @@ export async function submitAttempt(page: Page) {
     timeout: 30_000,
   });
   await page.getByRole("button", { name: "Về trang chủ" }).click();
-  await expect(page).toHaveURL(/\/app$/);
+  await expect(page).toHaveURL(/\/$/);
 }
 
 /**

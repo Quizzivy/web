@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R8 Schedule · Attendance · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Attendance, in the states the deck does not draw</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws both Attendance screens in full: the page that lists sessions across classes, and the register in a class’s Attendance tab. Both are drawn with sessions to show and a register to take. R8’s plan names the rest (T-R8.12): the page and the register while they load and when they fail, a class with no session, and a session whose register cannot be taken because it has not started or was cancelled. This page draws those from the deck’s own parts, and puts both screens in Vietnamese for the first time. Nothing here changes an operation.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">A register that cannot be taken</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The roster shows, and one line says why it is closed.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li><span style="color:var(--fg)">A session that has not started</span> can be opened from a link. Its register lists who is expected, with every choice dimmed, and says when it opens.</li>
+      <li>A cancelled session reads the same way, with its own line. The chip beside the session picker says “Đã huỷ”.</li>
+      <li>In both, what cannot be used is not shown: no checkbox, no note, no “Đánh dấu tất cả có mặt”.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Nothing to list</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Each card of the page keeps its own sentence.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The page’s three cards stay when they are empty: the teacher sees that there is nothing today, nothing owed and nothing recent, each in its place.</li>
+      <li><span style="color:var(--fg)">“Hôm nay” says that no class has started</span>, not that there is none: the card lists sessions only once they start (O-R8.6).</li>
+      <li>A class with no session at all gives one sentence in its Attendance tab and a link to the calendar, where a session is made.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Loading and failing</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The frame of the screen first; one sentence when it fails.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The page’s three cards and the class’s header and tabs are there at once. Blocks stand where rows will be.</li>
+      <li><span style="color:var(--fg)">A failed read gives one sentence and “Thử lại”</span>, in place of the cards or of the register, and the rest of the screen stays.</li>
+      <li>A register being saved is not drawn: the deck draws its bar and its toast.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The two screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick the screen and its state in the bar above. The first state of each screen is the deck’s own, in Vietnamese; the others are the ones it leaves out. Today is Wednesday 24 September at 20:15, as in the deck. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+
+                <sc-if value="{{ m.isPage }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                    <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.attTitle }}</div><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ tx.attLead }}</div></div>
+                    <sc-if value="{{ m.hasGroups }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ m.groups }}" as="ag" hint-placeholder-count="3">
+                      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                        <div style="padding:14px 16px;display:flex;align-items:baseline;justify-content:space-between;gap:10px;flex-wrap:wrap"><span style="display:flex;align-items:center;gap:8px;font-size:15px;font-weight:600">{{ ag.title }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ag.pinToday }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.today.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.today.n }}</span></sc-if></sc-if></sc-if></span><span style="font-size:12.5px;color:var(--muted-fg)">{{ ag.sub }}</span></div>
+                        <sc-for list="{{ ag.rows }}" as="ss" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;padding:12px 16px;border-top:1px solid var(--border)">
+                          <span style="width:96px;flex:none;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums">{{ ss.time }}</span><span style="font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ ss.day }}</span></span>
+                          <span style="flex:1 1 220px;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ ss.cls }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ ss.meta }}</span></span>
+                          <span style="flex:0 0 auto;display:flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ ss.stBg }};color:{{ ss.stFg }}"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ ss.stDot }}"></span>{{ ss.st }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ss.pinChip }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.chip.n }}</span></sc-if></sc-if></sc-if></span>
+                          <sc-if value="{{ ss.take }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13px;font-weight:500;white-space:nowrap"><i class="icon-calendar-check" style="font-size:14px"></i>{{ tx.take }}</span></sc-if>
+                          <sc-if value="{{ ss.view }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap;box-shadow:var(--shadow)">{{ tx.open }}</span></sc-if>
+                        </div></sc-for>
+                        <sc-if value="{{ ag.loading }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ ag.skel }}" as="sk" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:16px;padding:14px 16px;border-top:1px solid var(--border)"><span style="width:96px;flex:none;display:flex;flex-direction:column;gap:6px"><span style="display:block;height:12px;width:40px;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:10px;width:52px;border-radius:6px;background:var(--muted)"></span></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:6px"><span style="display:block;height:12px;width:{{ sk.w }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:10px;width:30%;border-radius:6px;background:var(--muted)"></span></span><span style="display:block;height:22px;width:96px;border-radius:6px;background:var(--muted)"></span></div></sc-for></sc-if>
+                        <sc-if value="{{ ag.empty }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;padding:18px 16px;border-top:1px solid var(--border);font-size:13.5px;color:var(--muted-fg)">{{ ag.emptyText }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ag.pinToday }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.eToday.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.eToday.n }}</span></sc-if></sc-if></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ag.pinNeed }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.eNeed.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.eNeed.n }}</span></sc-if></sc-if></sc-if></div></sc-if>
+                      </div>
+                    </sc-for><sc-if value="{{ m.pageLoading }}" hint-placeholder-val="{{ false }}"><div style="display:flex;justify-content:center"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></sc-if></sc-if>
+                    <sc-if value="{{ m.hasMsg }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:12px;background:var(--card)"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:40px 18px"><span style="max-width:46ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.actIcon }}" style="font-size:14px"></i>{{ m.act }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div></div></sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isReg }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                      <div style="min-width:0;display:flex;flex-direction:column;gap:4px;flex:1 1 280px"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:13px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:14px"></i>{{ tx.classes }}</span><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;white-space:nowrap">IELTS 6.5 Evening</span><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--muted);font-size:12px;font-weight:500;white-space:nowrap">{{ m.countLabel }}</span></div></div>
+                      <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-user-plus" style="font-size:15px"></i>{{ tx.addStudent }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-clipboard-list" style="font-size:15px"></i>{{ tx.assign }}</span></div></sc-if>
+                    </div>
+                    <div style="display:flex;gap:20px;border-bottom:1px solid var(--border)"><sc-for list="{{ m.tabs }}" as="dt" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;gap:6px;padding:0 2px 10px;font-size:13.5px;white-space:nowrap;font-weight:500;color:{{ dt.fg }};box-shadow:{{ dt.line }}">{{ dt.label }}<sc-if value="{{ dt.hasBadge }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent-c);color:#1b2123;font-size:11px;font-weight:600;line-height:1;display:inline-flex;align-items:center;justify-content:center">{{ dt.badge }}</span></sc-if></span></sc-for></div>
+
+                    <sc-if value="{{ m.hasTools }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap;min-width:0">
+                        <div style="display:flex;align-items:center;gap:10px;flex:none"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-calendar-days" style="font-size:15px;color:var(--muted-fg)"></i>{{ m.sesLabel }}<i class="icon-chevron-down" style="font-size:14px;color:var(--muted-fg)"></i></span><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ m.stBg }};color:{{ m.stFg }}"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ m.stDot }}"></span>{{ m.st }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.picker.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.picker.n }}</span></sc-if></sc-if></div>
+                        <div style="display:flex;align-items:center;justify-content:flex-end;gap:8px;flex:1 1 240px;min-width:0"><span style="flex:0 1 240px;min-width:110px;display:flex;align-items:center;gap:8px;height:{{ f.btnH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--card)"><i class="icon-search" style="font-size:15px;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;font-size:13px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tx.searchStudents }}</span></span><sc-if value="{{ m.canMark }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-check-check" style="font-size:15px"></i>{{ tx.markAll }}</span></sc-if></div>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ m.regLoading }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px"><span style="display:block;height:36px;width:180px;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:22px;width:96px;border-radius:6px;background:var(--muted)"></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></sc-if>
+                    <sc-if value="{{ m.hasNotice }}" hint-placeholder-val="{{ false }}"><div role="status" style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--muted);font-size:13px;line-height:1.55"><i class="icon-{{ m.noticeIcon }}" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ m.notice }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.notice.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.notice.n }}</span></sc-if></sc-if></div></sc-if>
+
+                    <sc-if value="{{ m.hasCard }}" hint-placeholder-val="{{ true }}">
+                      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                        <sc-if value="{{ m.hasRoster }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;align-items:center;gap:10px 16px;flex-wrap:wrap;padding:12px 16px"><span style="font-size:13.5px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap">{{ m.progLabel }}</span><span style="flex:1 1 160px;min-width:120px;height:8px;border-radius:8px;background:var(--muted)"></span><span style="display:flex;align-items:center;gap:2px;flex-wrap:wrap"><sc-for list="{{ m.legend }}" as="lg" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;gap:6px;height:28px;padding:0 9px;border-radius:7px;font-size:12.5px;color:var(--muted-fg);white-space:nowrap"><span style="width:8px;height:8px;flex:none;border-radius:50%;background:{{ lg.color }}"></span>{{ lg.label }}<span style="font-weight:600;color:var(--fg);font-variant-numeric:tabular-nums">{{ lg.n }}</span></span></sc-for></span></div>
+                          <div style="display:flex;align-items:center;gap:8px 14px;padding:0 16px;height:40px;font-size:12.5px;color:var(--muted-fg);font-weight:500;background:var(--muted)"><sc-if value="{{ m.canMark }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;flex:none;border-radius:4px;border:1px solid var(--border);background:var(--card)"></span></sc-if><span style="flex:1 1 200px;min-width:0">{{ tx.colStudent }}</span><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 84px">{{ tx.colTerm }}</span><span style="flex:0 0 214px">{{ tx.colStatus }}</span><span style="flex:1 1 160px;text-align:right">{{ tx.colNote }}</span></sc-if></div>
+                          <sc-for list="{{ m.rows }}" as="at" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:8px 14px;flex-wrap:wrap;padding:10px 16px;min-height:56px;border-top:1px solid var(--border)">
+                            <sc-if value="{{ m.canMark }}" hint-placeholder-val="{{ true }}"><span style="width:16px;height:16px;flex:none;border-radius:4px;border:1px solid var(--border);background:var(--card)"></span></sc-if>
+                            <span style="flex:1 1 200px;min-width:0;display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11px;font-weight:600">{{ at.initials }}</span><span style="min-width:0;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ at.name }}</span></span>
+                            <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="flex:0 0 84px;font-size:13px;font-variant-numeric:tabular-nums;color:{{ at.rateColor }}">{{ at.rate }}</span></sc-if>
+                            <span style="position:relative;display:flex;flex:none"><div role="radiogroup" aria-label="{{ tx.attTitle }}" aria-disabled="{{ m.ro }}" style="flex:none;display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;opacity:{{ m.optOp }}"><sc-for list="{{ m.opts }}" as="ao" hint-placeholder-count="3"><span style="width:68px;border-radius:7px;height:30px;font-size:12.5px;font-weight:500;white-space:nowrap;display:grid;place-items:center;color:var(--muted-fg)">{{ ao }}</span></sc-for></div><span style="position:absolute;left:calc(100% + 6px);top:50%;transform:translateY(-50%);display:flex"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ at.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.row.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.row.n }}</span></sc-if></sc-if></sc-if></span></span>
+                            <span style="flex:1 1 160px;min-width:0;display:flex;justify-content:flex-end"><sc-if value="{{ m.canMark }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:7px;font-size:12.5px;color:var(--muted-fg);white-space:nowrap;opacity:.5"><i class="icon-plus" style="font-size:14px"></i>{{ tx.colNote }}</span></sc-if></span>
+                          </div></sc-for>
+                          <div style="display:flex;align-items:center;gap:8px;margin:0;padding:9px 16px;border-top:1px solid var(--border);font-size:12px;color:var(--muted-fg)">{{ tx.footer }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.footer.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.footer.n }}</span></sc-if></sc-if></div>
+                        </sc-if>
+                        <sc-if value="{{ m.regLoading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}"><div style="padding:14px 16px"><span style="display:block;height:12px;width:32%;border-radius:6px;background:var(--muted)"></span></div><div style="height:40px;background:var(--muted)"></div><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:14px;padding:13px 16px;border-top:1px solid var(--border)"><span style="width:30px;height:30px;flex:none;border-radius:50%;background:var(--muted)"></span><span style="flex:1;min-width:0"><span style="display:block;height:12px;width:{{ sk.w }};border-radius:6px;background:var(--muted)"></span></span><span style="display:block;height:30px;width:210px;border-radius:6px;background:var(--muted)"></span></div></sc-for></div></sc-if>
+                        <sc-if value="{{ m.hasMsg }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:40px 18px"><span style="max-width:46ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.actIcon }}" style="font-size:14px"></i>{{ m.act }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div></sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is drawn as the deck draws it.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Teacher page as it is. The right is this page. No part of the deck is redrawn.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is what the plan or the contract says about the cause.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Cause</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, and “New” that both are proposed here. The deck draws Attendance in English only, so every Vietnamese string is a first proposal.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R8.12</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each part of the two screens takes from this page. No operation of T-R8.6 changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R8 · Attendance, in the states the deck does not draw. A proposal page for T-R8.12.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['attTitle', 'Page', 'Điểm danh', 'Attendance', 'Deck'],
+  ['attLead', 'Page', 'Điểm danh cho các lớp hôm nay, hoặc bổ sung cho những buổi bạn bỏ sót.', 'Take the register for today’s classes, or catch up on sessions you missed.', 'Deck'],
+  ['gToday', 'Page', 'Hôm nay · {date}', 'Today · {date}', 'Deck'],
+  ['gTodaySub', 'Page', '{count} lớp', '{count} classes', 'Deck'],
+  ['gNeed', 'Page', 'Cần điểm danh', 'Needs a register', 'Deck'],
+  ['gNeedSub', 'Page', 'Buổi đã qua mà chưa điểm danh', 'Past sessions with no attendance taken', 'Deck'],
+  ['gRecent', 'Page', 'Gần đây', 'Recent', 'Deck'],
+  ['gRecentSub', 'Page', '7 ngày qua', 'Last 7 days', 'Deck'],
+  ['rowToday', 'Page', 'Hôm nay', 'Today', 'Deck'],
+  ['metaRoom', 'Page', '{room} · {count} học viên', '{room} · {count} students', 'Deck'],
+  ['metaSaved', 'Page', '{p} có mặt · {l} muộn · {a} vắng', '{p} present · {l} late · {a} absent', 'Deck'],
+  ['stToday', 'Chips', 'Chưa điểm danh', 'Not taken yet', 'Deck'],
+  ['stMissing', 'Chips', 'Bỏ sót', 'Not taken', 'Deck'],
+  ['stSaved', 'Chips', 'Đã lưu', 'Saved', 'Deck'],
+  ['stNotStarted', 'Chips', 'Chưa bắt đầu', 'Not started', 'New'],
+  ['stCancelled', 'Chips', 'Đã huỷ', 'Cancelled', 'New'],
+  ['take', 'Page', 'Điểm danh', 'Take attendance', 'Deck'],
+  ['open', 'Page', 'Mở', 'Open', 'Deck'],
+  ['eToday', 'Page', 'Hôm nay chưa có lớp nào bắt đầu.', 'No classes have started today.', 'Plan'],
+  ['eNeed', 'Page', 'Đã điểm danh đủ.', 'All caught up.', 'Deck'],
+  ['eRecent', 'Page', 'Chưa có gì.', 'Nothing yet.', 'Deck'],
+  ['pageFailed', 'Page', 'Không tải được danh sách buổi học.', 'Could not load the sessions.', 'New'],
+  ['classes', 'Class detail', 'Lớp học', 'Classes', 'As today'],
+  ['count', 'Class detail', '{count} học viên', '{count} students', 'As today'],
+  ['addStudent', 'Class detail', 'Thêm học viên', 'Add student', 'As today'],
+  ['assign', 'Class detail', 'Giao bài cho lớp', 'Assign to class', 'As today'],
+  ['tabOverview', 'Class detail', 'Tổng quan', 'Overview', 'Deck'],
+  ['tabAttendance', 'Class detail', 'Điểm danh', 'Attendance', 'Deck'],
+  ['searchStudents', 'Register', 'Tìm học viên', 'Search students', 'Deck'],
+  ['markAll', 'Register', 'Đánh dấu tất cả có mặt', 'Mark all present', 'Deck'],
+  ['prog', 'Register', '{k}/{n} đã đánh dấu', '{k} of {n} marked', 'Deck'],
+  ['present', 'Register', 'Có mặt', 'Present', 'Deck'],
+  ['late', 'Register', 'Muộn', 'Late', 'Deck'],
+  ['absent', 'Register', 'Vắng', 'Absent', 'Deck'],
+  ['notMarked', 'Register', 'Chưa đánh dấu', 'Not marked', 'Deck'],
+  ['colStudent', 'Register', 'Học viên', 'Student', 'Deck'],
+  ['colTerm', 'Register', 'Học kỳ này', 'This term', 'Deck'],
+  ['colStatus', 'Register', 'Trạng thái', 'Status', 'Deck'],
+  ['colNote', 'Register', 'Ghi chú', 'Note', 'Deck'],
+  ['footer', 'Register', 'Đi muộn vẫn tính là có mặt trong tỉ lệ điểm danh.', 'Late counts as present in the attendance rate.', 'Plan'],
+  ['noSessions', 'Register', 'Lớp này chưa có buổi học nào.', 'No sessions yet.', 'Plan'],
+  ['addInCalendar', 'Register', 'Thêm buổi học trong Lịch', 'Add one in Calendar', 'Plan'],
+  ['notStarted', 'Register', 'Buổi học này chưa bắt đầu. Điểm danh mở trước giờ học 15 phút.', 'This session has not started. Attendance opens 15 minutes before it.', 'New'],
+  ['cancelledLine', 'Register', 'Buổi học này đã bị huỷ nên không điểm danh.', 'This session was cancelled, so no attendance is taken.', 'New'],
+  ['regFailed', 'Register', 'Không tải được bảng điểm danh.', 'Could not load the register.', 'New'],
+  ['retry', 'States', 'Thử lại', 'Retry', 'As today'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+const SCREENS = [['register', 'A class’s register'], ['page', 'The Attendance page']];
+const STATES = {
+  register: [['notStarted', 'Not started yet'], ['cancelled', 'Cancelled'], ['noSessions', 'No sessions yet'], ['loading', 'Loading'], ['error', 'Could not load'], ['open', 'Ready to take']],
+  page: [['empty', 'Nothing to list'], ['loading', 'Loading'], ['error', 'Could not load'], ['list', 'Sessions to take']]
+};
+const START = { register: 'notStarted', page: 'empty' };
+const NOTES = {
+  'register:notStarted': [['picker', 'The session and its chip. This one is Friday’s, opened from a link two days early.'], ['notice', 'One line says why nothing can be marked, and when it can. The roster still shows, so the teacher sees who is expected.'], ['row', 'The three choices are dimmed and take no press. There is no checkbox, no note and no “Đánh dấu tất cả có mặt”.']],
+  'register:cancelled': [['picker', 'The chip reads “Đã huỷ”, the word the calendar uses.'], ['notice', 'A cancelled session’s register says so in one line. Marks saved before it was cancelled would show, and are left out of the rate.']],
+  'register:noSessions': [['msg', 'The plan’s sentence, with its link to the calendar, where a session is made. The picker, the search and “Đánh dấu tất cả có mặt” have nothing to act on and are not shown.']],
+  'register:loading': [['skeleton', 'The class’s header and its tabs are there at once. The picker and the rows are blocks.']],
+  'register:error': [['msg', 'One sentence and “Thử lại” in place of the register. The class’s header and tabs stay.']],
+  'register:open': [['picker', 'The deck’s register, in Vietnamese: the session picker, its chip, the search and “Đánh dấu tất cả có mặt”.'], ['footer', 'One sentence, the plan’s. The deck’s “Students see their own attendance.” is not taken (DG-198).']],
+  'page:empty': [['eToday', 'The plan’s sentence, not the deck’s “No classes today.”: this card lists a session only once it has started (O-R8.6).'], ['eNeed', 'The deck’s other two sentences, as they are. Each card keeps its place when it is empty.']],
+  'page:loading': [['skeleton', 'The three cards and their headings are there at once. Two rows of a session’s shape stand in each.']],
+  'page:error': [['msg', 'One sentence and “Thử lại” in place of the three cards. The heading stays.']],
+  'page:list': [['today', 'The first card holds the sessions that have started today. One that has not started is not listed yet.'], ['chip', 'Three chips, by the plan: “Chưa điểm danh” for today, “Bỏ sót” for a past session with no register, “Đã lưu” once it is saved.']]
+};
+const PIN_KEYS = ['today', 'chip', 'eToday', 'eNeed', 'skeleton', 'msg', 'picker', 'footer', 'notice', 'row', 'nav', 'newAnn'];
+// [part, the deck, this page]
+const ADDS = [
+  ['A session that has not started', 'Not drawn.', 'Its register opens read-only: the roster, every choice dimmed, and one line that says when attendance opens.'],
+  ['A cancelled session', 'Not drawn.', 'The same, with its own line and the chip “Đã huỷ”.'],
+  ['A class with no session', 'Not drawn.', 'One sentence in the Attendance tab, with a link to the calendar.'],
+  ['The register loading or failing', 'Not drawn.', 'Blocks under the class’s header and tabs; one sentence with “Thử lại”.'],
+  ['The page’s empty cards', '“No classes today.”, “All caught up.”, “Nothing yet.”', 'The same three places. The first reads “Hôm nay chưa có lớp nào bắt đầu.”, as the plan has it.'],
+  ['The page loading or failing', 'Not drawn.', 'The three cards with blocks for rows; one sentence with “Thử lại” in their place.'],
+  ['The register’s last line', '“Students see their own attendance. Late counts as present in the attendance rate.”', 'The second sentence only, as the plan has it (DG-198).'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string of both screens, in the copy table below.']
+];
+// [when, what shows, cause]
+const WHENS = [
+  ['The session starts more than 15 minutes from now', 'The register read-only, with “Buổi học này chưa bắt đầu. Điểm danh mở trước giờ học 15 phút.”', 'The save refuses such a session (T-R8.6). It is not in the picker, so this comes from a link.'],
+  ['The session is cancelled', 'The register read-only, with “Buổi học này đã bị huỷ nên không điểm danh.” and the chip “Đã huỷ”.', 'cancelled on the session.'],
+  ['A cancelled session already had marks', 'The marks show, read-only.', 'The rate covers the class’s non-cancelled sessions, so these marks are left out of it.'],
+  ['The class has no session', '“Lớp này chưa có buổi học nào.” and “Thêm buổi học trong Lịch”.', 'T-R8.12. The link opens the calendar.'],
+  ['The register is loading', 'The class’s header and tabs, and blocks for the picker and the rows.', 'The read of the session’s register.'],
+  ['The register cannot load', '“Không tải được bảng điểm danh.” and “Thử lại”.', 'The server did not answer.'],
+  ['No class has started today', '“Hôm nay chưa có lớp nào bắt đầu.” in the first card.', 'The card lists sessions that have started (O-R8.6).'],
+  ['No past session lacks a register', '“Đã điểm danh đủ.” in the second card.', 'marked is false for none of them.'],
+  ['Nothing was saved in the last seven days', '“Chưa có gì.” in the third card.', 'The deck’s sentence.'],
+  ['The page is loading', 'The three cards with their headings, and two blocks in each.', 'The read of the sessions list.'],
+  ['The page cannot load', '“Không tải được danh sách buổi học.” and “Thử lại” in place of the cards.', 'The server did not answer.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · A register that is not open yet', 'When a session has not started, should its register show the roster, or only the line?', 'The plan asks for a read-only state with a line saying which. Showing the roster lets a teacher check who is expected before class. Showing only the line is simpler, and nothing on it looks pressable.', 'The roster, with every choice dimmed, under the line.'],
+  ['Q2 · “15 phút”', 'Should the line say that attendance opens 15 minutes before the session?', 'It is the server’s rule, and without it a teacher who arrives early does not know when to try again. If the rule changes, the sentence has to change with it.', 'Yes: “Điểm danh mở trước giờ học 15 phút.”'],
+  ['Q3 · The words', 'Are these the Vietnamese words for attendance?', 'The deck draws both screens in English. New here: “Điểm danh” for the screen and for the action, “Bỏ sót” for a past session with no register, “Chưa đánh dấu” for a student with no mark, “Có mặt”, “Muộn” and “Vắng”, and “Học kỳ này” for the rate’s column.', 'As listed in the copy table.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['The register, read-only', 'A session not started or cancelled: the notice line, the roster with the radio groups disabled, and no checkbox, note or “Đánh dấu tất cả có mặt”. Two more chips, “Chưa bắt đầu” and “Đã huỷ”.'],
+  ['The Attendance tab', 'The empty sentence with its link for a class with no session; the skeleton; the failed state.'],
+  ['The Attendance page', 'The three empty sentences in their cards, the skeleton rows, and the failed state in place of the cards. A row’s first column is 96px, not the deck’s 64px: “Th 3, 23 thg 9” is wider than “Tue 23 Sep”.'],
+  ['Locales', 'The copy table: forty-seven strings, Vietnamese first.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher page (Attendance, and the Attendance tab of Class detail), R8’s plan (docs/plan/78-r8.md: T-R8.6, T-R8.12, O-R8.6) and the register (DG-83, DG-198). Attendance is not built yet, so there was no screen to run.'],
+  ['What it leaves alone.', 'Both screens are the deck’s: the cards, the rows, the chips, the register’s bar, legend and rows. No operation changes.'],
+  ['What is not drawn.', 'Taking and saving a register, the selection bar, the note dialog and the confirm for unmarked students: the deck draws them. The session picker’s menu is the deck’s too.']
+];
+const NAMES = ['Trần Minh Anh', 'Lê Hoàng Nam', 'Nguyễn Gia Bảo', 'Phạm Thu Hà', 'Đỗ Phương Thảo', 'Vũ Thu Trang', 'Bùi Quang Huy'];
+const RATES = [100, 92, 85, 96, 71, 88, 79];
+const INIT = n => { const p = n.split(' '); return (p[p.length - 1][0] + p[0][0]).toUpperCase(); };
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', screen: 'register', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const scr = s.screen, st = s.st[scr];
+    const noteList = NOTES[scr + ':' + st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const isPage = scr === 'page', isReg = scr === 'register';
+    tx.title = isPage ? tx.attTitle : tx.classes;
+    const loading = st === 'loading', failed = st === 'error';
+    const D = (a, b) => (vi ? a : b);
+    const room = n => D('Phòng ', 'Room ') + n;
+    const CH = { today: [tx.stToday, 'var(--warning-soft)', 'var(--warning-ink)', 'var(--warning)'], missing: [tx.stMissing, 'var(--danger-soft)', 'var(--danger-ink)', 'var(--danger)'], saved: [tx.stSaved, 'var(--success-soft)', 'var(--success-ink)', 'var(--success)'],
+      notStarted: [tx.stNotStarted, 'var(--muted)', 'var(--muted-fg)', 'var(--ring)'], cancelled: [tx.stCancelled, 'var(--danger-soft)', 'var(--danger-ink)', 'var(--danger)'] };
+    const chip = k => ({ st: CH[k][0], stBg: CH[k][1], stFg: CH[k][2], stDot: CH[k][3] });
+
+    // ---- the Attendance page
+    const row = (time, day, cls, meta, k, first) => ({ time, day, cls, meta, ...chip(k), take: k !== 'saved', view: k === 'saved', pinChip: !!first });
+    const saved = (pp, l, a) => fmt(tx.metaSaved, { p: pp, l, a });
+    const LISTS = st === 'list' ? [
+      [row('18:00', tx.rowToday, 'IELTS 6.5 Evening', fmt(tx.metaRoom, { room: room(2), count: 24 }), 'today', true)],
+      [row('17:30', D('Th 3, 23 thg 9', 'Tue 23 Sep'), 'IELTS Foundation A', fmt(tx.metaRoom, { room: room(1), count: 18 }), 'missing')],
+      [row('18:00', D('Th 2, 22 thg 9', 'Mon 22 Sep'), 'IELTS 6.5 Evening', saved(22, 1, 1), 'saved'), row('09:00', D('CN, 21 thg 9', 'Sun 21 Sep'), 'TOEIC 600 Weekend', saved(15, 0, 1), 'saved'), row('18:00', D('Th 6, 19 thg 9', 'Fri 19 Sep'), 'IELTS 6.5 Evening', saved(23, 1, 0), 'saved')]
+    ] : [[], [], []];
+    const none = st === 'empty';
+    const groups = [
+      [fmt(tx.gToday, { date: D('Th 4, 24 thg 9', 'Wed 24 Sep') }), loading ? '' : fmt(tx.gTodaySub, { count: LISTS[0].length }), tx.eToday],
+      [tx.gNeed, tx.gNeedSub, tx.eNeed], [tx.gRecent, tx.gRecentSub, tx.eRecent]
+    ].map((g, i) => ({ title: g[0], sub: g[1], rows: LISTS[i], loading, skel: [{ w: ['44%', '52%', '48%'][i] }, { w: ['50%', '40%', '56%'][i] }], empty: none, emptyText: g[2], pinToday: i === 0, pinNeed: i === 1 }));
+
+    // ---- the register
+    const ro = st === 'notStarted' || st === 'cancelled', canMark = st === 'open';
+    const hasRoster = canMark || ro;
+    const regMsg = st === 'noSessions' ? [tx.noSessions, tx.addInCalendar, 'calendar-days'] : failed ? [tx.regFailed, tx.retry, 'rotate-cw'] : null;
+    const pageMsg = failed ? [tx.pageFailed, tx.retry, 'rotate-cw'] : null;
+    const msg = isPage ? pageMsg : regMsg;
+    const SES = { open: [D('Th 4, 24 thg 9 · 18:00', 'Wed 24 Sep · 18:00'), 'today'], notStarted: [D('Th 6, 26 thg 9 · 18:00', 'Fri 26 Sep · 18:00'), 'notStarted'], cancelled: [D('Th 2, 22 thg 9 · 18:00', 'Mon 22 Sep · 18:00'), 'cancelled'] }[st] || ['', 'today'];
+    const m = {
+      isPage, isReg, hasGroups: isPage && !failed, groups, pageLoading: isPage && loading,
+      hasMsg: !!msg, msg: msg ? msg[0] : '', act: msg ? msg[1] : '', actIcon: msg ? msg[2] : '',
+      countLabel: fmt(tx.count, { count: 24 }),
+      tabs: [[tx.tabOverview, false, ''], [tx.tabAttendance, true, st === 'noSessions' || loading || failed ? '' : '2']].map(x => ({ label: x[0], fg: x[1] ? 'var(--fg)' : 'var(--muted-fg)', line: x[1] ? 'inset 0 -2px 0 var(--fg)' : 'none', hasBadge: !!x[2], badge: x[2] })),
+      hasTools: isReg && hasRoster, sesLabel: SES[0], ...chip(SES[1]), canMark, ro, optOp: ro ? 0.45 : 1,
+      regLoading: isReg && loading, hasNotice: isReg && ro, noticeIcon: st === 'cancelled' ? 'calendar-x' : 'clock', notice: st === 'cancelled' ? tx.cancelledLine : tx.notStarted,
+      hasCard: isReg, hasRoster: isReg && hasRoster,
+      progLabel: fmt(tx.prog, { k: 0, n: 24 }),
+      legend: [[tx.present, 'var(--success)', 0], [tx.late, 'var(--warning)', 0], [tx.absent, 'var(--danger)', 0], [tx.notMarked, 'var(--border)', 24]].map(x => ({ label: x[0], color: x[1], n: String(x[2]) })),
+      rows: NAMES.map((n, i) => ({ name: n, initials: INIT(n), rate: RATES[i] + '%', rateColor: RATES[i] < 80 ? 'var(--danger-ink)' : 'var(--muted-fg)', pin: i === 0 })),
+      opts: [tx.present, tx.late, tx.absent],
+      skel: ['38%', '30%', '42%', '34%', '40%'].map(w => ({ w }))
+    };
+
+    // ---- the shell
+    const navOn = isPage ? 'attendance' : 'classes';
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: false });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', D('Tổng quan', 'Dashboard')), item('calendar', 'calendar-days', D('Lịch', 'Calendar')), item('messages', 'message-square', D('Tin nhắn', 'Messages'))] },
+      { hasLabel: true, label: D('Giảng dạy', 'Teaching'), items: [item('assignments', 'clipboard-list', D('Bài giao', 'Assignments')), item('grading', 'square-pen', D('Chấm bài', 'Grading')), item('classes', 'graduation-cap', tx.classes), item('students', 'users', D('Học viên', 'Students')), item('attendance', 'calendar-check', tx.attTitle)] },
+      { hasLabel: true, label: D('Nội dung', 'Content'), items: [item('tests', 'file-text', D('Đề thi', 'Tests')), item('shared', 'share-2', D('Được chia sẻ với tôi', 'Shared with me'), 2), item('bank', 'library', D('Ngân hàng câu hỏi', 'Question bank')), item('media', 'image', D('Thư viện media', 'Media'))] }
+    ];
+
+    const W = s.stageW || 1280;
+    const names = { page: 'Attendance', register: 'Class register' };
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Teacher · ' + names[scr] + ' · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: !phone, tBar: true,
+      barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px' : '24px 28px 28px', h1: phone ? '20px' : '24px', btnH: phone ? '40px' : '36px'
+    });
+    const frames = [mk(1280, 800, Math.min(1, W / 1280), false, 'the teacher’s shell'), mk(360, 800, Math.min(1, W / 360), true, 'the same state on a phone; rows wrap as the deck’s do')];
+    const ctl = [
+      { label: 'Screen', opts: this.seg(SCREENS, scr, v => this.setState({ screen: v })) },
+      { label: 'State', opts: this.seg(STATES[scr], st, v => this.setState(x => ({ st: { ...x.st, [scr]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const stLabel = (STATES[scr].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, frames, ctl, stageRef: this.stageRef,
+      chips: ['R8 · v0.15.0', 'T-R8.12', 'DG-83, DG-198', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, screen: 'register', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + names[scr] + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -12,7 +12,8 @@ export const CHANGE_PASSWORD_PATH = "/change-password";
  * rather than redirecting, or a
  * reload would bounce every user to /login before `GET /auth/me` answers.
  * Carries the attempted path as `?next=` so sign-in can return to it, except
- * after the user's own sign-out, when it sends the visitor to /login alone.
+ * after the user's own sign-out and at the bare root, which says nothing
+ * about where the visitor was going: both send the visitor to /login alone.
  */
 export function RequireSession() {
   const location = useLocation();
@@ -26,8 +27,8 @@ export function RequireSession() {
   if (isBootstrapping) return null;
 
   if (!user) {
-    if (signedOut) return <Navigate to="/login" replace />;
     const next = location.pathname + location.search;
+    if (signedOut || next === "/") return <Navigate to="/login" replace />;
     return <Navigate to={`/login?next=${encodeURIComponent(next)}`} replace />;
   }
 

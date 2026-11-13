@@ -1,0 +1,482 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R9 Insights · Gradebook category and weight · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">How an assignment counts in the gradebook, and where a teacher says so</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck’s Gradebook reads “tests 60%, homework 40%” and gives every column a kind and a weight. Nothing in the deck sets them (DG-93). R9’s plan gives each assignment a category and a weight and names three places to set them: the wizard’s Schedule step, the assignment’s Settings tab, and the gradebook’s own column heading (T-R9.6, T-R9.7). This page draws the three, with one set of two controls used in all of them, in Vietnamese first. It follows the plan’s wording throughout, and says in its questions where that wording will mislead: a weight is shown as a percent, and it is one only while a term’s weights happen to add to a hundred.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Two controls, three places</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The same pair wherever it is set.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>“Tính là”, a choice of two, and “Trọng số”, a stepper from 0 to 100 by fives. Both are parts the wizard already has.</li>
+      <li><span style="color:var(--fg)">In the wizard they are a group of their own under “Thời gian và số lượt”</span>, and the summary beside the form gains one line.</li>
+      <li>In the assignment’s Settings tab and from a gradebook column they open in the dialog the Settings tab already uses, so a teacher learns one form.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">While the assignment is live</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">It can always be changed, and students are not told.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The other Settings cards lock while students are taking the test. This one does not: a weight changes no student’s test.</li>
+      <li><span style="color:var(--fg)">The toast after saving says only that it is saved.</span> The Settings tab’s usual toast adds “Học viên thấy thay đổi ngay”, which is not true of a weight: students never see one.</li>
+      <li>A weight of 0 keeps the column in the gradebook and out of the final grade, and each place says so.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">In the gradebook</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A column’s heading is the way in.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The plan makes the heading a button. The page gives it the look of one when the pointer is over it: the muted tint and a pencil.</li>
+      <li><span style="color:var(--fg)">After a save the heading’s shares are worked out again</span> from every column’s weight in the term.</li>
+      <li>That is where a weight and a percent come apart: see Q1.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The three places at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick the screen and its state in the bar above. The wizard and the Settings tab are the product’s, with its own strings; the gradebook is the deck’s. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+
+                <sc-if value="{{ m.isWizard }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:100%;max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                    <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ wz.title }}</div><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ wz.desc }}</div></sc-if></div>
+                    <div style="display:grid;grid-template-columns:repeat({{ f.stepCols }},minmax(0,1fr));gap:8px"><sc-for list="{{ wz.steps }}" as="sp" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:8px;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid {{ sp.border }};background:var(--card)"><span style="width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:600;background:{{ sp.numBg }};color:{{ sp.numFg }}">{{ sp.num }}</span><span style="min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sp.label }}</span></div></sc-for></div>
+                    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+                      <div style="flex:1 1 480px;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:14px">
+                        <div style="font-size:15px;font-weight:600">{{ wz.scheduleTitle }}</div>
+                        <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"><sc-for list="{{ wz.window }}" as="wf" hint-placeholder-count="2"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ wf.label }}</span><span style="display:flex;align-items:center;gap:8px;height:{{ f.inH }};border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg)"><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums">{{ wf.value }}</span><i class="icon-calendar" style="font-size:15px;color:var(--muted-fg)"></i></span></div></sc-for></div>
+                        <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-timer" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ wz.timeGroup }}</span></div><div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;line-height:1.5">{{ wz.timeLimit }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ wz.timeLimitHint }}</span></span><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ wz.times }}" as="o" hint-placeholder-count="2"><span style="flex:1;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:grid;place-items:center;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</span></sc-for></div></div><div style="padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 16px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;line-height:1.5">{{ wz.attempts }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ wz.attemptsHint }}</span></span><span style="justify-self:end"><span style="display:inline-flex;align-items:center;height:36px;border:1px solid var(--border);border-radius:8px;background:var(--bg)"><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-minus" style="font-size:14px"></i></span><span style="min-width:54px;text-align:center;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums">1</span><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i></span></span></span></div></div>
+                        <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-table-2" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ tx.gbGroup }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.group.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.group.n }}</span></sc-if></sc-if></div><div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;line-height:1.5">{{ tx.countsAs }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ tx.countsHint }}</span></span><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ gbv.cats }}" as="o" hint-placeholder-count="2"><span style="flex:1;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:grid;place-items:center;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</span></sc-for></div></div><div style="padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 16px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;line-height:1.5">{{ tx.weight }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ gbv.weightHint }}</span></span><span style="justify-self:end;display:flex;align-items:center;gap:8px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.weight.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.weight.n }}</span></sc-if></sc-if><span style="display:inline-flex;align-items:center;height:36px;border:1px solid var(--border);border-radius:8px;background:var(--bg)"><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-minus" style="font-size:14px"></i></span><span style="min-width:54px;text-align:center;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums">{{ gbv.weightText }}</span><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i></span></span></span></div></div>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding-top:2px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap;box-shadow:none">{{ wz.back }}</span><span style="flex:1"></span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap">{{ wz.saveDraft }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:600;white-space:nowrap">{{ wz.cont }}</span></div>
+                      </div>
+                      <div style="flex:1 1 244px;max-width:{{ f.asideMax }};min-width:0;display:flex;flex-direction:column;gap:12px">
+                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px"><div style="display:flex;flex-direction:column;gap:8px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--border)"><sc-for list="{{ wz.lines }}" as="ln" hint-placeholder-count="5"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px"><span style="color:var(--muted-fg);white-space:nowrap">{{ ln.label }}</span><span style="display:flex;align-items:center;gap:6px;min-width:0;text-align:right;font-weight:500;font-variant-numeric:tabular-nums">{{ ln.value }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ ln.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.aside.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.aside.n }}</span></sc-if></sc-if></sc-if></span></div></sc-for></div><div style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--muted-fg);margin-bottom:10px"><i class="icon-eye" style="font-size:14px"></i>{{ wz.reads }}</div><div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.55"><sc-for list="{{ wz.rules }}" as="ru" hint-placeholder-count="2"><span style="display:flex;gap:8px"><span style="color:var(--muted-fg)">·</span><span>{{ ru }}</span></span></sc-for></div></div>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isSettings }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;flex-direction:column;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:14px"></i>{{ ad.back }}</span><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">Reading Mock</span><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);font-size:12px;font-weight:500;white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--success)"></span>{{ ad.live }}</span></div></div>
+                    <div style="display:flex;gap:20px;border-bottom:1px solid var(--border)"><sc-for list="{{ ad.tabs }}" as="dt" hint-placeholder-count="3"><span style="padding:0 2px 10px;font-size:13.5px;white-space:nowrap;font-weight:500;color:{{ dt.fg }};box-shadow:{{ dt.line }}">{{ dt.label }}</span></sc-for></div>
+                    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px;align-items:start">
+                      <sc-for list="{{ ad.cards }}" as="cd" hint-placeholder-count="6"><div style="min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                        <div style="display:flex;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--border)"><span style="width:28px;height:28px;flex:none;border-radius:7px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ cd.icon }}" style="font-size:15px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:600">{{ cd.title }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ cd.hint }}</span></span>
+                          <sc-if value="{{ cd.locked }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted-fg);white-space:nowrap"><i class="icon-lock" style="font-size:13px"></i>{{ ad.lockedPill }}</span></sc-if>
+                          <sc-if value="{{ cd.canEdit }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ cd.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.edit.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.edit.n }}</span></sc-if></sc-if></sc-if><span style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-pencil" style="font-size:13px"></i>{{ ad.edit }}</span></span></sc-if></div>
+                        <sc-if value="{{ cd.isNew }}" hint-placeholder-val="{{ false }}"><sc-for list="{{ cd.rows }}" as="rw" hint-placeholder-count="2"><div style="display:grid;grid-template-columns:minmax(110px,150px) minmax(0,1fr);align-items:baseline;gap:4px 16px;padding:12px 16px;border-top:{{ rw.border }}"><span style="font-size:13px;color:var(--muted-fg)">{{ rw.label }}</span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500">{{ rw.value }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ rw.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.card.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.card.n }}</span></sc-if></sc-if></sc-if></span><span style="font-size:12.5px;color:var(--muted-fg)">{{ rw.sub }}</span></span></div></sc-for></sc-if>
+                        <sc-if value="{{ cd.ghost }}" hint-placeholder-val="{{ true }}"><div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px"><span style="display:block;height:11px;width:{{ cd.w1 }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:11px;width:{{ cd.w2 }};border-radius:6px;background:var(--muted)"></span></div></sc-if>
+                      </div></sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isGradebook }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="min-width:0"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.gbTitle }}</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px;color:var(--muted-fg);font-size:14px"><span style="min-width:0;text-wrap:pretty">{{ gb.sub }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.shares.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.shares.n }}</span></sc-if></sc-if></div></div><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-download" style="font-size:15px"></i>{{ tx.gbExport }}</span></div>
+                    <div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;max-width:100%;align-self:flex-start;overflow:hidden"><sc-for list="{{ gb.classes }}" as="gc" hint-placeholder-count="4"><span style="border-radius:7px;height:30px;padding:0 12px;font-size:13px;white-space:nowrap;display:grid;place-items:center;background:{{ gc.bg }};color:{{ gc.fg }};box-shadow:{{ gc.ring }};font-weight:500">{{ gc.label }}</span></sc-for></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                      <table style="border-collapse:separate;border-spacing:0;width:100%;min-width:860px;font-size:13.5px">
+                        <thead><tr><th style="background:var(--muted);text-align:left;font-weight:500;font-size:12.5px;color:var(--muted-fg);padding:10px 16px;min-width:180px">{{ tx.gbStudent }}</th>
+                          <sc-for list="{{ gb.cols }}" as="col" hint-placeholder-count="6"><th style="background:{{ col.bg }};text-align:center;font-weight:500;font-size:12px;color:var(--muted-fg);padding:8px 4px;min-width:96px;line-height:1.3"><span style="display:flex;align-items:center;justify-content:center;gap:5px;color:var(--fg);white-space:nowrap">{{ col.name }}<sc-if value="{{ col.hover }}" hint-placeholder-val="{{ false }}"><i class="icon-pencil" style="font-size:12px;color:var(--muted-fg)"></i></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ col.hot }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.header.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.header.n }}</span></sc-if></sc-if></sc-if></span><span style="display:block;font-weight:400;white-space:nowrap">{{ col.meta }}</span></th></sc-for>
+                          <th style="background:var(--muted);text-align:right;font-weight:600;font-size:12.5px;padding:10px 16px;min-width:90px;border-left:1px solid var(--border)">{{ tx.gbFinal }}</th></tr></thead>
+                        <tbody><sc-for list="{{ gb.rows }}" as="gr" hint-placeholder-count="8"><tr><td style="padding:0 16px;height:48px;border-top:1px solid var(--border)"><span style="display:flex;align-items:center;gap:10px"><span style="width:28px;height:28px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11px;font-weight:600">{{ gr.initials }}</span><span style="font-weight:500;white-space:nowrap">{{ gr.name }}</span></span></td><sc-for list="{{ gr.cells }}" as="ce" hint-placeholder-count="6"><td style="border-top:1px solid var(--border);padding:6px;text-align:center"><span style="display:inline-flex;align-items:center;justify-content:center;min-width:56px;height:28px;border-radius:6px;font-variant-numeric:tabular-nums;font-size:13px;font-weight:500;background:{{ ce.bg }};color:{{ ce.fg }};border:{{ ce.ring }}">{{ ce.label }}</span></td></sc-for><td style="border-top:1px solid var(--border);border-left:1px solid var(--border);padding:0 16px;text-align:right;font-weight:600;font-variant-numeric:tabular-nums">{{ gr.final }}</td></tr></sc-for></tbody>
+                      </table>
+                    </div>
+                    <div style="display:flex;gap:16px;flex-wrap:wrap;font-size:12.5px;color:var(--muted-fg)"><sc-for list="{{ gb.legend }}" as="lg" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:6px"><span style="width:12px;height:12px;flex:none;border-radius:3px;background:{{ lg.bg }};border:{{ lg.ring }}"></span>{{ lg.label }}</span></sc-for></div>
+                  </div>
+                </sc-if>
+              </div>
+            </div>
+
+            <sc-if value="{{ dg.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:10"></div><div role="dialog" aria-label="{{ dg.title }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);z-index:11"><div style="padding:18px 14px 4px 18px;display:flex;gap:12px;align-items:flex-start"><span style="width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--muted)"><i class="icon-table-2" style="font-size:18px"></i></span><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600;line-height:1.35">{{ dg.title }}</div><sc-if value="{{ dg.hasDesc }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:6px;font-size:13px;color:var(--muted-fg);margin-top:3px;line-height:1.5"><span style="min-width:0;text-wrap:pretty">{{ dg.desc }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.ddesc.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.ddesc.n }}</span></sc-if></sc-if></div></sc-if></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialog.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialog.n }}</span></sc-if></sc-if><span style="width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:16px"></i></span></div><div style="padding:14px 18px 4px"><div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-table-2" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ tx.gbGroup }}</span></div><div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;line-height:1.5">{{ tx.countsAs }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ tx.countsHint }}</span></span><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ gbv.cats }}" as="o" hint-placeholder-count="2"><span style="flex:1;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:grid;place-items:center;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</span></sc-for></div></div><div style="padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 16px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;line-height:1.5">{{ tx.weight }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ gbv.weightHint }}</span></span><span style="justify-self:end;display:flex;align-items:center;gap:8px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dweight.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dweight.n }}</span></sc-if></sc-if><span style="display:inline-flex;align-items:center;height:36px;border:1px solid var(--border);border-radius:8px;background:var(--bg)"><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-minus" style="font-size:14px"></i></span><span style="min-width:54px;text-align:center;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums">{{ gbv.weightText }}</span><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i></span></span></span></div></div></div><div style="display:flex;justify-content:flex-end;gap:8px;padding:16px 18px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap;box-shadow:none">{{ tx.cancel }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:600;white-space:nowrap">{{ tx.save }}</span></div></div></sc-if>
+            <sc-if value="{{ m.hasToast }}" hint-placeholder-val="{{ false }}"><div role="status" style="position:absolute;right:16px;bottom:16px;z-index:12;display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);font-size:13.5px;max-width:calc(100% - 32px)"><i class="icon-circle-check" style="font-size:16px;flex:none;color:var(--success)"></i><span style="text-wrap:pretty">{{ tx.savedGb }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.toast.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.toast.n }}</span></sc-if></sc-if></div></sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is the product’s, or the deck’s.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What exists, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck and the product as they are. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck and the product</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What each choice does</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule of R9’s plan behind it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Plan” and “Deck” say where the English comes from, “As today” that both strings are in the locale files now, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. The first is the one that changes what teachers will read.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R9.6 and T-R9.7</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each part the plan names takes from this page. No operation of T-R9.1 or T-R9.2 changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R9 · How an assignment counts in the gradebook. A proposal page for DG-93, T-R9.6 and T-R9.7.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['gbGroup', 'The two controls', 'Sổ điểm', 'Gradebook', 'Plan'],
+  ['countsAs', 'The two controls', 'Tính là', 'Counts as', 'Plan'],
+  ['countsHint', 'The two controls', 'Bài kiểm tra và bài tập được cộng riêng ở đầu sổ điểm', 'Tests and homework are totalled apart in the gradebook’s heading', 'New'],
+  ['catTest', 'The two controls', 'Bài kiểm tra', 'Test', 'Plan'],
+  ['catHomework', 'The two controls', 'Bài tập', 'Homework', 'Plan'],
+  ['weight', 'The two controls', 'Trọng số', 'Weight', 'Plan'],
+  ['weightHint', 'The two controls', 'Phần của bài này trong điểm tổng kết của học kỳ. Đặt 0 để không tính vào điểm tổng kết.', 'Share of the final grade in its term. 0 keeps it out of the final grade.', 'Plan'],
+  ['asideValue', 'Wizard summary', '{category} · {weight}%', '{category} · {weight}%', 'Plan'],
+  ['cardHint', 'Settings card', 'Bài này tính vào điểm tổng kết thế nào', 'How this counts towards the final grade', 'New'],
+  ['cardWeightSub', 'Settings card', 'Trong điểm tổng kết của học kỳ', 'Of the final grade in its term', 'New'],
+  ['cardZeroSub', 'Settings card', 'Không tính vào điểm tổng kết', 'Left out of the final grade', 'New'],
+  ['editTitle', 'Dialog', 'Sửa Sổ điểm', 'Edit Gradebook', 'As today'],
+  ['cancel', 'Dialog', 'Huỷ', 'Cancel', 'As today'],
+  ['save', 'Dialog', 'Lưu thay đổi', 'Save changes', 'As today'],
+  ['savedGb', 'Toast', 'Đã lưu Sổ điểm.', 'Gradebook saved.', 'New'],
+  ['gbTitle', 'Gradebook', 'Sổ điểm', 'Gradebook', 'Deck'],
+  ['gbSub', 'Gradebook', '{term} · điểm tổng kết gồm bài kiểm tra {t}%, bài tập {h}%.', '{term} · final grade weights tests {t}%, homework {h}%.', 'Deck'],
+  ['gbExport', 'Gradebook', 'Xuất', 'Export', 'Deck'],
+  ['gbStudent', 'Gradebook', 'Học viên', 'Student', 'Deck'],
+  ['gbFinal', 'Gradebook', 'Tổng kết', 'Final', 'Deck'],
+  ['gbPending', 'Gradebook', 'Chờ chấm', 'Pending', 'Deck'],
+  ['lg80', 'Gradebook', 'Từ 80% trở lên', '80% and above', 'Deck'],
+  ['lg60', 'Gradebook', 'Dưới 60%', 'Below 60%', 'Deck'],
+  ['lgWaiting', 'Gradebook', 'Chờ chấm', 'Waiting for grading', 'Deck'],
+  ['lgMissing', 'Gradebook', 'Chưa nộp', 'Not submitted', 'Deck'],
+  ['headerTitle', 'Gradebook', 'Sửa cách tính của {title}', 'Change how {title} counts', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+// the product's own strings around the new parts, as the locale files have them today: [Vietnamese, English]
+const WIZ = {
+  title: ['Giao bài mới', 'New assignment'], desc: ['Chưa có gì được gửi đi cho tới khi bạn bấm Giao bài. Mặc định là lựa chọn an toàn.', 'Nothing is sent until you press Assign. Defaults are the safe choice.'],
+  steps: [['Đề thi', 'Test'], ['Học viên', 'Students'], ['Lịch', 'Schedule'], ['Quy định', 'Rules']],
+  scheduleTitle: ['Khi nào học viên làm bài?', 'When can they take it?'], opens: ['Mở', 'Opens'], closes: ['Đóng', 'Closes'],
+  timeGroup: ['Thời gian và số lượt', 'Time and attempts'], timeLimit: ['Thời gian làm bài', 'Time limit'], timeLimitHint: ['Tính từ lúc học viên bấm Bắt đầu, không phải lúc bài mở', 'Starts when the student presses Start, not when the window opens'],
+  minutes: ['{count} phút', '{count} min'], custom: ['Tuỳ chỉnh', 'Custom'], attempts: ['Số lượt mỗi học viên', 'Attempts per student'], attemptsHint: ['Một lượt, không làm lại', 'One attempt, no retakes'],
+  back: ['Quay lại', 'Back'], saveDraft: ['Lưu nháp', 'Save draft'], cont: ['Tiếp tục', 'Continue'], reads: ['Học viên sẽ đọc', 'What students will read'],
+  aside: [[['Học viên', 'Students'], ['24', '24']], [['Thời gian mở', 'Window'], ['3 ngày', '3 days']], [['Thời gian làm bài', 'Time limit'], ['60 phút', '60 min']], [['Số lượt', 'Attempts'], ['1', '1']]],
+  rules: [['Bạn có 60 phút kể từ lúc bấm Bắt đầu.', 'You have 60 minutes from the moment you press Start.'], ['Bạn chỉ được làm một lượt.', 'You get one attempt.']]
+};
+const DET = {
+  back: ['Về danh sách bài giao', 'Back to assignments'], live: ['Đang mở', 'Open'], tabs: [['Học viên', 'Students'], ['Câu hỏi', 'Questions'], ['Cài đặt', 'Settings']],
+  edit: ['Sửa', 'Edit'], lockedPill: ['Đã khóa', 'Locked'],
+  cards: [['file-text', ['Đề và thời gian', 'Test & timing'], ['Học viên làm đề nào và trong bao lâu', 'What students take and for how long'], true], ['calendar-clock', ['Thời gian mở', 'Window'], ['Khi nào học viên có thể bắt đầu', 'When the test can be started'], false],
+    ['shield-check', ['Tính toàn vẹn', 'Integrity'], ['Xử lý khi học viên rời bài', 'How focus loss is handled'], false], ['eye', ['Kết quả', 'Results'], ['Học viên thấy gì sau khi nộp bài', 'What students see after submitting'], false],
+    null, ['message-square-text', ['Lời nhắn cho học viên', 'Note to students'], ['Hiện trên trang giới thiệu bài', 'Shown on the test’s intro page'], false]]
+};
+// the deck's gradebook: [title, category, weight], and each student's cells
+const COLS = [['Unit 1 Quiz', 'test', 10], ['Unit 2 Listening', 'test', 10], ['Vocab: Travel', 'homework', 20], ['Reading Mock', 'test', 25], ['Writing T1', 'test', 15], ['Grammar: PP', 'homework', 20]];
+const GB = [['Trần Minh Anh', [92, 85, 90, 90, 'P', 88]], ['Lê Hoàng Nam', [78, 64, 70, 'P', 60, 72]], ['Phạm Thu Hà', [81, 77, null, null, 68, 80]], ['Nguyễn Gia Bảo', [66, 58, 61, 'P', 55, 70]], ['Võ Khánh Linh', [88, 90, 84, 85, 78, 86]], ['Đặng Quốc Huy', [55, 49, null, 'P', 52, 58]], ['Bùi Ngọc Mai', [74, 80, 76, null, 70, 79]], ['Đỗ Phương Thảo', [95, 92, 94, 95, 85, 93]]];
+const INIT = n => { const p = n.split(' '); return (p[p.length - 1][0] + p[0][0]).toUpperCase(); };
+const HOT = 3;   // Reading Mock, the column a teacher changes
+
+const SCREENS = [['wizard', 'The wizard'], ['settings', 'The Settings tab'], ['gradebook', 'The gradebook']];
+const STATES = {
+  wizard: [['default', 'As it opens'], ['homework', 'Homework, 20%'], ['zero', 'Weight 0']],
+  settings: [['card', 'The card'], ['edit', 'Editing'], ['saved', 'Saved']],
+  gradebook: [['header', 'A column’s heading'], ['dialog', 'Editing from it'], ['saved', 'Saved']]
+};
+const START = { wizard: 'default', settings: 'card', gradebook: 'header' };
+const NOTES = {
+  'wizard:default': [['group', 'A second group in the Schedule step, built as “Thời gian và số lượt” is: a heading on the sidebar tone, then one setting per row.'], ['weight', 'The stepper the step already uses, from 0 to 100 by fives. A new assignment opens as a test at 10, the value every earlier assignment was given.'], ['aside', 'One more line in the summary, in the plan’s shape.']],
+  'wizard:homework': [['group', '“Bài tập” is chosen and the weight raised to 20. The line under “Tính là” says what the choice changes: which of the two totals in the gradebook’s heading it joins.'], ['aside', 'The summary follows.']],
+  'wizard:zero': [['weight', 'At 0 the assignment keeps its column and counts for nothing. The plan’s line under the stepper already says so, and the stepper stops there.'], ['aside', 'The summary says 0% plainly.']],
+  'settings:card': [['edit', 'A card of its own. It is the sixth: the plan says “fifth”, written before the note to students became a card. “Sửa” shows while the assignment is open, where “Đề và thời gian” is locked.'], ['card', 'Two rows, each with the line the wizard gives it. At 0 the second line reads “Không tính vào điểm tổng kết”.']],
+  'settings:edit': [['dialog', 'The dialog every Settings card opens, holding the wizard’s own group.'], ['dweight', 'Raised from 25 to 30. Nothing a student sees changes.']],
+  'settings:saved': [['toast', 'New on this page: the toast says only that it is saved. The Settings tab’s own toast would add “Học viên thấy thay đổi ngay”, and students never see a weight (Q2).'], ['card', 'The card shows the new weight.']],
+  'gradebook:header': [['header', 'A column’s heading is a button, by the plan. Under the pointer it takes the muted tint and a pencil, and its title reads “Sửa cách tính của Reading Mock”. Nothing else on the deck’s gradebook changes.']],
+  'gradebook:dialog': [['ddesc', 'The same dialog, with the assignment’s name under the title: here the page is the whole class, not one assignment.'], ['dweight', 'Raised from 25 to 30.']],
+  'gradebook:saved': [['shares', 'The heading’s two shares are worked out again from every weight in the term: 65 and 40 out of 105 are 62% and 38%.'], ['header', 'The column reads 30%. The six columns now add to 105%, while the heading adds to 100: a weight is a percent only while a term’s weights add to a hundred (Q1).']]
+};
+const PIN_KEYS = ['group', 'weight', 'aside', 'edit', 'card', 'dialog', 'dweight', 'ddesc', 'toast', 'header', 'shares', 'nav', 'newAnn'];
+// [part, the deck and the product, this page]
+const ADDS = [
+  ['Setting a category and a weight', 'Nowhere. The deck’s gradebook shows both and nothing sets them (DG-93).', 'Two controls, “Tính là” and “Trọng số”, in three places.'],
+  ['The wizard’s Schedule step', 'The window, the time limit and the attempts.', 'A second group, “Sổ điểm”, with the two controls, and one more line in the summary beside the form.'],
+  ['The assignment’s Settings tab', 'Five cards: test and timing, window, integrity, results, the note to students.', 'A sixth, “Sổ điểm”, editable while the assignment is open.'],
+  ['Saving from the Settings tab', '“Đã lưu {group}. Học viên thấy thay đổi ngay.”', 'For this card, “Đã lưu Sổ điểm.” only (Q2).'],
+  ['A gradebook column’s heading', 'The name, then the kind and the weight. Not a control.', 'A button, with a tint and a pencil under the pointer, that opens the same dialog.'],
+  ['The gradebook’s heading', '“Term 3 · final grade weights tests 60%, homework 40%.”', 'The same sentence, with the two shares worked out from the weights after each save.'],
+  ['A weight of 0', 'Not drawn.', 'The column stays; the card and the wizard say it is left out of the final grade.'],
+  ['Vietnamese', 'The gradebook is English only (DG-20).', 'Every new string, and the gradebook’s own, in the copy table below.']
+];
+// [when, what shows, rule]
+const WHENS = [
+  ['A new assignment', '“Bài kiểm tra”, weight 10.', 'T-R9.1’s defaults, the same as every assignment made before R9.'],
+  ['“Bài tập” is chosen', 'The assignment joins the homework share of the gradebook’s heading.', 'categoryShares, each kind’s part of the term’s total weight.'],
+  ['The weight is 0', 'The column stays in the gradebook, and the Final is worked out without it.', 'A weight of 0 keeps a column visible and out of the Final.'],
+  ['“Lưu nháp” is pressed in the wizard', 'The two values are kept with the draft.', 'T-R9.6, DG-65.'],
+  ['The assignment is open', 'The card’s “Sửa” is there, while “Đề và thời gian” is locked.', 'T-R9.6: editable while live.'],
+  ['The card is saved', '“Đã lưu Sổ điểm.”, and the card shows the new values.', 'An update that changes only the gradebook fields.'],
+  ['A column’s heading is pressed', 'The dialog opens for that assignment, with its name under the title.', 'T-R9.7. Saving reads the gradebook again.'],
+  ['A weight changes in a term', 'Every Final in that term and the two shares in the heading are worked out again.', 'Weights are renormalised per term.'],
+  ['A term’s weights do not add to 100', 'Each column still shows its own weight with “%”. The heading’s shares add to 100; the columns do not.', 'The plan shows “{kind} · {w}%” on a column and derives the shares (Q1).'],
+  ['The teacher may not change assignments', 'No “Sửa” on the card, and a column’s heading is not a button.', 'teaching.assignments.write.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · A weight is not always a percent', 'Should a column say “25%” when its weight is 25?', 'The plan stores a weight from 0 to 100 and works the Final out over the term’s total. The deck’s six columns add to exactly 100, so each weight is also a percent there. Add a seventh assignment at the default 10 and the total is 110: the column that says “25%” now counts for 23%. The heading’s two shares stay right, because they are worked out; the columns, the wizard’s line and the card are not.', 'As planned: the weight with “%”, in all three places. What this page would rather: the stepper shows a plain number, and a column and the card show the share it really has in its term, which the read can already give.'],
+  ['Q2 · The toast', 'May this card’s toast leave out “Học viên thấy thay đổi ngay”?', 'Every Settings card saves with one toast, “Đã lưu {group}. Học viên thấy thay đổi ngay.” The plan asks for “the same toast”. Students see their scores and never a weight or a final grade, so for this card the second sentence is not true.', '“Đã lưu Sổ điểm.” only.'],
+  ['Q3 · The words', 'Are these the Vietnamese words?', 'New here: “Sổ điểm” (gradebook), “Tính là” (counts as), “Bài kiểm tra” and “Bài tập” (test, homework), “Trọng số” (weight), “điểm tổng kết” and the column “Tổng kết” (final grade). “Bài kiểm tra” is not “Đề thi”: the product’s “Đề thi” is the test a teacher writes, and this is how one assignment of it counts.', 'As listed in the copy table.'],
+  ['Q4 · The heading as a button', 'Is a tint and a pencil under the pointer enough to show that a column’s heading can be pressed?', 'The plan makes the heading open the dialog and draws nothing for it. On a phone there is no pointer, so the heading looks like any other. A teacher who never presses it still has the Settings tab.', 'The tint and the pencil on hover and on focus; nothing at rest.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['ScheduleStep', 'A second RuleGroup, “Sổ điểm”: a RuleRow with the two-way segmented control, and an inline RuleRow with the NumberStepper from 0 to 100 by 5, showing its value with “%”.'],
+  ['WizardAside', 'One more line, “Sổ điểm”, with “{category} · {weight}%”.'],
+  ['SettingsGroups', 'A sixth group after “Kết quả”, never locked, with two rows and the second line each takes at 0 and above. Its edit dialog holds the wizard’s group.'],
+  ['The saved toast', 'For this group only, without the sentence about students (Q2).'],
+  ['GradebookTable', 'Each assessment heading is a button with a title; the muted tint and a pencil on hover and focus. It opens the same dialog, which here carries the assignment’s name. The kind and the weight stay on one line, which makes a column about 116px wide in Vietnamese, where the deck’s is 96px.'],
+  ['Locales', 'The copy table: twenty-six strings, Vietnamese first.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher page (Gradebook), R9’s plan (docs/plan/79-r9.md: its decisions on weights, T-R9.1, T-R9.2, T-R9.6, T-R9.7), the register (DG-93), and the product’s wizard and Settings tab (ScheduleStep, RuleGroup, WizardAside, SettingsGroups) with their strings. The gradebook is not built, so there was no screen to run.'],
+  ['What it leaves alone.', 'The wizard’s other groups, the other five Settings cards and the gradebook’s table are the product’s and the deck’s. No operation changes. In the Settings tab the other cards’ rows are not redrawn: blocks stand for them.'],
+  ['What is not drawn.', 'The gradebook’s term menu, its class select, its phone layout and its empty, loading and failed states: they are the next page. The export dialog, which the deck draws.']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', screen: 'wizard', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const scr = s.screen, st = s.st[scr];
+    const noteList = NOTES[scr + ':' + st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const on = x => ({ bg: x ? 'var(--card)' : 'transparent', fg: x ? 'var(--fg)' : 'var(--muted-fg)', ring: x ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' });
+    const isWizard = scr === 'wizard', isSettings = scr === 'settings', isGradebook = scr === 'gradebook';
+    tx.title = isWizard ? WIZ.title[li] : isSettings ? 'Reading Mock' : tx.gbTitle;
+    const catName = c => (c === 'test' ? tx.catTest : tx.catHomework);
+
+    // ---- the two controls, with the values of the state
+    const W = { 'wizard:default': ['test', 10], 'wizard:homework': ['homework', 20], 'wizard:zero': ['test', 0] }[scr + ':' + st] || ['test', 30];
+    const gbv = { cats: [['test', tx.catTest], ['homework', tx.catHomework]].map(c => ({ label: c[1], ...on(c[0] === W[0]) })), weightText: W[1] + '%', weightHint: tx.weightHint };
+
+    // ---- the wizard
+    const wz = {}; ['title', 'desc', 'scheduleTitle', 'timeGroup', 'timeLimit', 'timeLimitHint', 'attempts', 'attemptsHint', 'back', 'saveDraft', 'cont', 'reads'].forEach(k => { wz[k] = WIZ[k][li]; });
+    wz.steps = WIZ.steps.map((x, i) => ({ label: x[li], num: i < 2 ? '✓' : String(i + 1), border: i === 2 ? 'var(--primary)' : 'var(--border)', numBg: i <= 2 ? 'var(--primary)' : 'var(--muted)', numFg: i <= 2 ? 'var(--primary-fg)' : 'var(--muted-fg)' }));
+    wz.window = [{ label: WIZ.opens[li], value: vi ? '22/09/2026 08:00' : '22 Sep 2026, 08:00' }, { label: WIZ.closes[li], value: vi ? '24/09/2026 21:00' : '24 Sep 2026, 21:00' }];
+    wz.times = [30, 45, 60].map(n => ({ label: fmt(WIZ.minutes[li], { count: n }), ...on(n === 60) })).concat([{ label: WIZ.custom[li], ...on(false) }]);
+    wz.lines = WIZ.aside.map(x => ({ label: x[0][li], value: x[1][li], isNew: false })).concat([{ label: tx.gbGroup, value: fmt(tx.asideValue, { category: catName(W[0]), weight: W[1] }), isNew: true }]);
+    wz.rules = WIZ.rules.map(x => x[li]);
+
+    // ---- the Settings tab
+    const cardWeight = isSettings && st === 'card' ? 25 : 30;
+    const ad = { back: DET.back[li], live: DET.live[li], edit: DET.edit[li], lockedPill: DET.lockedPill[li],
+      tabs: DET.tabs.map((x, i) => ({ label: x[li], fg: i === 2 ? 'var(--fg)' : 'var(--muted-fg)', line: i === 2 ? 'inset 0 -2px 0 var(--fg)' : 'none' })),
+      cards: DET.cards.map((c, i) => (c === null
+        ? { icon: 'table-2', title: tx.gbGroup, hint: tx.cardHint, locked: false, canEdit: true, isNew: true, ghost: false, w1: '', w2: '',
+          rows: [{ label: tx.countsAs, value: tx.catTest, sub: tx.countsHint, pin: false, border: '0' }, { label: tx.weight, value: cardWeight + '%', sub: tx.cardWeightSub, pin: true, border: '1px solid var(--border)' }] }
+        : { icon: c[0], title: c[1][li], hint: c[2][li], locked: c[3], canEdit: !c[3], isNew: false, ghost: true, w1: ['64%', '58%', '70%', '52%', '', '60%'][i], w2: ['42%', '50%', '36%', '44%', '', '30%'][i], rows: [] })) };
+
+    // ---- the gradebook
+    const cols = COLS.map((c, i) => (i === HOT && isGradebook && st === 'saved' ? [c[0], c[1], 30] : c));
+    const total = cols.reduce((a, c) => a + c[2], 0), tests = cols.filter(c => c[1] === 'test').reduce((a, c) => a + c[2], 0);
+    const tPct = Math.round(tests / total * 100);
+    const band = v => (v == null ? ['—', 'transparent', 'var(--muted-fg)', '1px dashed var(--ring)'] : v === 'P' ? [tx.gbPending, 'var(--warning-soft)', 'var(--warning-ink)', '0'] : [v + '%', v >= 80 ? 'var(--success-soft)' : v < 60 ? 'var(--danger-soft)' : 'transparent', v >= 80 ? 'var(--success-ink)' : v < 60 ? 'var(--danger-ink)' : 'var(--fg)', '0']);
+    const hot = isGradebook;
+    const gb = {
+      sub: fmt(tx.gbSub, { term: vi ? 'Thu 2026' : 'Autumn 2026', t: tPct, h: 100 - tPct }),
+      classes: ['IELTS 6.5 Evening', 'IELTS Foundation A', 'TOEIC 600 Weekend', 'Kids Starters B'].map((label, i) => ({ label, ...on(i === 0) })),
+      cols: cols.map((c, i) => ({ name: c[0], meta: catName(c[1]) + ' · ' + c[2] + '%', hot: hot && i === HOT, hover: hot && i === HOT && st !== 'saved', bg: hot && i === HOT && st !== 'saved' ? 'var(--hover)' : 'var(--muted)' })),
+      rows: GB.map(([n, vals]) => { let sum = 0, ws = 0; vals.forEach((v, i) => { if (typeof v === 'number') { sum += v * cols[i][2]; ws += cols[i][2]; } }); return { name: n, initials: INIT(n), final: ws ? Math.round(sum / ws) + '%' : '—', cells: vals.map(v => { const b = band(v); return { label: b[0], bg: b[1], fg: b[2], ring: b[3] }; }) }; }),
+      legend: [[tx.lg80, 'var(--success-soft)', '0'], [tx.lg60, 'var(--danger-soft)', '0'], [tx.lgWaiting, 'var(--warning-soft)', '0'], [tx.lgMissing, 'transparent', '1px dashed var(--ring)']].map(x => ({ label: x[0], bg: x[1], ring: x[2] }))
+    };
+
+    // ---- the dialog and the toast
+    const dgOpen = (isSettings && st === 'edit') || (isGradebook && st === 'dialog');
+    const dg = { open: dgOpen, title: tx.editTitle, hasDesc: isGradebook, desc: 'Reading Mock' };
+    const m = { isWizard, isSettings, isGradebook, hasToast: st === 'saved' };
+
+    // ---- the shell
+    const navOn = isGradebook ? 'gradebook' : 'assignments';
+    const D = (a, b) => (vi ? a : b);
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: false });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', D('Tổng quan', 'Dashboard')), item('calendar', 'calendar-days', D('Lịch', 'Calendar')), item('messages', 'message-square', D('Tin nhắn', 'Messages'))] },
+      { hasLabel: true, label: D('Giảng dạy', 'Teaching'), items: [item('assignments', 'clipboard-list', D('Bài giao', 'Assignments')), item('grading', 'square-pen', D('Chấm bài', 'Grading')), item('classes', 'graduation-cap', D('Lớp học', 'Classes')), item('students', 'users', D('Học viên', 'Students')), item('attendance', 'calendar-check', D('Điểm danh', 'Attendance'))] },
+      { hasLabel: true, label: D('Nội dung', 'Content'), items: [item('tests', 'file-text', D('Đề thi', 'Tests')), item('shared', 'share-2', D('Được chia sẻ với tôi', 'Shared with me'), 2), item('bank', 'library', D('Ngân hàng câu hỏi', 'Question bank')), item('media', 'image', D('Thư viện media', 'Media'))] },
+      { hasLabel: true, label: D('Thống kê', 'Insights'), items: [item('gradebook', 'table', tx.gbTitle), item('reports', 'chart-column', D('Báo cáo', 'Reports'))] }
+    ];
+
+    const Wd = s.stageW || 1280;
+    const names = { wizard: 'Assignment wizard', settings: 'Assignment settings', gradebook: 'Gradebook' };
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Teacher · ' + names[scr] + ' · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: !phone, tBar: true,
+      barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px' : '24px 28px 28px', h1: phone ? '20px' : '24px', btnH: phone ? '40px' : '36px', inH: phone ? '44px' : '38px', segH: phone ? '36px' : '32px',
+      stepCols: phone ? 2 : 4, asideMax: phone ? '100%' : '300px',
+      dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '460px', dlgR: phone ? '16px 16px 0 0' : '12px'
+    });
+    const frames = [mk(1280, isWizard ? 900 : 780, Math.min(1, Wd / 1280), false, 'the teacher’s shell'), mk(360, isWizard ? 1180 : 780, Math.min(1, Wd / 360), true, isGradebook ? 'the table scrolls sideways, as the deck’s does' : 'the same state on a phone')];
+    const ctl = [
+      { label: 'Screen', opts: this.seg(SCREENS, scr, v => this.setState({ screen: v })) },
+      { label: 'State', opts: this.seg(STATES[scr], st, v => this.setState(x => ({ st: { ...x.st, [scr]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const stLabel = (STATES[scr].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, wz, ad, gb, gbv, dg, pin, nav, frames, ctl, stageRef: this.stageRef,
+      chips: ['R9 · v0.16.0', 'T-R9.6, T-R9.7', 'DG-93', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, screen: 'wizard', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + names[scr] + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

@@ -10,7 +10,7 @@ import {
 import { StudentNotificationsSection } from "@/features/notifications/components/StudentNotificationsSection";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 
-const BASE = "/app/settings";
+const BASE = "/settings";
 const ALL_SECTIONS = [
   { id: "profile", label: "student.settings.sections.profile" },
   { id: "sign-in", label: "student.settings.sections.signIn" },
@@ -48,7 +48,7 @@ function pathOf(id: SectionId): string {
 /**
  * StudentSettingsPage is the student's Settings, as the design deck draws
  * it: a 760px column with a switcher over the Profile, Sign-in,
- * Notifications and Appearance sections, each at `/app/settings/:section`,
+ * Notifications and Appearance sections, each at `/settings/:section`,
  * Profile also at the bare path; Notifications is there while its module is
  * on. Every section stays mounted, so what is typed in one survives a
  * visit to another and a resize across 768px. The slugs of the screen this

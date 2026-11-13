@@ -252,7 +252,7 @@ for (const [locale, failed] of [
         },
         "POST /app/attempts/paper/events": { body: {} },
       });
-      await page.goto("/app/attempts/paper");
+      await page.goto("/attempts/paper");
       await page.locator("label").filter({ hasText: "Đáp án A" }).click();
 
       const line = page.locator('[data-slot="save-strip"]').getByText(failed, {

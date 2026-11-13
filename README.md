@@ -38,6 +38,11 @@ make help
 
 Use `localhost`, never `127.0.0.1`, so the cookies behave as in production.
 
+In production the build is served on two hosts, `my.quizzivy.com` for students
+and `portal.quizzivy.com` for teachers and admins, and reads which one it is
+from its own origin (`docs/deploy.md`). `make dev-web` serves every page from
+one origin; `.env.example` says how to run the two hosts locally.
+
 ## The contract
 
 The web never edits the contract. Its types, `openapi.yaml`, the shared test

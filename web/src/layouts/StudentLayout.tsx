@@ -75,18 +75,18 @@ export default function StudentLayout() {
   }, [route]);
 
   const destinations: Destination[] = [
-    { to: "/app", label: t("student.shell.home"), icon: House, count: dueSoon },
-    { to: "/app/classes", label: t("student.classesNav"), icon: Users },
+    { to: "/", label: t("student.shell.home"), icon: House, count: dueSoon },
+    { to: "/classes", label: t("student.classesNav"), icon: Users },
     ...(modules.learn
-      ? [{ to: "/app/learn", label: t("student.shell.learn"), icon: BookOpen }]
+      ? [{ to: "/learn", label: t("student.shell.learn"), icon: BookOpen }]
       : []),
     ...(modules.grades
-      ? [{ to: "/app/grades", label: t("student.shell.grades"), icon: ChartColumn }]
+      ? [{ to: "/grades", label: t("student.shell.grades"), icon: ChartColumn }]
       : []),
   ];
   const tabs: Destination[] = [
     ...destinations,
-    { to: "/app/settings", label: t("student.shell.me"), icon: CircleUser },
+    { to: "/settings", label: t("student.shell.me"), icon: CircleUser },
   ];
   const phoneDetail = !wide && detail !== null;
 
@@ -112,11 +112,7 @@ export default function StudentLayout() {
             </p>
           </>
         ) : (
-          <Link
-            to="/app"
-            aria-label={t("student.shell.homeLink")}
-            className="flex-none"
-          >
+          <Link to="/" aria-label={t("student.shell.homeLink")} className="flex-none">
             <BrandMark height={24} wordmark="header" theme="auto" />
           </Link>
         )}
@@ -148,7 +144,7 @@ export default function StudentLayout() {
           {modules.notifications ? (
             <NotificationBell audience="student" unread={unread} />
           ) : null}
-          <AccountMenu settingsTo="/app/settings" />
+          <AccountMenu settingsTo="/settings" />
         </div>
       </header>
       <main

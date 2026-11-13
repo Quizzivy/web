@@ -16,12 +16,12 @@ import { queryWrapper } from "@tests/support/queryWrapper";
 
 const REQUEST_ID = "019535d9-3df7-79fb-b466-fa907fa17f9e";
 
-function renderAt(element: React.ReactElement, path = "/app/assignments/8f2c-unit-5") {
+function renderAt(element: React.ReactElement, path = "/assignments/8f2c-unit-5") {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const routes: RouteObject[] = [
     { path: "*", element },
     { path: "/login", element: <p>login page</p> },
-    { path: "/app", element: <p>student home</p> },
+    { path: "/", element: <p>student home</p> },
     { path: "/teacher", element: <p>admin home</p> },
   ];
   const router = createMemoryRouter(routes, { initialEntries: [path] });
@@ -41,7 +41,7 @@ function renderFailure(error: unknown) {
   vi.spyOn(console, "error").mockImplementation(() => undefined);
   const router = createMemoryRouter(
     [{ path: "*", ErrorBoundary, element: <Throws error={error} /> }],
-    { initialEntries: ["/app/tests"] },
+    { initialEntries: ["/tests"] },
   );
   render(<RouterProvider router={router} />, { wrapper: queryWrapper() });
 }
@@ -54,8 +54,8 @@ afterEach(() => {
 
 describe("the 404", () => {
   it("puts the address that failed on the page itself", () => {
-    renderAt(<NotFoundPage />, "/app/assignments/8f2c-unit-5");
-    expect(screen.getByText("/app/assignments/8f2c-unit-5")).toBeInTheDocument();
+    renderAt(<NotFoundPage />, "/assignments/8f2c-unit-5");
+    expect(screen.getByText("/assignments/8f2c-unit-5")).toBeInTheDocument();
   });
 
   it("ranks home above back", () => {
@@ -74,7 +74,7 @@ describe("the 404", () => {
 
   it.each([
     [null, "/login"],
-    [studentUser, "/app"],
+    [studentUser, "/"],
     [teacherUser, "/teacher"],
     [adminUser, "/admin"],
   ])("sends home to the caller's console (%#)", (user, home) => {
@@ -90,7 +90,7 @@ describe("the 404", () => {
     useAuthStore.setState({ user: studentUser });
     const router = renderAt(<NotFoundPage />);
     await userEvent.setup().click(screen.getByRole("button", { name: "Quay lại" }));
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
   });
 
   it("is also what a route answering 404 renders", async () => {
@@ -106,7 +106,7 @@ describe("the 404", () => {
           element: <p>never</p>,
         },
       ],
-      { initialEntries: ["/app/tests/gone"] },
+      { initialEntries: ["/tests/gone"] },
     );
     render(<RouterProvider router={router} />, { wrapper: queryWrapper() });
     expect(
@@ -123,7 +123,7 @@ describe("the 403", () => {
     expect(screen.getByText("Đang đăng nhập")).toBeInTheDocument();
     expect(screen.getByRole("link", { name: "Về trang chủ của tôi" })).toHaveAttribute(
       "href",
-      "/app",
+      "/",
     );
   });
 

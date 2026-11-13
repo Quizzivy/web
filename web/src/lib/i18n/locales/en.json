@@ -1882,6 +1882,7 @@
     "haveCode": "Have a class code?",
     "joinClass": "Join a class",
     "googleFailedTitle": "Couldn't sign you in with Google",
+    "otherHost": "Go to the sign-in page of {{host}}",
     "noMethod": "No way to sign in is available right now. Ask the front desk or your centre's administrator."
   },
   "join": {

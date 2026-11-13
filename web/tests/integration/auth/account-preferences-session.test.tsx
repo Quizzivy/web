@@ -51,10 +51,10 @@ function logoutFixture() {
   }
   const router = createMemoryRouter(
     [
-      { path: "/app", element: <Departure /> },
+      { path: "/", element: <Departure /> },
       { path: "/login", element: <p>login</p> },
     ],
-    { initialEntries: ["/app"] },
+    { initialEntries: ["/"] },
   );
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -230,7 +230,7 @@ it("settles the ten-second cleanup status while keeping B blocked until natural 
     await clear.promise;
   });
   await waitFor(() => expect(transitionStatus().kind).toBe("idle"));
-  expect(fixture.router.state.location.pathname).toBe("/app");
+  expect(fixture.router.state.location.pathname).toBe("/");
 });
 
 it("never admits a late password result after the twenty-second status deadline", async () => {
@@ -428,7 +428,7 @@ function loginFixture(
   const router = createMemoryRouter(
     [
       { path: "/login", element: <LoginPage /> },
-      { path: "/app", element: <Destination /> },
+      { path: "/", element: <Destination /> },
     ],
     { initialEntries: ["/login"] },
   );
@@ -467,7 +467,7 @@ it.each(["different-ID", "same-ID"] as const)(
     const before = useAuthStore.getState().actorGeneration;
     const fixture = loginFixture(client);
     await submitLogin();
-    await waitFor(() => expect(fixture.router.state.location.pathname).toBe("/app"));
+    await waitFor(() => expect(fixture.router.state.location.pathname).toBe("/"));
     expect(screen.queryByText("A private assignment")).not.toBeInTheDocument();
     expect(screen.getByText("B has no cached assignments")).toBeInTheDocument();
     expect(client.getQueryData(["my-assignments"])).toBeUndefined();

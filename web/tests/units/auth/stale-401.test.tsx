@@ -128,7 +128,7 @@ function open(entry: string) {
     [
       { path: "/auth/google/callback", element: <GoogleCallbackPage /> },
       { path: "/login", element: <LoginPage /> },
-      { path: "/app", element: <p>student home</p> },
+      { path: "/", element: <p>student home</p> },
     ],
     { initialEntries: [entry] },
   );
@@ -498,7 +498,7 @@ function openSignedIn() {
     [
       {
         element: <RequireSession />,
-        children: [{ path: "/app", element: <SignOut onSignedOut={signedOut} /> }],
+        children: [{ path: "/", element: <SignOut onSignedOut={signedOut} /> }],
       },
       {
         path: "/login",
@@ -508,7 +508,7 @@ function openSignedIn() {
         },
       },
     ],
-    { initialEntries: ["/app"] },
+    { initialEntries: ["/"] },
   );
   render(
     <QueryClientProvider client={new QueryClient()}>
@@ -694,7 +694,7 @@ describe("a 401 handled while signing out", () => {
     expect(await failure).toBeInstanceOf(ApiError);
     expect(lost).toHaveBeenCalledOnce();
     expect(signedOut).not.toHaveBeenCalled();
-    expect(router.state.location.pathname).toBe("/app");
+    expect(router.state.location.pathname).toBe("/");
     expect(useAuthStore.getState()).toMatchObject({
       accessToken: null,
       user: studentUser,

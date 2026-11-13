@@ -32,14 +32,9 @@ const named = (paths: Iterable<string>) =>
 describe("what the student routes import", () => {
   const student = [...routesOf("studentTree"), ...routesOf("takeTestTree")];
 
-  it("walks every route the router declares under /app", () => {
-    const declared = ROUTER.matchAll(
-      /(?:const (\w+): RouteObject = \{\s*)?\bpath: "app[/"]/g,
-    );
-    expect([...declared].map((match) => match[1])).toEqual([
-      "studentTree",
-      "takeTestTree",
-    ]);
+  it("walks every tree the router gives the student host", () => {
+    const given = /\.\.\.\(student \? \[([\w, ]+)\] : \[\]\)/.exec(ROUTER);
+    expect(given?.[1]?.split(", ")).toEqual(["studentTree", "takeTestTree"]);
   });
 
   it("starts from the shell, its pages and the engine", () => {

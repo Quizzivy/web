@@ -23,7 +23,7 @@ test("E2E 2a: a student signs in with a password and reaches their own app", asy
   await page.getByLabel("Email").fill("hocvien@example.com");
   await page.getByLabel("Mật khẩu", { exact: true }).fill("quizzivy-dev");
   await page.getByRole("button", { name: "Đăng nhập" }).click();
-  await expect(page).toHaveURL(/\/app$/);
+  await expect(page).toHaveURL(/\/$/);
   // Their own app: greeted by name, and -- in no class yet -- offered the way in.
   await expect(page.getByRole("heading", { name: /^Chào / })).toBeVisible();
   await page.getByRole("button", { name: "Tham gia lớp" }).click();
@@ -35,19 +35,19 @@ test("E2E 2a: student settings groups profile, sign-in and appearance", async ({
   page,
 }) => {
   await stubApi(page, sessionAs(studentUser));
-  await page.goto("/app/settings");
+  await page.goto("/settings");
   await expect(page.getByRole("region", { name: "Hồ sơ" })).toBeVisible();
   await expect(page.getByLabel("Họ và tên")).toBeEditable();
   await expect(page.getByLabel("Email")).toBeDisabled();
   await expect(page.getByRole("combobox", { name: "Ngôn ngữ" })).toBeVisible();
   const sections = page.getByRole("group", { name: "Mục cài đặt" });
   await sections.getByRole("button", { name: "Đăng nhập" }).click();
-  await expect(page).toHaveURL(/\/app\/settings\/sign-in$/);
+  await expect(page).toHaveURL(/\/settings\/sign-in$/);
   const signIn = page.getByRole("region", { name: "Đăng nhập" });
   await expect(signIn.getByText("Mật khẩu", { exact: true })).toBeVisible();
   await expect(signIn.getByText("Google", { exact: true })).toBeVisible();
   await sections.getByRole("button", { name: "Giao diện" }).click();
-  await expect(page).toHaveURL(/\/app\/settings\/appearance$/);
+  await expect(page).toHaveURL(/\/settings\/appearance$/);
   await expect(page.getByRole("group", { name: "Chủ đề" })).toBeVisible();
   await expect(
     page.getByRole("switch", { name: "Chữ lớn hơn khi làm bài" }),
@@ -58,11 +58,11 @@ test("the old section addresses lead to where their controls went", async ({
   page,
 }) => {
   await stubApi(page, sessionAs(studentUser));
-  await page.goto("/app/settings/security");
-  await expect(page).toHaveURL(/\/app\/settings\/sign-in$/);
+  await page.goto("/settings/security");
+  await expect(page).toHaveURL(/\/settings\/sign-in$/);
   await expect(page.getByRole("region", { name: "Đăng nhập" })).toBeVisible();
-  await page.goto("/app/settings/preferences");
-  await expect(page).toHaveURL(/\/app\/settings$/);
+  await page.goto("/settings/preferences");
+  await expect(page).toHaveURL(/\/settings$/);
   await expect(page.getByRole("combobox", { name: "Ngôn ngữ" })).toBeVisible();
 });
 
@@ -73,7 +73,7 @@ test("unlinking is disabled, with a reason, when Google is the only way in", asy
     page,
     sessionAs({ ...studentUser, hasPassword: false, linkedProviders: ["google"] }),
   );
-  await page.goto("/app/settings/sign-in");
+  await page.goto("/settings/sign-in");
 
   const unlink = page.getByRole("button", { name: "Bỏ liên kết", exact: true });
   await expect(unlink).toHaveAttribute("aria-disabled", "true");
@@ -169,12 +169,12 @@ test("signing out lives behind the avatar, on the settings screen too", async ({
 }) => {
   await stubApi(page, sessionAs(studentUser));
 
-  await page.goto("/app");
+  await page.goto("/");
   await expect(page.getByRole("button", { name: "Đăng xuất" })).toHaveCount(0);
 
   await page.getByRole("button", { name: /^Tài khoản của/ }).click();
   await page.getByRole("menuitem", { name: "Cài đặt" }).click();
-  await expect(page).toHaveURL(/\/app\/settings$/);
+  await expect(page).toHaveURL(/\/settings$/);
   await expect(page.getByRole("heading", { name: "Cài đặt" })).toBeVisible();
   await expect(page.getByRole("button", { name: "Đăng xuất" })).toHaveCount(0);
   await page.getByRole("button", { name: /^Tài khoản của/ }).click();

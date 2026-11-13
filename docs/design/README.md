@@ -481,6 +481,15 @@ To view one, start the server above and open, for example,
   440 and 360, light and dark, Vietnamese and English. R7's plan does not build it and the
   page changes no plan: it names the one field the read of an admin user would need. Its five
   questions for Thuong are on the page.
+- 2026-11-13 — Eighth proposal page: `proposals/R8 Session Popover.dc.html`, for DG-92 (R8;
+  T-R8.11). The deck's Calendar jumps to Attendance when a session is pressed, and R8's plan
+  asks for a popover from deck primitives. The page draws it on the week grid and as a sheet
+  on a phone: five facts and up to six actions; the dialog for one date and the one for the
+  weeks to come; stopping a series; the Cancel and Delete confirms; and a cancelled session,
+  which stays on the grid struck through. Ten states, at 1280 and 360, light and dark,
+  Vietnamese and English. No operation of T-R8.4 changes. One sentence goes beyond the plan:
+  the repeating-session dialog says, before saving, that dates already changed or cancelled
+  will follow the new schedule. Its four questions for Thuong are on the page.
 
 ## The brand
 

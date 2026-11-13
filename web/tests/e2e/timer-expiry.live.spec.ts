@@ -27,6 +27,6 @@ test("E2E 5: the timer runs out and the attempt submits without the student", as
 
   // Reopening it proves the server took the submission rather than the client
   // merely navigating away.
-  await page.goto(`/app/attempts/${attemptId}`);
+  await page.goto(`/attempts/${attemptId}`);
   await expect(page.getByText("Bài làm này đã kết thúc.")).toBeVisible();
 });

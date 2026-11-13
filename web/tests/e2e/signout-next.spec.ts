@@ -23,9 +23,9 @@ async function signOutFromClasses(page: Page) {
     ...listing,
     "POST /auth/logout": (route) => route.fulfill({ status: 204 }),
   });
-  await page.goto("/app");
+  await page.goto("/");
   await page.getByRole("link", { name: "Lớp", exact: true }).click();
-  await page.waitForURL((url) => url.pathname === "/app/classes");
+  await page.waitForURL((url) => url.pathname === "/classes");
   const seen = addresses(page);
   await page.getByRole("button", { name: /^Tài khoản của/ }).click();
   await page.getByRole("menuitem", { name: "Đăng xuất" }).click();
@@ -70,8 +70,8 @@ test("a session that expired still returns the user to their page", async ({
     },
     "POST /auth/refresh": anonymous["POST /auth/refresh"]!,
   });
-  await page.goto("/app/classes");
+  await page.goto("/classes");
   await expect(page.getByText("Vui lòng đăng nhập lại")).toBeVisible();
   await page.getByRole("button", { name: "Đăng nhập", exact: true }).click();
-  await expect(page).toHaveURL("/login?next=%2Fapp%2Fclasses");
+  await expect(page).toHaveURL("/login?next=%2Fclasses");
 });

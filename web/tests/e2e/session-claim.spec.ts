@@ -100,7 +100,7 @@ test("a tab another device took over stays read-only after a reload", async ({
 }) => {
   const server = backend();
   await serve(page, server);
-  await page.goto("/app/attempts/paper");
+  await page.goto("/attempts/paper");
   await expect(choiceA(page)).toBeEnabled();
   expect(server.named).toEqual([null]);
 
@@ -142,9 +142,9 @@ test("Continue in a tab that holds the session keeps it and resumes nothing", as
     [HELD, S1] as const,
   );
 
-  await page.goto("/app");
+  await page.goto("/");
   await page.getByRole("button", { name: "Tiếp tục làm bài" }).click();
-  await expect(page).toHaveURL(/\/app\/attempts\/paper$/);
+  await expect(page).toHaveURL(/\/attempts\/paper$/);
   await expect(choiceA(page)).toBeEnabled();
   expect(server.resumed).toBe(0);
   expect(new Set(server.named)).toEqual(new Set([S1]));
@@ -169,9 +169,9 @@ test("Continue in a tab that holds no session resumes, and its reload keeps the 
   const server = backend();
   await serve(page, server);
 
-  await page.goto("/app");
+  await page.goto("/");
   await page.getByRole("button", { name: "Tiếp tục làm bài" }).click();
-  await expect(page).toHaveURL(/\/app\/attempts\/paper$/);
+  await expect(page).toHaveURL(/\/attempts\/paper$/);
   await expect(choiceA(page)).toBeEnabled();
   expect(server.resumed).toBe(1);
   await expect(page.getByText(BAR)).toHaveCount(0);
@@ -200,9 +200,9 @@ test("Continue in a tab another device took over resumes once, and the tab saves
     [HELD, S1] as const,
   );
 
-  await page.goto("/app");
+  await page.goto("/");
   await page.getByRole("button", { name: "Tiếp tục làm bài" }).click();
-  await expect(page).toHaveURL(/\/app\/attempts\/paper$/);
+  await expect(page).toHaveURL(/\/attempts\/paper$/);
   await expect(choiceA(page)).toBeEnabled();
   expect(server.resumed).toBe(1);
   await expect(page.getByText(BAR)).toHaveCount(0);

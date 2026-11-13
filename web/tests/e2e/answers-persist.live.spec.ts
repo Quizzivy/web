@@ -28,7 +28,7 @@ test("E2E 2: an answer survives a reload, and the result shows what was earned",
   await expect(page.getByText(/^Đã lưu /)).toBeVisible({ timeout: 30_000 });
 
   await page.reload();
-  await expect(page).toHaveURL(new RegExp(`/app/attempts/${attemptId}$`));
+  await expect(page).toHaveURL(new RegExp(`/attempts/${attemptId}$`));
 
   await expect(page.getByRole("radio", { name: "went" })).toBeChecked();
   await expect(page.getByRole("radio", { name: "gone" })).not.toBeChecked();
@@ -55,7 +55,7 @@ test("E2E 2: an answer survives a reload, and the result shows what was earned",
   // ---------------------------------------------------------------- result
   // By URL: the fixture allows fifty attempts, so after one the home still
   // offers the assignment as due rather than filing it under completed.
-  await page.goto(`/app/attempts/${attemptId}/result`);
+  await page.goto(`/attempts/${attemptId}/result`);
   await expect(page.getByText("trên 2, tạm tính")).toBeVisible({ timeout: 30_000 });
   await expect(
     page.getByText("1 câu đã được chấm tự động. Giáo viên sẽ chấm 1 câu tự luận."),

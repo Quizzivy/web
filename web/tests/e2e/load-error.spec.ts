@@ -15,7 +15,7 @@ for (const width of [320, 360]) {
         body: { error: { code: "INTERNAL", message: "boom", requestId } },
       },
     });
-    await page.goto("/app");
+    await page.goto("/");
     await expect(page.getByRole("alert")).toBeVisible({ timeout: 15_000 });
     await fits(page);
     const id = await page.getByText(requestId).boundingBox();
@@ -33,7 +33,7 @@ for (const width of [320, 360]) {
         body: { error: { code: "INTERNAL", message: "boom", requestId } },
       },
     });
-    await page.goto("/app/attempts/result/result");
+    await page.goto("/attempts/result/result");
     await expect(page.getByRole("alert")).toBeVisible({ timeout: 15_000 });
     await fits(page);
     const id = await page.getByText(requestId).boundingBox();

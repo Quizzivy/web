@@ -158,7 +158,7 @@ test("E2E 8: the listening count is the server's and survives a reload", async (
       .getByRole("dialog")
       .getByRole("button", { name: "Bắt đầu", exact: true })
       .click();
-    await expect(page).toHaveURL(/\/app\/attempts\/[0-9a-f-]+$/);
+    await expect(page).toHaveURL(/\/attempts\/[0-9a-f-]+$/);
 
     const card = page.getByRole("group", { name: "Đoạn ghi âm của câu hỏi" });
     const position = () => playedTo(page);
@@ -243,7 +243,7 @@ test("E2E 8b: a group's recording left mid-play resumes where it stopped, for no
       .getByRole("dialog")
       .getByRole("button", { name: "Bắt đầu", exact: true })
       .click();
-    await expect(page).toHaveURL(/\/app\/attempts\/[0-9a-f-]+$/);
+    await expect(page).toHaveURL(/\/attempts\/[0-9a-f-]+$/);
 
     const next = page.getByRole("button", { name: "Câu sau", exact: true });
     const back = page.getByRole("button", { name: "Câu trước", exact: true });

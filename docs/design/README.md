@@ -508,6 +508,14 @@ To view one, start the server above and open, for example,
   and dark, Vietnamese and English. No operation changes. One line goes beyond the plan: under
   Room in Edit class, what the room is for once sessions exist. Its four questions for Thuong
   are on the page.
+- 2026-11-13 — Eleventh proposal page: `proposals/R8 Attendance States.dc.html`, for DG-83
+  (R8; T-R8.12). The deck draws both Attendance screens in full; the page draws the states it
+  leaves out and puts both screens in Vietnamese. In a class's Attendance tab: a register that
+  is read-only because its session has not started or was cancelled, a class with no session,
+  the skeleton and a failed read. On the Attendance page: the three cards empty, loading and
+  failed. Ten states, at 1280 and 360, light and dark, Vietnamese and English. No operation
+  changes. A row's first column on the page is 96px, where the deck has 64px, so a Vietnamese
+  date fits. Its three questions for Thuong are on the page.
 
 ## The brand
 

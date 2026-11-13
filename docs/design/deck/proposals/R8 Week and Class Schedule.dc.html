@@ -1,0 +1,493 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R8 Schedule · The week and a class’s schedule · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The student’s week, a class’s schedule, and a calendar with nothing to show</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">Three smaller things R8 builds and the deck draws only in part. The student’s “This week” is drawn full: this page adds a cancelled session, a week with nothing in it, and the loading and failed states (T-R8.15). A class’s schedule stops being a line a teacher types and comes from its sessions: this page draws the Schedule field of Edit class as it then reads (T-R8.14). And the teacher’s Calendar is drawn with a busy week: this page draws it loading, empty and failed (T-R8.10). Everything is in Vietnamese first, and nothing here changes an operation.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The student’s week</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A cancelled class stays in the week, and says so.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li><span style="color:var(--fg)">It is not removed</span>: a student who expects a class on Thursday has to be told it is off, not left to wonder where it went.</li>
+      <li>It is muted, its name is struck through and its second line reads “Đã huỷ”, the same marks the teacher’s calendar uses.</li>
+      <li>A day with nothing reads “Không có lịch”. A week with nothing gives one sentence in place of seven.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">A class’s schedule</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Once a class has sessions, its schedule is read from them.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The line on a class card, in class detail and in the Admin table is worked out from the sessions that repeat. Nobody types it.</li>
+      <li><span style="color:var(--fg)">In Edit class the field becomes read-only</span>, with “Đổi trong Lịch” beside it and a line that says where it comes from.</li>
+      <li>A class with no session keeps the field it has today, so a teacher who has not used the calendar loses nothing.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Nothing to show</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The grid stays; a sentence sits on it.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>An empty week keeps its days and hours, so the teacher still sees which week it is and can move on. The sentence and “Buổi học” sit over the grid.</li>
+      <li><span style="color:var(--fg)">While it loads, blocks stand where sessions will be.</span> The week’s days are known from the address, so the header is there at once.</li>
+      <li>When it cannot load, one sentence and “Thử lại” take the grid’s place.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick who is looking, the screen and its state in the bar above. The week is the deck’s: 22 to 28 September, with today on Wednesday the 24th. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ f.sBar }}" hint-placeholder-val="{{ false }}">
+                <div style="height:60px;flex:none;display:flex;align-items:center;gap:14px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span role="img" aria-label="{{ tx.back }}" style="width:44px;height:44px;flex:none;margin:0 -10px 0 -8px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:18px"></i></span><span style="font-size:15px;font-weight:600;white-space:nowrap">{{ tx.wkTitle }}</span></sc-if>
+                  <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></span><span style="display:flex;align-items:center;gap:2px;margin-left:14px"><sc-for list="{{ sNav }}" as="n" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;font-size:14px;white-space:nowrap;color:{{ n.fg }};background:{{ n.bg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px"></i>{{ n.label }}</span></sc-for></span></sc-if>
+                  <span style="margin-left:auto;display:flex;align-items:center;gap:4px"><span style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};display:grid;place-items:center;border-radius:8px"><i class="icon-message-square" style="font-size:18px"></i></span><span style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};display:grid;place-items:center;border-radius:8px"><i class="icon-bell" style="font-size:18px"></i></span><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;font-weight:600">BN</span></span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+
+                <sc-if value="{{ m.isWeek }}" hint-placeholder-val="{{ false }}">
+                  <div style="max-width:820px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                    <div><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted-fg);margin-bottom:8px"><i class="icon-arrow-left" style="font-size:14px"></i>{{ tx.back }}</span></sc-if><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.wkTitle }}</div><div style="margin-top:4px;color:var(--muted-fg);font-size:14px">{{ m.wkLead }}</div></div>
+                    <sc-if value="{{ m.hasDays }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ m.days }}" as="dy" hint-placeholder-count="4"><div style="display:flex;gap:14px"><span style="width:48px;flex:none;display:flex;flex-direction:column;align-items:center;padding-top:4px"><span style="font-size:11.5px;font-weight:600;color:{{ dy.dowColor }};text-transform:uppercase">{{ dy.dow }}</span><span style="width:36px;height:36px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:16px;font-weight:600;background:{{ dy.numBg }};color:{{ dy.numFg }}">{{ dy.num }}</span></span><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;padding-bottom:6px"><sc-for list="{{ dy.items }}" as="it" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:12px;padding:12px 14px;border-radius:12px;border:1px solid var(--border);background:{{ it.bg }}"><i class="icon-{{ it.icon }}" style="font-size:17px;flex:none;color:{{ it.iconColor }}"></i><span style="flex:1;min-width:0"><span style="display:flex;align-items:center;gap:6px"><span style="min-width:0;font-size:14px;font-weight:500;color:{{ it.fg }};text-decoration:{{ it.deco }};text-wrap:pretty">{{ it.title }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ it.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.item.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.item.n }}</span></sc-if></sc-if></sc-if></span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ it.meta }}</span></span><span style="font-size:13px;font-variant-numeric:tabular-nums;color:var(--muted-fg);white-space:nowrap">{{ it.time }}</span></div></sc-for><sc-if value="{{ dy.empty }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font-size:13px;color:var(--muted-fg);padding:10px 0">{{ tx.dayEmpty }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ dy.pinEmpty }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dayEmpty.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dayEmpty.n }}</span></sc-if></sc-if></sc-if></span></sc-if></div></div></sc-for></sc-if>
+                    <sc-if value="{{ m.wkLoading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}" style="display:flex;flex-direction:column;gap:18px"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="4"><div style="display:flex;gap:14px"><span style="width:48px;flex:none;display:flex;flex-direction:column;align-items:center;gap:6px;padding-top:4px"><span style="display:block;height:10px;width:26px;border-radius:6px;background:var(--muted);"></span><span style="width:36px;height:36px;border-radius:50%;background:var(--muted)"></span></span><div style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px"><sc-for list="{{ sk.items }}" as="si" hint-placeholder-count="1"><div style="display:flex;align-items:center;gap:12px;padding:14px;border-radius:12px;border:1px solid var(--border)"><span style="width:18px;height:18px;border-radius:5px;background:var(--muted);flex:none"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px"><span style="display:block;height:12px;width:{{ si.w }};border-radius:6px;background:var(--muted);"></span><span style="display:block;height:10px;width:32%;border-radius:6px;background:var(--muted);"></span></span><span style="display:block;height:11px;width:34px;border-radius:6px;background:var(--muted);"></span></div></sc-for></div></div></sc-for><div style="display:flex;justify-content:center"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></div></sc-if>
+                    <sc-if value="{{ m.hasMsg }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:12px;background:var(--card)"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:36px 18px"><span style="max-width:44ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><sc-if value="{{ m.hasAct }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.actIcon }}" style="font-size:14px"></i>{{ m.act }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div></div></sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isCal }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
+                    <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
+                      <div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;white-space:nowrap">{{ tx.wkRange }}</div>
+                      <div style="display:flex;gap:8px;align-items:center"><div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)"><span style="width:{{ f.navBtn }};height:{{ f.navBtn }};display:grid;place-items:center"><i class="icon-chevron-left" style="font-size:16px"></i></span><span style="height:{{ f.navBtn }};padding:0 12px;border-left:1px solid var(--border);border-right:1px solid var(--border);display:grid;place-items:center;font-size:13px;font-weight:500;white-space:nowrap">{{ tx.today }}</span><span style="width:{{ f.navBtn }};height:{{ f.navBtn }};display:grid;place-items:center"><i class="icon-chevron-right" style="font-size:16px"></i></span></div><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.navBtn }};padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-plus" style="font-size:15px"></i>{{ tx.addSession }}</span></div>
+                    </div>
+                    <div style="display:flex;gap:14px;flex-wrap:wrap;font-size:12.5px;color:var(--muted-fg)"><sc-for list="{{ legend }}" as="lg" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;flex:none;border-radius:3px;background:{{ lg.color }}"></span>{{ lg.label }}</span></sc-for></div>
+                    <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}">
+                      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                        <sc-if value="{{ m.calGrid }}" hint-placeholder-val="{{ true }}">
+                          <div style="max-height:560px;overflow:hidden;position:relative">
+                            <div style="display:grid;grid-template-columns:56px repeat(7,minmax(0,1fr));border-bottom:1px solid var(--border);background:var(--card)"><span></span><sc-for list="{{ days }}" as="d" hint-placeholder-count="7"><div style="padding:10px 8px;border-left:1px solid var(--border);text-align:center;background:{{ d.bg }}"><div style="font-size:12px;color:var(--muted-fg)">{{ d.dow }}</div><div style="font-size:18px;font-weight:600;font-variant-numeric:tabular-nums;color:{{ d.fg }}">{{ d.num }}</div></div></sc-for></div>
+                            <div style="display:grid;grid-template-columns:56px repeat(7,minmax(0,1fr));position:relative;padding-top:10px">
+                              <div><sc-for list="{{ hours }}" as="h" hint-placeholder-count="14"><div style="height:44px;font-size:11.5px;color:var(--muted-fg);text-align:right;padding:0 8px;transform:translateY(-7px);font-variant-numeric:tabular-nums">{{ h }}</div></sc-for></div>
+                              <sc-for list="{{ days }}" as="d" hint-placeholder-count="7"><div style="position:relative;border-left:1px solid var(--border);height:616px;background:{{ d.colBg }}"><sc-for list="{{ hours }}" as="h2" hint-placeholder-count="14"><div style="height:44px;border-top:1px solid var(--border);opacity:.6"></div></sc-for><sc-for list="{{ d.blocks }}" as="bk" hint-placeholder-count="1"><span style="position:absolute;left:4px;right:4px;top:{{ bk.top }};height:{{ bk.h }};border-radius:6px;background:var(--muted)"></span></sc-for><sc-if value="{{ d.isToday }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:0;right:0;top:{{ nowTop }};height:2px;background:var(--danger)"><span style="position:absolute;left:-4px;top:-3px;width:8px;height:8px;border-radius:50%;background:var(--danger)"></span></div></sc-if></div></sc-for>
+                            </div>
+                            <sc-if value="{{ m.calEmpty }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:56px;right:0;top:150px;display:flex;justify-content:center"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow)"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:36px 18px"><span style="max-width:44ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><sc-if value="{{ m.hasAct }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.actIcon }}" style="font-size:14px"></i>{{ m.act }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div></div></div></sc-if>
+                            <sc-if value="{{ m.calLoading }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;right:12px;top:74px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></sc-if>
+                          </div>
+                        </sc-if>
+                        <sc-if value="{{ m.calFailed }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:36px 18px"><span style="max-width:44ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><sc-if value="{{ m.hasAct }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.actIcon }}" style="font-size:14px"></i>{{ m.act }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div></sc-if>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}">
+                      <sc-if value="{{ m.calLoading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}" style="display:flex;flex-direction:column;gap:14px"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:6px"><span style="display:block;height:11px;width:38%;border-radius:6px;background:var(--muted);"></span><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;padding:14px;display:flex;flex-direction:column;gap:8px"><span style="display:block;height:12px;width:62%;border-radius:6px;background:var(--muted);"></span><span style="display:block;height:10px;width:34%;border-radius:6px;background:var(--muted);"></span></div></div></sc-for></div></sc-if>
+                      <sc-if value="{{ m.hasMsg }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:12px;background:var(--card)"><div style="display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:36px 18px"><span style="max-width:44ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><sc-if value="{{ m.hasAct }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-{{ m.actIcon }}" style="font-size:14px"></i>{{ m.act }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.none.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.none.n }}</span></sc-if></sc-if></div></div></sc-if>
+                    </sc-if>
+                  </div>
+                </sc-if>
+
+                <sc-if value="{{ m.isClasses }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.classesTitle }}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"><sc-for list="{{ m.ghost }}" as="g" hint-placeholder-count="3"><div style="height:150px;border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;display:flex;flex-direction:column;gap:10px"><span style="display:block;height:13px;width:{{ g.w }};border-radius:6px;background:var(--muted);"></span><span style="display:block;height:10px;width:46%;border-radius:6px;background:var(--muted);"></span></div></sc-for></div></div>
+                </sc-if>
+              </div>
+            </div>
+
+            <sc-if value="{{ dg.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;background:var(--overlay);z-index:10"></div>
+              <div role="dialog" aria-label="{{ tx.ecTitle }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);z-index:11">
+                <div style="padding:18px 14px 4px 18px;display:flex;gap:12px;align-items:center"><span style="width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--muted)"><i class="icon-pencil" style="font-size:18px"></i></span><div style="flex:1;min-width:0;font-size:16px;font-weight:600;line-height:1.35">{{ tx.ecTitle }}</div><span style="width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:16px"></i></span></div>
+                <div style="padding:14px 18px 4px;display:flex;flex-direction:column;gap:14px">
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.ecName }}</span><span style="display:flex;align-items:center;height:{{ f.inH }};border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg)">IELTS 6.5 Evening</span></div>
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.ecSchedule }}</span>
+                    <sc-if value="{{ dg.derived }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span style="flex:1 1 200px;min-width:0;display:flex;align-items:center;gap:8px;height:{{ f.inH }};border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--muted)"><i class="icon-repeat" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dg.line }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.derived.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.derived.n }}</span></sc-if></sc-if></span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.inH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13px;font-weight:500;white-space:nowrap"><i class="icon-calendar-days" style="font-size:15px"></i>{{ tx.ecChange }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.change.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.change.n }}</span></sc-if></sc-if></span></div><span style="font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ tx.ecFromSessions }}</span></sc-if>
+                    <sc-if value="{{ dg.free }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;height:{{ f.inH }};border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg)"><span style="flex:1;min-width:0;color:var(--muted-fg)">{{ tx.ecSchedulePh }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.free.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.free.n }}</span></sc-if></sc-if></span></sc-if>
+                  </div>
+                  <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12.5px;font-weight:500">{{ tx.ecRoom }}</span><span style="display:flex;align-items:center;height:{{ f.inH }};border:1px solid var(--border);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg)">{{ dg.room }}</span><sc-if value="{{ dg.derived }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:flex-start;gap:6px;font-size:12.5px;color:var(--muted-fg);line-height:1.5"><span style="flex:1;min-width:0;text-wrap:pretty">{{ tx.ecRoomHint }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.room.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.room.n }}</span></sc-if></sc-if></span></sc-if></div>
+                </div>
+                <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:16px 18px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap">{{ tx.cancel }}</span><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:600;white-space:nowrap">{{ tx.saveChanges }}</span></div>
+              </div>
+            </sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is drawn as the deck draws it, or as the product has it.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck and the product as they are. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck and the product</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is what the plan or the contract says about the cause.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Cause</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R8.10, T-R8.14 and T-R8.15</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each part the plan names takes from this page. No operation changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R8 · The student's week, a class's schedule, and a calendar with nothing to show.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['wkTitle', 'This week', 'Tuần này', 'This week', 'Deck'],
+  ['wkLead', 'This week', 'Lớp học và hạn nộp bài, {range}.', 'Classes and test deadlines, {range}.', 'Deck'],
+  ['wkRange', 'This week, Calendar', '22 – 28 tháng 9', '22 – 28 September', 'Plan'],
+  ['back', 'This week', 'Lớp', 'Classes', 'As today'],
+  ['sessMeta', 'This week', '{room} · {count} phút', '{room} · {count} min', 'Deck'],
+  ['cancelled', 'This week', 'Đã huỷ', 'Cancelled', 'Plan'],
+  ['dueToday', 'This week', 'Đóng hôm nay · đang làm', 'Closes today · in progress', 'Deck'],
+  ['dueTest', 'This week', 'Hạn nộp · bài {count} phút', 'Due · {count} min test', 'Deck'],
+  ['dueShort', 'This week', 'Hạn nộp · {count} phút', 'Due · {count} min', 'Deck'],
+  ['dayEmpty', 'This week', 'Không có lịch', 'Nothing scheduled', 'Deck'],
+  ['weekEmpty', 'This week', 'Tuần này không có lịch.', 'Nothing scheduled this week.', 'Plan'],
+  ['weekFailed', 'This week', 'Không tải được lịch tuần này.', 'Could not load this week.', 'New'],
+  ['retry', 'States', 'Thử lại', 'Retry', 'As today'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today'],
+  ['calTitle', 'Calendar', 'Lịch', 'Calendar', 'Deck'],
+  ['today', 'Calendar', 'Hôm nay', 'Today', 'Deck'],
+  ['addSession', 'Calendar', 'Buổi học', 'Session', 'Deck'],
+  ['legClass', 'Calendar', 'Buổi học', 'Class session', 'Deck'],
+  ['legClose', 'Calendar', 'Bài giao đóng', 'Test closes', 'Deck'],
+  ['legOpen', 'Calendar', 'Bài giao mở', 'Test opens', 'Deck'],
+  ['calEmpty', 'Calendar', 'Tuần này chưa có buổi học nào.', 'No sessions this week.', 'Plan'],
+  ['calFailed', 'Calendar', 'Không tải được lịch.', 'Could not load the calendar.', 'New'],
+  ['classesTitle', 'Classes', 'Lớp học', 'Classes', 'As today'],
+  ['ecTitle', 'Edit class', 'Sửa lớp', 'Edit class', 'As today'],
+  ['ecName', 'Edit class', 'Tên lớp', 'Class name', 'As today'],
+  ['ecSchedule', 'Edit class', 'Lịch học', 'Schedule', 'As today'],
+  ['ecSchedulePh', 'Edit class', 'T2 · T4, 09:00', 'Mon · Wed, 09:00', 'As today'],
+  ['ecChange', 'Edit class', 'Đổi trong Lịch', 'Change in Calendar', 'Plan'],
+  ['ecFromSessions', 'Edit class', 'Lịch này lấy từ các buổi học lặp lại của lớp.', 'This comes from the class’s repeating sessions.', 'New'],
+  ['ecRoom', 'Edit class', 'Phòng', 'Room', 'As today'],
+  ['ecRoomHint', 'Edit class', 'Dùng cho buổi học mới. Phòng của buổi đã có được đổi trong Lịch.', 'Used for new sessions. A session that exists changes its room in Calendar.', 'New'],
+  ['cancel', 'Edit class', 'Huỷ', 'Cancel', 'As today'],
+  ['saveChanges', 'Edit class', 'Lưu thay đổi', 'Save changes', 'As today'],
+  ['noSchedule', 'Class surfaces', 'Chưa có lịch học', 'No schedule yet', 'As today']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+// the deck's week for the student Bảo: [column vi, en], day, items, today
+// an item: [icon, title, kind, what its second line is made of, time, id]
+const WEEK = [
+  [['Th 2', 'Mon'], 22, [['users', 'IELTS 6.5 Evening', 'class', { room: 2, min: 90 }, '18:00', 'a']]],
+  [['Th 3', 'Tue'], 23, [['users', 'IELTS Foundation A', 'class', { room: 1, min: 90 }, '17:30', 'b']]],
+  [['Th 4', 'Wed'], 24, [['file-text', 'Reading · Why cities need green space', 'due', { k: 'today' }, '21:00', 'r'], ['users', 'IELTS 6.5 Evening', 'class', { room: 2, min: 90 }, '18:00', 'c']], true],
+  [['Th 5', 'Thu'], 25, [['headphones', 'Unit 4 · Listening: Directions', 'due', { k: 'test', min: 30 }, '08:00', 'l'], ['users', 'IELTS Foundation A', 'class', { room: 1, min: 90 }, '17:30', 'd']]],
+  [['Th 6', 'Fri'], 26, [['layers', 'Vocabulary check · Environment', 'due', { k: 'short', min: 15 }, '22:00', 'v'], ['users', 'IELTS 6.5 Evening', 'class', { note: ['Phòng 3 tuần này', 'Room 3 this week'] }, '18:00', 'e']]],
+  [['Th 7', 'Sat'], 27, []],
+  [['CN', 'Sun'], 28, []]
+];
+const TODAY = 2, NOW = 20.25;
+const SCREENS = { teacher: [['calendar', 'Calendar'], ['editClass', 'Edit class']], student: [['week', 'This week']] };
+const STATES = {
+  'student:week': [['cancelled', 'A cancelled class'], ['week', 'The week'], ['empty', 'Nothing this week'], ['loading', 'Loading'], ['error', 'Could not load']],
+  'teacher:calendar': [['empty', 'An empty week'], ['loading', 'Loading'], ['error', 'Could not load']],
+  'teacher:editClass': [['slots', 'With sessions'], ['noSlots', 'No sessions yet']]
+};
+const START = { 'student:week': 'cancelled', 'teacher:calendar': 'empty', 'teacher:editClass': 'slots' };
+const NOTES = {
+  'student:week:cancelled': [['item', 'A cancelled class stays in its day: muted, its name struck through, and “Đã huỷ” where the room was. It opens nothing.']],
+  'student:week:week': [['item', 'A session’s second line is its room and length. When the teacher left a note for that date, the note takes the line’s place, as the deck draws for Friday.'], ['dayEmpty', 'A day with nothing says so, in the deck’s words.']],
+  'student:week:empty': [['msg', 'A week with nothing at all gives one sentence in place of seven rows. There is nothing to do, so no action.']],
+  'student:week:loading': [['skeleton', 'Rows of the week’s own shape. The heading is there at once.']],
+  'student:week:error': [['msg', 'One sentence and “Thử lại”. The heading and the way back to “Lớp” stay.']],
+  'teacher:calendar:empty': [['msg', 'The grid stays, so the teacher still sees which week this is and can move on. The plan’s sentence and “Buổi học” sit over it.']],
+  'teacher:calendar:loading': [['skeleton', 'Blocks stand where sessions will be. The days are known from the address, so the header and the buttons are there at once.']],
+  'teacher:calendar:error': [['msg', 'One sentence and “Thử lại” take the grid’s place. The header stays, so another week can be tried.']],
+  'teacher:editClass:slots': [['derived', 'The class has sessions that repeat, so its schedule is read from them and is not typed. The line is the one the class card shows.'], ['change', '“Đổi trong Lịch” opens the calendar at the class’s next session, where the session’s own popover changes it.'], ['room', 'New on this page: what the room here is for once sessions exist (Q3).']],
+  'teacher:editClass:noSlots': [['free', 'A class with no session keeps the field it has today, a line the teacher types. It becomes read-only the day a session is added.']]
+};
+const PIN_KEYS = ['item', 'dayEmpty', 'msg', 'skeleton', 'derived', 'change', 'room', 'free', 'nav', 'newAnn', 'none'];
+// [part, the deck and the product, this page]
+const ADDS = [
+  ['A cancelled class in the student’s week', 'Not drawn.', 'It stays in its day, muted and struck through, reading “Đã huỷ”.'],
+  ['A week with nothing', '“Nothing scheduled” on each empty day.', 'The same for a day, and one sentence for a whole week.'],
+  ['The week loading or failing', 'Not drawn.', 'Skeleton rows; one sentence with “Thử lại”.'],
+  ['Moving to another week', 'Not drawn.', 'Not drawn here either: the plan builds none (Q2).'],
+  ['A class’s schedule', 'A line the teacher types, in New class and in Edit class.', 'Read from the class’s sessions once it has any. In Edit class the field is then read-only, with “Đổi trong Lịch”.'],
+  ['A class’s room', 'A field in New class and in Edit class.', 'It stays a field, with one line that says what it is for once sessions exist (Q3).'],
+  ['The calendar loading', 'Not drawn.', 'The header at once, and blocks where sessions will be.'],
+  ['An empty week in the calendar', 'Not drawn.', 'The grid stays, with the plan’s sentence and “Buổi học” over it.'],
+  ['The calendar failing', 'Not drawn.', 'One sentence and “Thử lại” in place of the grid.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, cause]
+const WHENS = [
+  ['A session in the student’s week is cancelled', 'Muted, struck through, “Đã huỷ”. It opens nothing.', 'cancelled on the week’s item (T-R8.8).'],
+  ['A session carries a note for that date', 'The note takes the place of “Phòng 2 · 90 phút”.', 'note on the item. The deck’s Friday reads “Room 3 this week”.'],
+  ['A day has nothing', '“Không có lịch”.', 'That day’s items are empty.'],
+  ['The whole week has nothing', '“Tuần này không có lịch.”', 'Every day’s items are empty.'],
+  ['The week cannot load', '“Không tải được lịch tuần này.” and “Thử lại”.', 'GET /app/week did not answer.'],
+  ['A class has sessions at one time', 'Its line reads “T2 · T4 · T6, 18:00”, and “T2 · T4 · T6, 18:00 · Phòng 2” where the room follows.', 'T-R8.14’s formatter, the one every schedule surface uses.'],
+  ['A class has sessions at several times', '“T2 · T4, 18:00; T7, 09:00”.', 'The same.'],
+  ['A class has no session', 'The line the teacher typed, or “Chưa có lịch học”.', 'R4’s free-text label stays until a session exists.'],
+  ['Edit class, for a class with sessions', 'Schedule is read-only, with “Đổi trong Lịch” and one line under it.', 'T-R8.14. The button opens the calendar at the class’s next session.'],
+  ['Edit class, for a class without', 'Schedule is the field of today.', 'T-R8.14.'],
+  ['The calendar is loading', 'The header, and blocks in the grid.', 'GET /teacher/calendar. Nothing polls; the page reads again on focus and after a change.'],
+  ['The week has no session and no test', 'The grid, with “Tuần này chưa có buổi học nào.” and “Buổi học” over it.', 'T-R8.10, DG-83.'],
+  ['The calendar cannot load', '“Không tải được lịch.” and “Thử lại” in place of the grid.', 'The server did not answer.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · A cancelled class, for the student', 'Should a cancelled class be struck through in the student’s week?', 'The plan has it muted and reading “Cancelled”. The teacher’s calendar, on the Sessions page, strikes it through as well. One look in both places is one thing less to learn.', 'Muted, struck through, and “Đã huỷ”.'],
+  ['Q2 · Next week', 'Should a student be able to open next week?', 'The deck draws no way to another week, so the plan builds none; only a link can open one. On a Friday evening a student cannot see Monday’s deadline here.', 'As planned: this week only.'],
+  ['Q3 · The room in Edit class', 'What should the Room field of Edit class mean once a class has sessions?', 'A session takes the class’s room on the day it is made, and keeps it. Changing the room here later changes no session, and nothing tells the teacher so.', 'The field stays, with one line under it: it is used for new sessions, and a session that exists changes its room in the calendar.'],
+  ['Q4 · An empty calendar', 'Does the grid stay when a week has nothing?', 'Replacing the grid with a message makes the week look like a different screen, and hides the days. Keeping it costs a sentence drawn over empty rows.', 'It stays, with the sentence and “Buổi học” over it.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['ThisWeekPage', 'A cancelled item’s look; the note in place of the second line; the empty day, the empty week, the skeleton and the failed state.'],
+  ['EditClassDialog', 'Schedule read-only with “Đổi trong Lịch” and its line when the class has sessions, and as today when it has none; the line under Room (Q3).'],
+  ['Class cards, class detail, Admin › Classes', 'The derived line, in the three shapes of the table above.'],
+  ['CalendarPage', 'The skeleton, the empty week over the grid, and the failed state.'],
+  ['Locales', 'The copy table: thirty-four strings, Vietnamese first.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Student page (“This week”) and Teacher page (Calendar), R8’s plan (docs/plan/78-r8.md: T-R8.8, T-R8.10, T-R8.14, T-R8.15), and the product’s Edit class dialog with its strings. None of the three is built for R8 yet, so there was no screen to run.'],
+  ['What it leaves alone.', 'The week’s rows, the calendar’s grid and the dialog’s other fields are the deck’s and the product’s. No operation changes.'],
+  ['What is not drawn.', 'Attendance and its states (T-R8.12): the deck draws both of its screens in full, and each state the plan adds is one sentence. The dashboard’s Today, the join preview card, and the “Tuần này” button on the student’s Classes.']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', role: 'student', screen: { teacher: 'calendar', student: 'week' }, st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const role = s.role, teacher = role === 'teacher', scr = s.screen[role], key = role + ':' + scr, st = s.st[key];
+    const noteList = NOTES[key + ':' + st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    tx.title = scr === 'calendar' ? tx.calTitle : tx.classesTitle;
+
+    const isWeek = scr === 'week', isCal = scr === 'calendar', isClasses = scr === 'editClass';
+    const loading = st === 'loading', failed = st === 'error', empty = st === 'empty';
+
+    // ---- the student's week
+    const roomOf = n => (vi ? 'Phòng ' : 'Room ') + n;
+    const metaOf = (it, off) => { const o = it[3];
+      if (off) return tx.cancelled;
+      if (it[2] === 'class') return o.note ? o.note[li] : fmt(tx.sessMeta, { room: roomOf(o.room), count: o.min });
+      return o.k === 'today' ? tx.dueToday : o.k === 'test' ? fmt(tx.dueTest, { count: o.min }) : fmt(tx.dueShort, { count: o.min }); };
+    const marked = st === 'cancelled' ? 'd' : 'e';
+    const days = WEEK.map((d, i) => ({ dow: d[0][li], num: d[1], empty: !d[2].length, pinEmpty: i === 5, numBg: d[3] ? 'var(--primary)' : 'transparent', numFg: d[3] ? 'var(--primary-fg)' : 'var(--fg)', dowColor: d[3] ? 'var(--fg)' : 'var(--muted-fg)',
+      items: d[2].map(it => { const off = st === 'cancelled' && it[5] === 'd', due = it[2] === 'due';
+        return { icon: it[0], title: it[1], meta: metaOf(it, off), time: it[4], bg: due ? 'var(--warning-soft)' : off ? 'var(--muted)' : 'var(--card)', iconColor: due ? 'var(--warning-ink)' : 'var(--muted-fg)', fg: off ? 'var(--muted-fg)' : 'var(--fg)', deco: off ? 'line-through' : 'none', pin: it[5] === marked }; }) }));
+    const weekMsg = empty ? [tx.weekEmpty, '', ''] : failed ? [tx.weekFailed, tx.retry, 'rotate-cw'] : null;
+    const calMsg = empty ? [tx.calEmpty, tx.addSession, 'plus'] : failed ? [tx.calFailed, tx.retry, 'rotate-cw'] : null;
+    const msg = isWeek ? weekMsg : isCal ? calMsg : null;
+
+    const m = {
+      isWeek, isCal, isClasses, wkLead: fmt(tx.wkLead, { range: tx.wkRange }),
+      hasDays: isWeek && (st === 'week' || st === 'cancelled'), days, wkLoading: isWeek && loading,
+      skel: isWeek ? [['58%'], ['46%'], ['66%', '52%'], ['54%']].map(x => ({ items: x.map(w => ({ w })) })) : [0, 1, 2].map(() => ({ items: [] })),
+      hasMsg: !!msg, msg: msg ? msg[0] : '', hasAct: !!(msg && msg[1]), act: msg ? msg[1] : '', actIcon: msg ? msg[2] : '',
+      calGrid: isCal && !failed, calEmpty: isCal && empty, calLoading: isCal && loading, calFailed: isCal && failed,
+      ghost: [{ w: '62%' }, { w: '54%' }, { w: '70%' }]
+    };
+
+    // ---- the teacher's calendar
+    const fmtH = h => String(Math.floor(h)).padStart(2, '0') + ':00';
+    const hours = []; for (let h = 8; h < 22; h++) hours.push(fmtH(h));
+    const BLOCKS = [[0, 18, 1.5], [1, 17.5, 1.5], [2, 18, 1.5], [3, 17.5, 1.5], [4, 18, 1.5], [5, 9, 2], [6, 9, 2]];
+    const calDays = WEEK.map((d, i) => ({ dow: d[0][li], num: d[1], isToday: i === TODAY, bg: i === TODAY ? 'var(--accent-soft)' : 'transparent', fg: i === TODAY ? 'var(--accent-ink)' : 'var(--fg)', colBg: i >= 5 ? 'var(--sidebar)' : 'transparent',
+      blocks: isCal && loading ? BLOCKS.filter(b => b[0] === i).map(b => ({ top: ((b[1] - 8) * 44 + 1) + 'px', h: (b[2] * 44 - 3) + 'px' })) : [] }));
+
+    // ---- Edit class
+    const dg = { open: isClasses, derived: st === 'slots', free: st === 'noSlots', line: vi ? 'T2 · T4 · T6, 18:00' : 'Mon · Wed · Fri, 18:00', room: roomOf(2) };
+
+    // ---- the shells
+    const navOn = isClasses ? 'classes' : 'calendar';
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: false });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('calendar', 'calendar-days', tx.calTitle), item('messages', 'message-square', vi ? 'Tin nhắn' : 'Messages')] },
+      { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', tx.classesTitle), item('students', 'users', vi ? 'Học viên' : 'Students')] },
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'share-2', vi ? 'Được chia sẻ với tôi' : 'Shared with me', 2), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'image', vi ? 'Thư viện media' : 'Media')] }
+    ];
+    const sNav = [['house', vi ? 'Trang chủ' : 'Home', false], ['graduation-cap', tx.back, true], ['book-open', vi ? 'Học tập' : 'Learn', false], ['chart-column', vi ? 'Điểm số' : 'Grades', false]].map(x => ({ icon: x[0], label: x[1], fg: x[2] ? 'var(--fg)' : 'var(--muted-fg)', bg: x[2] ? 'var(--hover)' : 'transparent', weight: x[2] ? 600 : 400 }));
+
+    const W = s.stageW || 1280;
+    const names = { week: 'This week', calendar: 'Calendar', editClass: 'Edit class' };
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: (teacher ? 'Teacher' : 'Student') + ' · ' + names[scr] + ' · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: teacher && !phone, tBar: teacher, sBar: !teacher,
+      barPad: phone ? '0 14px' : teacher ? '0 28px' : '0 32px', pad: phone ? '14px' : teacher ? '24px 28px 28px' : '28px 32px', gap: phone ? '12px' : '16px', h1: phone ? '20px' : '24px', navBtn: phone ? '40px' : '34px', iconBtn: phone ? '44px' : '36px',
+      btnH: phone ? '44px' : '36px', inH: phone ? '44px' : '38px',
+      dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '460px', dlgR: phone ? '16px 16px 0 0' : '12px'
+    });
+    const full = isWeek && (st === 'week' || st === 'cancelled');   // a whole week is taller than a screen
+    const frames = [mk(1280, full ? 1030 : 800, Math.min(1, W / 1280), false, teacher ? 'the teacher’s shell' : 'the page is at most 820 wide'), mk(360, full ? 1120 : 780, Math.min(1, W / 360), true, 'the same state on a phone')];
+
+    const ctl = [
+      { label: 'Who', opts: this.seg([['student', 'Student'], ['teacher', 'Teacher']], role, v => this.setState({ role: v })) }
+    ].concat(SCREENS[role].length > 1 ? [{ label: 'Screen', opts: this.seg(SCREENS[role], scr, v => this.setState(x => ({ screen: { ...x.screen, [role]: v } }))) }] : []).concat([
+      { label: 'State', opts: this.seg(STATES[key], st, v => this.setState(x => ({ st: { ...x.st, [key]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ]);
+    const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const stLabel = (STATES[key].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, dg, pin, nav, sNav, frames, ctl, stageRef: this.stageRef, days: calDays, hours, nowTop: ((NOW - 8) * 44) + 'px',
+      legend: [{ color: 'var(--accent-c)', label: tx.legClass }, { color: 'var(--warning)', label: tx.legClose }, { color: 'var(--info-ink)', label: tx.legOpen }],
+      chips: ['R8 · v0.15.0', 'T-R8.10, T-R8.14, T-R8.15', 'DG-83', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, role: 'student', screen: { teacher: 'calendar', student: 'week' }, st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + names[scr] + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

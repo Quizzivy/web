@@ -204,8 +204,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                     <sc-if value="{{ f.popover }}" hint-placeholder-val="{{ false }}">
                       <div role="dialog" aria-label="{{ tx.details }}" style="position:absolute;top:56px;right:12px;width:292px;z-index:5;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);padding:14px;display:flex;flex-direction:column;gap:12px">
                         <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span><span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.th.name }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ m.det.sub }}</span></span></div>
-                        <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:13px"><i class="icon-{{ dr.icon }}" style="font-size:14px;color:var(--muted-fg);flex:none"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dr.text }}</span></span></sc-for></div>
-                        <span style="display:flex;align-items:center;justify-content:center;gap:6px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:14px"></i></span>
+                        <sc-if value="{{ m.det.hasList }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:13px"><i class="icon-{{ dr.icon }}" style="font-size:14px;color:var(--muted-fg);flex:none"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dr.text }}</span></span></sc-for></div></sc-if><sc-if value="{{ m.det.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--muted-fg);text-wrap:pretty">{{ m.det.note }}</span></sc-if>
+                        <sc-if value="{{ m.det.hasLink }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;justify-content:center;gap:6px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:14px"></i></span></sc-if>
                       </div>
                     </sc-if>
                   </div>
@@ -217,8 +217,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                 <div role="dialog" aria-label="{{ tx.details }}" style="position:absolute;left:0;right:0;bottom:0;z-index:7;background:var(--card);border-radius:16px 16px 0 0;box-shadow:var(--shadow-lg);padding:8px 16px 18px;display:flex;flex-direction:column;gap:14px">
                   <div aria-hidden="true" style="width:36px;height:4px;border-radius:4px;background:var(--border);margin:2px auto 0"></div>
                   <div style="display:flex;align-items:center;gap:10px"><span style="width:38px;height:38px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span><span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:15px">{{ m.th.name }}</span><span style="display:block;font-size:13px;color:var(--muted-fg)">{{ m.det.sub }}</span></span></div>
-                  <div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:14px"><i class="icon-{{ dr.icon }}" style="font-size:15px;color:var(--muted-fg);flex:none"></i>{{ dr.text }}</span></sc-for></div>
-                  <span style="display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:9px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:14px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:15px"></i></span>
+                  <sc-if value="{{ m.det.hasList }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:14px"><i class="icon-{{ dr.icon }}" style="font-size:15px;color:var(--muted-fg);flex:none"></i>{{ dr.text }}</span></sc-for></div></sc-if><sc-if value="{{ m.det.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:var(--muted-fg);text-wrap:pretty">{{ m.det.note }}</span></sc-if>
+                  <sc-if value="{{ m.det.hasLink }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:9px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:14px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:15px"></i></span></sc-if>
                 </div>
               </sc-if>
 
@@ -377,6 +377,7 @@ const STR = [
   ['detOpenStudent', 'Details', 'Mở trong Học viên', 'Open in Students', 'Plan'],
   ['detMembers', 'Details', 'Thành viên', 'Members', 'Plan'],
   ['detCount', 'Details', '{count} học viên', '{count} students', 'As today'],
+  ['detFormer', 'Details', 'Không còn học lớp nào của bạn.', 'No longer in any of your classes.', 'New'],
   ['detOpenClass', 'Details', 'Mở trang lớp', 'Open the class', 'Plan'],
   ['today', 'Stream', 'Hôm nay', 'Today', 'Plan'],
   ['monday', 'Stream', 'Thứ Hai', 'Monday', 'Plan'],
@@ -457,13 +458,17 @@ const SAY = {
   meFail: ['Lần sau em nhớ bật 4G dự phòng nhé.', 'Next time keep mobile data on as a backup.'],
   old1: ['Điểm bài từ vựng tốt lắm: 24/25!', 'Great result on the vocabulary quiz. 24/25!'],
   old2: ['Em cảm ơn ạ!', 'Thank you!'],
+  nam3: ['Em nghỉ lớp rồi, nhưng thầy cô cho em hỏi thêm về bài viết Task 2 được không ạ?', 'I have left the class, but may I still ask about Writing Task 2?'],
+  me3: ['Được chứ, em cứ gửi bài qua đây nhé.', 'Of course. Send it here.'],
   post1: ['Thứ Sáu này lớp chuyển sang Phòng 3 vì trung tâm diễn tập phòng cháy.', 'Class moves to Room 3 on Friday because of the fire drill.'],
   post2: ['Nhắc lại: bài Reading Mock đóng lúc 21:00 tối nay. Nên làm trên laptop.', 'Reminder: the Reading Mock closes tonight at 21:00. Use a laptop if you can.'],
   post3: ['Đáp án Unit 4, các em xem trước buổi thứ Năm.', 'The Unit 4 answer key, for Thursday.'],
   t1: ['Chào Bảo, tuần này phần ngữ pháp của em tiến bộ rõ.', 'Hi Bảo, great progress on the grammar check this week.'],
   t2: ['Thứ Năm học Unit 4, em nhớ mang tai nghe. Audio phát hai lần.', 'For Unit 4 on Thursday, please bring headphones. The audio plays twice.'],
   t3: ['Từ vựng Unit 4, em xem trước nhé.', 'Unit 4 vocabulary. Have a look first.'],
-  s1: ['Dạ em cảm ơn ạ. Em sẽ mang tai nghe.', 'Thank you! I will bring headphones.']
+  s1: ['Dạ em cảm ơn ạ. Em sẽ mang tai nghe.', 'Thank you! I will bring headphones.'],
+  s2: ['Em nghỉ lớp rồi nhưng vẫn làm bài viết thầy cô giao. Em gửi qua đây được không ạ?', 'I have left the class but I am still doing the writing you set. May I send it here?'],
+  t4: ['Được chứ. Viết xong em cứ gửi, thầy cô xem giúp.', 'Of course. Send it when it is done and I will have a look.']
 };
 
 const SCREENS = {
@@ -471,11 +476,11 @@ const SCREENS = {
   student: [['direct', 'The teacher’s thread'], ['channel', 'A class channel'], ['list', 'The list']]
 };
 const STATES = {
-  'teacher:direct': [['normal', 'With a file'], ['staged', 'A file waiting'], ['stagedText', 'A file and a message'], ['details', 'Details open'], ['failed', 'A send failed'], ['blocked', 'Account disabled'], ['empty', 'Nothing yet']],
+  'teacher:direct': [['normal', 'With a file'], ['staged', 'A file waiting'], ['stagedText', 'A file and a message'], ['details', 'Details open'], ['former', 'A former student'], ['failed', 'A send failed'], ['blocked', 'Account disabled'], ['empty', 'Nothing yet']],
   'teacher:channel': [['normal', 'Announcements'], ['details', 'Details open'], ['empty', 'Nothing yet'], ['archived', 'Class archived']],
   'teacher:attach': [['pick', 'Nothing chosen'], ['uploading', 'Uploading'], ['ready', 'Ready to attach'], ['tooBig', 'Too large'], ['badType', 'Wrong kind'], ['macro', 'Word with macros']],
   'teacher:list': [['loading', 'Loading'], ['empty', 'No class, no message'], ['error', 'Could not load'], ['search', 'No match'], ['found', 'Search finds a student']],
-  'student:direct': [['normal', 'With a file'], ['failed', 'A send failed'], ['blocked', 'Account disabled'], ['empty', 'Nothing yet']],
+  'student:direct': [['normal', 'With a file'], ['failed', 'A send failed'], ['blocked', 'Account disabled'], ['former', 'A former teacher'], ['empty', 'Nothing yet']],
   'student:channel': [['normal', 'Read only']],
   'student:list': [['loading', 'Loading'], ['empty', 'Nothing yet'], ['error', 'Could not load']]
 };
@@ -488,6 +493,7 @@ const NOTES = {
   'teacher:direct:stagedText': [['staged', 'A message is typed as usual, with the file above it. A class channel works the same way.'], ['send', 'The file and the message leave as one message and arrive in one bubble.']],
   'teacher:direct:details': [['details', 'Details is a popover, not a page (DG-91): the classes this student takes with the teacher, and one link to Students. On a phone it is a sheet.']],
   'teacher:direct:failed': [['status', 'A send that fails keeps its bubble and its words. “Thử lại” sends it under the same id, so it cannot arrive twice.']],
+  'teacher:direct:former': [['details', 'For a former student Details says so in one sentence and has no link, since Students no longer lists them. “Học viên cũ” is also the header’s sub-line, where the class was.'], ['send', 'The composer stays. A conversation outlives the class, so both go on writing (Q5).']],
   'teacher:direct:blocked': [['blocked', 'The student’s account is disabled. The thread stays readable and the composer gives its place to the reason (409 MESSAGING_NOT_ALLOWED). Leaving a class does not do this: a conversation that exists stays open (Q5).']],
   'teacher:direct:empty': [['empty', 'A thread opened from Students before anything is said. The conversation exists from its first message.']],
   'teacher:channel:normal': [['chip', 'In a class channel a file sits inside the announcement’s card, above the line that counts who has seen it. This one is a Word file: PDF, Word, pictures and audio can be attached.']],
@@ -507,6 +513,7 @@ const NOTES = {
   'teacher:list:found': [['cand', 'A search also finds the students the teacher may write to and has no conversation with yet. They follow the conversations under a label of their own, and only while a search is typed.'], ['former', '“Học viên cũ” stands where the class would be. A student who has left the teacher’s classes can still be found and written to (Q5). One the teacher never taught is not listed.'], ['empty', 'Choosing a row opens the empty thread. The conversation is made by its first message, so opening one and leaving creates nothing.']],
   'student:direct:normal': [['msgBtn', 'The top bar’s Messages button. Its lime count is the unread messages (T-R7.21).'], ['chip', 'A teacher’s file downloads from its chip. Students cannot attach, so their composer has no paperclip.']],
   'student:direct:failed': [['status', 'The same as for a teacher: the bubble stays, with “Thử lại”.']],
+  'student:direct:former': [['former', 'A teacher whose classes the student has left reads “Giáo viên cũ” where the classes were, in the list and in the thread’s header. The class channels left the list with the classes.'], ['send', 'The student can go on writing here. What a student cannot do is start a conversation with a teacher of a class they left (Q5).']],
   'student:direct:blocked': [['blocked', 'The teacher’s account is disabled. The thread stays, and the composer gives its place to the reason. A student who leaves the class can still write to the teacher (Q5).']],
   'student:direct:empty': [['empty', 'Opened from the class card’s message button, before anything is said.']],
   'student:channel:normal': [['msgBtn', 'A message from the teacher stays unread while the student reads the class channel.'], ['chip', 'An announcement can carry a file too, here a Word file.'], ['readonly', 'The footer’s second half is a link to the teacher’s thread.']],
@@ -522,14 +529,14 @@ const ADDS = [
   ['The kinds of file', 'PDF, image or audio.', 'PDF, Word (DOC and DOCX), PNG or JPEG pictures, MP3 or M4A audio. Word was added by the owner on 13 Nov 2026, and the upload of T-R7.11 changes for it.'],
   ['The Attach dialog', 'One file field and Send: the file leaves at once, alone.', 'Its states: nothing chosen, uploading, ready, and refused for size or kind. Its button reads “Đính kèm” and sends nothing (Q3).'],
   ['The composer with a file', 'Not drawn.', 'The attached file waits above the text as a chip with a ×. Send is on. A message can be typed with it, and both leave as one message.'],
-  ['Details', 'An info button that leaves for Students or Classes.', 'A popover (DG-91): a student’s classes and a link to Students; a class’s member count and a link to its page. A sheet on a phone. For a former student it reads “Học viên cũ” and has no link, since Students no longer lists them; that one is not drawn.'],
+  ['Details', 'An info button that leaves for Students or Classes.', 'A popover (DG-91): a student’s classes and a link to Students; a class’s member count and a link to its page. A sheet on a phone. For a former student it says so in one sentence and has no link, since Students no longer lists them.'],
   ['The list', 'Six conversations.', 'A skeleton, the empty sentence, an error with “Thử lại”, and a search that matches nothing.'],
   ['The search', 'A field over the conversations.', 'It also finds a student the teacher may write to and has no conversation with, under the label “Học viên chưa nhắn tin”. A former student is among them, marked “Học viên cũ” (Q5).'],
   ['A thread', 'Messages, from the first one.', '“Xem tin nhắn cũ hơn” at the top, and the empty sentence for a thread and for a channel.'],
   ['Sending', 'A message that is sent.', 'A message on its way (dimmed, “Đang gửi…”) and one that failed, with “Thử lại” under its bubble.'],
   ['The composer', 'Always there for a teacher. Enter sends.', 'Replaced by one sentence when the other account is disabled, or the class is archived. Leaving a class no longer closes a conversation (Q5). In a class channel Enter makes a new line (Q2); nothing on the screen spells that out.'],
   ['“Thông báo mới”', 'Always on.', 'Off, with the reason beside it, when the teacher has no class.'],
-  ['The student’s side', 'Text bubbles, and a footer of plain text on a channel.', 'The teacher’s file as a chip, the same failed and disabled-account states, and the footer’s second half as a link to the teacher’s thread.'],
+  ['The student’s side', 'Text bubbles, and a footer of plain text on a channel.', 'The teacher’s file as a chip, the same failed and disabled-account states, and the footer’s second half as a link to the teacher’s thread. “Giáo viên cũ” where the classes were, for a teacher whose classes the student has left.'],
   ['Data & privacy', 'Three rows, each a select: answers, focus-loss events, disabled accounts. It is on the Admin page.', 'A fourth row, read-only: messages are kept, and anonymising an account deletes its direct messages (Q6).'],
   ['Links', 'None drawn.', 'A web address in a body is an underlined link. Bodies are plain text otherwise.'],
   ['Vietnamese', 'English only (DG-20).', 'Every string of both screens, in the copy table below.']
@@ -576,7 +583,7 @@ const HANDOFF = [
   ['AttachmentChip', 'New from this page: kind tile (document, Word, picture, audio), name, kind and size, Download. In a bubble it takes the bubble’s colours; in a card it is bordered.'],
   ['AnnouncementCard', 'A chip between the text and the line that counts who has seen it.'],
   ['AttachDialog', 'Four states and the four refusals (size, kind, macros, too many in an hour). Its button is “Đính kèm”: it hands the uploaded file to the composer and sends nothing (Q3).'],
-  ['ThreadDetails', 'A popover from 768 and a sheet below: the header, one short list, one link.'],
+  ['ThreadDetails', 'A popover from 768 and a sheet below: the header, one short list, one link. For a former student: the header and one sentence, with no list and no link.'],
   ['Composer', 'A waiting file as a chip above the text, with a ×; Send on while a file waits; the file kept with the thread’s draft (Q3). In a class channel Enter makes a new line and only the button posts, with no sentence about it (Q2). In a direct thread Enter sends.'],
   ['T-R7.11, on the server', 'The upload accepts DOCX and DOC as well, read by content like the rest. One that carries macros is refused, under a code of its own so the dialog can say why (Q7).'],
   ['T-R7.9 and T-R7.10a, on the server', 'A record of who has taught whom, which the server does not keep today, so that a former student can be found and written to. The read of the threads returns the students a search finds, and says which are former (Q5, O-R7.8).'],
@@ -587,7 +594,7 @@ const HANDOFF = [
 const METHOD = [
   ['What this was drawn from.', 'The deck’s Teacher and Student pages (r.messages and “Student messages”), R7’s plan (docs/plan/77-r7.md: its decisions on messaging, T-R7.10a to T-R7.12 and T-R7.20 to T-R7.22) and the register (DG-08, DG-83, DG-91, DG-96). Messages is not built yet, so there was no screen to run.'],
   ['What it leaves alone.', 'The layout, the sizes, the list’s rows, the bubbles, the announcement and attempt cards and every rule of who may read. One read gains something: the list of threads, which answers a search with students too. Five things change on the owner’s word: the Attach dialog no longer sends, Enter does not send in a class channel, the upload takes Word files, a conversation stays open after a class ends, and a teacher can write first to a former student.'],
-  ['What is not drawn.', 'The entry points of T-R7.22 outside this page (the Students row menu, the class member menu, the palette), the notification settings of T-R7.23, the Details of a former student, and the student’s list with a former teacher.']
+  ['What is not drawn.', 'The entry points of T-R7.22 outside this page (the Students row menu, the class member menu, the palette) and the notification settings of T-R7.23.']
 ];
 
 class Component extends DCLogic {
@@ -635,7 +642,7 @@ class Component extends DCLogic {
 
     // ---- the open thread
     let th = {}, items = [], foot = { hasComposer: true, placeholder: '', draft: '', staged: false, stIcon: '', stName: '', stMeta: '', canAttach: teacher, hasHint: false, hint: '', hasNotice: false, noticeIcon: 'ban', noticeText: '', readOnly: false, roText: '', roLink: '' };
-    let det = { open: false, btnBg: 'transparent', sub: '', label: '', rows: [], link: '' };
+    let det = { open: false, btnBg: 'transparent', sub: '', label: '', rows: [], link: '', hasList: true, hasLink: true, hasNote: false, note: '' };
     const namThread = variant => {
       th = { hasAvatar: true, radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)', isClass: false, isDirect: true, initials: NAM.initials, name: NAM.name, sub: NAM.classes[0], hasDetails: true };
       det = { ...det, sub: tx.roleStudent, label: tx.detClasses, rows: NAM.classes.map(c => ({ icon: 'graduation-cap', text: c })), link: tx.detOpenStudent };
@@ -644,7 +651,12 @@ class Component extends DCLogic {
       if (variant === 'failed') items = head.concat([bubble(true, SAY.meFail[li], '', { status: 'failed' })]);
       else if (variant === 'blocked') { items = [day(tx.monday), bubble(true, SAY.old1[li], monTime('10:05')), bubble(false, SAY.old2[li], monTime('10:22'))]; foot = { ...foot, hasComposer: false, hasNotice: true, noticeIcon: 'ban', noticeText: fmt(tx.accountOff, { name: NAM.name }) }; }
       else if (variant === 'empty') items = [center('message-square', tx.threadEmpty)];
-      else if (variant === 'staged' || variant === 'stagedText') {
+      else if (variant === 'former') {
+        // the student has left the teacher's classes; the conversation goes on, and Details has nothing to list
+        items = [day(tx.monday), bubble(true, SAY.old1[li], monTime('10:05')), bubble(false, SAY.old2[li], monTime('10:22')), day(tx.today), bubble(false, SAY.nam3[li], '20:16'), bubble(true, SAY.me3[li], '20:32')];
+        th = { ...th, sub: tx.former };
+        det = { ...det, sub: tx.former, hasList: false, hasLink: false, hasNote: true, note: tx.detFormer, open: true, btnBg: 'var(--hover)' };
+      } else if (variant === 'staged' || variant === 'stagedText') {
         // a file is attached and waits for Send; a message may be typed with it
         const f = fileOf(FILE_GUIDE);
         items = head.map(x => ({ ...x, pinLink: false }));
@@ -676,6 +688,7 @@ class Component extends DCLogic {
       if (variant === 'failed') items = head.concat([bubble(true, SAY.s1[li], '', { status: 'failed' })]);
       else if (variant === 'blocked') { items = head.slice(0, 4); foot = { ...foot, hasComposer: false, hasNotice: true, noticeIcon: 'ban', noticeText: fmt(tx.accountOff, { name: TEACHER }) }; }
       else if (variant === 'empty') items = [center('message-square', tx.threadEmpty)];
+      else if (variant === 'former') { th = { ...th, sub: tx.sFormer }; items = head.concat([bubble(true, SAY.s2[li], '19:40'), bubble(false, SAY.t4[li], '19:52')]); }
       else items = head.concat([bubble(true, SAY.s1[li], '19:40')]);
     };
 
@@ -696,6 +709,9 @@ class Component extends DCLogic {
         { ...avOf('class'), hasIcon: true, icon: 'megaphone', hasInitials: false, initials: '', name: 'IELTS Foundation A', time: vi ? 'Hôm qua' : 'Yesterday', preview: tx.sChannelSub, hasUnread: false, unread: '', weight: 500, previewFg: 'var(--muted-fg)', bg: 'transparent' }
       ];
     }
+    if (teacher && scr === 'direct' && st === 'former') rows = rows.map((r, i) => (i === 0 ? { ...r, preview: tx.you + SAY.me3[li] } : r));
+    // a student who has left every class of the teacher keeps the thread and loses the class channels
+    if (!teacher && scr === 'direct' && st === 'former') rows = [{ ...rows[0], time: '19:52', preview: tx.sFormer, pinFormer: pinned('former') }];
     rows = rows.map(r => ({ isRow: true, isLabel: false, label: '', pinFormer: false, ...r }));
     const searching = listState === 'search' || listState === 'found';
     if (teacher && listState === 'found') {

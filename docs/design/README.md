@@ -463,7 +463,9 @@ To view one, start the server above and open, for example,
   they left. Last, he decided the page's Q6 as proposed: Admin › Data & privacy gets one
   read-only row saying that messages are kept and that anonymising an account deletes its
   direct messages. The page draws it on the card as the product has it (DG-96), and no
-  question is open on the page.
+  question is open on the page. Two states the page had left to its tables were then drawn at
+  his word: Details for a former student, which says so in one sentence and has no link, and
+  the student's thread and list with a former teacher.
 
 ## The brand
 

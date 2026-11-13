@@ -453,7 +453,12 @@ To view one, start the server above and open, for example,
   seen it and shows no names (Q4). And a class ending closes no conversation (Q5): a teacher
   and a student who have one can go on writing after the student leaves the class. The page's
   refusal state became a disabled account, and the eligibility rule of T-R7.10a changes in the
-  plan.
+  plan. He then decided that a teacher may write first to a former student never written to.
+  The list gains a state for it: a search also finds the students the teacher may write to and
+  has no conversation with, under "Học viên chưa nhắn tin", a former student marked "Học viên
+  cũ". Finding a current student there was not asked; it comes with the same search. The
+  server keeps no record of a past class membership, so the plan gains one (T-R7.9, O-R7.8),
+  and a student who left before R7 is found only if they joined with a code.
 
 ## The brand
 

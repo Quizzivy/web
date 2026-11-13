@@ -466,6 +466,14 @@ To view one, start the server above and open, for example,
   question is open on the page. Two states the page had left to its tables were then drawn at
   his word: Details for a former student, which says so in one sentence and has no link, and
   the student's thread and list with a former teacher.
+- 2026-11-13 — Sixth proposal page: `proposals/R7 Shared With Me.dc.html`, for DG-83 and DG-90
+  (R7; T-R7.17). It draws Shared with me as R7 ships it: two kinds, tests and question sets, on
+  three tabs, in Vietnamese for the first time, with the states the deck leaves out. Those are
+  loading, nothing shared, nothing matching, a list that cannot load, an owner whose account is
+  disabled, the Make a copy and Remove confirms, and an item that is no longer shared when the
+  teacher acts on it. Frames at 1280 and 360, light and dark, Vietnamese and English. No
+  exported page is edited and no operation changes. It is a proposal until Thuong approves it,
+  and its four questions for him are on the page.
 
 ## The brand
 

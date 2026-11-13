@@ -1,0 +1,471 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R7 Collaboration · Shared with me · Proposal · 13 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Shared with me, as R7 ships it</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws Shared with me once: five rows of four kinds, in English, with everything loaded. R7 builds the screen (T-R7.17) with the two kinds it has, tests and question sets; word lists and courses come with R10. This page draws the screen as R7 ships it, in Vietnamese for the first time, and the states the plan asks for and the deck leaves out: loading, nothing shared, nothing matching, a list that cannot load, an owner whose account is disabled, the two confirms, and an item that is gone by the time the teacher acts on it. The layout, the columns and the three actions are the deck’s.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What R7 has</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Two kinds now, and the page says only what exists.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>Three tabs: “Tất cả”, “Đề thi”, “Câu hỏi”. The deck’s “Word lists” and “Courses” join them with R10 (70 §2 rule 5).</li>
+      <li><span style="color:var(--fg)">The sub-line and the empty sentence name tests and questions only</span>, so a teacher is never told to expect a kind that cannot be shared yet.</li>
+      <li>A question set says its size on its kind line, “Bộ câu hỏi · 48 câu”. The deck writes the size into the name.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Whose it is</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Everything here still belongs to someone else, and the row says who.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The owner’s name is on every row. <span style="color:var(--fg)">An owner whose account is disabled is flagged under the name</span>, and what they shared keeps working (T-R7.8).</li>
+      <li>“Tạo bản sao” is the way to own it: the copy is the teacher’s, and nothing ties it to the original.</li>
+      <li>“Gỡ” is leaving, not deleting: the item stays its owner’s. The confirm says what stays and how to get it back.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">When it does not work</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One sentence and one action, inside the card.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The header, the sentence about access, the tabs and the search stay through every state. Only the card changes.</li>
+      <li><span style="color:var(--fg)">A list that cannot load offers “Thử lại”</span>; a search that matches nothing offers “Xoá bộ lọc”; an empty list offers nothing, because there is nothing to do.</li>
+      <li>An item that stopped being shared while the list was open answers with one toast, and the list reloads.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The screen at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick it in the bar above. At 360 the table keeps its 820px and scrolls sideways inside its card, as the plan has it (Q1). What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+                <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
+                  <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.title }}</div><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ tx.lead }}</div></div>
+                  <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--muted);font-size:13px;line-height:1.55"><i class="icon-info" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span><b style="font-weight:600">{{ tx.canUse }}</b> {{ tx.useText }} <b style="font-weight:600">{{ tx.canEdit }}</b> {{ tx.editText }}</span></div>
+                  <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
+                    <div style="display:flex;align-items:center;gap:8px;min-width:0;max-width:100%"><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;max-width:100%"><sc-for list="{{ m.tabs }}" as="tb" hint-placeholder-count="3"><span style="border-radius:7px;height:{{ f.tabH }};padding:0 12px;font-size:13px;display:flex;align-items:center;gap:6px;white-space:nowrap;font-weight:500;background:{{ tb.bg }};color:{{ tb.fg }};box-shadow:{{ tb.ring }}">{{ tb.label }}<sc-if value="{{ tb.hasCount }}" hint-placeholder-val="{{ true }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--primary);color:var(--primary-fg);font-size:11px;font-weight:600;line-height:1;display:inline-flex;align-items:center;justify-content:center;font-variant-numeric:tabular-nums">{{ tb.count }}</span></sc-if></span></sc-for></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.tabs.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.tabs.n }}</span></sc-if></sc-if></div>
+                    <span style="flex:{{ f.searchFlex }};display:flex;align-items:center;gap:8px;height:{{ f.fieldH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--card)"><i class="icon-search" style="font-size:15px;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;font-size:13px;color:{{ m.qFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.q }}</span><sc-if value="{{ m.hasQ }}" hint-placeholder-val="{{ false }}"><i class="icon-x" style="font-size:14px;color:var(--muted-fg)"></i></sc-if></span>
+                  </div>
+                  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                    <div style="overflow:hidden">
+                      <div style="min-width:820px">
+                        <div style="display:grid;grid-template-columns:minmax(240px,2fr) minmax(170px,1.2fr) 112px 92px 196px;gap:12px;padding:0 16px;height:40px;align-items:center;font-size:12.5px;color:var(--muted-fg);font-weight:500;background:var(--muted)"><span>{{ tx.colName }}</span><span>{{ tx.colBy }}</span><span>{{ tx.colAccess }}</span><span>{{ tx.colWhen }}</span><span></span></div>
+                        <sc-if value="{{ m.hasRows }}" hint-placeholder-val="{{ true }}">
+                          <sc-for list="{{ m.rows }}" as="r" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:minmax(240px,2fr) minmax(170px,1.2fr) 112px 92px 196px;gap:12px;padding:0 16px;min-height:58px;align-items:center;border-top:1px solid var(--border);font-size:13.5px">
+                            <span style="display:flex;align-items:center;gap:10px;min-width:0"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ r.icon }}" style="font-size:15px"></i></span><span style="min-width:0"><span style="display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.name }}</span><span style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ r.type }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ r.pinKind }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.kind.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.kind.n }}</span></sc-if></sc-if></sc-if></span></span></span>
+                            <span style="display:flex;align-items:center;gap:8px;min-width:0"><span style="width:26px;height:26px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:10px;font-weight:600">{{ r.init }}</span><span style="min-width:0"><span style="display:flex;align-items:center;gap:6px"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ r.owner }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ r.off }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.owner.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.owner.n }}</span></sc-if></sc-if></sc-if></span><sc-if value="{{ r.off }}" hint-placeholder-val="{{ false }}"><span style="display:block;font-size:12px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ tx.ownerOff }}</span></sc-if></span></span>
+                            <span><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:6px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ r.pBg }};color:{{ r.pFg }}"><i class="icon-{{ r.pIcon }}" style="font-size:12px"></i>{{ r.perm }}</span></span>
+                            <span style="font-size:13px;color:var(--muted-fg);white-space:nowrap">{{ r.when }}</span>
+                            <span style="display:flex;gap:6px;justify-content:flex-end;align-items:center"><span style="display:inline-flex;align-items:center;gap:5px;height:{{ f.rowBtn }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap">{{ tx.open }}</span><span style="display:inline-flex;align-items:center;gap:5px;height:{{ f.rowBtn }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-copy" style="font-size:13px"></i>{{ tx.copy }}</span><span role="img" aria-label="{{ tx.removeLabel }}" style="width:{{ f.rowBtn }};height:{{ f.rowBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></span>
+                          </div></sc-for>
+                        </sc-if>
+                        <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}">
+                          <div role="status" aria-label="{{ tx.loading }}"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="5"><div style="display:grid;grid-template-columns:minmax(240px,2fr) minmax(170px,1.2fr) 112px 92px 196px;gap:12px;padding:0 16px;min-height:58px;align-items:center;border-top:1px solid var(--border)">
+                            <span style="display:flex;align-items:center;gap:10px;min-width:0"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted)"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px"><span style="display:block;height:11px;width:{{ sk.w1 }};border-radius:6px;background:var(--muted)"></span><span style="display:block;height:10px;width:{{ sk.w2 }};border-radius:6px;background:var(--muted)"></span></span></span>
+                            <span style="display:flex;align-items:center;gap:8px;min-width:0"><span style="width:26px;height:26px;flex:none;border-radius:50%;background:var(--muted)"></span><span style="flex:1;min-width:0"><span style="display:block;height:11px;width:{{ sk.w3 }};border-radius:6px;background:var(--muted)"></span></span></span>
+                            <span><span style="display:block;height:22px;width:84px;border-radius:6px;background:var(--muted)"></span></span><span><span style="display:block;height:11px;width:52px;border-radius:6px;background:var(--muted)"></span></span><span style="display:flex;justify-content:flex-end"><span style="display:block;height:26px;width:150px;border-radius:6px;background:var(--muted)"></span></span>
+                          </div></sc-for></div>
+                        </sc-if>
+                      </div>
+                    </div>
+                    <sc-if value="{{ m.loading }}" hint-placeholder-val="{{ false }}"><div style="display:flex;justify-content:center;padding:10px;border-top:1px solid var(--border)"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if><span style="font-size:12.5px;color:var(--muted-fg);padding-left:8px">{{ tx.loading }}</span></div></sc-if>
+                    <sc-if value="{{ m.hasMsg }}" hint-placeholder-val="{{ false }}">
+                      <div style="padding:40px 16px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;border-top:1px solid var(--border)"><span style="max-width:52ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.msg }}</span><sc-if value="{{ m.hasMsgAct }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;color:var(--fg)"><i class="icon-{{ m.msgActIcon }}" style="font-size:14px"></i>{{ m.msgAct }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div>
+                    </sc-if>
+                    <sc-if value="{{ m.hasFoot }}" hint-placeholder-val="{{ true }}">
+                      <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:10px 16px;border-top:1px solid var(--border);font-size:13px;color:var(--muted-fg)"><span style="font-variant-numeric:tabular-nums;white-space:nowrap">{{ m.range }}</span><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ m.hasPage }}" hint-placeholder-val="{{ true }}"><span style="color:var(--fg);font-weight:500;white-space:nowrap">{{ m.pageOf }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pager.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.pager.n }}</span></sc-if></sc-if></span></div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            <sc-if value="{{ m.dlg.open }}" hint-placeholder-val="{{ false }}">
+              <div style="position:absolute;inset:0;background:var(--overlay);z-index:8"></div>
+              <div role="alertdialog" aria-label="{{ m.dlg.title }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,calc(100% - 24px));background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:9;display:flex;flex-direction:column">
+                <div style="padding:18px 18px 4px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:flex-start;gap:8px"><div style="flex:1;min-width:0;font-size:16px;font-weight:600;line-height:1.35;overflow-wrap:anywhere">{{ m.dlg.title }}</div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialog.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialog.n }}</span></sc-if></sc-if></div><div style="font-size:13.5px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">{{ m.dlg.body }}</div></div>
+                <div style="display:flex;justify-content:flex-end;gap:8px;padding:14px 18px 16px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap">{{ tx.cancel }}</span><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:{{ m.dlg.btnBg }};color:{{ m.dlg.btnFg }};font-size:13.5px;font-weight:600;white-space:nowrap">{{ m.dlg.confirm }}</span></div>
+              </div>
+            </sc-if>
+            <sc-if value="{{ m.hasToast }}" hint-placeholder-val="{{ false }}">
+              <div role="status" style="position:absolute;right:16px;bottom:16px;z-index:10;display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);font-size:13.5px;max-width:calc(100% - 32px)"><i class="icon-{{ m.toastIcon }}" style="font-size:16px;flex:none;color:{{ m.toastFg }}"></i><span style="text-wrap:pretty">{{ m.toast }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.toast.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.toast.n }}</span></sc-if></sc-if></div>
+            </sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="4"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is drawn as the deck draws it.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Teacher page as it is. The right is this page. No part of the deck is redrawn: each row adds a state, or says what R7 ships of it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is what the plan or the contract says about the cause.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Cause</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from. “Earlier page” means the Question sets page already proposed both strings, and they are kept as they are there. “As today” means both strings are in the locale files now, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 88px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 88px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. None stops the build: they are the places where this page had to choose.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R7.17</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan already lists what the page reuses. This is what each part takes from this page. No operation of T-R7.3 or T-R7.7 changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R7 · Shared with me, as R7 ships it. A proposal page: frames, states, copy, questions.
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['title', 'Page', 'Được chia sẻ với tôi', 'Shared with me', 'Deck'],
+  ['lead', 'Page', 'Đề thi và câu hỏi mà giáo viên khác chia sẻ với bạn. Chúng vẫn thuộc về giáo viên đã chia sẻ.', 'Tests and questions other teachers shared with you. They still belong to the teacher who shared them.', 'Plan'],
+  ['canUse', 'Access', 'Có thể dùng', 'Can use', 'Earlier page'],
+  ['canEdit', 'Access', 'Có thể sửa', 'Can edit', 'Earlier page'],
+  ['useText', 'Callout', 'cho phép bạn mở, giao cho lớp của mình và tạo bản sao riêng.', 'lets you open it, assign it to your classes and make your own copy.', 'Deck'],
+  ['editText', 'Callout', 'còn cho phép bạn thay đổi nội dung, và chủ sở hữu thấy đúng những thay đổi đó.', 'also lets you change it, and your changes are what the owner sees.', 'Deck'],
+  ['tabAll', 'Tabs', 'Tất cả', 'All', 'Deck'],
+  ['tabTests', 'Tabs', 'Đề thi', 'Tests', 'Deck'],
+  ['tabQuestions', 'Tabs', 'Câu hỏi', 'Questions', 'Deck'],
+  ['search', 'Search', 'Tìm theo tên hoặc giáo viên', 'Search name or teacher', 'Deck'],
+  ['colName', 'Table', 'Tên', 'Name', 'Deck'],
+  ['colBy', 'Table', 'Người chia sẻ', 'Shared by', 'Deck'],
+  ['colAccess', 'Table', 'Quyền', 'Access', 'Deck'],
+  ['colWhen', 'Table', 'Ngày chia sẻ', 'Shared', 'Deck'],
+  ['kindTest', 'Table', 'Đề thi', 'Test', 'Deck'],
+  ['kindSet', 'Table', 'Bộ câu hỏi · {count} câu', 'Question set · {count} questions', 'New'],
+  ['ownerOff', 'Table', 'Tài khoản đã vô hiệu hoá', 'Account disabled', 'Earlier page'],
+  ['open', 'Row', 'Mở', 'Open', 'Deck'],
+  ['copy', 'Row, confirm', 'Tạo bản sao', 'Make a copy', 'Earlier page'],
+  ['removeLabel', 'Row', 'Gỡ khỏi danh sách của tôi', 'Remove from my list', 'Deck'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today'],
+  ['empty', 'States', 'Chưa có gì được chia sẻ với bạn. Khi một giáo viên chia sẻ đề thi hoặc bộ câu hỏi, nó sẽ hiện ở đây.', 'Nothing is shared with you yet. When a teacher shares a test or a question set, it appears here.', 'Plan'],
+  ['noMatch', 'States', 'Không có mục nào khớp.', 'Nothing matches.', 'Deck'],
+  ['clear', 'States', 'Xoá bộ lọc', 'Clear filters', 'As today'],
+  ['loadFailed', 'States', 'Không tải được danh sách được chia sẻ với bạn.', 'Could not load what is shared with you.', 'New'],
+  ['retry', 'States', 'Thử lại', 'Retry', 'As today'],
+  ['range', 'Pager', '{from}–{to} trên {total} mục', '{from}–{to} of {total} items', 'As today'],
+  ['rangeNone', 'Pager', 'Không có mục nào', 'No items', 'As today'],
+  ['pageOf', 'Pager', 'Trang {page} trên {pages}', 'Page {page} of {pages}', 'As today'],
+  ['copyTitle', 'Make a copy', 'Tạo bản sao của “{name}”?', 'Make a copy of “{name}”?', 'Earlier page'],
+  ['copyBody', 'Make a copy', 'Bản sao là của bạn: chỉ bạn thấy, và bạn sửa tuỳ ý. Bản gốc của {owner} không thay đổi.', 'The copy is yours: only you can see it, and you can change it freely. {owner}’s original does not change.', 'Earlier page'],
+  ['cancel', 'Confirms', 'Huỷ', 'Cancel', 'As today'],
+  ['toastCopiedTest', 'Toast', 'Đã sao chép vào Đề thi của bạn', 'Copied to your Tests', 'Deck'],
+  ['toastCopiedSet', 'Toast', 'Đã sao chép vào Ngân hàng câu hỏi của bạn', 'Copied to your Question bank', 'Earlier page'],
+  ['removeTitle', 'Remove', 'Gỡ “{name}” khỏi danh sách của bạn?', 'Remove “{name}” from your list?', 'Deck'],
+  ['removeBody', 'Remove', 'Bạn sẽ không mở được mục này nữa. Bài giao bạn đã tạo từ nó vẫn chạy bình thường. {owner} có thể chia sẻ lại với bạn.', 'You lose access to it. Assignments you already made from it keep working. {owner} can share it with you again.', 'Deck'],
+  ['removeBodyOff', 'Remove', 'Bạn sẽ không mở được mục này nữa. Bài giao bạn đã tạo từ nó vẫn chạy bình thường. Tài khoản của {owner} đã bị vô hiệu hoá, nên hiện không ai chia sẻ lại được.', 'You lose access to it. Assignments you already made from it keep working. {owner}’s account is disabled, so nobody can share it again for now.', 'New'],
+  ['remove', 'Remove', 'Gỡ', 'Remove', 'Deck'],
+  ['toastRemoved', 'Toast', 'Đã gỡ khỏi Được chia sẻ với tôi', 'Removed from Shared with me', 'Deck'],
+  ['toastGone', 'Toast', 'Mục này không còn được chia sẻ với bạn.', 'This is no longer shared with you.', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+// the deck's own teachers; Lý Thanh Vân is its disabled account
+const SH_INIT = n => { const p = n.split(' '); return (p[p.length - 1][0] + p[0][0]).toUpperCase(); };
+// [id, kind, name, owner, access, [date vi, date en], questions in a set, the owner's account is disabled]
+const ITEMS = [
+  ['s1', 'test', 'IELTS Writing Task 2 · Mock set', 'Phan Minh Đức', 'edit', ['24 thg 9', '24 Sep'], 0, false],
+  ['s2', 'set', 'Collocations', 'Phan Minh Đức', 'use', ['23 thg 9', '23 Sep'], 48, false],
+  ['s3', 'test', 'Kids Starters · Animals quiz', 'Nguyễn Thu Trang', 'edit', ['15 thg 9', '15 Sep'], 0, false],
+  ['s4', 'set', 'Phrasal verbs · B1', 'Lý Thanh Vân', 'use', ['2 thg 9', '2 Sep'], 32, true],
+  ['s5', 'test', 'TOEIC Listening · Part 3', 'Đỗ Hải Yến', 'use', ['28 thg 8', '28 Aug'], 0, false]
+];
+const STATES = [['list', 'The list'], ['loading', 'Loading'], ['empty', 'Nothing shared'], ['noMatch', 'No match'], ['error', 'Could not load'], ['copy', 'Make a copy'], ['copied', 'Copied'], ['remove', 'Remove'], ['removeOff', 'Remove, owner disabled'], ['gone', 'No longer shared']];
+// [pin, note] per state
+const NOTES = {
+  list: [['nav', 'The nav item carries a muted count: what is shared with this teacher now (T-R7.22).'], ['tabs', 'Three tabs in R7: all, tests and questions. “Danh sách từ” and “Khoá học” join with R10, and until then the sub-line names only tests and questions.'], ['kind', 'A question set says its size beside its kind. The deck writes the size into the name; the read returns it as a number.'], ['owner', 'An owner whose account is disabled is flagged under the name. What they shared keeps working, and the row keeps its three actions.'], ['pager', 'The product’s pager and its words. Tab, search and page live in the address.']],
+  loading: [['skeleton', 'Five rows of the table’s own shape. The header, the sentence about access and the tabs are there at once; the counts and the pager come with the list.']],
+  empty: [['msg', 'The plan’s sentence, naming the two kinds R7 has. Nothing can be done here, so there is no action.']],
+  noMatch: [['msg', 'One sentence, and one action that clears the search and goes back to “Tất cả”. The deck draws the sentence alone.']],
+  error: [['msg', 'One sentence and “Thử lại”, inside the card. The header, the callout, the tabs and the search stay.']],
+  copy: [['dialog', 'The deck’s confirm. The copy is the teacher’s own from then on, and nothing ties it to the original.']],
+  copied: [['toast', 'The toast names where the copy went: “Đề thi” for a test, “Ngân hàng câu hỏi” for a set. The list does not change.']],
+  remove: [['dialog', 'A danger confirm, because access ends at once. Assignments already made keep working, and the last sentence says the way back.']],
+  removeOff: [['dialog', 'When the owner’s account is disabled the last sentence says so. The deck’s sentence would promise what cannot happen.']],
+  gone: [['toast', 'The owner stopped sharing while the list was open, and the teacher pressed “Tạo bản sao”. One sentence says why nothing happened, and the list reloads without the row.']]
+};
+const PIN_KEYS = ['nav', 'tabs', 'kind', 'owner', 'pager', 'skeleton', 'msg', 'dialog', 'toast'];
+
+// [part, the deck, this page]
+const ADDS = [
+  ['The kinds', 'Four: tests, question sets, word lists and courses, on five tabs.', 'Two in R7, tests and question sets, on three tabs. The sub-line names only these two. The other two come with R10.'],
+  ['A row’s kind line', '“Question set”; the size is written into the set’s name.', '“Bộ câu hỏi · 48 câu”, from the count the read returns (Q2).'],
+  ['Shared by', 'Initials and a name.', 'The same, with “Tài khoản đã vô hiệu hoá” under the name when the owner’s account is disabled.'],
+  ['While it loads', 'Not drawn.', 'Five skeleton rows under the table’s header. The tab counts and the pager come with the list.'],
+  ['Nothing shared', 'A sentence that names four kinds.', 'The sentence names the two kinds R7 has.'],
+  ['A search that matches nothing', '“Nothing matches.”', 'The sentence, and “Xoá bộ lọc”.'],
+  ['A list that cannot load', 'Not drawn.', 'One sentence and “Thử lại” inside the card.'],
+  ['Make a copy', 'A confirm and a toast.', 'The same in Vietnamese. The toast names where the copy went.'],
+  ['Remove', 'A danger confirm and a toast.', 'The same, with another last sentence when the owner’s account is disabled (Q3).'],
+  ['An item that is gone', 'Not drawn.', 'A toast that says it is no longer shared, and the list reloads.'],
+  ['The pager', '“Page 1 of 1”.', 'The product’s pager and its words.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, cause]
+const WHENS = [
+  ['The list is loading', 'Skeleton rows. No tab counts and no pager yet.', 'The first read of GET /teacher/shared-with-me.'],
+  ['Nothing is shared with the teacher', 'The empty sentence in the card. Every count is 0, and the nav item has no count.', 'total is 0 with no kind and no q.'],
+  ['A tab or a search leaves nothing', '“Không có mục nào khớp.” and “Xoá bộ lọc”.', 'total is 0 with a kind or a q. q matches the name and the owner, without accents.'],
+  ['The list cannot load', 'One sentence and “Thử lại” in the card.', 'The server did not answer, or the device is offline.'],
+  ['The owner’s account is disabled', '“Tài khoản đã vô hiệu hoá” under the owner’s name. The row keeps its three actions.', 'owner.disabled. A disabled owner’s grants stay valid (T-R7.8).'],
+  ['“Mở” on a test', 'The builder: read-only for “Có thể dùng”, and saving to the owner’s test for “Có thể sửa”.', 'Drawn on the Access modes page.'],
+  ['“Mở” on a question set', 'The set’s page.', 'Drawn on the Question sets page.'],
+  ['“Tạo bản sao” is confirmed', 'The toast “Đã sao chép vào Đề thi của bạn”, or “… Ngân hàng câu hỏi của bạn” for a set. The list stays as it is.', 'POST /teacher/tests/{id}/copy, or the set’s copy (T-R7.7).'],
+  ['“Gỡ” is confirmed', 'The row leaves, the counts drop, and the toast reads “Đã gỡ khỏi Được chia sẻ với tôi”.', 'DELETE /teacher/shared-with-me/{shareId}. The recipient leaves; the owner’s content does not change.'],
+  ['An action meets an item that is no longer shared', 'The toast “Mục này không còn được chia sẻ với bạn.”, and the list reloads.', '404 on the copy or on the remove: the owner stopped sharing, or deleted it, after the list was read.'],
+  ['Below 768px', 'The table keeps its 820px and scrolls sideways inside its card. The page does not scroll sideways.', 'T-R7.17. The three actions are at the far end of a row (Q1).'],
+  ['The counts under a search', 'They follow the search.', 'The plan does not say whether counts answers for q. Drawn as if it does; T-R7.17 settles it against the read of T-R7.3.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · On a phone', 'Is a table that scrolls sideways right for a phone?', 'The plan keeps the deck’s table at 820px and lets it scroll inside its card. At 360 that shows the name and part of the owner; the access, the date and the three actions are a swipe away. The product’s other lists turn into cards below 768px, but a card there holds no button, so “Tạo bản sao” and “Gỡ” would need a new place.', 'As planned: the table scrolls. The row’s name opens the item, as a row does in the product’s other tables, so the first action needs no swipe.'],
+  ['Q2 · A set’s size', 'Should a question set’s row say how many questions it holds?', 'The deck writes the size into the set’s name. The read returns it as questionCount, and a teacher choosing between two sets reads it first.', '“Bộ câu hỏi · 48 câu” on the kind line. A test’s line stays “Đề thi”.'],
+  ['Q3 · What a disabled colleague shared', 'What should the Remove confirm say when the owner’s account is disabled?', 'The deck’s last sentence promises that the owner can share it again. A disabled account cannot sign in, so that is not true until an admin enables the account or transfers its content.', 'Another last sentence: “Tài khoản của {owner} đã bị vô hiệu hoá, nên hiện không ai chia sẻ lại được.”'],
+  ['Q4 · “Gỡ” or “Xoá”', 'Is “Gỡ” the word for leaving something that was shared with you?', 'Nothing is deleted: the item stays its owner’s. The Question sets page already uses “Gỡ” for taking a question out of a set, and keeps “Xoá” for deleting.', '“Gỡ khỏi danh sách của tôi” on the button, and “Gỡ” in the confirm.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['SharedWithMePage', 'The sub-line and the tabs for two kinds, the callout, the card’s four states, and tab, search and page in the address.'],
+  ['DataTable', 'Five columns at a minimum of 820px: the kind line with a set’s size, the disabled owner’s second line, the access pill of the Question sets page. No cards below 768px, as planned (Q1).'],
+  ['ListState', 'The skeleton rows, and the two sentences with their one action each.'],
+  ['ConfirmDialog', 'Make a copy; Remove as a danger confirm, with its second body for a disabled owner (Q3).'],
+  ['Toasts', 'Copied, by kind; removed; and “no longer shared” when an action answers 404.'],
+  ['Pager', 'As the product has it, with “mục” as its noun.'],
+  ['Locales', 'The copy table: forty strings, Vietnamese first. Seven were proposed on the Question sets page and keep their words.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher page (“Shared with me” and its fixtures), R7’s plan (docs/plan/77-r7.md: T-R7.3, T-R7.7, T-R7.8, T-R7.17), the product’s data table, list states, confirm dialog and pager, and the two earlier proposal pages for their words. Sharing is not built yet, so there was no screen to run.'],
+  ['What it leaves alone.', 'The layout, the columns, the pill and the three actions are the deck’s. No operation changes.'],
+  ['What is not drawn.', 'What “Mở” leads to and the share dialog, which the Access modes and Question sets pages draw, and the tabs for word lists and courses, which are R10’s.']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', st: 'list', anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const st = s.st;
+    const noteList = NOTES[st] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+
+    // ---- what the read returned
+    const loading = st === 'loading', failed = st === 'error';
+    // what is shared with the teacher; in "gone" the owner of s3 has just stopped sharing
+    const mine = st === 'empty' ? [] : st === 'gone' ? ITEMS.filter(x => x[0] !== 's3') : ITEMS;
+    const found = st === 'noMatch' ? [] : mine;
+    const shown = loading || failed ? [] : found;
+    const count = k => found.filter(x => k === 'all' || x[1] === k).length;
+    const firstSet = shown.findIndex(x => x[1] === 'set');
+    const rows = shown.map((x, i) => ({ icon: x[1] === 'test' ? 'file-text' : 'library', name: x[2], type: x[1] === 'test' ? tx.kindTest : fmt(tx.kindSet, { count: x[6] }), pinKind: i === firstSet,
+      owner: x[3], init: SH_INIT(x[3]), off: x[7], perm: x[4] === 'edit' ? tx.canEdit : tx.canUse, pIcon: x[4] === 'edit' ? 'pencil' : 'eye',
+      pBg: x[4] === 'edit' ? 'var(--accent-soft)' : 'var(--muted)', pFg: x[4] === 'edit' ? 'var(--accent-ink)' : 'var(--muted-fg)', when: x[5][li] }));
+    const hasRows = rows.length > 0;
+    const Q = 'speaking part 2';
+    const msg = { empty: [tx.empty, '', ''], noMatch: [tx.noMatch, tx.clear, 'x'], error: [tx.loadFailed, tx.retry, 'rotate-cw'] }[st];
+
+    // ---- the confirm and the toast
+    const T1 = ITEMS[0], T4 = ITEMS[3];
+    const plain = { btnBg: 'var(--primary)', btnFg: 'var(--primary-fg)' }, danger = { btnBg: 'var(--danger)', btnFg: '#fff' };
+    const dlg = {
+      copy: { open: true, title: fmt(tx.copyTitle, { name: T1[2] }), body: fmt(tx.copyBody, { owner: T1[3] }), confirm: tx.copy, ...plain },
+      remove: { open: true, title: fmt(tx.removeTitle, { name: T1[2] }), body: fmt(tx.removeBody, { owner: T1[3] }), confirm: tx.remove, ...danger },
+      removeOff: { open: true, title: fmt(tx.removeTitle, { name: T4[2] }), body: fmt(tx.removeBodyOff, { owner: T4[3] }), confirm: tx.remove, ...danger }
+    }[st] || { open: false, title: '', body: '', confirm: '', ...plain };
+    const toast = { copied: [tx.toastCopiedTest, 'circle-check', 'var(--success)'], gone: [tx.toastGone, 'circle-alert', 'var(--danger-ink)'] }[st];
+
+    const on = x => ({ bg: x ? 'var(--card)' : 'transparent', fg: x ? 'var(--fg)' : 'var(--muted-fg)', ring: x ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' });
+    const m = {
+      tabs: [['all', tx.tabAll], ['test', tx.tabTests], ['set', tx.tabQuestions]].map(([k, label], i) => ({ label, hasCount: !loading && !failed, count: String(count(k)), ...on(i === 0) })),
+      q: st === 'noMatch' ? Q : tx.search, qFg: st === 'noMatch' ? 'var(--fg)' : 'var(--muted-fg)', hasQ: st === 'noMatch',
+      hasRows, rows, loading,
+      skel: [0, 1, 2, 3, 4].map(i => ({ w1: ['62%', '48%', '70%', '54%', '66%'][i], w2: ['34%', '42%', '30%', '40%', '36%'][i], w3: ['70%', '58%', '76%', '64%', '60%'][i] })),
+      hasMsg: !!msg, msg: msg ? msg[0] : '', hasMsgAct: !!(msg && msg[1]), msgAct: msg ? msg[1] : '', msgActIcon: msg ? msg[2] : '',
+      hasFoot: !loading && !failed, range: hasRows ? fmt(tx.range, { from: 1, to: rows.length, total: rows.length }) : tx.rangeNone, hasPage: hasRows, pageOf: fmt(tx.pageOf, { page: 1, pages: 1 }),
+      dlg, hasToast: !!toast, toast: toast ? toast[0] : '', toastIcon: toast ? toast[1] : '', toastFg: toast ? toast[2] : ''
+    };
+
+    // ---- the shell
+    const navOn = 'shared';
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: id === navOn && pin.nav.on });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('messages', 'message-square', vi ? 'Tin nhắn' : 'Messages')] },
+      { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', vi ? 'Lớp học' : 'Classes'), item('students', 'users', vi ? 'Học viên' : 'Students')] },
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'share-2', tx.title, mine.length), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'image', vi ? 'Thư viện media' : 'Media')] }
+    ];
+
+    const W = s.stageW || 1280;
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Teacher · Shared with me · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: !phone, tBar: true,
+      barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px' : '24px 28px 28px', gap: phone ? '12px' : '16px', h1: phone ? '20px' : '24px',
+      btnH: phone ? '44px' : '36px', rowBtn: '30px', fieldH: phone ? '44px' : '34px', tabH: phone ? '40px' : '30px', searchFlex: phone ? '1 1 100%' : '0 1 280px'
+    });
+    const frames = [mk(1280, 800, Math.min(1, W / 1280), false, 'the sidebar, and the table at its full width'), mk(360, 800, Math.min(1, W / 360), true, 'the table scrolls sideways inside its card')];
+
+    const ctl = [
+      { label: 'State', opts: this.seg(STATES, st, v => this.setState({ st: v })) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+
+    const tone = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)', 'Earlier page': 'var(--muted-fg)' };
+    const stLabel = (STATES.find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, frames, ctl, stageRef: this.stageRef,
+      chips: ['R7 · v0.14.0', 'T-R7.17', 'DG-83, DG-90', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, st: 'list' }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What is new on “' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

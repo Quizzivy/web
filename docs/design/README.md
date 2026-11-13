@@ -526,6 +526,15 @@ To view one, start the server above and open, for example,
   questions; the first is that a weight is shown with "%" and is a percent only while a term's
   weights add to 100. Its saved toast leaves out the Settings tab's sentence about students,
   who never see a weight.
+- 2026-11-13 — Thirteenth proposal page: `proposals/R9 Gradebook Screen.dc.html`, for DG-93
+  and DG-83 (R9; T-R9.7). The deck draws the gradebook once, at a desktop's width, with one
+  term named in a sentence. The page draws what R9 adds: the term as a button beside Export
+  with its menu, "Tất cả học kỳ", and no button when no term is set; a select in place of the
+  class tabs from the sixth class and below 768px; a cell's tooltip; the tinted row a teacher
+  arrives at from Students; and the screen with no class, no work in the term, loading and
+  failed. Ten states, at 1280 and 360, light and dark, Vietnamese and English. No operation
+  changes. The phone frame is new throughout: the student column loses its avatar and narrows
+  so two grades show beside a name. Its three questions for Thuong are on the page.
 
 ## The brand
 

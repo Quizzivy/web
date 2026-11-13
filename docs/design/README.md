@@ -458,7 +458,9 @@ To view one, start the server above and open, for example,
   has no conversation with, under "Học viên chưa nhắn tin", a former student marked "Học viên
   cũ". Finding a current student there was not asked; it comes with the same search. The
   server keeps no record of a past class membership, so the plan gains one (T-R7.9, O-R7.8),
-  and a student who left before R7 is found only if they joined with a code.
+  and a student who left before R7 is found only if they joined with a code. Asked about the
+  other side, he kept it as planned: a student cannot write first to a teacher of a class
+  they left.
 
 ## The brand
 

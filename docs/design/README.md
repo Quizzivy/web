@@ -566,11 +566,96 @@ To view one, start the server above and open, for example,
   the page, the same day. T-R10.14 is changed to match in Quizzivy/docs#15.
 - 2026-11-14 — The sidebar's icons on the proposal pages. Eight pages drew "Shared with me"
   and "Media" with icons of their own. They now use the deck's (`users-round`, `audio-lines`).
+- 2026-11-14 — Sixteenth proposal page: `proposals/R10 Student Lesson.dc.html`, for DG-94 and
+  DG-83 (R10; T-R10.16). The deck draws the student's Lesson page for a reading. The page keeps
+  it as it is and draws the other kinds inside it: a video and a listening with the browser's
+  player and the teacher's notes; flashcards and a test with one card and one button; the
+  course's last lesson; a lesson opened while it is locked; loading, a failed read, and a video
+  that cannot play. Eighteen states, at 1280 and 360, light and dark, Vietnamese and English.
+  Its first table sets the deck's Learn screens beside it, part by part, and none of them
+  changes. No operation changes; what T-R10.9 would need for a locked lesson is on the page's
+  handoff. Its three questions for Thuong are on the page: the pill's colour, the button after
+  a test is handed in, and the phrase for "Mark as done".
 - 2026-11-14 — The page frame on the earlier proposal pages. Eight of them (R7 Shared With Me;
   R8 Session Popover, Terms, Week and Class Schedule, Attendance States; R9 Gradebook Weights,
   Gradebook Screen, Reports and Grades) held their teacher or admin page in the v2 deck's
   1320px or 1080px container. Each now holds it in the frame's 1600px (DG-205). Nothing moves
   on screen: at 1280 the frame is 976px wide and at 360 it is 332px, under either limit.
+- 2026-11-14 — Seventeenth proposal page: `proposals/R10 Course Detail.dc.html`, for DG-94,
+  DG-90 and DG-83 (R10; T-R10.13). The deck draws Course detail for a published course of the
+  teacher's own. The page keeps it as it is, in the workspace's page frame, and draws what it
+  leaves out: a draft course with "Phát hành", resting with its reason while no lesson is
+  published; "Chia sẻ" and a "…" menu in the heading, with the details edited in New course's
+  dialog, the delete confirmation, and the refusal when a class still has the course; a "…" on
+  each unit, to edit or delete it; a lesson lifted by its grip; a course shared with Can use
+  and with Can edit; a course with no unit, loading, and a failed read. Sixteen states, at
+  1280, 360 and 1920, light and dark, Vietnamese and English. Its first table sets the deck's
+  Courses part beside it, part by part, and none of it changes. No operation changes. Its four
+  questions for Thuong are on the page: unpublishing a course, where a course is renamed, a
+  menu on each unit, and the width from which the side cards sit beside the units (T-R10.13
+  says 1000px of content; the deck's layout gives about 800, and a 1280 screen has 976). The
+  lesson editor's page now writes a unit's "Open now" as "Mở ngay", the words this page uses.
+- 2026-11-14 — Eighteenth proposal page: `proposals/R10 Vocabulary.dc.html`, for DG-95, DG-90
+  and DG-83 (R10; T-R10.12). The deck draws Vocabulary and a word list for a teacher's own
+  lists. The page keeps both as they are, in the workspace's page frame, and draws what they
+  leave out: "Phát âm" in the word dialog, which is the Question editor's media field for one
+  audio file, with the browser's voice when there is none; an import's result, in the rows and
+  the table of Admin › Users' import; "Chia sẻ" and a "…" menu on a list, with its details
+  edited in New word list's dialog, the delete confirmation and its refusal; a list shared with
+  Can use and with Can edit; and the pages empty, loading and failing. Twenty states, at 1280,
+  360 and 1920, light and dark, Vietnamese and English. Its first table sets the deck's
+  Vocabulary part beside it, part by part, and none of it changes. No operation changes; what
+  T-R10.4 would need for a refused row is on the page's handoff. Its three questions for
+  Thuong are on the page: "Sửa thông tin" or "Đổi tên" for a list, the sign-off DG-95 asks
+  for, and the three words on the progress card. On a phone the table's two columns share the
+  width: the deck's minimums would push a row's "…" off a 360 screen.
+- 2026-11-14 — Nineteenth proposal page: `proposals/R10 Practice Reminder.dc.html`, for DG-229
+  and DG-82 (R10; T-R10.6 and T-R10.18). R10 reminds a student at 19:00 on a day with words to
+  review and no practice yet. The deck draws the two switches behind it and Home's Practice
+  card, and no email. The page draws the email in the Email Layout page's panel (the subject
+  and the heading "{n} từ cần ôn hôm nay", two sentences, one button, one line on when it
+  comes, the footer, a form for one word, and the text part), the item in the bell, and the
+  student's switch in the product's card. Five states, light and dark, Vietnamese and English;
+  the email in a reading pane and on a phone, the app at 1280 and 360. No operation changes;
+  what T-R10.6 would need is on the page's handoff: a step that drops a reminder that could
+  not leave on its day, and a look at the daily email budget. Its three questions for Thuong
+  are on the page: what the email says, the words, and the item's colour in the bell.
+- 2026-11-14 — The Email Layout page's links. Its examples named app.quizzivy.com, which is
+  gone since v0.13.5. A student's links are now on my.quizzivy.com with no `/app` in front,
+  the staff's on portal.quizzivy.com, and the two example routes that did not exist are the
+  product's (`/attempts/{id}/result`, `/teacher/attempts/{id}`).
+- 2026-11-14 — Twentieth proposal page: `proposals/R11 Landing.dc.html`, for DG-100, DG-101,
+  DG-02 and DG-06 (R11; T-R11.3, T-R11.4a, T-R11.4b, T-R11.7). The owner asked for the Landing
+  of quizzivy.com ahead of the rest. The first drawing set the deck's sections in a row and
+  changed some of their words. He answered with a designer's landing page for an online
+  course site and asked for that kind of work: plain words a person would read, nothing made
+  up, and pictures from free stock libraries. The page was drawn again the same day. Its top
+  is a soft block of the brand's lime with one photo of a person in an arch, a test question
+  and a marked result from the deck resting on the photo, and a strip of four short facts
+  where such a page keeps its numbers, since Quizzivy has none to show yet. Each role has a
+  photo. The words are the deck's own: only "Vào lớp" changes, to the app's "Tham gia lớp",
+  and "Five question types" loses its number. The four photos are from StockSnap under CC0,
+  cropped, and kept in `proposals/landing/` with `CREDITS.md`. It still settles what the app's
+  two sites change ("Đăng nhập" with a choice for each, the join box opening the students'
+  site) and draws what the deck leaves out (the menu below 960, the join box's refusals, the
+  form's box to tick and its states). Eighteen states at 1280 and 360 (768 for the header),
+  light and dark, Vietnamese and English. Its seven questions for Thuong are on the page.
+- 2026-11-14 — The Landing proposal, drawn a third time on the owner's notes. The small label
+  above the headline is gone. The two pieces of the product on the photo are gone: the photo
+  has three brush strokes behind it and a few drawn marks around. The words no longer come
+  from the deck's Landing, which spoke of classes in general; they say what this system is
+  and does (lessons in units, flashcards reviewed daily, tests that save every answer, essays
+  marked on a band), and the copy table names what each line rests on in the spec and the
+  plans for R6 to R10. The phone is 036 321 6199 and the address "TP. Hồ Chí Minh". The
+  sections between the top and the form were laid out for this page, after the e-learning
+  templates in Figma's community: four steps on a card over the edge of the colour, three
+  rows that change sides with an illustration each, three cards with a photo each in place
+  of the role tabs, a soft band for fair tests, one dark panel for the consultation, and the
+  questions on cards. The header, the join box, the form's fields, the five questions and
+  the footer's columns stay the deck's. Five illustrations are unDraw's, recoloured to the
+  brand's lime; the brush stroke, sparkle, squiggle and underline were drawn for the page
+  and take the theme's colours. Fifteen states now (the role tabs are gone), at 1280 and 360
+  (768 for the header), light and dark, Vietnamese and English. Eight questions for Thuong.
 
 ## The brand
 

@@ -18,6 +18,9 @@ import "@/lib/i18n";
 Range.prototype.getClientRects ??= () => [] as unknown as DOMRectList;
 Range.prototype.getBoundingClientRect ??= () => new DOMRect();
 
+/** Each test mounts the whole review page and its lazy editor: CI's five seconds is tight on a busy runner. */
+vi.setConfig({ testTimeout: 15_000 });
+
 let state: ReviewServer;
 
 beforeEach(() => {

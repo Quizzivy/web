@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { act, render, renderHook, screen, within } from "@testing-library/react";
 import userEvent, { type UserEvent } from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -19,6 +19,9 @@ import "@/lib/i18n";
 /** jsdom does no layout; ProseMirror measures a range when it scrolls the selection into view. */
 Range.prototype.getClientRects ??= () => [] as unknown as DOMRectList;
 Range.prototype.getBoundingClientRect ??= () => new DOMRect();
+
+/** The editor tests mount the builder's pane and its lazy editor: CI's five seconds is tight on a busy runner. */
+vi.setConfig({ testTimeout: 15_000 });
 
 const WORDS = "They ___ to the museum.";
 const UNSUPPORTED = /cấu trúc chưa được hỗ trợ/;

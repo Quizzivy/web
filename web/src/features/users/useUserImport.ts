@@ -45,9 +45,10 @@ function newRequestId() {
  * after a read fails, until one succeeds; when
  * it settles, the Users list is read again and, if the dialog is closed, a
  * toast says how it ended. While a sheet job runs, or its sheet waits to be
- * taken, closing or reloading the tab asks first, because the sheet is offered
- * only here. `dismiss` is called when the dialog closes: it forgets the draft,
- * and a settled job whose sheet can no longer be taken.
+ * taken (`holdsSheet`), closing or reloading the tab asks first, because the
+ * sheet is offered only here; the dialog asks the same of a move inside the
+ * app. `dismiss` is called when the dialog closes: it forgets the draft, and a
+ * settled job whose sheet can no longer be taken.
  */
 export function useUserImport(open: boolean) {
   const { t } = useTranslation();
@@ -149,6 +150,7 @@ export function useUserImport(open: boolean) {
     start,
     jobId,
     job,
+    holdsSheet,
     choose(file: File | null) {
       start.reset();
       setRequestId(newRequestId());

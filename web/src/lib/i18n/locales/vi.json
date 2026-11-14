@@ -1058,6 +1058,13 @@
       "running": "Đang tạo tài khoản… {{done}}/{{total}}",
       "leave": "Bạn có thể đóng hộp thoại; việc nhập vẫn tiếp tục và danh sách sẽ tự cập nhật.",
       "leaveSheet": "Bạn có thể đóng hộp thoại; việc nhập vẫn tiếp tục. Hãy ở lại trang này: khi việc nhập xong, bảng mật khẩu chỉ tải được ở đây.",
+      "leaveAsk": {
+        "title": "Rời trang khi chưa tải bảng mật khẩu?",
+        "running": "Việc nhập vẫn tiếp tục, nhưng bảng mật khẩu chỉ tải được ở trang này. Nếu rời trang, bạn sẽ phải đặt lại mật khẩu cho những tài khoản mới từ danh sách Người dùng.",
+        "waiting": "Bảng mật khẩu chưa được tải và chỉ tải được ở trang này. Nếu rời trang, bạn sẽ phải đặt lại mật khẩu cho những tài khoản mới từ danh sách Người dùng.",
+        "confirm": "Rời trang",
+        "stay": "Ở lại"
+      },
       "summary": "{{created}} · {{skipped}}",
       "created_other": "{{count}} tài khoản đã tạo",
       "skipped_other": "{{count}} bỏ qua",

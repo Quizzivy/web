@@ -665,6 +665,20 @@ To view one, start the server above and open, for example,
   header keeps three of the deck's four links ("Dành cho bạn" is gone), the three role
   photos leave `proposals/landing/`, and the copy table is 67 strings. The first question
   stays decided as learners first, without the two cards it spoke of.
+- 2026-11-14 — The Landing opens ahead of v1.0, on the owner's word, and is to be built from
+  this page. So it now says only what the product has today (v0.13.6 on develop), which is
+  tests: the headline's two words under the line are "làm bài"; the four steps are join,
+  get the tests, take them, see the results; the three rows are the kinds of question,
+  taking a test, and results. Each line was checked against the app's own Vietnamese
+  strings (the eight question types by their names, the rules a student reads, saving when
+  the connection drops, the best score of several attempts, the result's filter). What the
+  third drawing said about lessons and vocabulary is kept as a state, "Later, with lessons
+  and vocabulary", and its strings are marked "Later" in the copy table: they take the
+  place of today's when R10 is out. Two more unDraw illustrations (seven in all). Sixteen
+  states, 94 strings. The second question is decided; six are open. The page's handoff
+  names what the Landing needs before it can open: the operation the form sends to
+  (T-R11.6), and the privacy notice and the status page it links to (T-R11.8), none of
+  which is built or drawn.
 
 ## The brand
 

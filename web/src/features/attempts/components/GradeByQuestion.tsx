@@ -1,7 +1,7 @@
 import { ReviewGroup } from "@/features/media";
 import { PromptMedia } from "@/features/take-test/components/PromptMedia";
 import { QuestionProse } from "@/components/shared/content/QuestionProse";
-import { useEffect, useId, useRef, useState } from "react";
+import { useEffect, useEffectEvent, useId, useRef, useState } from "react";
 import { Trans, useTranslation } from "react-i18next";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, Check, Eye, Minus, Plus } from "lucide-react";
@@ -46,7 +46,10 @@ import type { GradeMarks } from "./GradingCard";
  * The answers are read again when the window regains focus, since another
  * tab or teacher may grade these papers meanwhile. Next question, Grade per
  * paper, and a save and next that would leave another row's unsaved marks
- * ask before they drop them.
+ * ask before they drop them. A move to the next question that takes away
+ * what held focus, a row's box after save and next, puts focus on the first
+ * answer of the new question still to mark, or on Next question when it has
+ * none to mark by hand (GF-7); the heading's own button keeps it.
  */
 export function GradeByQuestion({
   assignmentId,
@@ -70,6 +73,8 @@ export function GradeByQuestion({
     message: string;
   } | null>(null);
   const inputs = useRef(new Map<string, HTMLElement>());
+  const nextButton = useRef<HTMLButtonElement>(null);
+  const landing = useRef(false);
   const confirmMove = useConfirmMove();
 
   const answers = useQuery({
@@ -132,9 +137,24 @@ export function GradeByQuestion({
       );
   const goNext = () => {
     if (nextId === undefined) return;
+    landing.current = true;
     setQuestionId(nextId);
     setShowNames(false);
   };
+  const land = useEffectEvent(() => {
+    const active = document.activeElement;
+    if (active instanceof HTMLElement && active !== document.body) return;
+    const marked = (row: QuestionAnswerRow) => inputs.current.get(row.attemptId);
+    const first =
+      items.find((row) => row.manualScore == null && marked(row)) ??
+      items.find((row) => marked(row));
+    (first ? marked(first) : nextButton.current)?.focus();
+  });
+  useEffect(() => {
+    if (!landing.current || data === undefined) return;
+    landing.current = false;
+    land();
+  }, [data]);
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
@@ -166,6 +186,7 @@ export function GradeByQuestion({
               </>
             ) : null}
             <Button
+              ref={nextButton}
               variant="outline"
               size="sm"
               aria-disabled={nextId === undefined || undefined}

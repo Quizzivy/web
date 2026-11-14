@@ -271,4 +271,25 @@ describe("the monitor", () => {
     await waitFor(() => expect(voided).toEqual({ reason: "Làm nhầm đề" }));
     await waitFor(() => expect(screen.queryByRole("dialog")).not.toBeInTheDocument());
   });
+  it.each([
+    ["Huỷ lượt làm này", "textbox", "Lý do"],
+    ["Cho làm lại", "textbox", "Lý do"],
+    ["Gia hạn thời gian", "combobox", "Cộng thêm"],
+  ])(
+    "opens “%s” with focus on its first field, not on Cancel (GF-5)",
+    async (item, role, name) => {
+      const user = userEvent.setup();
+      renderMonitor(true);
+      const row = (await screen.findByText("Phạm Gia Hân")).closest<HTMLElement>(
+        '[role="row"]',
+      )!;
+      await user.click(within(row).getByRole("button", { name: "Thao tác" }));
+      await user.click(await screen.findByRole("menuitem", { name: item }));
+
+      const dialog = await screen.findByRole("dialog");
+      await waitFor(() =>
+        expect(within(dialog).getByRole(role, { name })).toHaveFocus(),
+      );
+    },
+  );
 });

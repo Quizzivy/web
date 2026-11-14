@@ -1,0 +1,513 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R10 Learn · The lesson editor · Proposal · 14 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The lesson editor, for the five kinds of lesson</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws a course as units of lessons, and a lesson as a row: “Video · 6 min”, “Flashcards · 18 words”. Pressing a row opens nothing. R10 builds the screen behind it (T-R10.14) and asks for a drawing (DG-94). This page draws one, from parts the deck already has: the course’s heading, the question builder’s editor and media block, and the product’s upload row. A reading has a body and its minutes; a video and a listening have a file and notes; flashcards and a test point at a word list and a test. One footer saves, publishes and deletes. Nothing here changes an operation.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">One screen</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Five kinds, one shape.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>A heading with the kind’s tile, the title and the status; the title field; what the kind needs; a footer. A teacher who has edited one kind knows the other four.</li>
+      <li><span style="color:var(--fg)">The kind is a label, not a field.</span> It is chosen when the lesson is added, and the plan has no way to change it afterwards (Q2).</li>
+      <li>One column, at most 760 wide, so a body’s lines are about as long as on the student’s page, which is 720 wide.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Parts the deck has</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Nothing new to learn, and nothing new to build twice.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>A body and notes are edited in the editor the question builder uses, with the same toolbar.</li>
+      <li><span style="color:var(--fg)">A video and an audio file use the builder’s media block:</span> drop a file, choose one, or take one from Media. The limits are on the block before anything is chosen.</li>
+      <li>Progress and refusals are the product’s upload row and its sentences, with a video’s own limits: MP4, 95 MB, 30 minutes.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Saving</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Nothing saves by itself, and the footer says where things stand.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>“Lưu” wakes when something has changed. Leaving with changes asks first.</li>
+      <li><span style="color:var(--fg)">“Phát hành” saves what is on the screen and publishes it.</span> When the kind’s file, list or test is missing, the field says so and the lesson stays a draft.</li>
+      <li>Deleting asks, and says what students lose: their progress on the lesson, or for a test lesson that its assignment closes and results stay.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The editor at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick the kind of lesson and its state in the bar above. The lesson’s own words stay in English, as a teacher of English writes them. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:6px;min-width:0;font-size:13.5px"><sc-for list="{{ crumbs }}" as="c" hint-placeholder-count="3"><sc-if value="{{ c.sep }}" hint-placeholder-val="{{ false }}"><i class="icon-chevron-right" style="font-size:14px;color:var(--muted-fg)"></i></sc-if><span style="white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ c.color }};font-weight:{{ c.weight }}">{{ c.label }}</span></sc-for></span></sc-if><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="min-width:0;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ le.barTitle }}</span></sc-if>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+                <div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                  <sc-if value="{{ le.ready }}" hint-placeholder-val="{{ true }}"><div style="display:flex;align-items:flex-start;gap:12px"><span style="width:36px;height:36px;flex:none;border-radius:9px;display:grid;place-items:center;background:{{ le.tileBg }};color:{{ le.tileFg }}"><i class="icon-{{ le.icon }}" style="font-size:18px"></i></span><div style="min-width:0;flex:1"><div style="display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;min-width:0">{{ le.title }}</div><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ le.stBg }};color:{{ le.stFg }}"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ le.stDot }}"></span>{{ le.stLabel }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.head.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.head.n }}</span></sc-if></sc-if></div><div style="margin-top:3px;color:var(--muted-fg);font-size:13.5px">{{ le.sub }}</div></div></div><div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500">{{ tx.title }}</span><span style="display:flex;align-items:center;height:{{ f.inH }};padding:0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:14px"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ le.title }}</span></span></div><sc-if value="{{ le.hasMedia }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500">{{ mb.label }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.media.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.media.n }}</span></sc-if></sc-if></span><sc-if value="{{ mb.empty }}" hint-placeholder-val="{{ true }}"><div style="border:1.5px dashed var(--border);border-radius:10px;padding:14px 16px;display:flex;align-items:center;gap:12px 14px;flex-wrap:wrap"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ mb.icon }}" style="font-size:17px"></i></span><span style="flex:1 1 220px;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500">{{ mb.dropTitle }}</span><span style="display:block;font-size:12px;color:var(--muted-fg);line-height:1.5">{{ mb.limits }}</span></span><span style="display:flex;gap:6px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap"><i class="icon-upload" style="font-size:14px"></i>{{ tx.chooseFile }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;font-size:13px;font-weight:500;white-space:nowrap"><i class="icon-library" style="font-size:14px"></i>{{ tx.fromMedia }}</span></span></div></sc-if><sc-if value="{{ mb.uploading }}" hint-placeholder-val="{{ false }}"><div style="border:1px solid var(--border);border-radius:10px;padding:12px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;min-width:0"><i class="icon-{{ mb.fileIcon }}" style="font-size:16px;color:var(--muted-fg)"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mb.name }}</span></div><div style="display:flex;align-items:center;gap:12px"><span style="flex:1;min-width:0;height:8px;border-radius:8px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ mb.pct }};background:var(--primary)"></span></span><span style="font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums;white-space:nowrap">{{ mb.progress }}</span><span style="width:28px;height:28px;flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></div></div><span style="font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ tx.keepOpen }}</span></sc-if><sc-if value="{{ mb.has }}" hint-placeholder-val="{{ false }}"><div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:12px;padding:10px 12px"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--info-soft);color:var(--info-ink);display:grid;place-items:center"><i class="icon-{{ mb.icon }}" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ mb.name }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ mb.meta }}</span></span><span style="height:30px;padding:0 10px;display:inline-flex;align-items:center;border-radius:7px;font-size:12.5px;font-weight:500;white-space:nowrap">{{ tx.replace }}</span><span style="width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-trash-2" style="font-size:15px"></i></span></div><sc-if value="{{ mb.isVideo }}" hint-placeholder-val="{{ false }}"><div style="border-top:1px solid var(--border);padding:12px;background:var(--sidebar);display:flex;align-items:flex-start;gap:10px"><div style="position:relative;flex:1 1 auto;min-width:0;max-width:520px;aspect-ratio:16/9;border-radius:8px;background:#0c1210;display:grid;place-items:center;overflow:hidden"><span style="width:52px;height:52px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;color:#fff"><i class="icon-play" style="font-size:22px"></i></span><div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;font-size:12px;font-variant-numeric:tabular-nums"><i class="icon-play" style="font-size:14px"></i><span style="white-space:nowrap">0:00 / {{ mb.len }}</span><span style="flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.3)"></span><i class="icon-volume-2" style="font-size:14px"></i><i class="icon-maximize" style="font-size:14px"></i></div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.preview.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.preview.n }}</span></sc-if></sc-if></div></sc-if><sc-if value="{{ mb.isAudio }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-top:1px solid var(--border);background:var(--sidebar)"><span style="display:flex;align-items:center;gap:10px;flex:1;min-width:0;max-width:520px;height:36px;padding:0 14px;border-radius:999px;background:var(--muted);font-size:12px;font-variant-numeric:tabular-nums"><i class="icon-play" style="font-size:14px"></i><span style="white-space:nowrap">0:00 / {{ mb.len }}</span><span style="flex:1;height:3px;border-radius:3px;background:var(--border)"></span><i class="icon-volume-2" style="font-size:14px"></i></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.preview.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.preview.n }}</span></sc-if></sc-if></div></sc-if></div></sc-if><sc-if value="{{ mb.alert }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;align-items:flex-start;gap:12px;padding:12px 14px;border-radius:10px;background:{{ mb.alertBg }}"><i class="icon-{{ mb.alertIcon }}" style="font-size:18px;color:{{ mb.alertFg }};margin-top:1px;flex:none"></i><div style="min-width:0;flex:1"><div style="font-size:13.5px;font-weight:500">{{ mb.alertTitle }}</div><div style="margin-top:3px;font-size:12.5px;color:var(--muted-fg);line-height:1.55;overflow-wrap:anywhere;text-wrap:pretty">{{ mb.alertText }}</div><sc-if value="{{ mb.alertAct }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap;margin-top:10px"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span></sc-if></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.alert.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.alert.n }}</span></sc-if></sc-if></div></sc-if></div></sc-if><sc-if value="{{ le.hasSelect }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500">{{ sel.label }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.select.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.select.n }}</span></sc-if></sc-if></span><sc-if value="{{ sel.box }}" hint-placeholder-val="{{ true }}"><div style="position:relative"><div style="display:flex;align-items:center;gap:10px;height:{{ f.inH }};padding:0 12px;border:1px solid {{ sel.border }};border-radius:8px;background:var(--bg);font-size:14px"><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;color:{{ sel.fg }}">{{ sel.value }}</span><sc-if value="{{ sel.hasMeta }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:var(--muted-fg);white-space:nowrap;font-variant-numeric:tabular-nums">{{ sel.meta }}</span></sc-if><i class="icon-chevron-down" style="font-size:15px;color:var(--muted-fg)"></i></div><sc-if value="{{ sel.open }}" hint-placeholder-val="{{ false }}"><div role="listbox" style="position:absolute;left:0;right:0;top:calc(100% + 4px);z-index:6;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:5px"><sc-for list="{{ sel.items }}" as="it" hint-placeholder-count="4"><div role="option" aria-selected="{{ it.on }}" style="display:flex;align-items:center;gap:10px;min-height:{{ f.itemH }};padding:6px 8px;border-radius:6px;font-size:13.5px;background:{{ it.bg }}"><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-weight:{{ it.weight }}">{{ it.label }}</span><span style="font-size:12.5px;color:var(--muted-fg);white-space:nowrap;font-variant-numeric:tabular-nums">{{ it.meta }}</span><span style="width:16px;flex:none;display:grid;place-items:center"><sc-if value="{{ it.on }}" hint-placeholder-val="{{ false }}"><i class="icon-check" style="font-size:14px"></i></sc-if></span></div></sc-for></div></sc-if></div></sc-if><sc-if value="{{ sel.none }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:10px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:10px;text-align:center;padding:22px 16px"><span style="max-width:44ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ sel.noneText }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap;height:{{ f.btnH }}"><i class="icon-layers" style="font-size:14px"></i>{{ sel.noneAct }}</span></div></sc-if><sc-if value="{{ sel.hasErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:8px;font-size:12.5px;color:var(--danger-ink)"><i class="icon-circle-alert" style="font-size:14px;flex:none"></i><span style="min-width:0;text-wrap:pretty">{{ sel.err }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.err.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.err.n }}</span></sc-if></sc-if></span></sc-if><sc-if value="{{ sel.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ sel.hint }}</span></sc-if></div></sc-if><sc-if value="{{ le.hasEditor }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500">{{ ed.label }}<sc-if value="{{ ed.optional }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted-fg);font-weight:400">· {{ tx.optional }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.body.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.body.n }}</span></sc-if></sc-if></span><div style="min-width:0;background:var(--card);border:1px solid var(--border);border-radius:10px"><div role="toolbar" style="display:flex;flex-wrap:nowrap;overflow:hidden;align-items:center;gap:2px;padding:5px 6px;border-bottom:1px solid var(--border);background:var(--sidebar);border-radius:10px 10px 0 0"><sc-for list="{{ tools }}" as="tl" hint-placeholder-count="12"><sc-if value="{{ tl.sep }}" hint-placeholder-val="{{ false }}"><span aria-hidden="true" style="flex:none;width:1px;height:18px;background:var(--border);margin:0 4px"></span></sc-if><sc-if value="{{ tl.btn }}" hint-placeholder-val="{{ true }}"><span style="flex:none;height:32px;min-width:32px;padding:0 {{ tl.pad }};display:inline-flex;align-items:center;justify-content:center;gap:2px;border-radius:7px"><i class="icon-{{ tl.icon }}" style="font-size:16px"></i><sc-if value="{{ tl.caret }}" hint-placeholder-val="{{ false }}"><i class="icon-chevron-down" style="font-size:11px;color:var(--muted-fg)"></i></sc-if></span></sc-if></sc-for></div><div style="height:{{ ed.h }};overflow:hidden;padding:12px 16px;font-size:14.5px;line-height:1.6"><sc-if value="{{ ed.empty }}" hint-placeholder-val="{{ false }}"><span style="color:var(--muted-fg)">{{ ed.placeholder }}</span></sc-if><sc-for list="{{ ed.blocks }}" as="bk" hint-placeholder-count="4"><sc-if value="{{ bk.h }}" hint-placeholder-val="{{ false }}"><div style="font-size:16px;font-weight:600;margin:0 0 6px">{{ bk.text }}</div></sc-if><sc-if value="{{ bk.p }}" hint-placeholder-val="{{ true }}"><p style="margin:0 0 10px;text-wrap:pretty">{{ bk.text }}</p></sc-if><sc-if value="{{ bk.row }}" hint-placeholder-val="{{ false }}"><div style="display:flex;gap:12px;padding:7px 0;margin:{{ bk.gap }};border-top:1px solid var(--border);font-size:14px"><span style="flex:0 0 96px;font-weight:600">{{ bk.k }}</span><span style="min-width:0">{{ bk.text }}</span></div></sc-if></sc-for></div><div style="display:flex;justify-content:flex-end;padding:6px 12px;border-top:1px solid var(--border);font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ ed.words }}</div></div><sc-if value="{{ ed.hasHint }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ ed.hint }}</span></sc-if></div></sc-if><sc-if value="{{ le.hasMinutes }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:500">{{ tx.minutes }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.minutes.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.minutes.n }}</span></sc-if></sc-if></span><span style="display:flex;align-items:center;height:{{ f.inH }};padding:0 12px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:14px;width:96px;font-variant-numeric:tabular-nums">{{ mn.value }}</span><span style="font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ mn.hint }}<sc-if value="{{ mn.reset }}" hint-placeholder-val="{{ false }}"> <span style="color:var(--fg);font-weight:500;text-decoration:underline;text-underline-offset:3px;white-space:nowrap">{{ tx.useEstimate }}</span></sc-if></span></div></sc-if></sc-if>
+                  <sc-if value="{{ le.loading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}" style="display:flex;flex-direction:column;gap:18px"><div style="display:flex;align-items:center;gap:12px"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted)"></span><span style="flex:1;display:flex;flex-direction:column;gap:8px"><span style="display:block;height:20px;width:46%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:11px;width:30%;border-radius:6px;background:var(--muted)"></span></span></div><div style="display:flex;flex-direction:column;gap:8px"><span style="display:block;height:11px;width:64px;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:38px;width:100%;border-radius:6px;background:var(--muted)"></span></div><div style="display:flex;flex-direction:column;gap:8px"><span style="display:block;height:11px;width:72px;border-radius:6px;background:var(--muted)"></span><div style="border:1px solid var(--border);border-radius:10px;padding:14px 16px;display:flex;flex-direction:column;gap:12px"><span style="display:block;height:30px;width:100%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:11px;width:92%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:11px;width:84%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:11px;width:88%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:11px;width:58%;border-radius:6px;background:var(--muted)"></span></div></div><div style="display:flex;justify-content:center"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></div></sc-if>
+                  <sc-if value="{{ le.failed }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:12px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:44px 18px"><span style="max-width:46ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ tx.loadFailed }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msg.n }}</span></sc-if></sc-if></div></sc-if>
+                </div>
+              </div>
+
+              <sc-if value="{{ ft.show }}" hint-placeholder-val="{{ true }}"><div style="flex:none;border-top:1px solid var(--border);background:var(--bg);padding:{{ f.footPad }}"><div style="max-width:760px;margin:0 auto;display:flex;align-items:center;gap:8px"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;font-size:13.5px;font-weight:500;white-space:nowrap;padding:0 10px;color:var(--danger-ink)"><i class="icon-trash-2" style="font-size:15px"></i>{{ tx.deleteLesson }}</span></sc-if><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span aria-label="{{ tx.deleteLesson }}" style="width:{{ f.btnH }};height:{{ f.btnH }};flex:none;display:grid;place-items:center;border-radius:8px;border:1px solid var(--border);color:var(--danger-ink)"><i class="icon-trash-2" style="font-size:16px"></i></span></sc-if><span style="flex:1"></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.foot.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.foot.n }}</span></sc-if></sc-if><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ ft.hasNote }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:var(--muted-fg);white-space:nowrap;margin-right:4px"><i class="icon-{{ ft.noteIcon }}" style="font-size:14px"></i>{{ ft.note }}</span></sc-if></sc-if><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;font-size:13.5px;font-weight:500;white-space:nowrap;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow)">{{ ft.pub }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;font-size:13.5px;font-weight:500;white-space:nowrap;background:var(--primary);color:var(--primary-fg);opacity:{{ ft.saveOp }}">{{ tx.save }}</span></div></div></sc-if>
+            </div>
+            <sc-if value="{{ dg.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;z-index:20;background:var(--overlay)"></div><div role="alertdialog" aria-modal="true" style="position:absolute;z-index:21;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);padding:20px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600;line-height:1.35">{{ dg.title }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialog.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialog.n }}</span></sc-if></sc-if></div><div style="font-size:13.5px;color:var(--muted-fg);line-height:1.55;text-wrap:pretty">{{ dg.body }}</div><div style="display:flex;justify-content:flex-end;gap:8px;margin-top:10px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;font-size:13.5px;font-weight:500;white-space:nowrap;border:1px solid var(--border);background:var(--card)">{{ dg.cancel }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;font-size:13.5px;font-weight:500;white-space:nowrap;background:{{ dg.okBg }};color:{{ dg.okFg }}">{{ dg.ok }}</span></div></div></sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. The whole screen is new: the deck draws no lesson editor. The numbers mark what a reviewer should look at first.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page adds</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Teacher page as it is. The right is this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule of R10’s plan, or the part of the product, behind it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R10.14</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each component the plan names takes from this page. No operation of T-R10.2 or T-R10.8a changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R10 · The lesson editor, for the five kinds of lesson. A proposal page for T-R10.14 (DG-94).
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['crCourses', 'Crumbs', 'Khoá học', 'Courses', 'Deck'],
+  ['unitN', 'Heading', 'Chương {n}', 'Unit {n}', 'Deck'],
+  ['kReading', 'Heading', 'Bài đọc', 'Reading', 'Deck'],
+  ['kVideo', 'Heading', 'Video', 'Video', 'Deck'],
+  ['kListening', 'Heading', 'Bài nghe', 'Listening', 'Deck'],
+  ['kFlashcards', 'Heading', 'Thẻ từ', 'Flashcards', 'Deck'],
+  ['kTest', 'Heading', 'Bài kiểm tra', 'Test', 'Deck'],
+  ['draft', 'Heading', 'Bản nháp', 'Draft', 'As today'],
+  ['published', 'Heading', 'Đã phát hành', 'Published', 'As today'],
+  ['title', 'Fields', 'Tiêu đề', 'Title', 'As today'],
+  ['body', 'Reading', 'Nội dung', 'Content', 'Plan'],
+  ['words', 'Editor, select', '{count} từ', '{count} words', 'As today'],
+  ['minutes', 'Reading', 'Thời lượng (phút)', 'Minutes', 'Plan'],
+  ['minEst', 'Reading', 'Ước tính theo độ dài bài: {count} phút, tính 200 từ mỗi phút.', 'Estimated from the length: {count} min, at 200 words a minute.', 'New'],
+  ['minOver', 'Reading', 'Ước tính theo độ dài bài: {count} phút.', 'Estimated from the length: {count} min.', 'New'],
+  ['useEstimate', 'Reading', 'Dùng ước tính', 'Use the estimate', 'New'],
+  ['videoLabel', 'Video', 'Video', 'Video', 'Plan'],
+  ['dropVideo', 'Video', 'Thả tệp video vào đây', 'Drop a video file here', 'New'],
+  ['limitsVideo', 'Video', 'MP4 · tối đa 95 MB và 30 phút', 'MP4 · up to 95 MB and 30 minutes', 'Plan'],
+  ['audioLabel', 'Listening', 'Tệp âm thanh', 'Audio file', 'Plan'],
+  ['dropAudio', 'Listening', 'Thả tệp âm thanh vào đây', 'Drop an audio file here', 'New'],
+  ['limitsAudio', 'Listening', 'MP3 hoặc M4A · tối đa 50 MB và 5 phút', 'MP3 or M4A · up to 50 MB and 5 minutes', 'As today'],
+  ['chooseFile', 'Media block', 'Chọn tệp', 'Choose file', 'As today'],
+  ['fromMedia', 'Media block', 'Từ Media', 'From Media', 'As today'],
+  ['replace', 'Media block', 'Thay', 'Replace', 'As today'],
+  ['uploading', 'Upload', 'Đang tải lên · {pct}', 'Uploading · {pct}', 'As today'],
+  ['keepOpen', 'Upload', 'Video lớn có thể mất vài phút. Hãy giữ trang này mở cho đến khi tải xong.', 'A large video can take a few minutes. Keep this page open until it finishes.', 'New'],
+  ['rejectTitle', 'Upload', 'Không dùng được tệp này', 'This file cannot be used', 'As today'],
+  ['rejectVideoSize', 'Upload', '{name} nặng {size}, vượt quá 95 MB. Vui lòng nén hoặc cắt ngắn.', '{name} is {size}, over the 95 MB limit. Please compress or trim it.', 'New'],
+  ['rejectVideoType', 'Upload', '{name} không phải MP4. Chỉ nhận định dạng này.', '{name} is not an MP4. Only that format is accepted.', 'New'],
+  ['rejectVideoDuration', 'Upload (not drawn)', '{name} dài {duration}, vượt quá 30 phút. Vui lòng cắt ngắn.', '{name} is {duration}, over the 30 minute limit. Please trim it.', 'New'],
+  ['busyTitle', 'Upload', 'Máy chủ đang nhận một video khác', 'The server is receiving another video', 'New'],
+  ['busyText', 'Upload', '{name} chưa được gửi đi. Hãy thử lại sau ít phút.', '{name} was not sent. Try again in a few minutes.', 'New'],
+  ['retry', 'Upload, states', 'Thử lại', 'Retry', 'As today'],
+  ['notes', 'Video, Listening', 'Ghi chú', 'Notes', 'Plan'],
+  ['optional', 'Video, Listening', 'không bắt buộc', 'optional', 'As today'],
+  ['notesPh', 'Video, Listening', 'Viết vài dòng cho học viên: nên chú ý điều gì.', 'A few lines for students: what to look out for.', 'New'],
+  ['notesHintVideo', 'Video', 'Học viên đọc ghi chú này dưới video.', 'Students read these notes under the video.', 'New'],
+  ['notesHintAudio', 'Listening', 'Học viên đọc ghi chú này dưới bản ghi âm.', 'Students read these notes under the recording.', 'New'],
+  ['listLabel', 'Flashcards', 'Danh sách từ', 'Word list', 'Plan'],
+  ['listPh', 'Flashcards', 'Chọn danh sách từ', 'Choose a word list', 'New'],
+  ['listHint', 'Flashcards', 'Học viên hoàn thành bài khi đã ôn mỗi từ trong danh sách một lần.', 'Students finish the lesson once they have reviewed every word in the list.', 'New'],
+  ['listNone', 'Flashcards', 'Bạn chưa có danh sách từ nào. Hãy tạo một danh sách trong Từ vựng rồi quay lại đây.', 'You have no word list yet. Make one in Vocabulary, then come back.', 'New'],
+  ['openVocab', 'Flashcards', 'Mở Từ vựng', 'Open Vocabulary', 'New'],
+  ['testLabel', 'Test', 'Đề thi', 'Test', 'As today'],
+  ['testPh', 'Test', 'Chọn đề thi', 'Choose a test', 'New'],
+  ['testHint', 'Test', 'Chỉ hiện những đề đã phát hành.', 'Only tests with a published version are listed.', 'New'],
+  ['questions', 'Test', '{count} câu hỏi', '{count} questions', 'As today'],
+  ['needTest', 'Publishing', 'Chọn đề thi trước khi phát hành.', 'Choose a test before publishing.', 'New'],
+  ['needList', 'Publishing (not drawn)', 'Chọn danh sách từ trước khi phát hành.', 'Choose a word list before publishing.', 'New'],
+  ['needVideo', 'Publishing (not drawn)', 'Thêm video trước khi phát hành.', 'Add a video before publishing.', 'New'],
+  ['needAudio', 'Publishing (not drawn)', 'Thêm tệp âm thanh trước khi phát hành.', 'Add an audio file before publishing.', 'New'],
+  ['notOwned', 'Test', 'Đề thi này không còn thuộc về chủ khoá học. Hãy chọn đề khác.', 'This test no longer belongs to the course’s owner. Choose another.', 'New'],
+  ['deleteLesson', 'Footer', 'Xoá bài học', 'Delete lesson', 'Plan'],
+  ['unsaved', 'Footer', 'Có chỉnh sửa chưa lưu', 'Unsaved changes', 'As today'],
+  ['saved', 'Footer', 'Đã lưu', 'Saved', 'As today'],
+  ['publish', 'Footer', 'Phát hành', 'Publish', 'As today'],
+  ['unpublish', 'Footer', 'Dừng phát hành', 'Unpublish', 'New'],
+  ['save', 'Footer', 'Lưu', 'Save', 'As today'],
+  ['leaveTitle', 'Leaving', 'Rời trang mà không lưu?', 'Leave without saving?', 'As today'],
+  ['leaveBody', 'Leaving', 'Những gì bạn vừa sửa trong bài học này chưa được lưu và sẽ mất.', 'What you changed in this lesson is not saved and will be lost.', 'New'],
+  ['stay', 'Leaving', 'Ở lại', 'Stay', 'As today'],
+  ['leave', 'Leaving', 'Rời trang', 'Leave', 'As today'],
+  ['delTitle', 'Deleting', 'Xoá bài học “{title}”?', 'Delete the lesson “{title}”?', 'New'],
+  ['delBodyTest', 'Deleting', 'Bài giao của bài kiểm tra này sẽ đóng lại. Bài làm và điểm của học viên vẫn được giữ.', 'This test’s assignment closes. Students’ attempts and grades are kept.', 'Plan'],
+  ['delBody', 'Deleting (not drawn)', 'Học viên đã học xong bài này sẽ mất tiến độ của bài. Không khôi phục được.', 'Students who finished this lesson lose that progress. This cannot be undone.', 'Plan'],
+  ['cancel', 'Deleting', 'Huỷ', 'Cancel', 'As today'],
+  ['delete', 'Deleting', 'Xoá', 'Delete', 'As today'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today'],
+  ['loadFailed', 'States', 'Không tải được bài học.', 'Could not load the lesson.', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+// the deck's course, “IELTS Reading Foundations”: [icon, name key, tile, ink, unit number, unit, lesson]
+const COURSE = 'IELTS Reading Foundations';
+const KIND = {
+  reading: ['book-open-text', 'kReading', 'var(--info-soft)', 'var(--info-ink)', 2, 'True / False / Not Given', 'How True / False / Not Given questions work'],
+  video: ['circle-play', 'kVideo', 'var(--danger-soft)', 'var(--danger-ink)', 2, 'True / False / Not Given', 'Worked example: urban parks'],
+  listening: ['headphones', 'kListening', 'var(--warning-soft)', 'var(--warning-ink)', 3, 'Matching headings', 'Teacher walkthrough'],
+  flashcards: ['layers', 'kFlashcards', 'var(--accent-soft)', 'var(--accent-ink)', 1, 'Skimming and scanning', 'Unit 1 word list'],
+  test: ['file-text', 'kTest', 'var(--muted)', 'var(--fg)', 2, 'True / False / Not Given', 'Practice set B']
+};
+const KINDS = [['reading', 'Reading'], ['video', 'Video'], ['listening', 'Listening'], ['flashcards', 'Flashcards'], ['test', 'Test']];
+// the body of the deck's own reading lesson, as the student's page prints it
+const READING = [['p', 'Each statement is about what the writer says, not about what is true in the real world. Your job is to find the part of the passage that talks about the same idea, then compare the two carefully.'], ['row', 'The passage says the same thing, maybe in other words.', 'True'], ['row', 'The passage says the opposite.', 'False'], ['row', 'The passage does not say anything about it.', 'Not given'], ['p', 'The hardest choice is usually between False and Not Given. Ask yourself: does the passage say the opposite? If yes, it is False. If the passage simply does not mention it, it is Not Given.'], ['h', 'Try it'], ['p', 'Passage: “Most shop owners now support the scheme.” Statement: “All shop owners support the scheme.” The answer is False, because “most” contradicts “all”.']];
+const VIDEO_NOTES = [['p', 'Watch how the teacher underlines the words that carry the meaning before looking at the passage.'], ['p', 'Pause at 3:10 and try the second statement yourself.']];
+const AUDIO_NOTES = [['p', 'Listen once without the passage. Then listen again and note the three headings the teacher rules out, and why.']];
+const LISTS = [['Reading Foundations · Unit 1', 18], ['Travel & transport', 32], ['Academic Word List · Sublist 1', 60], ['Environment', 28]];
+const TESTS = [['Reading · TFNG Practice A', 14], ['Reading · TFNG Practice B', 14], ['Reading · Skimming check', 10], ['Unit 3 · Grammar check', 10]];
+const TOOLS = ['bold', 'italic', 'underline', 'strikethrough', 'superscript', 'subscript', '|', 'heading-2', 'pilcrow', '|', 'list', 'list-ordered', '|', 'link', 'image^', 'audio-lines^', 'table-2', '|', 'undo-2', 'redo-2'];
+
+const STATES = {
+  reading: [['draft', 'A draft with changes'], ['published', 'Published'], ['leave', 'Leaving with changes'], ['loading', 'Loading'], ['error', 'Could not load']],
+  video: [['empty', 'No video yet'], ['uploading', 'Uploading'], ['ready', 'With a video'], ['tooLarge', 'Too large'], ['wrongKind', 'Not an MP4'], ['busy', 'Server busy']],
+  listening: [['empty', 'No audio yet'], ['ready', 'With audio']],
+  flashcards: [['none', 'No list chosen'], ['open', 'The select open'], ['picked', 'A list chosen'], ['noLists', 'No word list yet']],
+  test: [['needs', 'Publishing with no test'], ['picked', 'A test chosen'], ['delete', 'Deleting the lesson'], ['notOwned', 'Refused by the server']]
+};
+const START = { reading: 'draft', video: 'ready', listening: 'ready', flashcards: 'picked', test: 'needs' };
+const PUBLISHED = ['reading:published', 'listening:ready', 'test:picked', 'test:delete'];
+const DIRTY = ['reading:draft', 'reading:leave', 'video:ready', 'flashcards:picked', 'test:notOwned'];
+const NOTES = {
+  'reading:draft': [['head', 'The heading is the course’s: the saved title and the status, with the kind’s tile from the lesson’s row. The line under it names the kind and the unit. The kind is not a field (Q2).'], ['body', 'The body is edited in the question builder’s editor. Nothing saves by itself.'], ['minutes', 'Worked out from the length until the teacher types a number.'], ['foot', 'The footer stays at the bottom of the screen. Something has changed, so a line says so and “Lưu” is awake.']],
+  'reading:published': [['head', 'A published lesson says so here, and the footer offers “Dừng phát hành” in place of “Phát hành”.'], ['minutes', 'The teacher typed 12. The estimate stays in the hint, with a way back to it.'], ['foot', 'Nothing has changed since the last save: “Lưu” rests, and the line reads “Đã lưu”.']],
+  'reading:leave': [['dialog', 'Leaving with changes asks first, under the title the assignment wizard uses today. On a phone it is a sheet.']],
+  'reading:loading': [['skeleton', 'The screen’s own shape. The crumbs say “Khoá học” alone until the lesson has loaded, and the footer waits with it.']],
+  'reading:error': [['msg', 'One sentence and “Thử lại”. There is no footer, because nothing can be saved.']],
+  'video:empty': [['media', 'The builder’s media block, asking for a video: drop a file, choose one, or take one from Media. The limits are on the block before anything is chosen.'], ['body', 'Notes are optional, in the same editor. Students read them under the video.']],
+  'video:uploading': [['media', 'The product’s upload row: the file’s name, how far it is, and a way to stop. A large video takes minutes, so one line asks to keep the page open.']],
+  'video:ready': [['media', 'The file’s row is the deck’s: name, format, size and length, “Thay” and remove. Removing takes the video off this lesson; the file stays in Media.'], ['preview', 'The video plays here with the browser’s own controls, as a student will get it.'], ['foot', 'A new file is a change: it is on the lesson once “Lưu” is pressed.']],
+  'video:tooLarge': [['alert', 'A file over 95 MB is refused in the browser, before anything is sent. The sentence names the file, its size and the limit, as today’s audio messages do.']],
+  'video:wrongKind': [['alert', 'Only MP4 is taken. Any other format is named and refused the same way.']],
+  'video:busy': [['alert', 'The server takes one video at a time. When someone else’s upload is running, the file stays chosen and “Thử lại” sends it again.']],
+  'listening:empty': [['media', 'The same block, asking for audio, with the limits audio has today.']],
+  'listening:ready': [['preview', 'A plain player with the browser’s controls, where the teacher checks the file.'], ['body', 'The notes, under the file as a student will read them.']],
+  'flashcards:none': [['select', 'One select, of the course owner’s word lists. The hint says when a student has finished the lesson.']],
+  'flashcards:open': [['select', 'Each list carries its number of words, the number the lesson’s row will show.']],
+  'flashcards:picked': [['select', 'The chosen list and its count.'], ['foot', 'Choosing a list is a change like any other.']],
+  'flashcards:noLists': [['select', 'With no word list to choose from, the field says where to make one.']],
+  'test:needs': [['err', '“Phát hành” was pressed with no test chosen. The field says what is missing, and the lesson stays a draft.'], ['select', 'Only tests with a published version are listed, and the hint says so.']],
+  'test:picked': [['select', 'The chosen test and its number of questions.']],
+  'test:delete': [['dialog', 'Deleting a test lesson says what happens to its assignment: it closes, and attempts and grades stay. For the other kinds the sentence is about students’ progress on the lesson.']],
+  'test:notOwned': [['err', 'The server refused the save: the test changed hands after this page was opened. Its sentence shows on the field.']]
+};
+const PIN_KEYS = ['head', 'body', 'minutes', 'media', 'preview', 'alert', 'select', 'err', 'foot', 'dialog', 'msg', 'skeleton', 'nav', 'newAnn'];
+// [part, the deck, this page]
+const ADDS = [
+  ['The lesson editor', 'Not drawn. A lesson’s row opens nothing.', 'One screen for the five kinds: a heading, the title, what the kind needs, and a footer.'],
+  ['A reading’s body', 'The student’s Lesson page prints a body. Nothing edits one.', 'The builder’s editor, and the minutes with their estimate.'],
+  ['A video', 'A row that reads “Video · 6 min”. Where the video comes from is not drawn (DG-94).', 'The media block asking for an MP4; the upload’s progress; three refusals and a busy server; the file’s row and a player; notes.'],
+  ['A listening', 'A row that reads “Listening · 5 min”.', 'The same block for audio, a plain player, and notes.'],
+  ['Flashcards', 'A row that reads “Flashcards · 18 words”.', 'A select of word lists, each with its count.'],
+  ['A test', 'A row that reads “Test · 10 questions”.', 'A select of published tests, each with its count.'],
+  ['Saving', 'Not drawn.', '“Lưu” when something has changed, a line that says where things stand, and a question on leaving.'],
+  ['Publishing a lesson', 'A “Draft” chip on a row.', '“Phát hành” and “Dừng phát hành” in the footer. What is missing is said on the field.'],
+  ['Deleting a lesson', 'Not drawn.', 'A confirmation that says what students lose.'],
+  ['Loading and failing', 'Not drawn.', 'The screen’s shape; one sentence and “Thử lại”.'],
+  ['A phone', 'Not drawn.', 'The same fields in one column. The toolbar scrolls sideways, “Xoá bài học” is an icon, and the footer’s line is left out: “Lưu” wakes and rests.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, rule]
+const WHENS = [
+  ['The lesson opens', 'The heading, the title, and the fields of its kind.', 'GET /teacher/lessons/{id} (T-R10.8a).'],
+  ['Something has changed', '“Có chỉnh sửa chưa lưu”, and “Lưu” is awake.', 'T-R10.14: Save is enabled when dirty. Nothing autosaves (the plan’s decision on lesson bodies).'],
+  ['The teacher leaves with changes', 'A question: “Ở lại” or “Rời trang”.', 'T-R10.14’s leave guard. Proposed here: it also asks while a file is on its way, because leaving stops the upload.'],
+  ['“Phát hành” on a draft', 'What is on the screen is saved, and the lesson is published.', 'One save that carries the fields and the status.'],
+  ['“Phát hành” with the kind’s file, list or test missing', 'The field says what is missing. The lesson stays a draft.', 'A published lesson must hold the one its kind needs (T-R10.3).'],
+  ['A published lesson', '“Đã phát hành” in the heading, “Dừng phát hành” in the footer.', 'status on the lesson.'],
+  ['A reading’s minutes were never typed', 'The estimate, and its rule in the hint.', 'The word count at 200 a minute (T-R10.8a).'],
+  ['The teacher typed the minutes', 'Their number, the estimate in the hint, and “Dùng ước tính”.', 'minutes on the save, 1 to 240.'],
+  ['A video or a listening has no file', 'The media block, with the kind’s limits.', 'T-R10.14.'],
+  ['A file is on its way', 'Its name, a bar, the percentage and a way to stop.', 'The product’s upload row.'],
+  ['A video is over 95 MB', '“{name} nặng {size}, vượt quá 95 MB…”. Nothing is sent.', 'T-R10.14: refused in the browser. The 95 MB is O-R10.1’s default.'],
+  ['A video is not an MP4', '“{name} không phải MP4…”.', 'T-R10.2 takes MP4 only.'],
+  ['A video is longer than 30 minutes', '“{name} dài {duration}, vượt quá 30 phút…”.', 'T-R10.2. Not drawn: the same alert with this sentence.'],
+  ['Another video is being received', '“Máy chủ đang nhận một video khác”, and “Thử lại”.', '429 UPLOAD_BUSY: one video upload at a time (T-R10.2).'],
+  ['The upload fails for another reason', 'Today’s alert: “Máy chủ gặp lỗi khi nhận tệp”.', 'As the product has it. Not drawn.'],
+  ['A file is on the lesson', 'Its row, and a player.', 'T-R10.14: the browser’s video controls, or plain audio controls.'],
+  ['Flashcards or a test, nothing chosen', 'A select with a placeholder.', 'T-R10.14.'],
+  ['The owner has no word list', 'One sentence and “Mở Từ vựng”.', 'New on this page. A test lesson with no published test to choose says the same of Tests. Not drawn.'],
+  ['The server refuses the list or the test', 'Its sentence, on the field.', '422 LESSON_REFERENCE_NOT_OWNED (T-R10.8a).'],
+  ['“Xoá bài học”', 'A confirmation that says what students lose.', 'The plan’s decision: completions go with the lesson; a test lesson’s assignment closes, and results stay.'],
+  ['The lesson cannot load', '“Không tải được bài học.” and “Thử lại”.', 'DG-83.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · The word for a unit', 'What is a unit called in Vietnamese?', 'The deck says “Unit”, and the word goes on every screen of R10: the course, its release labels (“After Unit 2”), the student’s Learn. “Chương” is the usual word for a group of lessons. “Unit” is what a coursebook prints. “Bài” is taken by the lesson.', '“Chương”: “Chương 2 · True / False / Not Given”.'],
+  ['Q2 · A lesson’s kind', 'Can a lesson’s kind be changed after it is added?', 'The plan fixes the kind when the lesson is added: the save has no field for it. A reading holds a body and a test points at a test, so changing the kind would drop what the lesson holds. A teacher who picked the wrong kind deletes the lesson and adds another.', 'No. The kind is a label in the heading.'],
+  ['Q3 · “Phát hành” or “Xuất bản”', 'Which word publishes a lesson and a course?', 'The product says “Phát hành” for a test, on its button and its status, and “xuất bản” in the Media screen’s sentences. A course and its lessons need one of the two.', '“Phát hành”, “Đã phát hành”, “Dừng phát hành”.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['LessonEditorPage', 'The heading (tile, saved title, status, kind and unit); one column at most 760 wide, so a body’s lines are about as long as on the student’s page; the footer at the bottom of the screen; the skeleton and the failed state; the words of the leave guard and of the delete confirmation.'],
+  ['LessonKindFields', 'The fields of each kind and their order: the file or the select first, then the body or the notes. A reading’s minutes with the estimate and “Dùng ước tính”. What each kind says when “Phát hành” finds its piece missing.'],
+  ['VideoField', 'The builder’s media block with a video’s limits; the upload row and the line under it; the refusals and the busy server; the file’s row and the player. The same block serves a listening’s audio.'],
+  ['ReferencePicker', 'A select whose lines carry a count; the case with nothing to choose; the server’s refusal on the field.'],
+  ['The footer', '“Xoá bài học” (an icon on a phone), the line that says where things stand, “Phát hành” or “Dừng phát hành”, and “Lưu”. “Phát hành” saves first.'],
+  ['Locales', 'The copy table: seventy strings, Vietnamese first. Twenty-four are in the locale files today.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The deck’s Teacher page (the course’s heading and lesson rows, the question builder’s editor and its media block), the deck’s Student page (the reading lesson’s text), R10’s plan (docs/plan/80-r10.md: its decisions on video and on lesson bodies, T-R10.2, T-R10.3, T-R10.8a, T-R10.14), and the product’s upload row with its sentences. The lesson editor is not built, so there was no screen to run.'],
+  ['What it leaves alone.', 'The editor’s toolbar, the media block and the upload row are the deck’s and the product’s. No operation changes.'],
+  ['What the plan does not say.', 'Whether a reading’s minutes can go back to the estimate once typed: the page draws “Dùng ước tính”, which needs the save to take an empty value, or the page to count the words itself. Whether “Phát hành” carries unsaved changes: the page says it does.'],
+  ['What is not drawn.', 'The “Choose from Media” dialog, which the deck draws and which gains video. The course’s page, where a lesson is added, moved and listed (T-R10.13). A video over 30 minutes and a failed upload: the same alert with another sentence.']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', kind: 'reading', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en';
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const D = (a, b) => (vi ? a : b);
+    const kind = s.kind, st = s.st[kind], key = kind + ':' + st, K = KIND[kind];
+    const noteList = NOTES[key] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const loading = st === 'loading', failed = st === 'error', ready = !loading && !failed;
+    const published = PUBLISHED.includes(key), dirty = DIRTY.includes(key);
+    const num = n => n.toLocaleString(vi ? 'vi-VN' : 'en-US');
+    const wc = blocks => blocks.reduce((a, b) => a + b[1].split(/\s+/).filter(Boolean).length + (b[2] ? b[2].split(/\s+/).length : 0), 0);
+    const view = blocks => blocks.map((b, i) => ({ h: b[0] === 'h', p: b[0] === 'p', row: b[0] === 'row', text: b[1], k: b[2] || '', gap: b[0] === 'row' && (blocks[i + 1] || [])[0] !== 'row' ? '0 0 12px' : '0' }));
+
+    const le = {
+      ready, loading, failed, title: K[6], barTitle: ready ? K[6] : tx.crCourses, icon: K[0], tileBg: K[2], tileFg: K[3],
+      stLabel: published ? tx.published : tx.draft, stBg: published ? 'var(--success-soft)' : 'var(--muted)', stFg: published ? 'var(--success-ink)' : 'var(--muted-fg)', stDot: published ? 'var(--success)' : 'var(--muted-fg)',
+      sub: tx[K[1]] + ' · ' + fmt(tx.unitN, { n: K[4] }) + ' · ' + K[5],
+      hasMedia: kind === 'video' || kind === 'listening', hasSelect: kind === 'flashcards' || kind === 'test', hasEditor: kind === 'reading' || kind === 'video' || kind === 'listening', hasMinutes: kind === 'reading'
+    };
+
+    // ---- the editor: a reading's body, or the notes under a file
+    const has = (kind === 'video' && st === 'ready') || (kind === 'listening' && st === 'ready');
+    const noteBlocks = !has ? [] : kind === 'video' ? VIDEO_NOTES : AUDIO_NOTES;
+    const ed = kind === 'reading'
+      ? { label: tx.body, optional: false, h: '250px', empty: false, placeholder: '', blocks: view(READING), words: fmt(tx.words, { count: num(1940) }), hasHint: false, hint: '' }
+      : { label: tx.notes, optional: true, h: '92px', empty: !has, placeholder: tx.notesPh, blocks: view(noteBlocks), words: fmt(tx.words, { count: wc(noteBlocks) }), hasHint: true, hint: kind === 'video' ? tx.notesHintVideo : tx.notesHintAudio };
+    const tools = TOOLS.map(t => (t === '|' ? { sep: true, btn: false } : { sep: false, btn: true, icon: t.replace('^', ''), caret: t.endsWith('^'), pad: t.endsWith('^') ? '6px' : '0' }));
+    const typed = key === 'reading:published';
+    const mn = { value: typed ? '12' : '10', hint: fmt(typed ? tx.minOver : tx.minEst, { count: 10 }), reset: typed };
+
+    // ---- the file of a video or a listening
+    const isV = kind === 'video';
+    const file = isV ? ['urban-parks-worked-example.mp4', D('MP4 · 71 MB · 8:36', 'MP4 · 71 MB · 8:36'), '8:36'] : ['headings-walkthrough.m4a', D('M4A · 4,6 MB · 4:38', 'M4A · 4.6 MB · 4:38'), '4:38'];
+    const refused = st === 'tooLarge' ? ['circle-alert', 'var(--danger-soft)', 'var(--danger-ink)', tx.rejectTitle, fmt(tx.rejectVideoSize, { name: 'urban-parks-full-lesson.mp4', size: '212 MB' }), false]
+      : st === 'wrongKind' ? ['circle-alert', 'var(--danger-soft)', 'var(--danger-ink)', tx.rejectTitle, fmt(tx.rejectVideoType, { name: 'urban-parks.webm' }), false]
+      : st === 'busy' ? ['clock', 'var(--warning-soft)', 'var(--warning-ink)', tx.busyTitle, fmt(tx.busyText, { name: file[0] }), true] : null;
+    const mb = {
+      label: isV ? tx.videoLabel : tx.audioLabel, icon: isV ? 'video' : 'audio-lines', fileIcon: isV ? 'file-video' : 'file-audio', dropTitle: isV ? tx.dropVideo : tx.dropAudio, limits: isV ? tx.limitsVideo : tx.limitsAudio,
+      empty: st === 'empty' || st === 'tooLarge' || st === 'wrongKind', uploading: st === 'uploading', has: st === 'ready', isVideo: isV, isAudio: !isV,
+      name: file[0], meta: file[1], len: file[2], pct: '42%', progress: fmt(tx.uploading, { pct: '42%' }),
+      alert: !!refused && isV, alertIcon: refused ? refused[0] : 'circle-alert', alertBg: refused ? refused[1] : 'transparent', alertFg: refused ? refused[2] : 'var(--fg)', alertTitle: refused ? refused[3] : '', alertText: refused ? refused[4] : '', alertAct: !!(refused && refused[5])
+    };
+
+    // ---- the word list of flashcards, the test of a test lesson
+    const isT = kind === 'test', rows = isT ? TESTS : LISTS, unit = isT ? tx.questions : tx.words;
+    const chosen = kind === 'flashcards' ? (st === 'picked' ? 0 : -1) : (st === 'needs' ? -1 : 1);
+    const err = key === 'test:needs' ? tx.needTest : key === 'test:notOwned' ? tx.notOwned : '';
+    const sel = {
+      label: isT ? tx.testLabel : tx.listLabel, box: st !== 'noLists', none: st === 'noLists', noneText: tx.listNone, noneAct: tx.openVocab,
+      value: chosen < 0 ? (isT ? tx.testPh : tx.listPh) : rows[chosen][0], fg: chosen < 0 ? 'var(--muted-fg)' : 'var(--fg)', hasMeta: chosen >= 0, meta: chosen >= 0 ? fmt(unit, { count: rows[chosen][1] }) : '',
+      border: err ? 'var(--danger)' : st === 'open' ? 'var(--ring)' : 'var(--border)', open: st === 'open',
+      items: rows.map((r, i) => ({ label: r[0], meta: fmt(unit, { count: r[1] }), on: i === chosen, weight: i === chosen ? 600 : 400, bg: st === 'open' && i === 0 ? 'var(--hover)' : 'transparent' })),
+      hasErr: !!err, err, hasHint: st !== 'noLists', hint: isT ? tx.testHint : tx.listHint
+    };
+
+    const ft = { show: ready, hasNote: true, note: dirty ? tx.unsaved : tx.saved, noteIcon: dirty ? 'circle-dot' : 'check', pub: published ? tx.unpublish : tx.publish, saveOp: dirty ? 1 : 0.45 };
+    const dg = st === 'leave' ? { open: true, title: tx.leaveTitle, body: tx.leaveBody, cancel: tx.stay, ok: tx.leave, okBg: 'var(--primary)', okFg: 'var(--primary-fg)' }
+      : st === 'delete' ? { open: true, title: fmt(tx.delTitle, { title: K[6] }), body: tx.delBodyTest, cancel: tx.cancel, ok: tx.delete, okBg: 'var(--danger)', okFg: '#fff' }
+      : { open: false, title: '', body: '', cancel: '', ok: '', okBg: 'transparent', okFg: 'inherit' };
+    const crumbs = (ready ? [[tx.crCourses, false], [COURSE, false], [K[6], true]] : [[tx.crCourses, true]]).map((c, i) => ({ label: c[0], sep: i > 0, color: c[1] ? 'var(--fg)' : 'var(--muted-fg)', weight: c[1] ? 500 : 400 }));
+
+    // ---- the shell, as R10 leaves it
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === 'courses' ? 'var(--hover)' : 'transparent', fg: id === 'courses' ? 'var(--fg)' : 'var(--muted-fg)', weight: id === 'courses' ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: 'var(--muted)', countFg: 'var(--muted-fg)', pin: false });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', D('Tổng quan', 'Dashboard')), item('calendar', 'calendar-days', D('Lịch', 'Calendar')), item('messages', 'message-square', D('Tin nhắn', 'Messages'))] },
+      { hasLabel: true, label: D('Giảng dạy', 'Teaching'), items: [item('assignments', 'clipboard-list', D('Bài giao', 'Assignments')), item('grading', 'square-pen', D('Chấm bài', 'Grading')), item('classes', 'graduation-cap', D('Lớp học', 'Classes')), item('students', 'users', D('Học viên', 'Students')), item('attendance', 'calendar-check', D('Điểm danh', 'Attendance'))] },
+      { hasLabel: true, label: D('Nội dung', 'Content'), items: [item('tests', 'file-text', D('Đề thi', 'Tests')), item('shared', 'share-2', D('Được chia sẻ với tôi', 'Shared with me'), 2), item('bank', 'library', D('Ngân hàng câu hỏi', 'Question bank')), item('media', 'image', D('Thư viện media', 'Media')), item('courses', 'book-open', tx.crCourses), item('vocab', 'layers', D('Từ vựng', 'Vocabulary'))] },
+      { hasLabel: true, label: D('Thống kê', 'Insights'), items: [item('gradebook', 'table', D('Sổ điểm', 'Gradebook')), item('reports', 'chart-column', D('Báo cáo', 'Reports'))] }
+    ];
+
+    const W = s.stageW || 1280;
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Teacher · Lesson editor · ' + w, desk: !phone, phone, pins: s.anno && !phone, sidebar: !phone, tBar: true,
+      barPad: phone ? '0 14px' : '0 28px', pad: phone ? '14px' : '24px 28px 28px', footPad: phone ? '10px 14px' : '12px 28px', h1: phone ? '19px' : '22px', btnH: phone ? '40px' : '36px', inH: phone ? '44px' : '38px', itemH: phone ? '44px' : '34px',
+      dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '460px', dlgR: phone ? '16px 16px 0 0' : '12px'
+    });
+    const H = loading ? [760, 480] : failed ? [760, 340] : key === 'video:ready' ? [970, 860] : { reading: [790, 850], video: [760, 800], listening: [760, 720], flashcards: [760, 580], test: [760, 580] }[kind];
+    const frames = [mk(1280, H[0], Math.min(1, W / 1280), false, 'the teacher’s shell'), mk(360, H[1], Math.min(1, W / 360), true, 'the same state on a phone')];
+
+    const ctl = [
+      { label: 'Lesson', opts: this.seg(KINDS, kind, v => this.setState({ kind: v })) },
+      { label: 'State', opts: this.seg(STATES[kind], st, v => this.setState(x => ({ st: { ...x.st, [kind]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const ink = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const kLabel = (KINDS.find(x => x[0] === kind) || ['', ''])[1], stLabel = (STATES[kind].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, le, ed, tools, mn, mb, sel, ft, dg, crumbs, pin, nav, frames, ctl, stageRef: this.stageRef,
+      chips: ['R10 · v0.17.0', 'T-R10.14', 'DG-94, DG-83', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, kind: 'reading', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What to look at on “' + kLabel + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: ink[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

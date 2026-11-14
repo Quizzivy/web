@@ -546,6 +546,15 @@ To view one, start the server above and open, for example,
   report fails, a second row of tiles, and tabs with one class. The same change puts the
   sidebar of the two gradebook pages in the deck's order, with Attendance, Shared with me and
   Reports in it.
+- 2026-11-14 — Fifteenth proposal page: `proposals/R10 Lesson Editor.dc.html`, for DG-94 and
+  DG-83 (R10; T-R10.14). The deck draws a lesson as a row in its course, and the row opens
+  nothing. The page draws the screen behind it from parts the deck has: the course's heading,
+  the question builder's editor and media block, and the product's upload row. A reading has a
+  body and its minutes; a video and a listening have a file, a player and notes; flashcards and
+  a test choose a word list and a test. One footer saves, publishes and deletes. Twenty-one
+  states, at 1280 and 360, light and dark, Vietnamese and English. No operation changes. Its
+  three questions for Thuong are on the page: the Vietnamese word for a unit, whether a
+  lesson's kind can change, and "Phát hành" or "Xuất bản".
 
 ## The brand
 

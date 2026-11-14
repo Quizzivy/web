@@ -151,6 +151,51 @@ test("the first wrong option makes the gap a choice, and clearing the last makes
   expect(groupIssue(cleared)).toBeNull();
 });
 
+test("a gap chosen again keeps its options in order as it did before it was typed", () => {
+  const typed = make(cloze(), text("Trees ", { gap: "g1" }, " the air cleaner."), {
+    g1: "make",
+  }).bundle;
+  const gap = [...gapQuestions(typed).values()][0]!;
+  const rows = gapRows(typed, gap);
+  const wrongAt = (gapRow("g1") + 1) % GAP_ROWS;
+  const filled = rows.map((row, index) =>
+    index === wrongAt ? { text: "do", isCorrect: false } : row,
+  );
+  const order = (bundle: GroupBundle) => bundle.group.members[0]!.optionOrder;
+  const answer = (bundle: GroupBundle, next: typeof rows, kept?: "fixed" | "shuffle") =>
+    withGapAnswer(
+      bundle,
+      gapQuestions(bundle).get(gap.questionId)!,
+      { rows: next, also: [], prompt: gap.prompt },
+      prompts,
+      kept,
+    );
+
+  const chosen = answer(typed, filled);
+  expect(order(chosen)).toBe("shuffle");
+  const fixed: GroupBundle = {
+    ...chosen,
+    group: {
+      ...chosen.group,
+      members: chosen.group.members.map((member) => ({
+        ...member,
+        optionOrder: "fixed" as const,
+      })),
+    },
+  };
+
+  const cleared = answer(fixed, rows, "fixed");
+  expect(cleared.questions[0]!.input.type).toBe("fill_blank");
+  expect(order(cleared)).toBe("shuffle");
+  expect(groupIssue(cleared)).toBeNull();
+
+  const back = answer(cleared, filled, "fixed");
+  expect(back.questions[0]!.input.type).toBe("single_choice");
+  expect(order(back)).toBe("fixed");
+  expect(order(answer(cleared, filled))).toBe("shuffle");
+  expect(order(answer(back, filled, "shuffle"))).toBe("fixed");
+});
+
 test("a prompt the teacher wrote survives a change of mode", () => {
   const typed = make(cloze(), text({ gap: "g1" }, " roofs"), { g1: "cover" }).bundle;
   const gap = [...gapQuestions(typed).values()][0]!;

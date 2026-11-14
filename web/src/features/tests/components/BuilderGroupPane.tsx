@@ -56,7 +56,8 @@ interface PaneProps {
  * is passed on: each new value puts focus in the title. `start` is how the
  * group was started from the outline's menu, while it is still empty;
  * `section` and `firstNumber` place it in the test, and `moves` are the moves
- * of a question out of it, which the builder carries out. The pane's menu
+ * of a question out of it and of bank questions into it, which the builder
+ * carries out. The pane's menu
  * adds "Save a copy to the bank".
  */
 export function BuilderGroupPane(props: Readonly<PaneProps>) {

@@ -251,7 +251,8 @@ function ClozeSteps() {
  * for the heading and the number of the group's first question, 1 unless
  * given. `titleFocus` is a request: each new value puts focus in the title.
  * `status` is drawn at the heading's end and `menu` adds items to the pane's
- * "…" menu. `moves` gives the cards' menus the moves out of the group.
+ * "…" menu. `moves` gives the cards' menus the moves out of the group, and
+ * the row that adds a question its "From question bank".
  */
 export function GroupWorkspace({
   bundle,

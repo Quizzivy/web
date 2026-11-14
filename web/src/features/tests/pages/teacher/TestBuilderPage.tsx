@@ -205,6 +205,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   );
   const [violations, setViolations] = useState<PublishViolation[] | null>(null);
   const [picking, setPicking] = useState(false);
+  const [pickingInto, setPickingInto] = useState<string | null>(null);
   const pickerOpener = useRef<HTMLElement | null>(null);
   const [moving, setMoving] = useState(false);
   const [deleting, setDeleting] = useState(false);
@@ -785,6 +786,36 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     return index < 0 ? sections.length - 1 : index;
   }
 
+  /**
+   * pickFromBank takes what "Add from question bank" picked: into the section
+   * the outline's entry names, or into the group whose pane asked.
+   */
+  function pickFromBank(ids: string[]) {
+    if (pickingInto === null) appendQuestions(ids);
+    else void addFromBankToGroup(pickingInto, ids);
+  }
+
+  function pickWholeGroup() {
+    setPicking(false);
+    setPickingGroup(true);
+  }
+
+  /**
+   * bankTarget is what the bank picker names as its destination: the section,
+   * with the choice of a whole group, or the group whose pane asked, where a
+   * group cannot go.
+   */
+  function bankTarget() {
+    if (pickingInto === null)
+      return {
+        destination: sections[destinationIndex()]?.title ?? null,
+        onPickGroup: pickWholeGroup,
+      };
+    return {
+      destination: groups.get(pickingInto)?.group.title || t("groups.newGroup"),
+    };
+  }
+
   const doomedSection =
     removing && "sectionIndex" in removing
       ? sections[removing.sectionIndex]
@@ -856,12 +887,19 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     }
   }
 
-  async function moveQuestion(move: QuestionMove) {
+  /**
+   * moveQuestion asks the server for one move and answers the id the question
+   * has afterwards, a copy's when it was copied into a group, or null when
+   * the move was refused or its saves failed. `quiet` leaves the notice of a
+   * copy to the caller.
+   */
+  async function moveQuestion(move: QuestionMove, quiet = false) {
     setPublishError(null);
     setMovingQuestion(move.questionId);
     focusAfterMove.current = move.questionId;
+    let landed: string | null = null;
     try {
-      if (!(await flushBeforeMove())) return;
+      if (!(await flushBeforeMove())) return null;
       await writes.run(async () => {
         const section = latestOutline.current[move.to.sectionIndex];
         const sectionId = section
@@ -881,12 +919,71 @@ function Builder({ test }: Readonly<{ test: Test }>) {
           to: { sectionId, groupId: move.to.groupId, index: move.to.index },
           expectedGroupRevisions,
         });
-        acknowledgeMove(moved, move.to.groupId, known);
+        acknowledgeMove(moved, move.to.groupId, known, quiet);
+        landed = moved.questionId;
       });
     } catch (cause) {
       refuseMove(cause);
     } finally {
       setMovingQuestion(null);
+    }
+    return landed;
+  }
+
+  /**
+   * addFromBankToGroup carries out "From question bank" of a group's pane.
+   * The picked questions join the group's section just after the group, as
+   * the outline's own entry adds them to a section, and the server then moves
+   * each into the group in the order picked: it copies the question and the
+   * original stays in the bank. A question the server refuses, and those
+   * picked after it, stay in the section, with the reason in a notice.
+   */
+  async function addFromBankToGroup(groupId: string, added: readonly string[]) {
+    if (added.length === 0) return;
+    setPublishError(null);
+    setCreating(true);
+    try {
+      if (!(await flushBeforeMove())) return;
+      const owner = findUnit(latestOutline.current, `group:${groupId}`);
+      const stored =
+        queryClient.getQueryData<StoredGroup>(["teacher-group", groupId]) ??
+        (await getGroup(groupId));
+      if (!owner) return;
+      if (added.length > groupRoom(stored.bundle.group)) {
+        notify.error(t("builder.moveGroupFull"));
+        return;
+      }
+      updateOutline(
+        latestOutline.current.map((section, index) => {
+          if (index !== owner.sectionIndex) return section;
+          const units = unitsOf(section);
+          return withUnits(section, [
+            ...units.slice(0, owner.index + 1),
+            ...added.map((id) => ({ kind: "question" as const, id })),
+            ...units.slice(owner.index + 1),
+          ]);
+        }),
+      );
+      const first = stored.bundle.group.members.length;
+      let copied = 0;
+      for (const questionId of added) {
+        const landed = await moveQuestion(
+          {
+            questionId,
+            to: { sectionIndex: owner.sectionIndex, groupId, index: first + copied },
+            groupIds: [groupId],
+          },
+          true,
+        );
+        if (landed === null) break;
+        copied += 1;
+      }
+      if (copied > 0)
+        notify.success(t("builder.bankCopiedIntoGroup", { count: copied }));
+    } catch (cause) {
+      report(cause);
+    } finally {
+      setCreating(false);
     }
   }
 
@@ -942,6 +1039,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     moved: MoveTestQuestionResult,
     groupId: string | null,
     known: Map<string, StoredGroup>,
+    quiet = false,
   ) {
     const updatedAt = moved.test.updatedAt;
     version.current = updatedAt;
@@ -972,8 +1070,9 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     setEditorEpoch((epoch) => epoch + 1);
     setTitleFocus(null);
     focusAfterMove.current = moved.questionId;
-    if (moved.copied) notify.success(t("builder.movedIntoGroupCopied"));
-    else if (moved.restored) notify.success(t("builder.movedOutRestored"));
+    if (moved.copied) {
+      if (!quiet) notify.success(t("builder.movedIntoGroupCopied"));
+    } else if (moved.restored) notify.success(t("builder.movedOutRestored"));
     else if (moved.editedCopy)
       notify.info(t("builder.movedOutEditedCopy"), { duration: 6000 });
   }
@@ -1124,6 +1223,11 @@ function Builder({ test }: Readonly<{ test: Test }>) {
                     setGroupMove(questionId);
                   }
                 : undefined,
+            fromBank: (opener) => {
+              pickerOpener.current = opener;
+              setPickingInto(selectedGroupId);
+              setPicking(true);
+            },
           }}
         />
       );
@@ -1304,6 +1408,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
                   onCreateQuestion={() => void onCreateQuestion()}
                   onPickFromBank={(opener) => {
                     pickerOpener.current = opener;
+                    setPickingInto(null);
                     setPicking(true);
                   }}
                   onAddSection={onAddSection}
@@ -1329,12 +1434,8 @@ function Builder({ test }: Readonly<{ test: Test }>) {
         excluded={new Set(questionIds)}
         returnFocus={pickerOpener}
         onOpenChange={setPicking}
-        destination={sections[destinationIndex()]?.title ?? null}
-        onPick={appendQuestions}
-        onPickGroup={() => {
-          setPicking(false);
-          setPickingGroup(true);
-        }}
+        {...bankTarget()}
+        onPick={pickFromBank}
       />
 
       <GroupPickerDialog

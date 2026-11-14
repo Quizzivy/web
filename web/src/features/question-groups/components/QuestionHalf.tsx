@@ -1,10 +1,11 @@
-import type { ReactNode } from "react";
+import { useId, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import {
   ChevronDown,
   ChevronUp,
   Ellipsis,
   Layers,
+  Library,
   ListPlus,
   LogOut,
   MousePointerClick,
@@ -48,13 +49,15 @@ const CHIP =
   "bg-card h-7.5 gap-1.5 rounded-[8px] px-2.5 text-[12.5px] font-medium shadow-none max-[767px]:h-10 [&_svg]:text-muted-fg";
 
 /**
- * GroupMoves are the moves of a member that leave its group, which only a
- * host that holds the test can carry out: out to the section, and to another
- * group, left out when the test has none.
+ * GroupMoves are the moves across the group's boundary, which only a host
+ * that holds the test can carry out: a member out to the section, a member to
+ * another group, left out when the test has none, and questions in from the
+ * question bank, asked for by the button `fromBank` is handed.
  */
 export interface GroupMoves {
   out: (questionId: string) => void;
   toAnother?: ((questionId: string) => void) | undefined;
+  fromBank?: ((opener: HTMLElement) => void) | undefined;
 }
 
 /** QuestionActions are what the right half asks of the pane. */
@@ -91,8 +94,10 @@ export interface StackView {
 /**
  * QuestionHalf is the right half of a group's pane: its questions as a stack
  * of cards, one open and the rest a line each, numbered as in the test; under
- * them the row that adds a question by type, or, when every question answers
- * a gap (`gapsOnly`), the line that says how the next gap is made. `heading`
+ * them the row that adds a question by type and, where the host can take
+ * questions from the bank (`moves.fromBank`), "From question bank"; or, when
+ * every question answers a gap (`gapsOnly`), the line that says how the next
+ * gap is made. `heading`
  * names the half and is read out only while the halves stand side by side
  * (`shown`), since a tab carries it otherwise.
  */
@@ -167,6 +172,7 @@ export function QuestionHalf({
           label={t(`groups.kind.${kind}.addQuestion`)}
           full={members.length >= 200}
           onAdd={actions.addQuestion}
+          onFromBank={moves?.fromBank}
         />
       )}
       {gapsOnly && members.length > 0 ? (
@@ -371,8 +377,15 @@ function AddQuestion({
   label,
   full,
   onAdd,
-}: Readonly<{ label: string; full: boolean; onAdd: (type: QuestionType) => void }>) {
+  onFromBank,
+}: Readonly<{
+  label: string;
+  full: boolean;
+  onAdd: (type: QuestionType) => void;
+  onFromBank: ((opener: HTMLElement) => void) | undefined;
+}>) {
   const { t } = useTranslation();
+  const labelId = useId();
   const item = (type: QuestionType): ReactNode => {
     const Icon = QUESTION_TYPE_ICONS[type];
     return (
@@ -383,8 +396,15 @@ function AddQuestion({
     );
   };
   return (
-    <div className="bg-muted flex flex-col gap-2 rounded-xl px-3 py-2.5">
-      <span className="flex items-center gap-2 text-[12.5px] font-semibold">
+    <div
+      role="group"
+      aria-labelledby={labelId}
+      className="bg-muted flex flex-col gap-2 rounded-xl px-3 py-2.5"
+    >
+      <span
+        id={labelId}
+        className="flex items-center gap-2 text-[12.5px] font-semibold"
+      >
         <Plus aria-hidden="true" className="size-3.5" />
         {label}
       </span>
@@ -418,6 +438,18 @@ function AddQuestion({
             )}
           </DropdownMenuContent>
         </DropdownMenu>
+        {onFromBank ? (
+          <Button
+            type="button"
+            variant="outline"
+            className={CHIP}
+            disabled={full}
+            onClick={(event) => onFromBank(event.currentTarget)}
+          >
+            <Library aria-hidden="true" />
+            {t("builder.fromQuestionBank")}
+          </Button>
+        ) : null}
       </div>
     </div>
   );

@@ -2771,6 +2771,7 @@
     "moveGroupField": "Bài đọc, bài nghe",
     "moveGroupOption": "{{group}} · {{section}}",
     "movedIntoGroupCopied": "Đã sao chép câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
+    "bankCopiedIntoGroup_other": "Đã sao chép {{count}} câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
     "movedOutRestored": "Đã trả câu hỏi gốc về đề thi.",
     "movedOutEditedCopy": "Câu hỏi khác với bản gốc nên được lưu thành câu hỏi mới trong ngân hàng.",
     "moveGapBound": "Câu hỏi này trả lời cho một chỗ trống. Hãy bỏ chỗ trống đó trước.",

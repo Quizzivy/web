@@ -21,6 +21,7 @@ function renderLogin(initialEntry = "/login") {
     { path: "/admin", element: <p>admin console</p> },
     { path: "/teacher", element: <p>admin home</p> },
     { path: "/", element: <p>student home</p> },
+    { path: "/join", element: <p>join page</p> },
     { path: "/join/:code", element: <p>join page</p> },
   ];
   const router = createMemoryRouter(routes, { initialEntries: [initialEntry] });
@@ -59,6 +60,37 @@ async function signInWith(user: ReturnType<typeof userEvent.setup>) {
   await user.type(screen.getByLabelText("Mật khẩu"), "quizzivy-dev");
   await user.click(screen.getByRole("button", { name: "Đăng nhập" }));
 }
+
+/**
+ * The line for a visitor who holds a class code (§5.8). Fails when the staff
+ * host's sign-in page links to its own `/join`, which that host does not
+ * serve, or when a host that serves the join page sends its visitor away.
+ */
+describe("/login for a visitor with a class code", () => {
+  it("names the student host's join page from the staff host", async () => {
+    asHost("staff");
+    renderLogin();
+
+    expect(await screen.findByRole("link", { name: "Tham gia lớp" })).toHaveAttribute(
+      "href",
+      "https://my.quizzivy.com/join",
+    );
+  });
+
+  it.each(["student", "all"] as const)(
+    "links to this host's own join page on the %s host",
+    async (kind) => {
+      asHost(kind);
+      const router = renderLogin();
+      const user = userEvent.setup();
+
+      const link = await screen.findByRole("link", { name: "Tham gia lớp" });
+      expect(link).toHaveAttribute("href", "/join");
+      await user.click(link);
+      await waitFor(() => expect(router.state.location.pathname).toBe("/join"));
+    },
+  );
+});
 
 /**
  * An account that belongs at the other host (§5.8). Each case fails when the

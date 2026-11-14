@@ -190,3 +190,67 @@ test("one host for every page serves both sides and offers no other host", async
   await page.goto(`${ONE_HOST}/join`);
   await expect(page.getByRole("heading", { name: NOT_FOUND })).toHaveCount(0);
 });
+
+test("a visitor with a class code at the staff host's sign-in page reaches the join page", async ({
+  page,
+}) => {
+  await stubApi(page, anonymous);
+  await page.goto(`${STAFF_HOST}/login`);
+
+  const join = page.getByRole("link", { name: "Tham gia lớp", exact: true });
+  await expect(join).toHaveAttribute("href", `${STUDENT_HOST}/join`);
+  await join.click();
+  await expect(page).toHaveURL(`${STUDENT_HOST}/join`);
+  await expect(page.getByRole("heading", { name: "Tham gia lớp học" })).toBeVisible();
+});
+
+const SIGNED_OUT = [
+  "/login",
+  "/forgot-password",
+  "/set-password",
+  "/auth/google/callback",
+  "/403",
+  "/duong-dan-khong-ton-tai",
+];
+
+/**
+ * Every link a signed-out visitor can follow, on every page a host shows them,
+ * followed in the browser. It fails when a page of one host links to a path
+ * only the other host serves, as the staff host's sign-in page did with
+ * `/join` in v0.13.5: nothing below the built router knows which host a path
+ * belongs to.
+ */
+for (const [name, host] of [
+  ["student", STUDENT_HOST],
+  ["staff", STAFF_HOST],
+  ["one", ONE_HOST],
+] as const) {
+  test(`every link on the ${name} host's signed-out pages leads to a page that exists`, async ({
+    page,
+  }) => {
+    await stubApi(page, anonymous);
+    const ours = new Set([STUDENT_HOST, STAFF_HOST, ONE_HOST]);
+    const targets = new Map<string, string>();
+    for (const path of SIGNED_OUT) {
+      await page.goto(`${host}${path}`);
+      await expect(page.getByRole("heading").first()).toBeVisible();
+      const hrefs = await page
+        .locator("a[href]")
+        .evaluateAll((links) => links.map((link) => (link as HTMLAnchorElement).href));
+      for (const href of hrefs) {
+        const url = new URL(href);
+        if (ours.has(url.origin)) targets.set(url.origin + url.pathname, path);
+      }
+    }
+
+    expect([...targets.keys()]).toContain(`${host}/login`);
+    for (const [target, from] of targets) {
+      await page.goto(target);
+      await expect(page.getByRole("heading").first()).toBeVisible();
+      await expect(
+        page.getByRole("heading", { name: NOT_FOUND }),
+        `${target}, linked from ${host}${from}`,
+      ).toHaveCount(0);
+    }
+  });
+}

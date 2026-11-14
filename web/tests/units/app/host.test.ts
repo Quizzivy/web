@@ -2,6 +2,7 @@ import { afterEach, describe, expect, it, vi } from "vitest";
 import {
   hostKind,
   hostKindOf,
+  onStudentHost,
   otherHostSignIn,
   studentOrigin,
   type HostKind,
@@ -94,6 +95,18 @@ describe("the host this page is served from", () => {
       host: "my.quizzivy.com",
       href: "https://my.quizzivy.com/login",
     });
+  });
+
+  // Fails when a link to one of the student's pages is written as a path on
+  // the staff host, which answers that path with its 404.
+  it("writes a student page's address in full only from the staff host", () => {
+    hosts("staff");
+    expect(onStudentHost("/join")).toBe("https://my.quizzivy.com/join");
+    hosts("student");
+    expect(onStudentHost("/join")).toBeNull();
+    vi.stubEnv("VITE_STUDENT_APP_URL", STUDENT);
+    vi.stubEnv("VITE_STAFF_APP_URL", STAFF);
+    expect(onStudentHost("/join")).toBeNull();
   });
 
   it("reads a build input written with a trailing slash", () => {

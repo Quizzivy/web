@@ -581,6 +581,20 @@ To view one, start the server above and open, for example,
   Gradebook Screen, Reports and Grades) held their teacher or admin page in the v2 deck's
   1320px or 1080px container. Each now holds it in the frame's 1600px (DG-205). Nothing moves
   on screen: at 1280 the frame is 976px wide and at 360 it is 332px, under either limit.
+- 2026-11-14 — Seventeenth proposal page: `proposals/R10 Course Detail.dc.html`, for DG-94,
+  DG-90 and DG-83 (R10; T-R10.13). The deck draws Course detail for a published course of the
+  teacher's own. The page keeps it as it is, in the workspace's page frame, and draws what it
+  leaves out: a draft course with "Phát hành", resting with its reason while no lesson is
+  published; "Chia sẻ" and a "…" menu in the heading, with the details edited in New course's
+  dialog, the delete confirmation, and the refusal when a class still has the course; a "…" on
+  each unit, to edit or delete it; a lesson lifted by its grip; a course shared with Can use
+  and with Can edit; a course with no unit, loading, and a failed read. Sixteen states, at
+  1280, 360 and 1920, light and dark, Vietnamese and English. Its first table sets the deck's
+  Courses part beside it, part by part, and none of it changes. No operation changes. Its four
+  questions for Thuong are on the page: unpublishing a course, where a course is renamed, a
+  menu on each unit, and the width from which the side cards sit beside the units (T-R10.13
+  says 1000px of content; the deck's layout gives about 800, and a 1280 screen has 976). The
+  lesson editor's page now writes a unit's "Open now" as "Mở ngay", the words this page uses.
 
 ## The brand
 

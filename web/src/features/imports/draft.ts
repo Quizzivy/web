@@ -1,5 +1,5 @@
 import type { ContentDocument } from "@/components/shared/content/model";
-import { questionGaps } from "@/components/shared/content/gaps";
+import { questionGaps, settleGaps } from "@/components/shared/content/gaps";
 import { contentPlainText } from "@/components/shared/content/plainText";
 import type {
   ImportDraftAnswer,
@@ -149,6 +149,59 @@ export function updateQuestion(
       return item;
     });
     return changed ? { ...section, items } : section;
+  });
+}
+
+/**
+ * updateQuestions replaces every question whose ID is in `ids`, group members
+ * included, in one pass; untouched sections, items and groups keep their
+ * reference.
+ */
+export function updateQuestions(
+  sections: ImportDraftSection[],
+  ids: ReadonlySet<string>,
+  update: (question: ImportDraftQuestion) => ImportDraftQuestion,
+): ImportDraftSection[] {
+  const each = (question: ImportDraftQuestion) =>
+    ids.has(question.id) ? update(question) : question;
+  return sections.map((section) => {
+    let changed = false;
+    const items = section.items.map((item) => {
+      if (item.question) {
+        const question = each(item.question);
+        if (question === item.question) return item;
+        changed = true;
+        return { ...item, question };
+      }
+      const group = item.group;
+      if (!group?.questions.some((question) => ids.has(question.id))) return item;
+      changed = true;
+      return { ...item, group: { ...group, questions: group.questions.map(each) } };
+    });
+    return changed ? { ...section, items } : section;
+  });
+}
+
+/**
+ * onlyQuestions is the draft narrowed to the questions in `ids`: each section
+ * with the questions it keeps, a group with the members it keeps, and no
+ * section or group left empty.
+ */
+export function onlyQuestions(
+  sections: readonly ImportDraftSection[],
+  ids: ReadonlySet<string>,
+): ImportDraftSection[] {
+  return sections.flatMap((section) => {
+    const items = section.items.flatMap((item) => {
+      if (item.question) return ids.has(item.question.id) ? [item] : [];
+      const group = item.group;
+      if (!group) return [];
+      const questions = group.questions.filter((question) => ids.has(question.id));
+      return questions.length === 0
+        ? []
+        : [{ ...item, group: { ...group, questions } }];
+    });
+    return items.length === 0 ? [] : [{ ...section, items }];
   });
 }
 
@@ -678,6 +731,95 @@ export function dropsAnswerData(
     return true;
   if (dropsTypeFields(before, after)) return true;
   return (before.answer.text ?? "").trim() !== "" && after.answer.text === undefined;
+}
+
+/**
+ * passageBound lists the questions a shared passage's gaps answer through a
+ * blank of their own (`blankGapId`): a cloze's members. The gap of such a
+ * question's prompt is the one the passage is bound to, by its ID.
+ */
+export function passageBound(sections: readonly ImportDraftSection[]): Set<string> {
+  const bound = new Set<string>();
+  for (const section of sections)
+    for (const item of section.items)
+      for (const link of item.group?.gaps ?? [])
+        if (link.blankGapId !== undefined) bound.add(link.questionId);
+  return bound;
+}
+
+/**
+ * changeTypeSettled changes a question's type as `changeType` does and, when
+ * the new type binds no blank, writes the gaps of its prompt out first
+ * (`settleGaps`), so the question is valid as it stands. A change of one
+ * question keeps the gaps, which lets it be taken back with nothing lost; a
+ * change of many has Undo for that, and nobody to remove a gap from each.
+ */
+export function changeTypeSettled(
+  question: ImportDraftQuestion,
+  type: QuestionType,
+): ImportDraftQuestion {
+  if (type === "fill_blank" || question.prompt.format !== "semantic_v1")
+    return changeType(question, type);
+  const prompt = settleGaps(question.prompt);
+  if (prompt === question.prompt) return changeType(question, type);
+  return changeType(
+    { ...question, prompt, origins: entered(question, "prompt") },
+    type,
+  );
+}
+
+/** TypeChangePlan is what changing a set of questions to one type would do, before it is done. */
+export interface TypeChangePlan {
+  /** The questions of another type, which change. */
+  changing: ImportDraftQuestion[];
+  /** The questions already of the type, which stay as they are. */
+  unchanged: ImportDraftQuestion[];
+  /** Those of `changing` that lose options, key data, a "Choose N" count or a word limit (`dropsAnswerData`). */
+  dropping: ImportDraftQuestion[];
+  /** Those of `changing` whose prompt holds gaps the new type cannot, which are written out (`settleGaps`). */
+  settling: ImportDraftQuestion[];
+  /** Those of `changing` whose gaps a passage is bound to: they keep them, and are not valid until the teacher sees to them. */
+  keeping: ImportDraftQuestion[];
+}
+
+/**
+ * planTypeChange sorts questions by what a change to `type` does to each, in
+ * the order given. `bound` are the questions whose gaps a passage answers
+ * through (`passageBound`).
+ */
+export function planTypeChange(
+  questions: readonly ImportDraftQuestion[],
+  type: QuestionType,
+  bound: ReadonlySet<string> = new Set(),
+): TypeChangePlan {
+  const changing = questions.filter((question) => question.type !== type);
+  const gapped =
+    type === "fill_blank"
+      ? []
+      : changing.filter((question) => promptGaps(question.prompt).length > 0);
+  return {
+    changing,
+    unchanged: questions.filter((question) => question.type === type),
+    dropping: changing.filter((question) =>
+      dropsAnswerData(question, changeType(question, type)),
+    ),
+    settling: gapped.filter((question) => !bound.has(question.id)),
+    keeping: gapped.filter((question) => bound.has(question.id)),
+  };
+}
+
+/**
+ * applyTypeChange is the change `planTypeChange` describes, for one question
+ * of it: gaps written out, unless a passage is bound to them.
+ */
+export function applyTypeChange(
+  question: ImportDraftQuestion,
+  type: QuestionType,
+  bound: ReadonlySet<string> = new Set(),
+): ImportDraftQuestion {
+  return bound.has(question.id)
+    ? changeType(question, type)
+    : changeTypeSettled(question, type);
 }
 
 /** SELECT_COUNT_LIMITS are the contract's bounds on a "Choose N" count. */

@@ -3,13 +3,20 @@ import type { ContentDocument } from "@/components/shared/content/model";
 import { contentPlainText } from "@/components/shared/content/plainText";
 import {
   ACCEPTED_LIMITS,
+  applyTypeChange,
   BLANK_LIMIT,
   candidateOptions,
   changeType,
+  changeTypeSettled,
   clampAccepted,
   dropsAnswerData,
   exceedsBlankLimit,
+  onlyQuestions,
+  passageBound,
   pickCandidate,
+  planTypeChange,
+  questionPlaces,
+  updateQuestions,
   removeOption,
   restore,
   exclude,
@@ -627,5 +634,133 @@ describe("a question that stops being fill in the blank", () => {
       blanks: blank().blanks.map((item) => ({ ...item, accepted: [] })),
     };
     expect(dropsAnswerData(empty, changeType(empty, "short_answer"))).toBe(false);
+  });
+});
+
+describe("editing several questions at once", () => {
+  const gapped = (id: string, before: string, after = ""): ContentDocument => ({
+    format: "semantic_v1",
+    blocks: [
+      {
+        type: "paragraph",
+        content: [
+          ...(before === ""
+            ? []
+            : [{ type: "text" as const, text: before, marks: [] }]),
+          { type: "gap", id, label: "1" },
+          ...(after === "" ? [] : [{ type: "text" as const, text: after, marks: [] }]),
+        ],
+      },
+    ],
+  });
+  const blankOf = (id: string, prompt: ContentDocument, accepted: string[] = []) =>
+    question({
+      id,
+      label: id.slice(1),
+      type: "fill_blank",
+      prompt,
+      options: [],
+      blanks: [{ gapId: `g${id}`, label: "1", accepted, caseSensitive: false }],
+      answer: { state: "unknown", optionIds: [], evidence: [] },
+    });
+  const q1 = blankOf("q1", gapped("gq1", "Where do you live? "));
+  const q2 = blankOf("q2", gapped("gq2", "She ", " to school."), ["goes"]);
+  const q3 = question({ id: "q3", label: "3", type: "short_answer", options: [] });
+  const member = blankOf("q4", gapped("gq4", ""));
+  const sections = [
+    {
+      id: "s1",
+      title: "Part 1",
+      origin: "source_explicit" as const,
+      source: [],
+      items: [{ question: q1 }, { question: q2 }, { question: q3 }],
+    },
+    {
+      id: "s2",
+      title: "Part 2",
+      origin: "source_explicit" as const,
+      source: [],
+      items: [
+        {
+          group: {
+            id: "g",
+            label: "4",
+            stimulus: gapped("p1", "I ", " in Hanoi."),
+            gaps: [{ gapId: "p1", questionId: "q4", blankGapId: "gq4" }],
+            source: [],
+            questions: [member],
+          },
+        },
+      ],
+    },
+  ];
+
+  it("updates the questions named, group members too, and nothing else", () => {
+    const next = updateQuestions(sections, new Set(["q2", "q4"]), (current) => ({
+      ...current,
+      points: "2",
+    }));
+    expect(questionPlaces(next).map((place) => place.question.points)).toEqual([
+      "1",
+      "2",
+      "1",
+      "2",
+    ]);
+    expect(next[0]!.items[0]).toBe(sections[0]!.items[0]);
+    expect(
+      updateQuestions(sections, new Set(["nobody"]), (current) => current),
+    ).toEqual(sections);
+    expect(updateQuestions(sections, new Set(["nobody"]), (c) => c)[0]).toBe(
+      sections[0],
+    );
+  });
+
+  it("narrows a draft to the questions named, without an empty section or group", () => {
+    expect(
+      questionPlaces(onlyQuestions(sections, new Set(["q1", "q3"]))).map(
+        (place) => place.question.id,
+      ),
+    ).toEqual(["q1", "q3"]);
+    expect(onlyQuestions(sections, new Set(["q1"]))).toHaveLength(1);
+    expect(onlyQuestions(sections, new Set(["q4"]))[0]!.items[0]!.group!.id).toBe("g");
+    expect(onlyQuestions(sections, new Set())).toEqual([]);
+  });
+
+  it("names the members a passage answers through a blank", () => {
+    expect([...passageBound(sections)]).toEqual(["q4"]);
+  });
+
+  it("plans a change of type: what changes, what stays, what loses answers, whose gaps are written out or kept", () => {
+    const all = [q1, q2, q3, member];
+    const plan = planTypeChange(all, "short_answer", passageBound(sections));
+    expect(plan.changing.map((item) => item.id)).toEqual(["q1", "q2", "q4"]);
+    expect(plan.unchanged.map((item) => item.id)).toEqual(["q3"]);
+    expect(plan.dropping.map((item) => item.id)).toEqual(["q2"]);
+    expect(plan.settling.map((item) => item.id)).toEqual(["q1", "q2"]);
+    expect(plan.keeping.map((item) => item.id)).toEqual(["q4"]);
+
+    const toBlank = planTypeChange(all, "fill_blank");
+    expect(toBlank.changing.map((item) => item.id)).toEqual(["q3"]);
+    expect(toBlank.settling).toEqual([]);
+    expect(toBlank.keeping).toEqual([]);
+  });
+
+  it("writes gaps out when many change type, and keeps them where a passage is bound to them", () => {
+    const bound = passageBound(sections);
+    const first = applyTypeChange(q1, "short_answer", bound);
+    expect(contentPlainText(first.prompt)).toBe("Where do you live?");
+    expect(first.blanks).toEqual([]);
+    expect(first.origins.prompt).toBe("teacher_entered");
+    expect(first.origins.type).toBe("teacher_entered");
+
+    expect(contentPlainText(applyTypeChange(q2, "single_choice", bound).prompt)).toBe(
+      "She ___ to school.",
+    );
+    const kept = applyTypeChange(member, "short_answer", bound);
+    expect(kept.prompt).toBe(member.prompt);
+    expect(applyTypeChange(q3, "fill_blank", bound).prompt).toBe(q3.prompt);
+    expect(changeTypeSettled(q3, "single_choice").origins.prompt).toBe(
+      q3.origins.prompt,
+    );
   });
 });

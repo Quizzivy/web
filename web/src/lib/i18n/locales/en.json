@@ -5490,6 +5490,7 @@
       "doneOptionNamed": "Done editing option {{label}}",
       "acceptedLimit": "At most {{count}} answers of up to {{length}} characters each. Anything beyond that is not saved.",
       "blankLimit": "A question can have at most {{max}} blanks. Remove one before adding another.",
+      "strayGaps": "Only a fill in the blank question holds gaps, so this {{type}} question is not valid yet. Remove the gaps left in the content, or change the type back to Fill in the blank.",
       "excludeReason": "Reason",
       "excludeHint": "Saved with the import so others can see why.",
       "excludeConfirm": "Exclude",

@@ -579,3 +579,53 @@ describe("TFNG, Choose N and word limits", () => {
       expect(validMaxWords(bad), bad).toBe(false);
   });
 });
+
+describe("a question that stops being fill in the blank", () => {
+  const blank = () =>
+    question({
+      id: "q",
+      label: "1",
+      type: "fill_blank",
+      prompt: withGaps(["g1", "g2"]),
+      options: [],
+      blanks: [
+        { gapId: "g1", label: "1", accepted: ["goes"], caseSensitive: false },
+        { gapId: "g2", label: "2", accepted: [], caseSensitive: false },
+      ],
+      answer: { state: "unknown", optionIds: [], evidence: [] },
+    });
+
+  it.each([
+    "single_choice",
+    "multiple_choice",
+    "true_false",
+    "tfng",
+    "short_answer",
+  ] as const)(
+    "keeps the gaps of its prompt and drops its blanks when it becomes %s",
+    (type) => {
+      const next = changeType(blank(), type);
+      expect(contentPlainText(next.prompt)).toBe("She [1][2]");
+      expect(next.blanks).toEqual([]);
+      expect(next.origins.prompt).toBe("source_explicit");
+      expect(dropsAnswerData(blank(), next)).toBe(true);
+    },
+  );
+
+  it("gets its blanks back, without their answers, when it becomes one again", () => {
+    const again = changeType(changeType(blank(), "short_answer"), "fill_blank");
+    expect(again.blanks).toEqual([
+      { gapId: "g1", label: "1", accepted: [], caseSensitive: false },
+      { gapId: "g2", label: "2", accepted: [], caseSensitive: false },
+    ]);
+    expect(contentPlainText(again.prompt)).toBe("She [1][2]");
+  });
+
+  it("is not asked about when no blank has an accepted answer", () => {
+    const empty = {
+      ...blank(),
+      blanks: blank().blanks.map((item) => ({ ...item, accepted: [] })),
+    };
+    expect(dropsAnswerData(empty, changeType(empty, "short_answer"))).toBe(false);
+  });
+});

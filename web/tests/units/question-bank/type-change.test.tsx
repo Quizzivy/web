@@ -266,6 +266,14 @@ describe("the answers a type held, when the teacher comes back to it", () => {
     expect(rewritten.options).toEqual([option("left", true), option("have gone")]);
   });
 
+  it("has them again when the type before it only held its own empty options", () => {
+    const start = of("single_choice");
+    expect(trip(start, "essay", "matching", "single_choice")).toEqual(start);
+    expect(trip(of("matching"), "short_answer", "single_choice", "matching")).toEqual(
+      of("matching"),
+    );
+  });
+
   it("brings matching items back unanswered beside rewritten options", () => {
     const back = trip(
       of("matching"),

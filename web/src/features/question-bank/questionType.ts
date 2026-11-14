@@ -328,9 +328,10 @@ function sameTexts(a: readonly Option[], b: readonly Option[]): boolean {
  * or to look at another, costs nothing typed: `retype` alone hands a type
  * only what the one before it could hold, and a trip through short answer
  * would bring a choice question back with two empty options. What `retype`
- * carried is newer and wins: options the teacher rewrote in another type that
- * lists options, and a sample answer rewritten between short answer and
- * essay. The type's own options come back with what hangs on them: the ticks,
+ * carried is newer and wins: options the teacher wrote in another type that
+ * lists options (never that type's untouched empty ones), and a sample answer
+ * rewritten between short answer and essay. The type's own options come back
+ * with what hangs on them: the ticks,
  * a "Choose N" count, each matching item's answer, and "Not given" for a true
  * / false. Beside rewritten options the matching items come back unanswered,
  * since their answers named options by position, and a "Choose N" count only
@@ -345,7 +346,9 @@ export function recall(
   if (held === undefined || editorType(held.type) !== editorType(next.type))
     return next;
   const own =
-    !carriesOptions(from.type, next.type) || sameTexts(next.options, held.options);
+    !carriesOptions(from.type, next.type) ||
+    sameTexts(next.options, held.options) ||
+    next.options.every((option) => option.text.trim() === "");
   const out: QuestionValues = own
     ? { ...next, type: held.type, options: held.options }
     : { ...next };

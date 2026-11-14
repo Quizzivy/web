@@ -112,18 +112,23 @@ function passagesOf(groups: readonly StudentGroup[]): AiPassage[] {
  * usePinnedGroups reads the groups of version `version` of the test `testId`,
  * the passages a practice set starts from, only while `enabled`. A preview
  * that answers another version gives none rather than the wrong passages.
+ * `settled` says the read has answered, with the groups or with a failure,
+ * so that a caller can wait for it.
  */
 function usePinnedGroups(
   testId: string,
   version: number,
   enabled: boolean,
-): readonly StudentGroup[] | undefined {
+): { groups: readonly StudentGroup[] | undefined; settled: boolean } {
   const preview = useQuery({
     queryKey: ["teacher-test-preview", testId, version],
     queryFn: ({ signal }) => previewTest(testId, version, signal),
     enabled,
   });
-  return preview.data?.version === version ? preview.data.groups : undefined;
+  return {
+    groups: preview.data?.version === version ? preview.data.groups : undefined,
+    settled: !preview.isLoading,
+  };
 }
 
 /**
@@ -133,8 +138,9 @@ function usePinnedGroups(
  * one, "Review answers" (Grading narrowed to the assignment) or "Make a
  * practice set" (the Generate panel with the insight's types, saving a new
  * draft test "{title} · Practice", whose passages come from the assignment's
- * pinned version `testVersion`, read only while the entry is offered). It
- * writes nothing itself; the practice set is the one write, made by its
+ * pinned version `testVersion`, read only while the entry is offered; the
+ * Generate panel takes what it starts from once, when it first opens, so it
+ * opens only when that read has answered). It writes nothing itself; the practice set is the one write, made by its
  * primary through the existing writes. A failed explanation is a callout in
  * its place, with "Try again" when the assistant did not answer.
  */
@@ -154,7 +160,7 @@ export function AiInsightsPanel({
   const { t } = useTranslation();
   const available = useAiAvailable();
   const reads = useReadsStudentAnswers();
-  const groups = usePinnedGroups(testId, testVersion, available && reads);
+  const pinned = usePinnedGroups(testId, testVersion, available && reads);
   const [practice, setPractice] = useState<{
     types: readonly QuestionType[];
     open: boolean;
@@ -176,13 +182,13 @@ export function AiInsightsPanel({
           onPractice={(types) => setPractice({ types, open: true })}
         />
       )}
-      {practice !== null && (
+      {practice !== null && pinned.settled && (
         <PracticePanel
           key={`${assignmentId}:${practice.types.join()}`}
           types={practice.types}
           open={practice.open}
           testTitle={testTitle}
-          passages={passagesOf(groups ?? [])}
+          passages={passagesOf(pinned.groups ?? [])}
           onOpen={() => setPractice({ ...practice, open: true })}
           onClose={() => setPractice({ ...practice, open: false })}
         />

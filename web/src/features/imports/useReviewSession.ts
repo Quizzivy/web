@@ -7,7 +7,12 @@ import {
   type ImportDraftQuestion,
   type ImportReview,
 } from "./api";
-import { updateQuestion, workingFrom, type ReviewWorking } from "./draft";
+import {
+  updateQuestion,
+  updateQuestions,
+  workingFrom,
+  type ReviewWorking,
+} from "./draft";
 
 function superseded(cause: unknown): boolean {
   return (
@@ -20,7 +25,8 @@ function superseded(cause: unknown): boolean {
  * useReviewSession holds the review's local draft and saves it through the
  * shared autosave, one write at a time, each sending the revision the previous
  * save returned. STALE_WRITE or IMPORT_CONFLICT stops saving and refreshes the
- * import. While `locked`, edits are ignored. Findings, summary and readiness
+ * import. While `locked`, edits are ignored. `editQuestions` changes several
+ * questions as one edit and one save. Findings, summary and readiness
  * are the server's answer for the last saved revision.
  */
 export function useReviewSession(
@@ -77,6 +83,18 @@ export function useReviewSession(
     [apply],
   );
 
+  const editQuestions = useCallback(
+    (
+      ids: ReadonlySet<string>,
+      update: (question: ImportDraftQuestion) => ImportDraftQuestion,
+    ) =>
+      apply({
+        ...latest.current,
+        sections: updateQuestions(latest.current.sections, ids, update),
+      }),
+    [apply],
+  );
+
   const setTitle = useCallback(
     (title: string) => apply({ ...latest.current, title }),
     [apply],
@@ -98,6 +116,7 @@ export function useReviewSession(
     revision,
     autosave,
     editQuestion,
+    editQuestions,
     setTitle,
     acknowledge,
   };

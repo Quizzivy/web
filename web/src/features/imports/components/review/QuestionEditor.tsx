@@ -25,6 +25,7 @@ import {
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { ContentView } from "@/components/shared/content/ContentView";
 import type { SemanticContent } from "@/components/shared/content/model";
+import { questionGaps } from "@/components/shared/content/gaps";
 import { isOptionContent } from "@/components/shared/content/optionContent";
 import { contentPlainText } from "@/components/shared/content/plainText";
 import { isQuestionContent } from "@/components/shared/content/questionContent";
@@ -85,8 +86,10 @@ const SMALL_BUTTON = "rounded-[7px] font-medium shadow-none h-7 px-2.25 text-xs"
  * with "Show in source" and its actions (Exclude or Restore), the exclusion
  * and its reason, its findings with their resolutions, and its fields. The
  * "Question" field is the content editor, mounted only here, since one card
- * is open at a time. While `readOnly`, and for an excluded question, every
- * field is its read view; locating and the provenance chips still work.
+ * is open at a time, and mounted again when the question becomes or stops
+ * being fill in the blank, the one change that gives the prompt another
+ * vocabulary. While `readOnly`, and for an excluded question, every field is
+ * its read view; locating and the provenance chips still work.
  * `onExclude` names the element the exclusion dialog returns focus to: the
  * card's actions button when the menu asked, since its item unmounts, or
  * null when a button that stays asked.
@@ -346,6 +349,11 @@ function FieldLabel({
   );
 }
 
+/**
+ * PromptField is the "Question" field. Its editor lives as long as the
+ * question keeps the vocabulary it was mounted with: becoming or ceasing to
+ * be fill in the blank mounts a new one on the prompt as it then stands.
+ */
 function PromptField({
   question,
   editable,
@@ -353,8 +361,7 @@ function PromptField({
 }: Readonly<{ question: ImportDraftQuestion; editable: boolean; onEdit: Edit }>) {
   const { t } = useTranslation();
   const labelId = useId();
-  const [tooManyGaps, setTooManyGaps] = useState(false);
-  const live = editable && question.prompt.format === "semantic_v1";
+  const fillBlank = question.type === "fill_blank";
   return (
     <div className="flex min-w-0 flex-col gap-1.5">
       <FieldLabel
@@ -362,22 +369,12 @@ function PromptField({
         label={t("imports.field.prompt")}
         origin={question.origins.prompt}
       />
-      {live && question.prompt.format === "semantic_v1" ? (
-        <RichField
-          key={`${question.id}:prompt`}
+      {editable && question.prompt.format === "semantic_v1" ? (
+        <PromptEditor
+          key={`${question.id}:${fillBlank ? "blank" : "prose"}`}
+          question={question}
           document={question.prompt}
-          label={t("imports.review.promptEditorLabel", { label: question.label })}
-          placeholder={t("imports.review.promptPlaceholder")}
-          profile={
-            question.type === "fill_blank" || !isQuestionContent(question.prompt)
-              ? "prompt"
-              : "question"
-          }
-          onChange={(document) => {
-            const over = question.type === "fill_blank" && exceedsBlankLimit(document);
-            setTooManyGaps(over);
-            if (!over) onEdit((current) => setPrompt(current, document));
-          }}
+          onEdit={onEdit}
         />
       ) : (
         <div
@@ -388,12 +385,63 @@ function PromptField({
           <ContentView document={question.prompt} className="text-base" />
         </div>
       )}
-      {live && tooManyGaps ? (
+    </div>
+  );
+}
+
+/**
+ * PromptEditor is one mount of the prompt's content editor. Its profile is
+ * chosen once, from the question it opens on, and holds for as long as it is
+ * mounted: the editor validates its document and filters every edit by the
+ * profile it started with, so a profile worked out again from each edit turns
+ * a live editor into the "unsupported structure" notice the moment the last
+ * gap goes (Quizzivy/web#70). A fill in the blank takes gaps and offers
+ * "Insert gap". Any other type takes none, but a question changed from fill
+ * in the blank keeps the gaps of its prompt until the teacher removes them,
+ * so its editor shows them, lets them go, offers no new one, and says under
+ * the box why the question is not valid yet.
+ */
+function PromptEditor({
+  question,
+  document,
+  onEdit,
+}: Readonly<{
+  question: ImportDraftQuestion;
+  document: SemanticContent;
+  onEdit: Edit;
+}>) {
+  const { t } = useTranslation();
+  const fillBlank = question.type === "fill_blank";
+  const [profile] = useState<"prompt" | "question">(() =>
+    fillBlank || !isQuestionContent(document) ? "prompt" : "question",
+  );
+  const [tooManyGaps, setTooManyGaps] = useState(false);
+  const strayGaps = !fillBlank && questionGaps(document).length > 0;
+  return (
+    <>
+      <RichField
+        document={document}
+        label={t("imports.review.promptEditorLabel", { label: question.label })}
+        placeholder={t("imports.review.promptPlaceholder")}
+        profile={profile}
+        gapTool={fillBlank}
+        onChange={(next) => {
+          const over = fillBlank && exceedsBlankLimit(next);
+          setTooManyGaps(over);
+          if (!over) onEdit((current) => setPrompt(current, next));
+        }}
+      />
+      {tooManyGaps ? (
         <p role="alert" className="text-danger-ink m-0 text-xs">
           {t("imports.review.blankLimit", { max: BLANK_LIMIT })}
         </p>
       ) : null}
-    </div>
+      {strayGaps ? (
+        <p role="alert" className="text-danger-ink m-0 text-xs">
+          {t("imports.review.strayGaps", { type: t(`imports.type.${question.type}`) })}
+        </p>
+      ) : null}
+    </>
   );
 }
 
@@ -402,12 +450,14 @@ function RichField({
   label,
   profile,
   placeholder,
+  gapTool = true,
   onChange,
 }: Readonly<{
   document: SemanticContent;
   label: string;
   profile: "question" | "prompt" | "option";
   placeholder?: string;
+  gapTool?: boolean;
   onChange: (document: SemanticContent) => void;
 }>) {
   const { t } = useTranslation();
@@ -435,6 +485,7 @@ function RichField({
           minHeight={64}
           fontSize={14}
           placeholder={placeholder}
+          ownGapTool={!gapTool}
           onChange={onChange}
         />
       )}

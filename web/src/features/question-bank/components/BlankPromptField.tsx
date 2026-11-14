@@ -31,17 +31,21 @@ const PREVIEW_PLUGINS = [blankSlots];
  * or audio. Only
  * "Switch to Markdown" and "Apply conversion" change the stored form.
  * `onEditor` receives the rich editor while it is live and `null` otherwise.
+ * `clearOnFocus` hides the builder's starter prompt in either form until it
+ * is replaced, as `QuestionProseField` does for the other types.
  */
 export function BlankPromptField({
   value,
   onChange,
   onEditor,
+  clearOnFocus = false,
   placeholder,
   label: given,
 }: Readonly<{
   value: QuestionValues;
   onChange: (value: QuestionValues) => void;
   onEditor?: ((editor: Editor | null) => void) | undefined;
+  clearOnFocus?: boolean;
   placeholder?: string | undefined;
   label?: string | undefined;
 }>) {
@@ -110,6 +114,7 @@ export function BlankPromptField({
               onChange={onChange}
               onEditor={onEditor}
               placeholder={placeholder}
+              starter={clearOnFocus ? t("builder.starterPrompt") : undefined}
             />
           </Suspense>
         </>
@@ -122,6 +127,7 @@ export function BlankPromptField({
           onChange={(prompt) => onChange({ ...value, prompt })}
           minHeight={96}
           fontSize={15}
+          clearOnFocus={clearOnFocus}
           placeholder={placeholder}
           previewPlugins={PREVIEW_PLUGINS}
           focusOnMount={moved}

@@ -709,6 +709,24 @@ describe("the Import users dialog at its edges", () => {
     expect(dialog.queryByRole("alert")).toBeNull();
   });
 
+  it("offers Retry when the server could not finish reading the file (408), and reads the preview again", async () => {
+    servePreview((call) =>
+      call === 0
+        ? refusal(408, "REQUEST_INCOMPLETE", "Máy chủ chưa nhận đủ yêu cầu.")
+        : ok(preview()),
+    );
+    const { user: person } = renderUsers();
+    const dialog = await openImport(person);
+
+    await person.upload(fileInput(), csv());
+
+    expect(await dialog.findByRole("alert")).toHaveTextContent(
+      "Máy chủ chưa nhận đủ yêu cầu.",
+    );
+    await person.click(dialog.getByRole("button", { name: "Thử lại" }));
+    expect(await dialog.findByRole("button", { name: "Nhập 26 người" })).toBeVisible();
+  });
+
   it("does not offer Retry on a server that is not set up for imports, nor name its settings", async () => {
     servePreview(() => refusal(501, "USER_IMPORT_OFF"));
     const { user: person } = renderUsers();

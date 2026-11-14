@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R10 Learn · The practice reminder · Proposal · 14 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The daily practice reminder, as an email and in the app</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">R10 reminds a student at 19:00 on a day with words to review and no practice yet (T-R10.6), in the app and by email. The deck draws the two switches behind it, the teacher’s in Assign flashcards and the student’s in Settings, and the Practice card on Home. It draws no email, and its bell has no practice item. This page draws the email in the layout every Quizzivy email uses (the Email Layout page), the item in the bell, and the student’s switch in the product’s own card, in Vietnamese and English. Nothing here changes an operation.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The email</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One number and one button, in the layout every email uses.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>It fills the Email Layout page’s panel and nothing more: the centre’s name, a heading, a greeting, two sentences, one button, the link in full, the footer.</li>
+      <li><span style="color:var(--fg)">The subject and the heading are the plan’s words:</span> “{n} từ cần ôn hôm nay”. No list, no minutes and no streak; Home’s card has them.</li>
+      <li>The button opens Learn on its Flashcards tab, on the student’s host. The footer’s line leads to the switch that stops the email.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">In the app</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The same sentence in the bell, and the deck’s switch in Settings.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The bell gets one more kind of item, with the flashcards’ icon. It opens the same place as the email’s button.</li>
+      <li><span style="color:var(--fg)">The student’s switch is the deck’s fourth row,</span> in the card the product has today. One switch covers the app and email (DG-82).</li>
+      <li>The teacher’s switch, “Daily reminder at 19:00” in Assign flashcards, is the deck’s and is not drawn again.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">When it comes</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Only on a day with words to review and no practice yet.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>Four things must hold: the teacher kept the reminder on for a class that has the list, the student kept theirs on, words are due, and the student has not practised today.</li>
+      <li><span style="color:var(--fg)">Once a day, at 19:00.</span> The item is there when the student opens the app after 19:00 in their time; the email leaves at 19:00 in the centre’s time.</li>
+      <li>A student who practises before 19:00 gets neither.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The reminder, where a student meets it</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Pick the email or the app in the bar above. An email is shown in a reading pane and on a phone; the grey strip at the top stands for the mail client and is not part of the design, and everything under it is the email, in the reader’s system typeface. The app is shown at 1280 and 360. The student is the deck’s, Nguyễn Gia Bảo, and the list is the deck’s “Travel &amp; transport”.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ mailFrames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;flex-direction:column;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px"><div aria-hidden="true" style="flex:none;display:flex;flex-direction:column;gap:8px;padding:{{ f.chromePad }};border-bottom:1px solid var(--border);background:var(--muted)"><div style="display:flex;align-items:flex-start;gap:8px;font-size:{{ f.subjSize }};font-weight:600;line-height:1.3;overflow-wrap:anywhere"><span style="flex:1;min-width:0">{{ m.subject }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.subject.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.subject.n }}</span></sc-if></sc-if></div><div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--card);border:1px solid var(--border);display:grid;place-items:center;font-size:13px;font-weight:600">Q</span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">Quizzivy <span style="font-weight:400;color:var(--muted-fg)">no-reply@quizzivy.com</span></span><span style="display:block;font-size:12px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.pre }}</span></span><span style="flex:none;font-size:12px;color:var(--muted-fg)">19:00</span></div></div><div style="flex:1;min-height:0;overflow:hidden;background:{{ e.ground }}"><div><sc-if value="{{ isHtml }}" hint-placeholder-val="{{ true }}"><div lang="{{ lang }}" style="padding:{{ f.mailPad }};font-family:{{ e.font }};font-size:16px;line-height:1.5;color:{{ e.text }}"><div style="max-width:600px;margin:0 auto"><div style="background:{{ e.card }};border-radius:16px;padding:{{ f.cardPad }}"><div style="margin:0 0 {{ f.brandGap }};font-size:15px;font-weight:700">{{ m.org }}</div><h1 style="margin:0 0 16px;display:flex;align-items:flex-start;gap:8px;font-size:{{ f.h1 }};line-height:1.25;letter-spacing:-0.01em;font-weight:700"><span style="flex:1;min-width:0">{{ m.head }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.head.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.head.n }}</span></sc-if></sc-if></h1><p style="margin:0 0 12px">{{ m.hello }}</p><p style="margin:0 0 12px;display:flex;align-items:flex-start;gap:8px"><span style="flex:1;min-width:0">{{ m.body }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.body.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.body.n }}</span></sc-if></sc-if></p><div style="display:flex;align-items:center;gap:10px;margin:24px 0 0"><span role="link" style="display:inline-block;height:44px;padding:0 24px;border-radius:8px;background:{{ e.btn }};color:{{ e.btnText }};font-size:16px;font-weight:700;line-height:44px;white-space:nowrap">{{ m.cta }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.cta.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.cta.n }}</span></sc-if></sc-if></div><p style="margin:14px 0 0;font-size:13px;line-height:1.5;color:{{ e.muted }}">{{ m.linkNote }}<br><span style="word-break:break-all;color:{{ e.text }}">{{ m.link }}</span></p><p style="margin:12px 0 0;display:flex;align-items:flex-start;gap:8px;font-size:14px;color:{{ e.muted }}"><span style="flex:1;min-width:0">{{ m.note }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.note.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.note.n }}</span></sc-if></sc-if></p></div><div style="display:flex;gap:8px;align-items:flex-start;padding:20px {{ f.footPad }} 0;font-size:13px;line-height:1.6;color:{{ e.muted }}"><div style="flex:1;min-width:0"><div>{{ m.why }}</div><div><span role="link" style="color:{{ e.text }};text-decoration:underline;text-underline-offset:3px">{{ m.prefs }}</span></div><div>{{ m.sent }}</div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.foot.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.foot.n }}</span></sc-if></sc-if></div></div></div></sc-if><sc-if value="{{ isText }}" hint-placeholder-val="{{ false }}"><div style="position:relative"><pre lang="{{ lang }}" style="margin:0;padding:{{ f.mailPad }};font-family:ui-monospace,SFMono-Regular,Menlo,monospace;font-size:13px;line-height:1.55;white-space:pre-wrap;overflow-wrap:anywhere;color:{{ e.text }}">{{ m.text }}</pre><span style="position:absolute;top:12px;right:12px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.text.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.text.n }}</span></sc-if></sc-if></span></div></sc-if></div></div></div>
+        </div>
+      </figure>
+    </sc-for>
+    <sc-for list="{{ appFrames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px;line-height:1.5"><header style="flex:none;height:60px;display:flex;align-items:center;gap:14px;padding:0 {{ f.padX }};border-bottom:1px solid var(--border);background:var(--bg)"><sc-if value="{{ f.backHead }}" hint-placeholder-val="{{ false }}"><span role="button" aria-label="{{ tx.back }}" style="width:36px;height:36px;flex:none;margin-left:-6px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:18px"></i></span><span style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ tx.settings }}</span></sc-if><sc-if value="{{ f.logo }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></span></sc-if><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:2px;margin-left:14px"><sc-for list="{{ sNav }}" as="n" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;font-size:14px;white-space:nowrap;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px"></i>{{ n.label }}</span></sc-for></span></sc-if><span style="margin-left:auto;display:flex;align-items:center;gap:4px"><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-message-square" style="font-size:18px"></i></span><span role="button" aria-label="{{ tx.bellTitle }}" style="position:relative;width:36px;height:36px;display:grid;place-items:center;border-radius:8px;background:{{ ap.bellBg }}"><i class="icon-bell" style="font-size:18px"></i><sc-if value="{{ ap.bellDot }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:8px;right:9px;width:7px;height:7px;border-radius:50%;background:var(--danger);border:1.5px solid var(--bg)"></span></sc-if></span><span style="width:32px;height:32px;flex:none;margin-left:4px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;font-weight:600">BN</span></span></header><div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.mainPad }}"><div><sc-if value="{{ ap.home }}" hint-placeholder-val="{{ true }}"><div style="max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:24px"><div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ ap.greeting }}</div><div style="margin-top:4px;color:var(--muted-fg);font-size:14.5px">{{ tx.subNothing }}</div></div><section style="display:flex;flex-direction:column;gap:10px;min-width:0;max-width:{{ f.cardMax }}"><div style="display:flex;align-items:center;gap:8px;font-size:16px;font-weight:600">{{ tx.practice }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.card.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.card.n }}</span></sc-if></sc-if></div><div style="text-align:left;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:16px;display:flex;flex-direction:column;gap:10px"><span style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;flex:none;border-radius:10px;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center"><i class="icon-layers" style="font-size:18px"></i></span><span><span style="display:block;font-size:14.5px;font-weight:600">{{ ap.cardWords }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ ap.cardMeta }}</span></span></span><span style="display:flex;gap:4px"><sc-for list="{{ ap.streak }}" as="d" hint-placeholder-count="7"><span style="flex:1;display:flex;flex-direction:column;align-items:center;gap:4px"><span style="width:100%;height:6px;border-radius:6px;background:{{ d.bg }}"></span><span style="font-size:10.5px;color:var(--muted-fg)">{{ d.label }}</span></span></sc-for></span></div></section></div></sc-if><sc-if value="{{ ap.settingsPage }}" hint-placeholder-val="{{ false }}"><div style="max-width:760px;margin:0 auto;display:flex;flex-direction:column;gap:16px"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em">{{ tx.settings }}</div></sc-if><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;overflow:hidden;align-self:flex-start;max-width:100%"><sc-for list="{{ ap.tabs }}" as="tb" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;border-radius:7px;height:32px;padding:0 12px;font-size:13px;white-space:nowrap;background:{{ tb.bg }};color:{{ tb.fg }};box-shadow:{{ tb.shadow }};font-weight:500">{{ tb.label }}</span></sc-for></div><section style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden"><sc-for list="{{ ap.rules }}" as="nr" hint-placeholder-count="3"><div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-top:{{ nr.border }}"><span style="flex:1;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:14px;font-weight:500">{{ nr.label }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ nr.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.row.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.row.n }}</span></sc-if></sc-if></sc-if></span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ nr.hint }}</span></span><span role="switch" aria-checked="true" aria-label="{{ nr.label }}" style="width:42px;height:24px;flex:none;border-radius:999px;padding:2px;background:var(--primary);display:flex;justify-content:flex-end"><span style="width:20px;height:20px;flex:none;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span></div></sc-for></section></div></sc-if></div></div><sc-if value="{{ f.tabBar }}" hint-placeholder-val="{{ false }}"><nav style="flex:none;display:grid;grid-template-columns:repeat(5,1fr);border-top:1px solid var(--border);background:var(--bg);padding:4px 4px 8px"><sc-for list="{{ ap.phoneTabs }}" as="t" hint-placeholder-count="5"><span style="display:flex;flex-direction:column;align-items:center;gap:2px;height:52px;justify-content:center;color:{{ t.fg }};font-size:11px;font-weight:{{ t.weight }}"><span style="width:48px;height:28px;border-radius:999px;display:grid;place-items:center;background:{{ t.pill }}"><i class="icon-{{ t.icon }}" style="font-size:19px"></i></span>{{ t.label }}</span></sc-for></nav></sc-if><sc-if value="{{ ap.panel }}" hint-placeholder-val="{{ false }}"><div role="dialog" aria-label="{{ tx.bellTitle }}" style="position:absolute;right:{{ f.padX }};top:56px;width:min(340px,calc(100% - 24px));background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);z-index:8;overflow:hidden"><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border)"><span style="font-weight:600">{{ tx.bellTitle }}</span><span style="font-size:12.5px;color:var(--muted-fg)">{{ tx.markAll }}</span></div><sc-for list="{{ ap.items }}" as="nt" hint-placeholder-count="3"><div style="display:flex;gap:10px;padding:12px 14px;border-top:{{ nt.border }};text-align:left"><span style="width:30px;height:30px;flex:none;border-radius:8px;display:grid;place-items:center;background:{{ nt.bg }};color:{{ nt.fg }}"><i class="icon-{{ nt.icon }}" style="font-size:15px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;line-height:1.4;overflow-wrap:anywhere">{{ nt.text }}</span><span style="display:block;margin-top:2px;font-size:12px;color:var(--muted-fg)">{{ nt.time }}</span></span><sc-if value="{{ nt.unread }}" hint-placeholder-val="{{ false }}"><span role="img" aria-label="{{ tx.unread }}" style="width:7px;height:7px;flex:none;margin-top:6px;border-radius:50%;background:var(--accent-c)"></span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ nt.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.item.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.item.n }}</span></sc-if></sc-if></sc-if></div></sc-for></div></sc-if></div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the wider frame.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What is already drawn, and what this page does with it</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck, or an earlier proposal page, as it is. The right is this page. Nothing in the left column changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">When the reminder comes</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule of R10’s or R7’s plan behind it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What happens</span><span>Rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, “Earlier page” that an earlier proposal page proposed them, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R10.6 and T-R10.18</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each part takes from this page, and what the plan’s task would need. The email is built in Quizzivy/api; the item and the switch in Quizzivy/web.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R10 · The daily practice reminder, as an email and in the app. A proposal page for T-R10.6 and T-R10.18 (DG-229, DG-82).
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['mSubject', 'Email: subject', '{org}: {count} từ cần ôn hôm nay', '{org}: {count} words to review today', 'Plan'],
+  ['mSubjectOne', 'Email: subject, one word', '{org}: 1 từ cần ôn hôm nay', '{org}: 1 word to review today', 'Plan'],
+  ['mPre', 'Email: preview line', 'Mở Thẻ từ để ôn trong vài phút.', 'Open Flashcards for a few minutes of practice.', 'New'],
+  ['mHead', 'Email: heading. The bell', '{count} từ cần ôn hôm nay', '{count} words to review today', 'Plan'],
+  ['mHeadOne', 'Email: heading. The bell, one word', '1 từ cần ôn hôm nay', '1 word to review today', 'Plan'],
+  ['greeting', 'Email', 'Chào {name},', 'Hello {name},', 'As today'],
+  ['mBody1', 'Email: text', 'Hôm nay bạn có {count} từ đến hạn ôn.', 'You have {count} words due for review today.', 'New'],
+  ['mBody1One', 'Email: text, one word', 'Hôm nay bạn có 1 từ đến hạn ôn.', 'You have 1 word due for review today.', 'New'],
+  ['mBody2', 'Email: text', 'Ôn vài phút mỗi ngày giúp bạn nhớ từ lâu hơn.', 'A few minutes a day keeps the words in your memory.', 'New'],
+  ['mCta', 'Email: button', 'Luyện tập ngay', 'Practise now', 'New'],
+  ['linkLine', 'Email', 'Nếu nút không mở được, hãy sao chép liên kết này vào trình duyệt:', 'If the button does not open, copy this link into your browser:', 'Earlier page'],
+  ['mNote', 'Email: note', 'Thư này chỉ gửi lúc 19:00, vào những ngày bạn còn từ cần ôn và chưa luyện tập.', 'This email is sent at 19:00, only on days when you have words to review and have not practised yet.', 'New'],
+  ['footWhy', 'Email: footer', 'Bạn nhận thư này vì bạn có tài khoản Quizzivy tại {org}.', 'You got this email because you have a Quizzivy account at {org}.', 'Earlier page'],
+  ['footPrefs', 'Email: footer', 'Đổi loại thư bạn nhận', 'Change which emails you get', 'Earlier page'],
+  ['footSent', 'Email: footer', '{org} · gửi qua Quizzivy', '{org} · sent with Quizzivy', 'Earlier page'],
+  ['bellTitle', 'The bell', 'Thông báo', 'Notifications', 'As today'],
+  ['markAll', 'The bell', 'Đánh dấu đã đọc hết', 'Mark all read', 'As today'],
+  ['justNow', 'The bell', 'Vừa xong', 'Just now', 'As today'],
+  ['unread', 'The bell (accessible name)', 'Chưa đọc', 'Unread', 'As today'],
+  ['kDueSoon', 'The bell', '{title} đóng lúc {when}', '{title} closes at {when}', 'As today'],
+  ['kResult', 'The bell', '{title} đã có kết quả', 'Your result for {title} is ready', 'As today'],
+  ['greetEvening', 'Home', 'Chào buổi tối, {name}', 'Good evening, {name}', 'As today'],
+  ['subNothing', 'Home', 'Hôm nay không có bài đến hạn.', 'Nothing due today.', 'As today'],
+  ['practice', 'Home', 'Luyện tập', 'Practice', 'Deck'],
+  ['cardWords', 'Home: the Practice card', '{count} từ cần ôn', '{count} words to review', 'Deck'],
+  ['cardMeta', 'Home: the Practice card', '{list} · khoảng {min} phút', '{list} · about {min} min', 'Deck'],
+  ['settings', 'Settings', 'Cài đặt', 'Settings', 'As today'],
+  ['back', 'Settings, on a phone (accessible name)', 'Quay lại', 'Back', 'As today'],
+  ['tabProfile', 'Settings', 'Hồ sơ', 'Profile', 'As today'],
+  ['tabSignIn', 'Settings', 'Đăng nhập', 'Sign-in', 'As today'],
+  ['tabNotif', 'Settings', 'Thông báo', 'Notifications', 'As today'],
+  ['tabLook', 'Settings', 'Giao diện', 'Appearance', 'As today'],
+  ['sDue', 'Settings › Notifications', 'Bài sắp hết hạn', 'Test due soon', 'As today'],
+  ['sDueHint', 'Settings › Notifications', 'Một ngày trước và 1 giờ trước khi bài đóng', 'The day before and 1 hour before it closes', 'As today'],
+  ['sResult', 'Settings › Notifications', 'Đã có kết quả', 'Result ready', 'As today'],
+  ['sResultHint', 'Settings › Notifications', 'Khi giáo viên chấm xong bài của bạn', 'When your teacher finishes grading', 'As today'],
+  ['sPractice', 'Settings › Notifications', 'Nhắc luyện tập hằng ngày', 'Daily practice reminder', 'Deck'],
+  ['sPracticeHint', 'Settings › Notifications', 'Lúc 19:00 nếu bạn còn từ cần ôn', 'At 19:00 if you have words to review', 'Deck'],
+  ['tToggle', 'Assign flashcards: the teacher’s switch (the deck’s dialog, not drawn here)', 'Nhắc hằng ngày lúc 19:00', 'Daily reminder at 19:00', 'Deck']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+const ORG = 'Quizzivy English Centre';
+const HOST = 'https://my.quizzivy.com';
+const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
+// the Email Layout page's colours: [light, dark]
+const EC = { ground: ['#f7f8f8', '#0a0d0e'], card: ['#ffffff', '#131819'], text: ['#1b2123', '#ecefef'], muted: ['#646c6e', '#98a0a2'], btn: ['#252c2e', '#ecefef'], btnText: ['#fafbfb', '#141a1b'] };
+const STUDENT = 'Nguyễn Gia Bảo', LIST = 'Travel & transport', TEST = 'Mid-term Reading Mock', QUIZ = 'Unit 3 grammar check';
+
+const PARTS = [['email', 'The email'], ['app', 'In the app']];
+const STATES = {
+  email: [['many', 'Twelve words'], ['one', 'One word'], ['text', 'Plain text']],
+  app: [['bell', 'The bell'], ['settings', 'The switch']]
+};
+const START = { email: 'many', app: 'bell' };
+const NOTES = {
+  'email:many': [['subject', 'The subject starts with the centre’s name, as every email’s does, then the plan’s words. The line the inbox shows after it says what the button does.'], ['head', 'The same words as the heading, and as the item in the bell.'], ['body', 'One number. No list, no minutes and no streak: Home’s card has them (Q1).'], ['cta', 'One button. It opens Learn on its Flashcards tab, on the student’s host. The link in full is under it, as the layout asks.'], ['note', 'One line says when the email comes, so a student knows that practising stops it (Q1).'], ['foot', 'The layout’s footer. Its link opens Settings › Notifications, where the switch is.']],
+  'email:one': [['head', 'One word due: “1 từ” in Vietnamese, and “1 word”, not “1 words”, in English. The subject, the heading and the first sentence each have that form.']],
+  'email:text': [['text', 'The text part: the same lines, top to bottom, with the two links in full. Every email keeps one.']],
+  'app:bell': [['item', 'One more kind of item: the email’s heading, with the flashcards’ icon in the bell’s blue (Q3). It is unread until the bell is opened, and it opens Learn on its Flashcards tab.'], ['card', 'The deck’s Practice card on Home, with the same number. Home’s other cards are left out of this frame.']],
+  'app:settings': [['row', 'The deck’s row for the reminder, in the card the product has today, after its two rows. One switch turns the reminder on or off in the app and by email (DG-82). R7’s row for messages comes before it when R7 ships.']]
+};
+const PIN_KEYS = ['subject', 'head', 'body', 'cta', 'note', 'foot', 'text', 'item', 'card', 'row'];
+// [what is already drawn, what it holds, this page]
+const ADDS = [
+  ['Teacher · Assign flashcards', 'A switch, “Daily reminder at 19:00”, on, for the classes picked in the dialog.', 'Unchanged, and not drawn again. Its Vietnamese is in the copy table.'],
+  ['Student · Settings › Notifications', 'Four rows with a switch each. The fourth is “Daily practice reminder”, “At 19:00 if you have words to review”.', 'That row, in the card the product has today. One switch for the app and for email.'],
+  ['Student · Home: Practice', 'A card: “12 words to review”, the list and the minutes, and a strip of the week.', 'Unchanged. The reminder says the same number and opens the same place.'],
+  ['Student · the bell', 'A panel of three items: a result, a test that closes today, a message. No item for practice.', 'One more kind of item: “{n} từ cần ôn hôm nay”.'],
+  ['Email Layout (an earlier proposal page)', 'One layout for every email, and one row for this one: “{n} words to review today”, no facts, “Practise now”, a settings link.', 'The email itself in that layout: subject, preview line, heading, text, button, note, footer, and the text part.'],
+  ['An email, anywhere in the deck', 'None (DG-229).', 'This one, in a reading pane and on a phone, light and dark.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+const WHENS = [
+  ['The teacher keeps “Nhắc hằng ngày lúc 19:00” on in Assign flashcards', 'Students of that class can be reminded of that list.', 'T-R10.5: `dailyReminder`, on by default, kept for each class and list.'],
+  ['The student keeps “Nhắc luyện tập hằng ngày” on', 'They can be reminded, in the app and by email.', 'T-R10.6 and DG-82: one switch for both, on by default.'],
+  ['Words are due and the student has not practised today', 'A reminder is due at 19:00.', 'T-R10.6. A day is the student’s own day, from midnight to midnight.'],
+  ['19:00 has passed where the student is, and they open the bell', 'The item is there, unread: “{n} từ cần ôn hôm nay”.', 'T-R10.6: the item is made when the bell is read, once for a student and a day.'],
+  ['19:00 at the centre', 'One email to each such student who has an address.', 'T-R10.6: one rule on R7’s scheduler, at 19:00 in `APP_TIMEZONE`.'],
+  ['The student practised before 19:00', 'Neither comes.', 'T-R10.6.'],
+  ['A switch is off, or nothing is due', 'Neither comes.', 'T-R10.6’s four conditions.'],
+  ['The item, or the email’s button, is opened', 'Learn, on its Flashcards tab.', 'T-R10.6. On the student’s host since v0.13.5.'],
+  ['One word is due', '“1 từ cần ôn hôm nay”, and “1 word” in English.', 'The locale files’ plural forms; the template’s own for the email.'],
+  ['The email could not leave on its day', 'It should not leave the next day: it says “today”.', 'Not in T-R10.6. T-R7.13 lets a template drop a row that went stale; this one needs that.']
+];
+// [id, question, why, default]
+const QUESTIONS = [
+  ['Q1 · What the email says', 'Is one number enough, with one line on when the email comes?', 'The plan gives the email the count alone. Home’s card also names the list and the minutes, and a streak could be said too; each needs the server to read more at 19:00. The line under the link says the email comes only on a day with words to review and no practice yet, so a student knows that practising stops it.', 'The number, two sentences, and that one line.'],
+  ['Q2 · The words', 'Are “Nhắc luyện tập hằng ngày”, “từ cần ôn” and “Luyện tập ngay” the words?', 'They stand on the switch, in the bell, on Home’s card and in the email. The Vocabulary page uses “Đang ôn” for the students who are practising a list.', 'As drawn.'],
+  ['Q3 · The item’s colour in the bell', 'Blue, or the Practice card’s lime?', 'The bell has five tones and lime is not one of them: a result is green, a test about to close is amber, a test that opened is blue. Home’s Practice card has a lime tile. A lime item would be a sixth tone.', 'Blue, the tone the bell has for news that is not urgent.']
+];
+const HANDOFF = [
+  ['practice_reminder (api: platform/email/templates)', 'The Email Layout’s panel with: the subject and the heading “{n} từ cần ôn hôm nay”, the preview line, the greeting, two sentences, the button “Luyện tập ngay”, the link line, one note on when it is sent, and the footer with its settings link. Vietnamese and English, a form for one word, and a text part in the same order.'],
+  ['The two links', 'On the student’s host (`STUDENT_APP_URL`), with no `/app` in front: `/learn?tab=flashcards` for the button, `/settings/notifications` for the footer. The plan was written before v0.13.5 and says `/app/learn?tab=flashcards`.'],
+  ['What T-R10.6 would need', 'A `Prepare` step for the template, as T-R7.13 allows: drop the row once its day is over, once the student has practised, or once a switch is off, and read {n} again at send. And a look at the volume: one email a student a day counts against `EMAIL_DAILY_LIMIT` (100 by default), so a centre with more students than that would push its other emails to the next day.'],
+  ['The bell (web: notifications/kinds.ts)', 'A kind `practice.reminder`: the `layers` icon in the “info” tone, the text “{n} từ cần ôn hôm nay” with its form for one word, and a target that opens `/learn?tab=flashcards`.'],
+  ['StudentNotificationsSection (web)', 'A row for `practice.reminder` after the others: “Nhắc luyện tập hằng ngày” and “Lúc 19:00 nếu bạn còn từ cần ôn”. The card, the switch and its saving are today’s.'],
+  ['AssignFlashcardsDialog (T-R10.12)', 'The deck’s switch reads “Nhắc hằng ngày lúc 19:00”.'],
+  ['The Email Layout page', 'Its example links named app.quizzivy.com, which is gone since v0.13.5. They now name the two hosts: a student’s links on my.quizzivy.com with no `/app` in front, the staff’s on portal.quizzivy.com.'],
+  ['The two 19:00s', 'The item follows the student’s time zone and the email the centre’s. For a student in another zone they come at different hours; the switch’s line says “Lúc 19:00” for both.'],
+  ['Locales', 'The copy table: ' + STR.length + ' strings, Vietnamese first. ' + STR.filter(r => r[4] === 'As today').length + ' are in the locale files today, and ' + STR.filter(r => r[4] === 'Earlier page').length + ' are the Email Layout page’s shared lines.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The Email Layout page (its panel, its colours, its shared lines and its row for this email), R10’s plan (docs/plan/80-r10.md: the decision on the reminder, T-R10.5, T-R10.6, T-R10.18), R7’s plan for email (T-R7.13, T-R7.14), the deck’s Student page (the bell, Settings › Notifications, Home’s Practice card) and Teacher page (Assign flashcards), and in the product the bell (`kinds.ts`, `NotificationsPanel`), the student’s notification card and the app’s routes on its two hosts. The reminder is not built, so there was nothing to run.'],
+  ['What it leaves alone.', 'The layout, and every part the deck draws. No operation changes.'],
+  ['What the plan does not say.', 'What becomes of a reminder that could not leave on its day. How many reminders a day the email budget takes. That the two 19:00s differ for a student in another time zone.'],
+  ['What is not drawn.', 'Assign flashcards and Learn › Flashcards, which the deck draws. Home’s other cards. The item once it is read. The switch turned off.']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', part: 'email', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', ci = theme === 'dark' ? 1 : 0;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const D = (a, b) => (vi ? a : b);
+    const part = s.part, st = s.st[part], key = part + ':' + st;
+    const noteList = NOTES[key] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const isEmail = part === 'email', isText = key === 'email:text', one = key === 'email:one';
+    const count = one ? 1 : 12;
+
+    // ---- the email: the Email Layout page's panel, filled for practice_reminder
+    const head = one ? tx.mHeadOne : fmt(tx.mHead, { count });
+    const m = {
+      org: ORG, subject: fmt(one ? tx.mSubjectOne : tx.mSubject, { org: ORG, count }), pre: tx.mPre, head, hello: fmt(tx.greeting, { name: STUDENT }),
+      body: (one ? tx.mBody1One : fmt(tx.mBody1, { count })) + ' ' + tx.mBody2, cta: tx.mCta, linkNote: tx.linkLine, link: HOST + '/learn?tab=flashcards', note: tx.mNote,
+      why: fmt(tx.footWhy, { org: ORG }), prefs: tx.footPrefs, sent: fmt(tx.footSent, { org: ORG })
+    };
+    m.text = [m.org, '', head, '', m.hello, '', m.body, '', m.cta + ':', m.link, '', m.note, '', '--', m.why, m.prefs + ': ' + HOST + '/settings/notifications', m.sent].join('\n');
+    const e = { font: FONT, ground: EC.ground[ci], card: EC.card[ci], text: EC.text[ci], muted: EC.muted[ci], btn: EC.btn[ci], btnText: EC.btnText[ci] };
+
+    // ---- the student's app
+    const tone = { info: ['var(--info-soft)', 'var(--info-ink)'], success: ['var(--success-soft)', 'var(--success-ink)'], warning: ['var(--warning-soft)', 'var(--warning-ink)'] };
+    const item = (icon, t, text, time, unread, pinned) => ({ icon, bg: tone[t][0], fg: tone[t][1], text, time, unread: !!unread, pin: !!pinned });
+    const bell = key === 'app:bell';
+    const ap = {
+      home: bell, settingsPage: key === 'app:settings', panel: bell, bellBg: bell ? 'var(--hover)' : 'transparent', bellDot: !bell,
+      items: [item('layers', 'info', fmt(tx.mHead, { count: 12 }), tx.justNow, true, true), item('clock', 'warning', fmt(tx.kDueSoon, { title: TEST, when: D('21:00 hôm nay', '21:00 today') }), D('2 giờ trước', '2 hours ago')), item('circle-check', 'success', fmt(tx.kResult, { title: QUIZ }), D('Hôm qua', 'Yesterday'))].map((x, i) => ({ ...x, border: i ? '1px solid var(--border)' : '0' })),
+      greeting: fmt(tx.greetEvening, { name: 'Bảo' }), cardWords: fmt(tx.cardWords, { count: 12 }), cardMeta: fmt(tx.cardMeta, { list: LIST, min: 4 }),
+      streak: D(['T2', 'T3', 'T4', 'T5', 'T6', 'T7', 'CN'], ['M', 'T', 'W', 'T', 'F', 'S', 'S']).map((d, i) => ({ label: d, bg: i < 2 ? 'var(--accent-c)' : i === 2 ? 'var(--border)' : 'var(--muted)' })),
+      tabs: [[tx.tabProfile, false], [tx.tabSignIn, false], [tx.tabNotif, true], [tx.tabLook, false]].map(x => ({ label: x[0], bg: x[1] ? 'var(--card)' : 'transparent', fg: x[1] ? 'var(--fg)' : 'var(--muted-fg)', shadow: x[1] ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' })),
+      rules: [[tx.sDue, tx.sDueHint], [tx.sResult, tx.sResultHint], [tx.sPractice, tx.sPracticeHint, true]].map((x, i) => ({ label: x[0], hint: x[1], pin: !!x[2], border: i ? '1px solid var(--border)' : '0' })),
+      phoneTabs: [['house', D('Trang chủ', 'Home'), true], ['users', D('Lớp', 'Classes')], ['book-open', D('Học tập', 'Learn')], ['chart-column', D('Điểm số', 'Grades')], ['circle-user', D('Tôi', 'Me')]].map(x => ({ icon: x[0], label: x[1], fg: x[2] ? 'var(--fg)' : 'var(--muted-fg)', weight: x[2] ? 600 : 500, pill: x[2] ? 'var(--accent-soft)' : 'transparent' }))
+    };
+    const sNav = [['house', D('Trang chủ', 'Home'), bell], ['users', D('Lớp', 'Classes')], ['book-open', D('Học tập', 'Learn')], ['chart-column', D('Điểm số', 'Grades')]].map(x => ({ icon: x[0], label: x[1], bg: x[2] ? 'var(--hover)' : 'transparent', fg: x[2] ? 'var(--fg)' : 'var(--muted-fg)', weight: x[2] ? 500 : 400 }));
+
+    const W = s.stageW || 1280;
+    const mkMail = (w, h, sc, phone, title, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title, sub, screen: 'Reminder · email · ' + w, pins: s.anno && !phone,
+      chromePad: phone ? '12px 14px' : '14px 20px', subjSize: phone ? '15px' : '17px', mailPad: phone ? '12px 10px 28px' : '32px 24px 40px', cardPad: phone ? '26px 20px' : '40px', brandGap: phone ? '22px' : '28px', footPad: phone ? '20px' : '40px', h1: phone ? '22px' : '26px'
+    });
+    const mkApp = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Reminder · app · ' + w, desk: !phone, phone, pins: s.anno && !phone,
+      padX: phone ? '14px' : '24px', mainPad: phone ? '18px 16px 28px' : '32px 24px 48px', h1: phone ? '22px' : '26px', cardMax: phone ? 'none' : '400px',
+      logo: !(phone && !bell), backHead: phone && !bell, tabBar: phone && bell
+    });
+    const MH = isText ? [560, 700] : [710, 740];
+    const AH = bell ? [460, 540] : [500, 440];
+    const mailFrames = isEmail ? [mkMail(760, MH[0], Math.min(1, W / 760), false, D('Khung đọc thư', 'Reading pane'), 'the email at its full 600'), mkMail(360, MH[1], Math.min(1, W / 360), true, D('Điện thoại', 'Phone'), '360 wide')] : [];
+    const appFrames = isEmail ? [] : [mkApp(1280, AH[0], Math.min(1, W / 1280), false, bell ? 'the bell, open on Home' : 'Settings › Notifications'), mkApp(360, AH[1], Math.min(1, W / 360), true, 'the same on a phone')];
+
+    const ctl = [
+      { label: 'Part', opts: this.seg(PARTS, part, v => this.setState({ part: v })) },
+      { label: 'State', opts: this.seg(STATES[part], st, v => this.setState(x => ({ st: { ...x.st, [part]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const ink = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)', 'Earlier page': 'var(--muted-fg)' };
+    const pLabel = (PARTS.find(x => x[0] === part) || ['', ''])[1], stLabel = (STATES[part].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', lang: vi ? 'vi' : 'en', tx, m, e, ap, sNav, pin, mailFrames, appFrames, isHtml: !isText, isText, ctl, stageRef: this.stageRef,
+      chips: ['R10 · v0.17.0', 'T-R10.6, T-R10.18', 'DG-229, DG-82', 'Email built in Quizzivy/api', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, part: 'email', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What to look at on “' + pLabel + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: ink[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

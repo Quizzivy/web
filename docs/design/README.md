@@ -609,6 +609,21 @@ To view one, start the server above and open, for example,
   Thuong are on the page: "Sửa thông tin" or "Đổi tên" for a list, the sign-off DG-95 asks
   for, and the three words on the progress card. On a phone the table's two columns share the
   width: the deck's minimums would push a row's "…" off a 360 screen.
+- 2026-11-14 — Nineteenth proposal page: `proposals/R10 Practice Reminder.dc.html`, for DG-229
+  and DG-82 (R10; T-R10.6 and T-R10.18). R10 reminds a student at 19:00 on a day with words to
+  review and no practice yet. The deck draws the two switches behind it and Home's Practice
+  card, and no email. The page draws the email in the Email Layout page's panel (the subject
+  and the heading "{n} từ cần ôn hôm nay", two sentences, one button, one line on when it
+  comes, the footer, a form for one word, and the text part), the item in the bell, and the
+  student's switch in the product's card. Five states, light and dark, Vietnamese and English;
+  the email in a reading pane and on a phone, the app at 1280 and 360. No operation changes;
+  what T-R10.6 would need is on the page's handoff: a step that drops a reminder that could
+  not leave on its day, and a look at the daily email budget. Its three questions for Thuong
+  are on the page: what the email says, the words, and the item's colour in the bell.
+- 2026-11-14 — The Email Layout page's links. Its examples named app.quizzivy.com, which is
+  gone since v0.13.5. A student's links are now on my.quizzivy.com with no `/app` in front,
+  the staff's on portal.quizzivy.com, and the two example routes that did not exist are the
+  product's (`/attempts/{id}/result`, `/teacher/attempts/{id}`).
 
 ## The brand
 

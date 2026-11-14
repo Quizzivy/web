@@ -29,10 +29,13 @@ import {
   type WordImport,
 } from "../../api";
 import {
+  applyTypeChange,
   blockKey,
   blockOwners,
   draftPositions,
   exclude,
+  onlyQuestions,
+  passageBound,
   questionPlaces,
   setPoints,
 } from "../../draft";
@@ -53,10 +56,12 @@ import { sourceViewQuery } from "../../queries";
 import { isActiveStatus, reprocessOutcome } from "../../status";
 import { useReprocess } from "../../useReprocess";
 import { useReviewSession } from "../../useReviewSession";
+import { BulkTypeDialog, ReviewBulkBar } from "./BulkEdit";
 import {
   ExamPane,
   WHOLE_TEST,
   type ExamPaneHandlers,
+  type ExamSelection,
   type WholeTestFact,
 } from "./ExamPane";
 import { QuestionEditor } from "./QuestionEditor";
@@ -190,7 +195,8 @@ export function ReviewWorkspace({
   const [origin] = useState(initial);
   const locked = useRef(false);
   const session = useReviewSession(importId, origin, locked);
-  const { working, server, editQuestion, setTitle, acknowledge } = session;
+  const { working, server, editQuestion, editQuestions, setTitle, acknowledge } =
+    session;
   const { status, flush, retry } = session.autosave;
   const navigate = useNavigate();
   const {
@@ -247,6 +253,9 @@ export function ReviewWorkspace({
   const [excluding, setExcluding] = useState<string | null>(null);
   const excludeReturn = useRef<HTMLElement | null>(null);
   const [pointsOpen, setPointsOpen] = useState(false);
+  const [picked, setPicked] = useState<ReadonlySet<string>>(() => new Set());
+  const [bulk, setBulk] = useState<"type" | "points" | "exclude" | null>(null);
+  const [bulkEpoch, setBulkEpoch] = useState(0);
   const [phoneNote, setPhoneNote] = useState(true);
   const examScroller = useRef<HTMLDivElement>(null);
   const examScrollTop = useRef(0);
@@ -374,6 +383,43 @@ export function ReviewWorkspace({
   const labels = useMemo(
     () => new Map(places.map((place) => [place.question.id, place.question])),
     [places],
+  );
+  const bound = useMemo(() => passageBound(working.sections), [working.sections]);
+  const chosen = useMemo(
+    () =>
+      readOnly
+        ? []
+        : included
+            .filter((place) => picked.has(place.question.id))
+            .map((place) => place.question),
+    [included, picked, readOnly],
+  );
+  const chosenIds = useMemo(
+    () => new Set(chosen.map((question) => question.id)),
+    [chosen],
+  );
+  const selection = useMemo<ExamSelection | null>(
+    () =>
+      readOnly
+        ? null
+        : {
+            selected: chosenIds,
+            toggle: (questionId) =>
+              setPicked((current) => {
+                const next = new Set(current);
+                if (!next.delete(questionId)) next.add(questionId);
+                return next;
+              }),
+            setMany: (questionIds, on) =>
+              setPicked((current) => {
+                const next = new Set(current);
+                for (const id of questionIds)
+                  if (on) next.add(id);
+                  else next.delete(id);
+                return next;
+              }),
+          },
+    [chosenIds, readOnly],
   );
   const contexts = useMemo(() => {
     const out = new Map<string, string>();
@@ -596,9 +642,38 @@ export function ReviewWorkspace({
       showInSource,
     ],
   );
+  /**
+   * editMany changes the questions in `ids` as one edit, says so, and offers
+   * to take it back: Undo puts each of them back as it stood. The open card is
+   * mounted again either way, since its fields keep what was typed in them.
+   */
+  const editMany = (
+    ids: ReadonlySet<string>,
+    update: (question: ImportDraftQuestion) => ImportDraftQuestion,
+    message: string,
+  ) => {
+    const before = new Map(
+      places
+        .filter((place) => ids.has(place.question.id))
+        .map((place) => [place.question.id, place.question]),
+    );
+    editQuestions(ids, update);
+    setBulkEpoch((epoch) => epoch + 1);
+    notify.success(message, {
+      duration: 6000,
+      action: {
+        label: t("common.undo"),
+        onClick: () => {
+          editQuestions(ids, (current) => before.get(current.id) ?? current);
+          setBulkEpoch((epoch) => epoch + 1);
+        },
+      },
+    });
+  };
+
   const editor = (question: ImportDraftQuestion) => (
     <QuestionEditor
-      key={question.id}
+      key={`${question.id}:${bulkEpoch}`}
       question={question}
       context={contexts.get(question.id) ?? ""}
       findings={grouped.byTarget.get(question.id) ?? NONE}
@@ -674,6 +749,17 @@ export function ReviewWorkspace({
           : "bg-sidebar min-h-0 flex-1 overflow-y-auto p-3"
       }
     >
+      {chosen.length > 0 ? (
+        <div className="sticky top-0 z-10 mx-auto mb-2.5 w-full max-w-190">
+          <ReviewBulkBar
+            questions={chosen}
+            onType={() => setBulk("type")}
+            onPoints={() => setBulk("points")}
+            onExclude={() => setBulk("exclude")}
+            onClear={() => setPicked(new Set())}
+          />
+        </div>
+      ) : null}
       <ExamPane
         sections={working.sections}
         section={section}
@@ -688,6 +774,7 @@ export function ReviewWorkspace({
         onFinish={openPreview}
         handlers={handlers}
         editor={editor}
+        selection={selection}
       />
     </div>
   );
@@ -809,6 +896,59 @@ export function ReviewWorkspace({
           notify.success(
             t("imports.review.pointsSet", { points, count: included.length }),
           );
+        }}
+      />
+      <BulkTypeDialog
+        questions={chosen}
+        bound={bound}
+        open={bulk === "type" && chosen.length > 0}
+        onOpenChange={(next) => {
+          if (!next) setBulk(null);
+        }}
+        onApply={(type, changing) => {
+          setBulk(null);
+          editMany(
+            new Set(changing.map((question) => question.id)),
+            (current) => applyTypeChange(current, type, bound),
+            t("imports.review.bulkTypeDone", {
+              count: changing.length,
+              type: t(`imports.type.${type}`),
+            }),
+          );
+        }}
+      />
+      <PointsDialog
+        selection
+        sections={onlyQuestions(working.sections, chosenIds)}
+        initialPoints={chosen[0]?.points ?? "1"}
+        open={bulk === "points" && chosen.length > 0}
+        onOpenChange={(next) => {
+          if (!next) setBulk(null);
+        }}
+        onApply={(points) => {
+          setBulk(null);
+          editMany(
+            chosenIds,
+            (current) => setPoints(current, points),
+            t("imports.review.pointsSet", { points, count: chosen.length }),
+          );
+        }}
+      />
+      <ExcludeDialog
+        label=""
+        count={chosen.length}
+        open={bulk === "exclude" && chosen.length > 0}
+        onOpenChange={(next) => {
+          if (!next) setBulk(null);
+        }}
+        onExclude={(reason) => {
+          setBulk(null);
+          editMany(
+            chosenIds,
+            (current) => exclude(current, reason),
+            t("imports.review.bulkExcluded", { count: chosen.length }),
+          );
+          setPicked(new Set());
         }}
       />
       <ConfirmDialog

@@ -2,6 +2,7 @@ import { useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { CircleCheck, FileCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { Checkbox } from "@/components/ui/checkbox";
 import { ContentView } from "@/components/shared/content/ContentView";
 import { contentPlainText } from "@/components/shared/content/plainText";
 import type {
@@ -30,6 +31,16 @@ export interface ExamPaneHandlers {
   onPoints: () => void;
 }
 
+/**
+ * ExamSelection is the questions picked for an edit of several at once:
+ * `toggle` picks or drops one, `setMany` picks or drops a section's.
+ */
+export interface ExamSelection {
+  selected: ReadonlySet<string>;
+  toggle: (questionId: string) => void;
+  setMany: (questionIds: readonly string[], on: boolean) => void;
+}
+
 /** WholeTestFact is one row of the whole-test card's table. */
 export interface WholeTestFact {
   label: string;
@@ -47,7 +58,9 @@ function headlineOf(question: ImportDraftQuestion): string {
  * `editor`; the rest are their header rows. `section` narrows the pane to one
  * section and `visible`, when not null, to the cards a filter holds; the
  * selected card always stays. `allDone` adds the deck's "Everything is
- * resolved" band.
+ * resolved" band. With `selection`, every question still in the test has a
+ * checkbox before its header, and a section's heading one that picks or drops
+ * the section's questions the pane shows.
  */
 export function ExamPane({
   sections,
@@ -63,6 +76,7 @@ export function ExamPane({
   onFinish,
   handlers,
   editor,
+  selection = null,
 }: Readonly<{
   sections: readonly ImportDraftSection[];
   section: string;
@@ -77,6 +91,7 @@ export function ExamPane({
   onFinish: () => void;
   handlers: ExamPaneHandlers;
   editor: (question: ImportDraftQuestion) => ReactNode;
+  selection?: ExamSelection | null;
 }>) {
   const { t } = useTranslation();
   const shown = (id: string) =>
@@ -116,6 +131,7 @@ export function ExamPane({
             : t(`imports.type.${question.type}`)
         }
         findings={findings}
+        select={questionSelect(selection, question)}
         onToggle={() => toggle(question.id)}
       >
         {editor(question)}
@@ -244,6 +260,7 @@ export function ExamPane({
               ? t("imports.review.questionsCount", { count: total })
               : t("imports.review.someOf", { count, total })
           }
+          select={sectionSelect(selection, current, shown)}
         />
         {sectionNotices}
         {items}
@@ -277,13 +294,95 @@ export function ExamPane({
   );
 }
 
-function SectionHeading({ title, meta }: Readonly<{ title: string; meta?: string }>) {
+/** pickableIn lists a section's questions a selection may hold: those still in the test that the pane shows. */
+function pickableIn(
+  section: ImportDraftSection,
+  shown: (id: string) => boolean,
+): string[] {
+  return section.items
+    .flatMap((item) =>
+      item.question ? [item.question] : (item.group?.questions ?? []),
+    )
+    .filter((question) => question.excluded === undefined && shown(question.id))
+    .map((question) => question.id);
+}
+
+/** SectionSelect is a section heading's checkbox: checked when all of `ids` are selected, mixed when some are, and it picks or drops them all. */
+function SectionSelect({
+  title,
+  ids,
+  selection,
+}: Readonly<{ title: string; ids: readonly string[]; selection: ExamSelection }>) {
+  const { t } = useTranslation();
+  const picked = ids.filter((id) => selection.selected.has(id)).length;
   return (
-    <div className="flex items-baseline gap-2 px-0.5 pt-2.5 pb-0.5">
+    <Checkbox
+      ref={(element) => {
+        if (element) element.indeterminate = picked > 0 && picked < ids.length;
+      }}
+      aria-label={t("imports.review.selectSection", { section: title })}
+      checked={picked === ids.length}
+      onChange={(event) => selection.setMany(ids, event.target.checked)}
+    />
+  );
+}
+
+/** questionSelect is a question card's checkbox, for a question still in the test while a selection is offered. */
+function questionSelect(
+  selection: ExamSelection | null,
+  question: ImportDraftQuestion,
+): ReactNode | undefined {
+  if (selection === null || question.excluded !== undefined) return undefined;
+  return <QuestionSelect question={question} selection={selection} />;
+}
+
+function QuestionSelect({
+  question,
+  selection,
+}: Readonly<{ question: ImportDraftQuestion; selection: ExamSelection }>) {
+  const { t } = useTranslation();
+  return (
+    <Checkbox
+      aria-label={t("imports.review.selectQuestion", { label: question.label })}
+      checked={selection.selected.has(question.id)}
+      onChange={() => selection.toggle(question.id)}
+    />
+  );
+}
+
+/** sectionSelect is a section heading's checkbox, when a selection is offered and the section shows a question it may hold. */
+function sectionSelect(
+  selection: ExamSelection | null,
+  section: ImportDraftSection,
+  shown: (id: string) => boolean,
+): ReactNode | undefined {
+  if (selection === null) return undefined;
+  const ids = pickableIn(section, shown);
+  if (ids.length === 0) return undefined;
+  return <SectionSelect title={section.title} ids={ids} selection={selection} />;
+}
+
+function SectionHeading({
+  title,
+  meta,
+  select,
+}: Readonly<{ title: string; meta?: string; select?: ReactNode }>) {
+  const heading = (
+    <>
       <h2 className="text-muted-fg m-0 text-xs font-semibold tracking-[0.04em] uppercase">
         {title}
       </h2>
       {meta ? <span className="text-muted-fg text-xs">{meta}</span> : null}
+    </>
+  );
+  if (select === undefined)
+    return (
+      <div className="flex items-baseline gap-2 px-0.5 pt-2.5 pb-0.5">{heading}</div>
+    );
+  return (
+    <div className="flex items-center gap-2.5 pt-2.5 pr-0.5 pb-0.5 pl-[0.8125rem]">
+      {select}
+      <div className="flex min-w-0 items-baseline gap-2">{heading}</div>
     </div>
   );
 }

@@ -41,10 +41,18 @@ export class ApiError extends Error {
 
   /**
    * isRetryable says the same request may succeed if sent again: it got no
-   * answer (status 0), was rate limited, or met a server-side fault.
+   * answer (status 0), the server or a proxy before it gave up waiting for
+   * the request to arrive (408), it was rate limited, or it met a server-side
+   * fault. A 408 says nothing about who asked: answered to the refresh call it
+   * leaves the session as it is (Quizzivy/web#5).
    */
   get isRetryable() {
-    return this.status === 0 || this.status === 429 || this.status >= 500;
+    return (
+      this.status === 0 ||
+      this.status === 408 ||
+      this.status === 429 ||
+      this.status >= 500
+    );
   }
 }
 

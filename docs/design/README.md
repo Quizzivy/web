@@ -566,6 +566,16 @@ To view one, start the server above and open, for example,
   the page, the same day. T-R10.14 is changed to match in Quizzivy/docs#15.
 - 2026-11-14 — The sidebar's icons on the proposal pages. Eight pages drew "Shared with me"
   and "Media" with icons of their own. They now use the deck's (`users-round`, `audio-lines`).
+- 2026-11-14 — Sixteenth proposal page: `proposals/R10 Student Lesson.dc.html`, for DG-94 and
+  DG-83 (R10; T-R10.16). The deck draws the student's Lesson page for a reading. The page keeps
+  it as it is and draws the other kinds inside it: a video and a listening with the browser's
+  player and the teacher's notes; flashcards and a test with one card and one button; the
+  course's last lesson; a lesson opened while it is locked; loading, a failed read, and a video
+  that cannot play. Eighteen states, at 1280 and 360, light and dark, Vietnamese and English.
+  Its first table sets the deck's Learn screens beside it, part by part, and none of them
+  changes. No operation changes; what T-R10.9 would need for a locked lesson is on the page's
+  handoff. Its three questions for Thuong are on the page: the pill's colour, the button after
+  a test is handed in, and the phrase for "Mark as done".
 - 2026-11-14 — The page frame on the earlier proposal pages. Eight of them (R7 Shared With Me;
   R8 Session Popover, Terms, Week and Class Schedule, Attendance States; R9 Gradebook Weights,
   Gradebook Screen, Reports and Grades) held their teacher or admin page in the v2 deck's

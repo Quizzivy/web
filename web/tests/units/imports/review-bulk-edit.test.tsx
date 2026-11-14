@@ -372,7 +372,7 @@ describe("points and exclusion for the selected questions", () => {
     const { user } = await open();
     await user.click(box("Chọn câu 4"));
     await user.click(box("Chọn câu 5"));
-    await user.click(within(bar()).getByRole("button", { name: "Loại khỏi đề" }));
+    await user.click(within(bar()).getByRole("button", { name: "Loại khỏi đề…" }));
     const dialog = await screen.findByRole("dialog");
     expect(dialog).toHaveTextContent("Loại 2 câu đã chọn?");
     await user.type(within(dialog).getByLabelText(/Lý do/), "Không dạy phần này");

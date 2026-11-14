@@ -57,13 +57,13 @@ export function ReviewBulkBar({
       className="shadow-card"
     >
       <BulkBarButton icon={Shapes} onClick={onType}>
-        {t("imports.review.bulkType")}
+        {t("imports.review.typeChangeConfirm")}
       </BulkBarButton>
       <BulkBarButton icon={Hash} onClick={onPoints}>
-        {t("imports.review.bulkPoints")}
+        {t("imports.review.pointsApplyPlain")}
       </BulkBarButton>
       <BulkBarButton icon={CircleSlash} onClick={onExclude}>
-        {t("imports.review.bulkExclude")}
+        {t("imports.review.excludeMenu")}
       </BulkBarButton>
     </BulkActions>
   );
@@ -108,11 +108,10 @@ export function BulkTypeDialog({
       onOpenChange={close}
       icon={Shapes}
       title={t("imports.review.bulkTypeTitle", { count: questions.length })}
-      description={t("imports.review.bulkTypeBody")}
       confirmLabel={
         changes
           ? t("imports.review.bulkTypeApply", { count: plan.changing.length })
-          : t("imports.review.bulkTypeApplyPlain")
+          : t("imports.review.typeChangeConfirm")
       }
       disabled={!changes}
       onConfirm={() => {

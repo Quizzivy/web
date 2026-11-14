@@ -434,7 +434,7 @@ class Component extends DCLogic {
     const nav = [
       { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('messages', 'message-square', vi ? 'Tin nhắn' : 'Messages')] },
       { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', vi ? 'Lớp học' : 'Classes'), item('students', 'users', vi ? 'Học viên' : 'Students')] },
-      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'share-2', tx.title, mine.length), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'image', vi ? 'Thư viện media' : 'Media')] }
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'users-round', tx.title, mine.length), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'audio-lines', vi ? 'Thư viện media' : 'Media')] }
     ];
 
     const W = s.stageW || 1280;

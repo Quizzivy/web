@@ -553,13 +553,19 @@ To view one, start the server above and open, for example,
   rename it; the question builder's editor and media block; the product's upload row; and a
   300px side column docked as the assignment wizard's summary is. A reading has a body and its
   minutes; a video and a listening have a file, a player and notes; flashcards and a test
-  choose a word list and a test. The side column says where the lesson sits, what students
-  will see, and lists the unit's lessons. One footer saves, publishes and deletes. Twenty-two
-  states, at 1280, 360 and 1920, light and dark, Vietnamese and English. No operation changes.
-  Its five questions for Thuong are on the page: the Vietnamese word for a unit, whether a
-  lesson's kind can change, "Phát hành" or "Xuất bản", what the side column holds, and a footer
-  or the top of the page for Save. The first drawing centred a 760px column and had a title
-  field; the owner pointed at the page-width rule and at the builder's title the same day.
+  choose a word list and a test. The side column says where the lesson sits, what it means for
+  students, and lists the unit's lessons. The page's buttons are at the right of the heading,
+  where the deck's Course detail keeps its own: Save, Publish or Unpublish, and Delete lesson
+  in a "…" menu. Twenty-three states, at 1280, 360 and 1920, light and dark, Vietnamese and
+  English. No operation changes, and nothing in the deck's Courses and Course detail screens
+  changes: the page's first table sets the two side by side. Its questions for Thuong are on
+  the page: the Vietnamese word for a unit, whether a lesson's kind can change, "Phát hành" or
+  "Xuất bản", what the side column holds, and a preview from the editor. The first drawing
+  centred a 760px column, had a title field and kept Save in a footer, as T-R10.14 says; the
+  owner pointed at the page-width rule and at the builder's title, and decided for the top of
+  the page, the same day. T-R10.14 is changed to match in Quizzivy/docs#15.
+- 2026-11-14 — The sidebar's icons on the proposal pages. Eight pages drew "Shared with me"
+  and "Media" with icons of their own. They now use the deck's (`users-round`, `audio-lines`).
 - 2026-11-14 — The page frame on the earlier proposal pages. Eight of them (R7 Shared With Me;
   R8 Session Popover, Terms, Week and Class Schedule, Attendance States; R9 Gradebook Weights,
   Gradebook Screen, Reports and Grades) held their teacher or admin page in the v2 deck's

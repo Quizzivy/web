@@ -1,5 +1,5 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { act, screen, waitFor, within } from "@testing-library/react";
+import { act, cleanup, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import i18n from "@/lib/i18n";
@@ -829,6 +829,96 @@ describe("the Import users dialog at its edges", () => {
     const leaving = new Event("beforeunload", { cancelable: true });
     window.dispatchEvent(leaving);
     expect(leaving.defaultPrevented).toBe(true);
+  });
+
+  const LEAVE = "Rời trang khi chưa tải bảng mật khẩu?";
+
+  it("asks before a move inside the app leaves a sheet that waits, and stays or goes as answered", async () => {
+    servePreview(() => ok(preview({ emailBudget: null })));
+    serveJob(() => sheetJob());
+    const { user: person, router } = renderUsers();
+    const dialog = await startImport(person, { sheet: true });
+    await dialog.findByRole("button", { name: "Tải bảng mật khẩu" });
+    await person.click(dialog.getByRole("button", { name: "Xong" }));
+
+    await act(() => router.navigate("/admin/users?tab=teachers"));
+    expect(router.state.location.search).toBe("?tab=teachers");
+    expect(screen.queryByRole("dialog", { name: LEAVE })).toBeNull();
+
+    await act(() => router.navigate("/admin/roles"));
+    const ask = within(await screen.findByRole("dialog", { name: LEAVE }));
+    expect(router.state.location.pathname).toBe("/admin/users");
+    expect(
+      ask.getByText(
+        "Bảng mật khẩu chưa được tải và chỉ tải được ở trang này. Nếu rời trang, bạn sẽ phải đặt lại mật khẩu cho những tài khoản mới từ danh sách Người dùng.",
+      ),
+    ).toBeVisible();
+    await person.click(ask.getByRole("button", { name: "Ở lại" }));
+    await waitFor(() =>
+      expect(screen.queryByRole("dialog", { name: LEAVE })).toBeNull(),
+    );
+    expect(router.state.location.pathname).toBe("/admin/users");
+    expect(
+      (await openImport(person)).getByRole("button", { name: "Tải bảng mật khẩu" }),
+    ).toBeVisible();
+    await person.keyboard("{Escape}");
+
+    await act(() => router.navigate("/admin/roles"));
+    await person.click(
+      within(await screen.findByRole("dialog", { name: LEAVE })).getByRole("button", {
+        name: "Rời trang",
+      }),
+    );
+    expect(await screen.findByRole("heading", { name: "Vai trò" })).toBeVisible();
+  });
+
+  it("asks while a sheet import still runs, in words for a sheet that is not ready", async () => {
+    servePreview(() => ok(preview({ emailBudget: null })));
+    serveJob(() => job({ delivery: "sheet" }));
+    const { user: person, router } = renderUsers();
+    const dialog = await startImport(person, { sheet: true });
+    await dialog.findByText(/Hãy ở lại trang này/);
+    await person.keyboard("{Escape}");
+
+    await act(() => router.navigate("/admin/roles"));
+    const ask = within(await screen.findByRole("dialog", { name: LEAVE }));
+    expect(
+      ask.getByText(
+        "Việc nhập vẫn tiếp tục, nhưng bảng mật khẩu chỉ tải được ở trang này. Nếu rời trang, bạn sẽ phải đặt lại mật khẩu cho những tài khoản mới từ danh sách Người dùng.",
+      ),
+    ).toBeVisible();
+    expect(router.state.location.pathname).toBe("/admin/users");
+  });
+
+  it("lets a sign-out through while a sheet waits, and asks nothing once the sheet is taken or for an import by email", async () => {
+    servePreview(() => ok(preview({ emailBudget: null })));
+    serveJob(() => sheetJob());
+    const first = renderUsers();
+    await (
+      await startImport(first.user, { sheet: true })
+    ).findByRole("button", { name: "Tải bảng mật khẩu" });
+    await act(() => first.router.navigate("/login"));
+    expect(await screen.findByRole("heading", { name: "Đăng nhập" })).toBeVisible();
+    cleanup();
+
+    serveJob(() =>
+      sheetJob({ available: false, downloadedAt: "2026-10-15T08:07:00Z" }),
+    );
+    const taken = renderUsers();
+    await (
+      await startImport(taken.user, { sheet: true })
+    ).findByText(/^Bảng mật khẩu đã được tải lúc/);
+    await act(() => taken.router.navigate("/admin/roles"));
+    expect(await screen.findByRole("heading", { name: "Vai trò" })).toBeVisible();
+    cleanup();
+
+    serveJob(() => job());
+    const byEmail = renderUsers();
+    const dialog = await startImport(byEmail.user);
+    await dialog.findByText(/việc nhập vẫn tiếp tục và danh sách sẽ tự cập nhật/);
+    await act(() => byEmail.router.navigate("/admin/roles"));
+    expect(await screen.findByRole("heading", { name: "Vai trò" })).toBeVisible();
+    expect(screen.queryByRole("dialog", { name: LEAVE })).toBeNull();
   });
 
   it("puts the once-only warning before the download button, and keeps the sheet when the dialog closes", async () => {

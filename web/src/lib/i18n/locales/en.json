@@ -1108,6 +1108,13 @@
       "running": "Creating accounts… {{done}}/{{total}}",
       "leave": "You can close this dialog; the import carries on and the list updates itself.",
       "leaveSheet": "You can close this dialog; the import carries on. Stay on this page: once the import finishes, the password sheet can be downloaded only here.",
+      "leaveAsk": {
+        "title": "Leave before downloading the password sheet?",
+        "running": "The import carries on, but the password sheet can be downloaded only on this page. If you leave, you will have to reset the new accounts' passwords from the Users list.",
+        "waiting": "The password sheet has not been downloaded, and it can be downloaded only on this page. If you leave, you will have to reset the new accounts' passwords from the Users list.",
+        "confirm": "Leave",
+        "stay": "Stay"
+      },
       "summary": "{{created}} · {{skipped}}",
       "created_one": "{{count}} account created",
       "created_other": "{{count}} accounts created",

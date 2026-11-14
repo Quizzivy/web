@@ -47,9 +47,10 @@ import type { GradeMarks } from "./GradingCard";
  * tab or teacher may grade these papers meanwhile. Next question, Grade per
  * paper, and a save and next that would leave another row's unsaved marks
  * ask before they drop them. A move to the next question that takes away
- * what held focus, a row's box after save and next, puts focus on the first
- * answer of the new question still to mark, or on Next question when it has
- * none to mark by hand (GF-7); the heading's own button keeps it.
+ * what held focus, a row's box after save and next, asked about first or
+ * not, puts focus on the first answer of the new question still to mark, or
+ * on Next question when it has none to mark by hand (GF-7); the heading's
+ * own button keeps it.
  */
 export function GradeByQuestion({
   assignmentId,
@@ -142,8 +143,14 @@ export function GradeByQuestion({
     setShowNames(false);
   };
   const land = useEffectEvent(() => {
+    // Focus was lost when it sits on the document, or on the page's `main`,
+    // where a dialog whose opener is gone puts it (the unsaved-marks question).
     const active = document.activeElement;
-    if (active instanceof HTMLElement && active !== document.body) return;
+    const kept =
+      active instanceof HTMLElement &&
+      active !== document.body &&
+      active.tagName !== "MAIN";
+    if (kept) return;
     const marked = (row: QuestionAnswerRow) => inputs.current.get(row.attemptId);
     const first =
       items.find((row) => row.manualScore == null && marked(row)) ??

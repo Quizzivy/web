@@ -61,10 +61,23 @@ beforeEach(() => {
   );
 });
 
+/**
+ * renderReview renders the paper inside a focusable `main`, as the shell does:
+ * a dialog whose opener is gone gives focus back to that element.
+ */
 function renderReview() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const router = createMemoryRouter(
-    [{ path: "/teacher/attempts/:id", element: <AttemptReviewPage /> }],
+    [
+      {
+        path: "/teacher/attempts/:id",
+        element: (
+          <main tabIndex={-1}>
+            <AttemptReviewPage />
+          </main>
+        ),
+      },
+    ],
     { initialEntries: [`/teacher/attempts/${ATTEMPT_ID}`] },
   );
   render(
@@ -172,6 +185,22 @@ describe("G-04, moving to the next question (GF-7)", () => {
     await user.type(box("Học viên 01"), "3{Control>}{Enter}{/Control}");
 
     await waitFor(() => expect(grades).toHaveLength(1));
+    expect(await screen.findByText("Unit 5 · Câu 3 / 3")).toBeVisible();
+    await waitFor(() => expect(box("Học viên 02")).toHaveFocus());
+  });
+
+  it("lands on the first answer too when another row's unsaved mark is asked about first", async () => {
+    const user = renderReview();
+    await user.click(await screen.findByRole("button", { name: "Chấm theo câu hỏi" }));
+    await screen.findByText("Unit 5 · Câu 2 / 3");
+
+    await user.type(box("Học viên 02"), "2");
+    await user.type(box("Học viên 01"), "3{Control>}{Enter}{/Control}");
+    const ask = await screen.findByRole("dialog", {
+      name: "Rời trang khi điểm chưa lưu?",
+    });
+    await user.click(within(ask).getByRole("button", { name: "Rời đi" }));
+
     expect(await screen.findByText("Unit 5 · Câu 3 / 3")).toBeVisible();
     await waitFor(() => expect(box("Học viên 02")).toHaveFocus());
   });

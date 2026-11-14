@@ -38,6 +38,8 @@ export type FormDialogProps<V extends FormValues> = Readonly<{
   description?: ReactNode | ((values: V) => ReactNode);
   icon?: LucideIcon | undefined;
   danger?: boolean;
+  /** Announces the dialog as an alert: a question whose answer cannot be taken back. */
+  alert?: boolean;
   width?: number | undefined;
   className?: string | undefined;
   initial: V;
@@ -76,6 +78,7 @@ export function FormDialog<V extends FormValues>({
   description,
   icon,
   danger = false,
+  alert = false,
   width,
   className,
   initial,
@@ -163,6 +166,7 @@ export function FormDialog<V extends FormValues>({
       width={width}
       className={className}
       returnFocus={returnFocus}
+      {...(alert ? { role: "alertdialog" } : {})}
       onOpenAutoFocus={(event) => {
         const first =
           form.current?.querySelector<HTMLElement>(FIRST_FIELD) ??

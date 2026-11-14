@@ -991,7 +991,8 @@
       "paused": "Tạm dừng AI cho giáo viên này",
       "pausedHint": "Các nút AI vẫn hiện nhưng không dùng được cho đến khi bạn tắt mục này.",
       "saved": "Đã lưu hạn mức của {{name}}",
-      "failed": "Không lưu được hạn mức. Hãy thử lại."
+      "failed": "Không lưu được hạn mức. Hãy thử lại.",
+      "failedFor": "Chưa lưu được hạn mức của {{name}}."
     },
     "rules": {
       "title": "Quy tắc",

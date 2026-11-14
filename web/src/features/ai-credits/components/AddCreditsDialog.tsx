@@ -1,4 +1,4 @@
-import { useMemo, type RefObject } from "react";
+import { useMemo, useRef, useState, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { Plus } from "lucide-react";
 import { FormDialog, type FormField } from "@/components/shared/form/FormDialog";
@@ -20,7 +20,9 @@ const INITIAL: Values = { amount: String(ADDITIONS[0]) };
  * beyond the plan, so the dialog says the extra is paid for outside Quizzivy
  * and does not carry over to next month (DG-196). The server records the
  * caller as the approver. An addition still in flight when the dialog closes
- * holds off the next one until it answers, and its toast still says so.
+ * holds off the next one until it answers, and its answer goes to the Admin in
+ * a notice, added or not: a dialog opened after it stays open and shows no
+ * error of the earlier addition (QC-AC-11).
  */
 export function AddCreditsDialog({
   open,
@@ -35,6 +37,16 @@ export function AddCreditsDialog({
   const locale = useLocale();
   const add = useAddCredits();
   const latch = useLatch();
+  // Counts the times the dialog has left the screen, so that an addition's
+  // answer can tell whether the dialog it was sent from is still the one open.
+  const opening = useRef(0);
+  const [failure, setFailure] = useState<string | null>(null);
+
+  function close() {
+    opening.current += 1;
+    setFailure(null);
+    onOpenChange(false);
+  }
 
   const fields = useMemo<readonly FormField<Values>[]>(
     () => [
@@ -55,8 +67,8 @@ export function AddCreditsDialog({
     <FormDialog
       open={open}
       onOpenChange={(next) => {
-        if (!next && !add.isPending) add.reset();
-        onOpenChange(next);
+        if (next) onOpenChange(true);
+        else close();
       }}
       title={t("aiCredits.add.title")}
       description={t("aiCredits.add.hint")}
@@ -65,17 +77,24 @@ export function AddCreditsDialog({
       fields={fields}
       submitLabel={t("aiCredits.add.submit")}
       pending={add.isPending}
-      error={add.isError ? failureMessage(add.error, t("aiCredits.add.failed")) : null}
+      error={failure}
       returnFocus={returnFocus}
       onSubmit={(values) => {
         if (!latch.take()) return;
         const amount = Number(values.amount);
+        const sent = opening.current;
+        setFailure(null);
         add.mutate(amount, {
           onSuccess: () => {
-            onOpenChange(false);
+            if (opening.current === sent) close();
             notify.success(
               t("aiCredits.add.added", { amount: credits(amount, locale) }),
             );
+          },
+          onError: (cause) => {
+            const reason = failureMessage(cause, t("aiCredits.add.failed"));
+            if (opening.current === sent) setFailure(reason);
+            else notify.error(reason);
           },
           onSettled: latch.release,
         });

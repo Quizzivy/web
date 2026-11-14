@@ -991,7 +991,8 @@
       "paused": "Pause AI for this teacher",
       "pausedHint": "AI buttons stay visible but can’t be used until you turn this off.",
       "saved": "Allowance saved for {{name}}",
-      "failed": "Couldn’t save the allowance. Try again."
+      "failed": "Couldn’t save the allowance. Try again.",
+      "failedFor": "The allowance for {{name}} was not saved."
     },
     "rules": {
       "title": "Rules",

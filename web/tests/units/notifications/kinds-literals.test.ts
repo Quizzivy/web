@@ -98,6 +98,9 @@ describe.each(["vi", "en"] as const)("notification literal strings in %s", (loca
   });
 });
 
+/** TEMPLATES counts each locale's notification templates: English has both forms of its six counted kinds, Vietnamese the one form it reads. */
+const TEMPLATES = { vi: 17, en: 23 } as const;
+
 function expectCollisionFreeTemplates(locale: "vi" | "en") {
   const templates: unknown = i18n.getResource(
     locale,
@@ -107,7 +110,7 @@ function expectCollisionFreeTemplates(locale: "vi" | "en") {
   expect(templates).toBeTypeOf("object");
   expect(templates).not.toBeNull();
   const values = Object.values(templates as Record<string, unknown>);
-  expect(values).toHaveLength(23);
+  expect(values).toHaveLength(TEMPLATES[locale]);
   for (const value of values) {
     expect(value).toBeTypeOf("string");
     expect(value).not.toMatch(/\uE000quizzivy-notification:\d+\uE001/);
@@ -116,7 +119,7 @@ function expectCollisionFreeTemplates(locale: "vi" | "en") {
 
 describe("supported notification template invariant", () => {
   it.each(["vi", "en"] as const)(
-    "keeps all 23 %s templates free of reserved tokens",
+    "keeps every %s template free of reserved tokens",
     (locale) => {
       expectCollisionFreeTemplates(locale);
     },

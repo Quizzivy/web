@@ -1,4 +1,4 @@
-import { useMemo, type RefObject } from "react";
+import { useMemo, useRef, useState, type RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { Sparkles } from "lucide-react";
 import { FormDialog, type FormField } from "@/components/shared/form/FormDialog";
@@ -12,7 +12,7 @@ import {
 } from "@/features/ai-credits/allowance";
 import { useLatch, useSaveAllowance } from "@/features/ai-credits/mutations";
 import { credits } from "@/features/ai/credits";
-import { failureMessage } from "@/lib/api/errors";
+import { ApiError, failureMessage } from "@/lib/api/errors";
 import { useLocale } from "@/lib/i18n/useLocale";
 import { notify } from "@/lib/toast";
 
@@ -21,11 +21,12 @@ import { notify } from "@/lib/toast";
  * `teacher` is set: the default allowance or a custom figure of at least
  * 1,000, and a switch that pauses their AI. It sends only what the Admin
  * changed against the row it opened on, so a dialog saved without a change
- * sends nothing and never undoes what another Admin set meanwhile. A save
- * still in flight when the dialog closes holds off the next one until it
- * answers. A figure
+ * sends nothing and never undoes what another Admin set meanwhile. A figure
  * below what the teacher has used is the server's refusal, shown in the
- * dialog.
+ * dialog. A save still in flight when the dialog closes holds off the next
+ * one until it answers, and its answer goes to the Admin in a notice, never
+ * to a dialog opened after it: that one stays open and shows no error of the
+ * earlier save (QC-AC-11).
  */
 export function AllowanceDialog({
   teacher,
@@ -42,6 +43,10 @@ export function AllowanceDialog({
   const locale = useLocale();
   const save = useSaveAllowance();
   const latch = useLatch();
+  // Counts the times the dialog has left the screen, so that a save's answer
+  // can tell whether the dialog it was sent from is still the one open.
+  const opening = useRef(0);
+  const [failure, setFailure] = useState<string | null>(null);
   const bounds = {
     min: credits(MIN_ALLOWANCE, locale),
     max: credits(MAX_ALLOWANCE, locale),
@@ -104,20 +109,38 @@ export function AllowanceDialog({
     return null;
   }
 
+  function close() {
+    opening.current += 1;
+    setFailure(null);
+    onClose();
+  }
+
   function submit(values: AllowanceValues) {
     if (teacher === null || !latch.take()) return;
     const body = allowanceBody(teacher, values);
     if (body === null) {
       latch.release();
-      onClose();
+      close();
       return;
     }
+    const sent = opening.current;
+    setFailure(null);
     save.mutate(
       { userId: teacher.userId, body },
       {
         onSuccess: () => {
-          onClose();
+          if (opening.current === sent) close();
           notify.success(t("aiCredits.allowance.saved", { name: teacher.name }));
+        },
+        onError: (cause) => {
+          if (opening.current === sent) {
+            setFailure(failureMessage(cause, t("aiCredits.allowance.failed")));
+            return;
+          }
+          const unsaved = t("aiCredits.allowance.failedFor", { name: teacher.name });
+          notify.error(
+            cause instanceof ApiError ? `${unsaved} ${cause.message}` : unsaved,
+          );
         },
         onSettled: latch.release,
       },
@@ -128,9 +151,7 @@ export function AllowanceDialog({
     <FormDialog
       open={teacher !== null}
       onOpenChange={(next) => {
-        if (next) return;
-        if (!save.isPending) save.reset();
-        onClose();
+        if (!next) close();
       }}
       title={t("aiCredits.allowance.title", { name: teacher?.name ?? "" })}
       description={t("aiCredits.allowance.used", {
@@ -142,11 +163,7 @@ export function AllowanceDialog({
       validate={validate}
       submitLabel={t("common.save")}
       pending={save.isPending}
-      error={
-        save.isError
-          ? failureMessage(save.error, t("aiCredits.allowance.failed"))
-          : null
-      }
+      error={failure}
       returnFocus={returnFocus}
       onSubmit={submit}
     />

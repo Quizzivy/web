@@ -96,7 +96,7 @@ describe("the Data & privacy section", () => {
     await choose(user, await answers(), "1 năm");
     await user.click(save());
 
-    const dialog = await screen.findByRole("dialog", {
+    const dialog = await screen.findByRole("alertdialog", {
       name: "Rút ngắn thời gian lưu giữ?",
     });
     expect(asked).toEqual([{ ...SAVED.retention, keepAnswersMonths: 12 }]);
@@ -122,7 +122,50 @@ describe("the Data & privacy section", () => {
     await user.click(within(dialog).getByRole("button", { name: "Lưu và xoá" }));
     await waitFor(() => expect(stored.puts).toHaveLength(1));
     expect(stored.puts[0]?.retention.keepAnswersMonths).toBe(12);
-    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
+  });
+
+  it("asks as an alert dialog, opening on Cancel, and gives focus back to Save when cancelled (SS-17)", async () => {
+    servesSettings();
+    servesRetentionImpact();
+    await openData();
+    const user = userEvent.setup({ delay: null });
+
+    await choose(user, await answers(), "1 năm");
+    await user.click(save());
+
+    const dialog = await screen.findByRole("alertdialog", {
+      name: "Rút ngắn thời gian lưu giữ?",
+    });
+    expect(screen.queryByRole("dialog")).toBeNull();
+    expect(dialog).toHaveAccessibleDescription(
+      "Việc dọn dẹp chạy mỗi đêm và không thể hoàn tác.",
+    );
+    expect(within(dialog).getByRole("button", { name: "Huỷ" })).toHaveFocus();
+
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
+    expect(save()).toHaveFocus();
+  });
+
+  it("puts focus on the control that was edited once a confirmed save lands, as a save that asks nothing does (SS-17)", async () => {
+    const stored = servesSettings();
+    servesRetentionImpact();
+    await openData();
+    const user = userEvent.setup({ delay: null });
+
+    await choose(user, await answers(), "Mãi mãi");
+    await user.click(save());
+    await waitFor(() => expect(stored.puts).toHaveLength(1));
+    await waitFor(async () => expect(await answers()).toHaveFocus());
+
+    await choose(user, focus(), "6 tháng");
+    await user.click(save());
+    const dialog = await screen.findByRole("alertdialog");
+    await user.click(within(dialog).getByRole("button", { name: "Lưu và xoá" }));
+    await waitFor(() => expect(stored.puts).toHaveLength(2));
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
+    await waitFor(() => expect(focus()).toHaveFocus());
   });
 
   it("keeps the form as it was when the question is cancelled", async () => {
@@ -133,11 +176,11 @@ describe("the Data & privacy section", () => {
 
     await choose(user, focus(), "6 tháng");
     await user.click(save());
-    const dialog = await screen.findByRole("dialog");
+    const dialog = await screen.findByRole("alertdialog");
     expect(within(dialog).getByText("Hiện chưa có gì bị xoá tối nay.")).toBeVisible();
 
     await user.click(within(dialog).getByRole("button", { name: "Huỷ" }));
-    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
     expect(stored.puts).toEqual([]);
     expect(focus()).toHaveTextContent("6 tháng");
     expect(save()).toBeVisible();
@@ -163,11 +206,11 @@ describe("the Data & privacy section", () => {
 
     await choose(user, await answers(), "1 năm");
     await user.click(save());
-    const dialog = await screen.findByRole("dialog");
+    const dialog = await screen.findByRole("alertdialog");
     await user.dblClick(within(dialog).getByRole("button", { name: "Lưu và xoá" }));
     release();
 
-    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
     expect(stored.puts).toHaveLength(1);
   });
 
@@ -197,12 +240,12 @@ describe("the Data & privacy section", () => {
     await user.clear(name);
     await user.type(name, "Tên mới");
     release();
-    const dialog = await screen.findByRole("dialog");
+    const dialog = await screen.findByRole("alertdialog");
     await user.click(within(dialog).getByRole("button", { name: "Lưu và xoá" }));
 
     await waitFor(() => expect(stored.puts).toHaveLength(1));
     expect(stored.puts[0]?.organization.name).toBe("Quizzivy English Centre");
-    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    await waitFor(() => expect(screen.queryByRole("alertdialog")).toBeNull());
     expect(screen.getByRole("textbox", { name: "Tên tổ chức" })).toHaveValue("Tên mới");
     expect(screen.getByText("Bạn có thay đổi chưa lưu.")).toBeVisible();
   });

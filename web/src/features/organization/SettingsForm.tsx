@@ -98,6 +98,7 @@ export function SettingsForm({
   const persisting = useRef(false);
   const lastEdited = useRef("organization.name");
   const pendingFocus = useRef<string | null>(null);
+  const afterConfirm = useRef<HTMLElement | null>(null);
 
   const form = useForm<SettingsFormValues, unknown, SettingsFormOutput>({
     resolver: zodResolver(settingsFormSchema),
@@ -196,6 +197,7 @@ export function SettingsForm({
     setChecking(true);
     try {
       const impact = await retentionImpact(values.retention);
+      afterConfirm.current = null;
       setConfirming({ values, sent, impact });
     } catch (cause) {
       setError(failureMessage(cause, t("api.failed")));
@@ -204,8 +206,9 @@ export function SettingsForm({
     }
   }
 
+  /** persist saves the form and answers whether the save landed. */
   async function persist(values: SettingsFormOutput, sent: unknown) {
-    if (persisting.current) return;
+    if (persisting.current) return false;
     persisting.current = true;
     try {
       const stored = await save.mutateAsync(settingsInput(values, revision.current));
@@ -217,8 +220,10 @@ export function SettingsForm({
         });
       }
       toast(t("settings.saved"));
+      return true;
     } catch (cause) {
       failed(cause, values);
+      return false;
     } finally {
       persisting.current = false;
     }
@@ -297,14 +302,18 @@ export function SettingsForm({
       <RetentionConfirm
         impact={confirming?.impact ?? null}
         pending={save.isPending}
+        returnFocus={afterConfirm}
         onCancel={() => {
           if (!save.isPending) setConfirming(null);
         }}
         onConfirm={() => {
           if (confirming === null) return;
-          void persist(confirming.values, confirming.sent).then(() =>
-            setConfirming(null),
-          );
+          void persist(confirming.values, confirming.sent).then((landed) => {
+            // A save that landed took the bar's Save away with it: focus goes
+            // where a save that asks nothing puts it, on what was edited.
+            if (landed) afterConfirm.current = controlOf(lastEdited.current);
+            setConfirming(null);
+          });
         }}
       />
     </FormProvider>

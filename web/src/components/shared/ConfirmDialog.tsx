@@ -13,6 +13,8 @@ export type ConfirmDialogProps = Readonly<{
   confirmLabel: string;
   cancelLabel?: string;
   destructive?: boolean;
+  /** Asks as an alert dialog, for an answer that cannot be taken back. */
+  alert?: boolean;
   disabled?: boolean;
   pending?: boolean;
   error?: string | null;
@@ -33,6 +35,7 @@ export function ConfirmDialog({
   confirmLabel,
   cancelLabel,
   destructive = false,
+  alert = false,
   disabled = false,
   pending = false,
   error = null,
@@ -49,6 +52,7 @@ export function ConfirmDialog({
       className={className}
       icon={icon}
       danger={destructive}
+      alert={alert}
       initial={INITIAL}
       fields={FIELDS}
       submitLabel={confirmLabel}

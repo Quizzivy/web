@@ -187,6 +187,93 @@ describe("the export page", () => {
     ).toBeVisible();
   });
 
+  it("drops the refusal of a stale tab once the page says the downloads are used (SS-22)", async () => {
+    let current: Export = { ...READY, downloads: 2 };
+    serves(() => body(current));
+    server.use(
+      http.post(`${BASE}/admin/data-exports/:id/download`, () => {
+        current = { ...READY, downloads: 3, downloadedAt: "2026-10-19T03:20:00Z" };
+        return contractJson(
+          "/admin/data-exports/{id}/download",
+          "post",
+          410,
+          failure("EXPORT_UNAVAILABLE", "Bản xuất không còn nữa."),
+        );
+      }),
+    );
+    renderPage();
+    const user = userEvent.setup({ delay: null });
+
+    await user.click(await screen.findByRole("button", { name: "Tải xuống" }));
+
+    expect(
+      await screen.findByText(
+        "Đã dùng hết lượt tải. Hãy yêu cầu xuất lại từ Cài đặt hệ thống.",
+      ),
+    ).toBeVisible();
+    expect(screen.queryByRole("button", { name: "Tải xuống" })).toBeNull();
+    await waitFor(() => expect(screen.queryByRole("alert")).toBeNull());
+    expect(screen.queryByText("Bản xuất không còn nữa.")).toBeNull();
+  });
+
+  it("keeps a refusal beside Download while the file can still be asked for", async () => {
+    serves(() => body({ ...READY, downloads: 1 }));
+    server.use(
+      http.post(`${BASE}/admin/data-exports/:id/download`, () =>
+        contractJson(
+          "/admin/data-exports/{id}/download",
+          "post",
+          410,
+          failure("EXPORT_UNAVAILABLE", "Bản xuất không còn nữa."),
+        ),
+      ),
+    );
+    renderPage();
+    const user = userEvent.setup({ delay: null });
+
+    await user.click(await screen.findByRole("button", { name: "Tải xuống" }));
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Bản xuất không còn nữa.",
+    );
+    expect(screen.getByRole("button", { name: "Tải xuống" })).toBeVisible();
+  });
+
+  it("says in a polite live region that it waits, and then that the file is ready (SS-18)", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const states: Export[] = [QUEUED, { ...QUEUED, status: "running" }, READY];
+    serves((read) => body(states[Math.min(read, states.length) - 1]!));
+    renderPage();
+
+    const waits = await screen.findByText(
+      "Yêu cầu đang chờ tới lượt. Trang này tự cập nhật.",
+    );
+    const live = screen.getByRole("status");
+    expect(live).toContainElement(waits);
+    expect(live).toHaveAttribute("aria-live", "polite");
+    expect(live).not.toHaveClass("sr-only");
+
+    await act(() => vi.advanceTimersByTimeAsync(5_000));
+    await waitFor(() =>
+      expect(live).toHaveTextContent("Đang tạo tệp. Trang này tự cập nhật."),
+    );
+    await act(() => vi.advanceTimersByTimeAsync(5_000));
+    await waitFor(() => expect(live).toHaveTextContent(/^Sẵn sàng$/));
+    expect(live).toHaveClass("sr-only");
+    expect(screen.getByRole("status")).toBe(live);
+    expect(screen.queryByRole("alert")).toBeNull();
+  });
+
+  it("leaves a failed export to its alert, with nothing said twice", async () => {
+    serves(() => body({ ...QUEUED, status: "failed" }));
+    renderPage();
+
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Không tạo được tệp xuất. Hãy yêu cầu xuất lại từ Cài đặt hệ thống.",
+    );
+    expect(screen.getByRole("status")).toBeEmptyDOMElement();
+  });
+
   it("says a failed export failed, and does not poll it", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const seen = serves(() => body({ ...QUEUED, status: "failed" }));

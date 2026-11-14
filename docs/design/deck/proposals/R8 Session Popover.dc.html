@@ -107,7 +107,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
               </sc-if>
 
               <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
-                <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
+                <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
                   <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
                     <div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;white-space:nowrap">{{ tx.week }}</div>
                     <div style="display:flex;gap:8px;align-items:center">
@@ -465,7 +465,7 @@ class Component extends DCLogic {
     const nav = [
       { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('calendar', 'calendar-days', tx.title), item('messages', 'message-square', vi ? 'Tin nhắn' : 'Messages')] },
       { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', vi ? 'Lớp học' : 'Classes'), item('students', 'users', vi ? 'Học viên' : 'Students')] },
-      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'share-2', vi ? 'Được chia sẻ với tôi' : 'Shared with me', 2), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'image', vi ? 'Thư viện media' : 'Media')] }
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'users-round', vi ? 'Được chia sẻ với tôi' : 'Shared with me', 2), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'audio-lines', vi ? 'Thư viện media' : 'Media')] }
     ];
     const hours = []; for (let h = 8; h < 22; h++) hours.push(fmtH(h));
 

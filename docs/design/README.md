@@ -640,6 +640,22 @@ To view one, start the server above and open, for example,
   site) and draws what the deck leaves out (the menu below 960, the join box's refusals, the
   form's box to tick and its states). Eighteen states at 1280 and 360 (768 for the header),
   light and dark, Vietnamese and English. Its seven questions for Thuong are on the page.
+- 2026-11-14 — The Landing proposal, drawn a third time on the owner's notes. The small label
+  above the headline is gone. The two pieces of the product on the photo are gone: the photo
+  has three brush strokes behind it and a few drawn marks around. The words no longer come
+  from the deck's Landing, which spoke of classes in general; they say what this system is
+  and does (lessons in units, flashcards reviewed daily, tests that save every answer, essays
+  marked on a band), and the copy table names what each line rests on in the spec and the
+  plans for R6 to R10. The phone is 036 321 6199 and the address "TP. Hồ Chí Minh". The
+  sections between the top and the form were laid out for this page, after the e-learning
+  templates in Figma's community: four steps on a card over the edge of the colour, three
+  rows that change sides with an illustration each, three cards with a photo each in place
+  of the role tabs, a soft band for fair tests, one dark panel for the consultation, and the
+  questions on cards. The header, the join box, the form's fields, the five questions and
+  the footer's columns stay the deck's. Five illustrations are unDraw's, recoloured to the
+  brand's lime; the brush stroke, sparkle, squiggle and underline were drawn for the page
+  and take the theme's colours. Fifteen states now (the role tabs are gone), at 1280 and 360
+  (768 for the header), light and dark, Vietnamese and English. Eight questions for Thuong.
 
 ## The brand
 

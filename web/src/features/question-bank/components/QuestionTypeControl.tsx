@@ -8,9 +8,9 @@ import type {
 import {
   editorType,
   QUESTION_TYPES,
-  retype,
   typeLocked,
 } from "@/features/question-bank/questionType";
+import { useRetype } from "@/features/question-bank/useRetype";
 
 const KNOWN = new Set<string>(QUESTION_TYPES);
 
@@ -21,7 +21,8 @@ const KNOWN = new Set<string>(QUESTION_TYPES);
  * seven, so every type stays in view (QC-R6AC-2); below 768px they also
  * stretch to the row. While gaps bind answers
  * only "Fill in the blank" stays available, and the line under the control
- * says why. Choosing a type keeps the prompt and the points (`retype`).
+ * says why. Choosing a type keeps the prompt and the points (`retype`), and
+ * a type the teacher comes back to has the answers it held (`useRetype`).
  */
 export function QuestionTypeControl({
   value,
@@ -31,9 +32,10 @@ export function QuestionTypeControl({
   const hint = useId();
   const locked = typeLocked(value);
   const shown = editorType(value.type);
+  const change = useRetype(value, onChange);
   function choose(next: string) {
     if (next === shown || !KNOWN.has(next)) return;
-    onChange(retype(value, next as QuestionType));
+    change(next as QuestionType);
   }
   return (
     <div className="flex min-w-0 flex-col gap-1.5">

@@ -313,6 +313,63 @@ function optionsFor(value: QuestionValues, type: QuestionType): Option[] {
   return [];
 }
 
+/** carriesOptions says whether `retype` hands a question's options from one type to the other. */
+function carriesOptions(from: QuestionType, to: QuestionType): boolean {
+  return LISTED_TYPES.has(from) && LISTED_TYPES.has(to);
+}
+
+function sameTexts(a: readonly Option[], b: readonly Option[]): boolean {
+  return a.length === b.length && a.every((option, i) => option.text === b[i]!.text);
+}
+
+/**
+ * recall gives a question just retyped from `from` the answers its new type
+ * held when the teacher last left it (`held`), so a type changed by mistake,
+ * or to look at another, costs nothing typed: `retype` alone hands a type
+ * only what the one before it could hold, and a trip through short answer
+ * would bring a choice question back with two empty options. What `retype`
+ * carried is newer and wins: options the teacher rewrote in another type that
+ * lists options, and a sample answer rewritten between short answer and
+ * essay. The type's own options come back with what hangs on them: the ticks,
+ * a "Choose N" count, each matching item's answer, and "Not given" for a true
+ * / false. Beside rewritten options the matching items come back unanswered,
+ * since their answers named options by position, and a "Choose N" count only
+ * while the options can still hold it. Blanks come back only to the Markdown
+ * prompt they were numbered in. The points stay as `retype` set them.
+ */
+export function recall(
+  next: QuestionValues,
+  held: QuestionValues | undefined,
+  from: QuestionValues,
+): QuestionValues {
+  if (held === undefined || editorType(held.type) !== editorType(next.type))
+    return next;
+  const own =
+    !carriesOptions(from.type, next.type) || sameTexts(next.options, held.options);
+  const out: QuestionValues = own
+    ? { ...next, type: held.type, options: held.options }
+    : { ...next };
+  if (held.selectCount != null && (own || held.selectCount < out.options.length))
+    out.selectCount = held.selectCount;
+  if (held.matchItems !== undefined)
+    out.matchItems = own
+      ? held.matchItems
+      : held.matchItems.map((item) => ({ ...item, correctOption: -1 }));
+  if (held.matchAllowReuse != null) out.matchAllowReuse = held.matchAllowReuse;
+  if (!(out.sampleAnswer ?? "").trim() && held.sampleAnswer != null)
+    out.sampleAnswer = held.sampleAnswer;
+  if (held.maxWords != null) out.maxWords = held.maxWords;
+  if (held.rubric?.length) out.rubric = held.rubric;
+  if (
+    held.blanks.length > 0 &&
+    out.promptContent == null &&
+    held.promptContent == null &&
+    out.prompt === held.prompt
+  )
+    out.blanks = held.blanks;
+  return out;
+}
+
 function blankOptions(firstCorrect = true): Option[] {
   return [
     { id: null, text: "", isCorrect: firstCorrect },

@@ -38,6 +38,8 @@ export type FormDialogProps<V extends FormValues> = Readonly<{
   description?: ReactNode | ((values: V) => ReactNode);
   icon?: LucideIcon | undefined;
   danger?: boolean;
+  /** Announces the dialog as an alert: a question whose answer cannot be taken back. */
+  alert?: boolean;
   width?: number | undefined;
   className?: string | undefined;
   initial: V;
@@ -58,9 +60,18 @@ const FIRST_FIELD =
   "input:not([type='hidden']):not(:disabled), textarea:not(:disabled), select:not(:disabled), button:not(:disabled), [tabindex]:not([tabindex='-1'])";
 
 /**
+ * TYPED_FIELD is a field of a caller's own content (`children`) that the
+ * dialog may open on: something to type in or to pick a value from. A tick
+ * box, a link or a button there is not one, so a question that carries only
+ * those still opens on Cancel.
+ */
+const TYPED_FIELD =
+  "input:not([type='hidden']):not([type='checkbox']):not([type='radio']):not(:disabled), textarea:not(:disabled), select:not(:disabled), [role='combobox']:not(:disabled)";
+
+/**
  * FormDialog edits typed values while open and unlocked, revealing visible
  * errors once a submission has been tried, valid or not, so that a rule the
- * caller finds only while handling a submit shows on its field. It opens with focus on its first field, or, when the form has none, on
+ * caller finds only while handling a submit shows on its field. It opens with focus on its first field, or on the first field to type in or pick from that the caller passed as `children` (GF-5), or, when it has neither, on
  * Cancel, the safe answer, or on the submit of a notice without Cancel (F-50). While `pending` the control a submit starts from
  * keeps focus (T-35): the submit answers `aria-disabled` and ignores a press,
  * text fields turn read-only, a select answers `aria-disabled` and keeps
@@ -76,6 +87,7 @@ export function FormDialog<V extends FormValues>({
   description,
   icon,
   danger = false,
+  alert = false,
   width,
   className,
   initial,
@@ -101,6 +113,7 @@ export function FormDialog<V extends FormValues>({
   const { t } = useTranslation();
   const id = useId();
   const form = useRef<HTMLFormElement>(null);
+  const content = useRef<HTMLDivElement>(null);
   const submitButton = useRef<HTMLButtonElement>(null);
   const cancelButton = useRef<HTMLButtonElement>(null);
   const [state, setState] = useState({
@@ -163,9 +176,11 @@ export function FormDialog<V extends FormValues>({
       width={width}
       className={className}
       returnFocus={returnFocus}
+      {...(alert ? { role: "alertdialog" } : {})}
       onOpenAutoFocus={(event) => {
         const first =
           form.current?.querySelector<HTMLElement>(FIRST_FIELD) ??
+          content.current?.querySelector<HTMLElement>(TYPED_FIELD) ??
           cancelButton.current ??
           submitButton.current;
         if (!first) return;
@@ -182,7 +197,7 @@ export function FormDialog<V extends FormValues>({
         tone={danger ? "danger" : "neutral"}
       />
       {body && (
-        <DialogShellBody>
+        <DialogShellBody ref={content}>
           <form
             ref={form}
             id={id}

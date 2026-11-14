@@ -179,9 +179,11 @@ export function GradingAnswerCard({
           <p className="text-muted-foreground mb-1.5 text-xs leading-[18px] font-medium">
             {t("grading.prompt")}
           </p>
+          {/* The line height is important: a rich prompt is `.semantic-content`,
+              whose own 1.75 is unlayered and beats any utility (F-28). */}
           <div
             className={cn(
-              "[&>div>div:first-child]:text-[15px] [&>div>div:first-child]:leading-[1.6] [&>div>div:first-child]:[text-wrap:pretty]",
+              "[&>div>div:first-child]:text-[15px] [&>div>div:first-child]:leading-[1.6]! [&>div>div:first-child]:[text-wrap:pretty]",
               item.type === "short_answer" &&
                 "[&>div>div:last-child]:bg-muted [&>div>div:last-child]:rounded-[10px] [&>div>div:last-child]:border-0",
             )}

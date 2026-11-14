@@ -104,7 +104,7 @@ function ReadyActions({ data }: Readonly<{ data: DataExport }>) {
       ) : (
         <p className="text-muted-fg text-ui">{t("dataExport.exhausted")}</p>
       )}
-      {error === null ? null : (
+      {error === null || taken >= MAX_DOWNLOADS ? null : (
         <p role="alert" className="text-danger-ink text-xs">
           {error}
         </p>
@@ -152,22 +152,38 @@ function Details({ data }: Readonly<{ data: DataExport }>) {
   );
 }
 
-function Waiting({ status }: Readonly<{ status: "queued" | "running" }>) {
+/**
+ * Progress is the page's polite live region, there for as long as an export
+ * is shown so that a change in it is read out: the note that the export waits
+ * its turn or is being made, and, once the file is there, the word "Ready"
+ * for a screen reader alone, since the card then shows it. A failed export is
+ * an alert of its own and an expired one does not change while it is watched.
+ */
+function Progress({ status }: Readonly<{ status: DataExport["status"] }>) {
   const { t } = useTranslation();
+  const waiting = status === "queued" || status === "running";
   return (
-    <Callout tone="info" icon={Hourglass}>
-      {t(`dataExport.waiting.${status}`)}
-    </Callout>
+    <div role="status" aria-live="polite" className={waiting ? undefined : "sr-only"}>
+      {waiting ? (
+        <Callout tone="info" icon={Hourglass}>
+          {t(`dataExport.waiting.${status}`)}
+        </Callout>
+      ) : null}
+      {status === "ready" ? t("dataExport.status.ready") : null}
+    </div>
   );
 }
 
 /**
  * DataExportPage is the Admin console's `exports/:id` page, where the link in the export's email
  * lands once the requester has signed in. A queued or running export is read
- * again every five seconds while somebody is there; a ready one shows its size
- * and expiry and offers the file once, then says when it was taken. A failed
- * export, an expired one and one that is not the caller's, which the server
- * answers as missing, each say so in place.
+ * again every five seconds while somebody is there, and what it waits for,
+ * and that the file is ready, is read out as it changes (`Progress`); a ready
+ * one shows its size and expiry and offers the file once, then says when it
+ * was taken. A refused download says why beside the button, until the page
+ * itself says the downloads are used. A failed export, an expired one and one
+ * that is not the caller's, which the server answers as missing, each say so
+ * in place.
  */
 export default function DataExportPage() {
   const { t } = useTranslation();
@@ -193,9 +209,7 @@ export default function DataExportPage() {
   if (data !== undefined) {
     body = (
       <>
-        {data.status === "queued" || data.status === "running" ? (
-          <Waiting status={data.status} />
-        ) : null}
+        <Progress status={data.status} />
         {data.status === "failed" ? (
           <Callout tone="danger" icon={TriangleAlert} announce>
             {t("dataExport.failed")}

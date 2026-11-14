@@ -353,6 +353,117 @@ describe("the allowance dialog", () => {
     expect(seen.reads).toBeGreaterThan(0);
   });
 
+  describe("a save still in flight when its dialog closes (QC-AC-11)", () => {
+    function holdAllowance(answer: () => Response) {
+      let release!: () => void;
+      const held = new Promise<void>((resolve) => {
+        release = resolve;
+      });
+      const sent: string[] = [];
+      server.use(
+        http.put(`${BASE}/admin/ai/teachers/:userId/allowance`, async ({ params }) => {
+          sent.push(String(params["userId"]));
+          await held;
+          return answer();
+        }),
+      );
+      return { sent, release: () => release() };
+    }
+
+    async function saveAndClose(user: ReturnType<typeof renderCreditsPage>["user"]) {
+      const dialog = await openAllowance(user, giau.name);
+      await user.click(
+        within(dialog).getByRole("switch", { name: "Tạm dừng AI cho giáo viên này" }),
+      );
+      await user.click(within(dialog).getByRole("button", { name: "Lưu" }));
+      await user.keyboard("{Escape}");
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    }
+
+    it("tells the Admin it was saved and leaves the dialog opened after it open", async () => {
+      serveCredits();
+      const held = holdAllowance(() =>
+        contractJson(ALLOWANCE, "put", 200, {
+          ...giau,
+          paused: true,
+          status: "paused",
+        }),
+      );
+      const { user } = renderCreditsPage();
+      await saveAndClose(user);
+      await waitFor(() => expect(held.sent).toEqual([giau.userId]));
+
+      const next = await openAllowance(user, bao.name);
+      held.release();
+
+      expect(await screen.findByText(`Đã lưu hạn mức của ${giau.name}`)).toBeVisible();
+      expect(next).toBeVisible();
+      expect(screen.getByRole("dialog", { name: `Hạn mức AI · ${bao.name}` })).toBe(
+        next,
+      );
+      await waitFor(() =>
+        expect(within(next).getByRole("button", { name: "Lưu" })).not.toHaveAttribute(
+          "aria-disabled",
+        ),
+      );
+      expect(within(next).queryByRole("alert")).toBeNull();
+    });
+
+    it("says in a notice, with the teacher's name, why it was not saved, and not in the dialog opened after it", async () => {
+      serveCredits();
+      const held = holdAllowance(() =>
+        HttpResponse.json(
+          {
+            error: {
+              code: "VALIDATION_FAILED",
+              message: "Hạn mức không được thấp hơn mức đã dùng.",
+              requestId: "019535d9-3df7-79fb-b466-fa907fa17f9e",
+            },
+          },
+          { status: 422 },
+        ),
+      );
+      const { user } = renderCreditsPage();
+      await saveAndClose(user);
+      await waitFor(() => expect(held.sent).toEqual([giau.userId]));
+
+      const next = await openAllowance(user, bao.name);
+      held.release();
+
+      expect(
+        await screen.findByText(
+          `Chưa lưu được hạn mức của ${giau.name}. Hạn mức không được thấp hơn mức đã dùng.`,
+        ),
+      ).toBeVisible();
+      expect(next).toBeVisible();
+      expect(within(next).queryByRole("alert")).toBeNull();
+      await user.keyboard("{Escape}");
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      const again = await openAllowance(user, giau.name);
+      expect(within(again).queryByRole("alert")).toBeNull();
+    });
+
+    it("still closes the dialog it was sent from when that one is open", async () => {
+      serveCredits();
+      const held = holdAllowance(() =>
+        contractJson(ALLOWANCE, "put", 200, {
+          ...giau,
+          paused: true,
+          status: "paused",
+        }),
+      );
+      const { user } = renderCreditsPage();
+      const dialog = await openAllowance(user, giau.name);
+      await user.click(
+        within(dialog).getByRole("switch", { name: "Tạm dừng AI cho giáo viên này" }),
+      );
+      await user.click(within(dialog).getByRole("button", { name: "Lưu" }));
+      held.release();
+      await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+      expect(await screen.findByText(`Đã lưu hạn mức của ${giau.name}`)).toBeVisible();
+    });
+  });
+
   it("reads in English", async () => {
     await i18n.changeLanguage("en");
     serveCredits();
@@ -553,6 +664,47 @@ describe("the add credits dialog", () => {
       await screen.findByText("Đã thêm 50.000 tín dụng vào quỹ chung"),
     ).toBeVisible();
     expect(calls).toBe(1);
+    expect(dialog).toBeVisible();
+    await waitFor(() =>
+      expect(
+        within(dialog).getByRole("button", { name: "Thêm tín dụng" }),
+      ).not.toHaveAttribute("aria-disabled"),
+    );
+  });
+
+  it("says in a notice why an addition closed in flight failed, and not in the dialog opened after it (QC-AC-11)", async () => {
+    serveCredits();
+    let release!: () => void;
+    const held = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.post(`${BASE}/admin/ai/credits/additions`, async () => {
+        await held;
+        return HttpResponse.json(
+          {
+            error: {
+              code: "INTERNAL",
+              message: "Máy chủ gặp lỗi.",
+              requestId: "019535d9-3df7-79fb-b466-fa907fa17f9e",
+            },
+          },
+          { status: 500 },
+        );
+      }),
+    );
+    const { user } = renderCreditsPage();
+    let dialog = await openAdd(user);
+    await user.click(within(dialog).getByRole("button", { name: "Thêm tín dụng" }));
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("dialog")).toBeNull());
+    dialog = await openAdd(user);
+    release();
+
+    const notice = await screen.findByText("Máy chủ gặp lỗi.");
+    expect(dialog).not.toContainElement(notice);
+    expect(dialog).toBeVisible();
+    expect(within(dialog).queryByRole("alert")).toBeNull();
   });
 
   it("sends one request for a double press", async () => {

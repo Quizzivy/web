@@ -26,7 +26,8 @@ interface QuestionPickerDialogProps {
   destination: string | null;
   onOpenChange: (open: boolean) => void;
   onPick: (questionIds: string[]) => void;
-  onPickGroup?: () => void;
+  /** Offers "Choose a whole group" under the list; left out where a group cannot go. */
+  onPickGroup?: (() => void) | undefined;
   /** Takes focus back when the dialog closes, if it is still in the page. */
   returnFocus?: RefObject<HTMLElement | null>;
 }

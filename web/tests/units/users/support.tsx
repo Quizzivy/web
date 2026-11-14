@@ -136,7 +136,8 @@ export function serveUsers(
 /**
  * renderUsers signs `who` in and renders the Users page at `path` with the
  * console's content `width`, and returns the router, the query client and a
- * user-event instance that does not wait between keys.
+ * user-event instance that does not wait between keys. The router also holds
+ * a page to leave for, at /admin/roles, and /login.
  */
 export function renderUsers(
   path = "/admin/users",
@@ -149,7 +150,11 @@ export function renderUsers(
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
   const router = createMemoryRouter(
-    [{ path: "/admin/users", element: <UsersPage /> }],
+    [
+      { path: "/admin/users", element: <UsersPage /> },
+      { path: "/admin/roles", element: <h1>Vai trò</h1> },
+      { path: "/login", element: <h1>Đăng nhập</h1> },
+    ],
     { initialEntries: [path] },
   );
   render(

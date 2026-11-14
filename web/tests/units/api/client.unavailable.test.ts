@@ -73,6 +73,20 @@ describe("a refresh that cannot be answered", () => {
       () => envelope("MAINTENANCE", 503, WINDOW),
       503,
     ],
+    [
+      "the API could not finish reading the request (408)",
+      () => envelope("REQUEST_INCOMPLETE", 408),
+      408,
+    ],
+    [
+      "a proxy gave up waiting for the request (408, no envelope)",
+      () =>
+        new Response("<html><body>408 Request Time-out</body></html>", {
+          status: 408,
+          headers: { "Content-Type": "text/html" },
+        }),
+      408,
+    ],
   ])("keeps the session when %s", async (_, refresh, status) => {
     handler = (url) =>
       url.endsWith("/auth/refresh") ? refresh() : envelope("UNAUTHORIZED", 401);
@@ -111,6 +125,20 @@ describe("a refresh that cannot be answered", () => {
     expect(lost).toHaveBeenCalledOnce();
     expect(useAuthStore.getState().accessToken).toBeNull();
   });
+
+  it.each([400, 401, 404, 409, 422])(
+    "still loses the session when the refresh is answered %i: a timeout is the one 4xx that says nothing about it",
+    async (status) => {
+      handler = (url) =>
+        url.endsWith("/auth/refresh")
+          ? envelope("VALIDATION_FAILED", status)
+          : envelope("UNAUTHORIZED", 401);
+      await expect(api("get", "/auth/me")).rejects.toBeInstanceOf(ApiError);
+      expect(refreshCalls()).toHaveLength(1);
+      expect(lost).toHaveBeenCalledOnce();
+      expect(useAuthStore.getState().accessToken).toBeNull();
+    },
+  );
 
   it("makes one refresh for five concurrent 401s and rejects all five retryably", async () => {
     handler = (url) =>

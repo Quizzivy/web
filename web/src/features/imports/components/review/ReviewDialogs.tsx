@@ -18,17 +18,21 @@ function normalizePoints(value: string): string {
  * ExcludeDialog asks why a question is left out of the test; the reason is
  * required, at most 500 characters, and saved with the import. Closing it
  * returns focus to `returnFocus` when that is set and still on the page.
+ * With `count`, it asks about that many selected questions at once, which
+ * share the one reason.
  */
 export function ExcludeDialog({
   label,
+  count,
   open,
   returnFocus,
   onOpenChange,
   onExclude,
 }: Readonly<{
   label: string;
+  count?: number | undefined;
   open: boolean;
-  returnFocus: RefObject<HTMLElement | null>;
+  returnFocus?: RefObject<HTMLElement | null> | undefined;
   onOpenChange: (open: boolean) => void;
   onExclude: (reason: string) => void;
 }>) {
@@ -51,8 +55,16 @@ export function ExcludeDialog({
       returnFocus={returnFocus}
       icon={CircleSlash}
       danger
-      title={t("imports.review.excludeTitle", { label })}
-      description={t("imports.review.excludeBody")}
+      title={
+        count === undefined
+          ? t("imports.review.excludeTitle", { label })
+          : t("imports.review.bulkExcludeTitle", { count })
+      }
+      description={t(
+        count === undefined
+          ? "imports.review.excludeBody"
+          : "imports.review.bulkExcludeBody",
+      )}
       initial={EXCLUDE_INITIAL}
       fields={fields}
       validate={(values) =>
@@ -69,16 +81,20 @@ export function ExcludeDialog({
 /**
  * PointsDialog sets one value for every question still in the test, with the
  * total and each section's share; excluded questions are named and left out.
+ * With `selection`, `sections` hold only the selected questions, and the
+ * dialog says the value is theirs alone.
  */
 export function PointsDialog({
   sections,
   initialPoints,
+  selection = false,
   open,
   onOpenChange,
   onApply,
 }: Readonly<{
   sections: readonly ImportDraftSection[];
   initialPoints: string;
+  selection?: boolean;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onApply: (points: string) => void;
@@ -111,10 +127,12 @@ export function PointsDialog({
       onOpenChange={onOpenChange}
       icon={Hash}
       width={520}
-      title={t("imports.review.pointsTitle")}
+      title={t(
+        selection ? "imports.review.bulkPointsTitle" : "imports.review.pointsTitle",
+      )}
       description={(values) => (
         <>
-          {t("imports.review.pointsBody")}{" "}
+          {t(selection ? "imports.review.bulkPointsBody" : "imports.review.pointsBody")}{" "}
           <span className="text-fg font-semibold">
             {t("imports.review.pointsTotal", { total: total(values) })}
           </span>

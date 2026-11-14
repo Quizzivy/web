@@ -98,8 +98,9 @@ export function isTooLarge(file: Pick<File, "size">): boolean {
 
 /**
  * isRetryable says the same file may be accepted if sent again: nothing
- * answered, or the server was busy. A server not set up for imports (501)
- * stays so until someone configures it.
+ * answered, the server could not finish reading the upload (408), or it was
+ * busy. A server not set up for imports (501) stays so until someone
+ * configures it.
  */
 export function isRetryable(cause: unknown): boolean {
   return cause instanceof ApiError ? cause.isRetryable && cause.status !== 501 : true;

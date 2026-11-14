@@ -1,6 +1,8 @@
 import { useId, useRef, type RefObject } from "react";
+import { useBlocker } from "react-router";
 import { useTranslation } from "react-i18next";
 import { Upload } from "lucide-react";
+import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import {
   DialogShell,
   DialogShellBody,
@@ -111,6 +113,41 @@ function ChooseBody({ run }: Readonly<{ run: UserImport }>) {
 }
 
 /**
+ * SheetLeaveGuard asks before a move inside the app leaves the page that holds
+ * a sheet import: the sheet can be taken only from this page's dialog, so
+ * leaving means resetting the new accounts' passwords. Stay keeps the page;
+ * Leave goes on. A move within the page (a filter, an opened user) is not
+ * asked about, nor is a move to /login, which signing out makes. `running`
+ * says the job has not finished, for the wording.
+ */
+function SheetLeaveGuard({ running }: Readonly<{ running: boolean }>) {
+  const { t } = useTranslation();
+  const blocker = useBlocker(
+    ({ currentLocation, nextLocation }) =>
+      currentLocation.pathname !== nextLocation.pathname &&
+      nextLocation.pathname !== "/login",
+  );
+  return (
+    <ConfirmDialog
+      open={blocker.state === "blocked"}
+      onOpenChange={(open) => {
+        if (!open && blocker.state === "blocked") blocker.reset();
+      }}
+      title={t("users.import.leaveAsk.title")}
+      description={t(
+        running ? "users.import.leaveAsk.running" : "users.import.leaveAsk.waiting",
+      )}
+      confirmLabel={t("users.import.leaveAsk.confirm")}
+      cancelLabel={t("users.import.leaveAsk.stay")}
+      destructive
+      onConfirm={() => {
+        if (blocker.state === "blocked") blocker.proceed();
+      }}
+    />
+  );
+}
+
+/**
  * ImportUsersDialog is the deck's "Import users" (T-R5.23), 520px: a CSV or
  * XLSX file, the role for rows that name none, and whether sign-in details go
  * by email or on a sheet to hand out (DG-05). Choosing a file, or changing
@@ -119,7 +156,9 @@ function ChooseBody({ run }: Readonly<{ run: UserImport }>) {
  * job to its end and offers the sheet once. It may be closed at any point:
  * the job carries on, the Users list is read again when it settles, and
  * opening the dialog again shows it while it runs or its sheet can still be
- * taken. The page keeps it mounted so that this holds while it is closed.
+ * taken. The page keeps it mounted so that this holds while it is closed, and
+ * while a sheet is still to be taken it asks before the page is left
+ * (`SheetLeaveGuard`).
  */
 export function ImportUsersDialog({
   open,
@@ -202,41 +241,46 @@ export function ImportUsersDialog({
   else content = readFailed || <ImportPreviewSkeleton />;
 
   return (
-    <DialogShell
-      open={open}
-      onOpenChange={close}
-      width={520}
-      returnFocus={returnFocus}
-      onOpenAutoFocus={(event) => {
-        const first = body.current?.querySelector<HTMLElement>("button:not(:disabled)");
-        if (!first) return;
-        event.preventDefault();
-        first.focus();
-      }}
-    >
-      <DialogShellHeader
-        title={t("users.import.title")}
-        description={t("users.import.columns")}
-        icon={Upload}
-      />
-      <DialogShellBody ref={body}>{content}</DialogShellBody>
-      <DialogShellFooter>
-        {secondary}
-        <Button
-          type="button"
-          aria-disabled={(choosing && paused) || undefined}
-          className={cn(
-            FOOTER_BUTTON,
-            "aria-disabled:bg-primary/55 aria-disabled:hover:bg-primary/55 px-4",
-          )}
-          onClick={() => {
-            if (!choosing) close(false);
-            else if (!paused) run.begin();
-          }}
-        >
-          {primaryLabel}
-        </Button>
-      </DialogShellFooter>
-    </DialogShell>
+    <>
+      {run.holdsSheet ? <SheetLeaveGuard running={!settled} /> : null}
+      <DialogShell
+        open={open}
+        onOpenChange={close}
+        width={520}
+        returnFocus={returnFocus}
+        onOpenAutoFocus={(event) => {
+          const first = body.current?.querySelector<HTMLElement>(
+            "button:not(:disabled)",
+          );
+          if (!first) return;
+          event.preventDefault();
+          first.focus();
+        }}
+      >
+        <DialogShellHeader
+          title={t("users.import.title")}
+          description={t("users.import.columns")}
+          icon={Upload}
+        />
+        <DialogShellBody ref={body}>{content}</DialogShellBody>
+        <DialogShellFooter>
+          {secondary}
+          <Button
+            type="button"
+            aria-disabled={(choosing && paused) || undefined}
+            className={cn(
+              FOOTER_BUTTON,
+              "aria-disabled:bg-primary/55 aria-disabled:hover:bg-primary/55 px-4",
+            )}
+            onClick={() => {
+              if (!choosing) close(false);
+              else if (!paused) run.begin();
+            }}
+          >
+            {primaryLabel}
+          </Button>
+        </DialogShellFooter>
+      </DialogShell>
+    </>
   );
 }

@@ -28,7 +28,7 @@ export function groupRoom(group: GroupBundle["group"]): number {
   return Math.max(MAX_GROUP_MEMBERS - group.members.length, 0);
 }
 
-type OptionOrder = GroupBundle["group"]["members"][number]["optionOrder"];
+export type OptionOrder = GroupBundle["group"]["members"][number]["optionOrder"];
 
 const CHOICE_TYPES: ReadonlySet<string> = new Set([
   "single_choice",
@@ -39,17 +39,20 @@ const CHOICE_TYPES: ReadonlySet<string> = new Set([
 /**
  * memberOptionOrder is how a member that was `from` and is now `type` orders
  * its options: a choice type keeps `current`, the teacher's choice, while it
- * stays a choice type, and starts from "shuffle" when it comes from a type
- * with no choice (QC-R6B-4); tfng and matching are always "fixed", because
- * the engine never shuffles them (00149); a type with no options is
- * "shuffle", the column's default.
+ * stays a choice type, and starts from `kept` when it comes from a type with
+ * no choice: "shuffle" (QC-R6B-4) unless the caller remembers what the teacher
+ * chose the last time the member was a choice type; tfng and matching are
+ * always "fixed", because the engine never shuffles them (00149); a type with
+ * no options is "shuffle", the column's default and the only order the server
+ * takes for it.
  */
 export function memberOptionOrder(
   type: string,
   current: OptionOrder,
   from: string = type,
+  kept: OptionOrder = "shuffle",
 ): OptionOrder {
-  if (CHOICE_TYPES.has(type)) return CHOICE_TYPES.has(from) ? current : "shuffle";
+  if (CHOICE_TYPES.has(type)) return CHOICE_TYPES.has(from) ? current : kept;
   return type === "tfng" || type === "matching" ? "fixed" : "shuffle";
 }
 

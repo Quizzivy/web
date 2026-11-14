@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { expect, test } from "vitest";
+import { expect, test, vi } from "vitest";
 import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { contentPlainText } from "@/components/shared/content/plainText";
 import { DEFAULT_AUDIO_POLICY } from "@/features/question-bank/audioPolicy";
 import type { GroupBundle } from "@/features/question-groups/api";
 import { GroupWorkspace } from "@/features/question-groups/components/GroupWorkspace";
+import type { GroupMoves } from "@/features/question-groups/components/QuestionHalf";
 import {
   gapQuestions,
   withMaterialContent,
@@ -62,7 +63,7 @@ function editorOf(box: HTMLElement): Editor {
   return (box as unknown as { editor: Editor }).editor;
 }
 
-function mount(initial: GroupBundle, start?: GroupStart) {
+function mount(initial: GroupBundle, start?: GroupStart, moves?: GroupMoves) {
   const latest = { current: initial };
   function Host() {
     const [bundle, setBundle] = useState(initial);
@@ -72,6 +73,7 @@ function mount(initial: GroupBundle, start?: GroupStart) {
         assets={[]}
         start={start}
         firstNumber={9}
+        moves={moves}
         onChange={(next) => {
           latest.current = next;
           setBundle(next);
@@ -125,6 +127,56 @@ test("a gap's card lists the word on its row and turns the gap into a choice wit
   expect(latest.current.group.stimuli[0]!.gaps[0]!.kind).toBe("blank");
 });
 
+test("“Keep the options in order” comes back with the wrong options of a gap that was typed in between", async () => {
+  const latest = mount(cloze());
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("button", { name: /make/ }));
+  const card = screen
+    .getByRole("heading", { name: t("groups.pane.gapHead", { number: 9 }) })
+    .closest("[data-group-card]") as HTMLElement;
+  const member = () => latest.current.group.members[0]!;
+  const type = () => latest.current.questions[0]!.input.type;
+  const empty = within(card)
+    .getAllByRole("textbox", { name: /^Lựa chọn [A-D]$/ })
+    .find((row) => (row as HTMLInputElement).value === "")!;
+  const keepOrder = async () => {
+    await user.click(
+      within(card).getByRole("button", { name: t("builder.editor.more") }),
+    );
+    return screen.findByRole("menuitemcheckbox", { name: t("groups.fixedOptions") });
+  };
+
+  const close = async () => {
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+  };
+
+  await user.type(empty, "do");
+  await waitFor(() => expect(type()).toBe("single_choice"));
+  await user.click(await keepOrder());
+  await waitFor(() => expect(member().optionOrder).toBe("fixed"));
+  await close();
+
+  await user.clear(empty);
+  await waitFor(() => expect(type()).toBe("fill_blank"));
+  expect(member().optionOrder).toBe("shuffle");
+  expect(groupIssue(latest.current)).toBeNull();
+
+  await user.type(empty, "does");
+  await waitFor(() => expect(type()).toBe("single_choice"));
+  expect(member().optionOrder).toBe("fixed");
+  expect(await keepOrder()).toBeChecked();
+
+  await user.click(screen.getByRole("menuitemcheckbox"));
+  await waitFor(() => expect(member().optionOrder).toBe("shuffle"));
+  await close();
+  await user.clear(empty);
+  await waitFor(() => expect(type()).toBe("fill_blank"));
+  await user.type(empty, "did");
+  await waitFor(() => expect(type()).toBe("single_choice"));
+  expect(member().optionOrder).toBe("shuffle");
+});
+
 test("“Remove gap” puts the word back in the text and takes the question with it", async () => {
   const latest = mount(cloze());
   const user = userEvent.setup();
@@ -163,6 +215,45 @@ test("a question is added by type at the end of the stack and opens in place", a
       name: t("builder.editor.questionNumber", { number: 9 }),
     }),
   ).toBeInTheDocument();
+});
+
+test("the add row ends with “From question bank” where the host can take questions from the bank", async () => {
+  const fromBank = vi.fn<(opener: HTMLElement) => void>();
+  mount(startBundle("reading", t), "reading", { out: vi.fn(), fromBank });
+  const user = userEvent.setup();
+  const row = screen
+    .getByText(t("groups.kind.reading.addQuestion"))
+    .closest("div") as HTMLElement;
+  const chips = within(row).getAllByRole("button");
+  expect(chips.map((chip) => chip.textContent)).toEqual([
+    t("questionEditor.type.single_choice"),
+    t("questionEditor.type.multiple_choice"),
+    t("questionEditor.type.true_false"),
+    t("questionEditor.type.fill_blank"),
+    t("questionEditor.type.short_answer"),
+    t("groups.pane.moreTypes"),
+    t("builder.fromQuestionBank"),
+  ]);
+  await user.click(chips.at(-1)!);
+  expect(fromBank).toHaveBeenCalledExactlyOnceWith(chips.at(-1));
+});
+
+test("a pane whose host holds no test offers no “From question bank”, and a cloze has no add row", () => {
+  const view = mount(startBundle("reading", t), "reading");
+  expect(view.current.group.members).toEqual([]);
+  expect(
+    screen.getByRole("button", { name: t("questionEditor.type.single_choice") }),
+  ).toBeInTheDocument();
+  expect(
+    screen.queryByRole("button", { name: t("builder.fromQuestionBank") }),
+  ).toBeNull();
+});
+
+test("a cloze, which adds questions by making gaps, offers no “From question bank”", () => {
+  mount(cloze(), undefined, { out: vi.fn(), fromBank: vi.fn() });
+  expect(
+    screen.queryByRole("button", { name: t("builder.fromQuestionBank") }),
+  ).toBeNull();
 });
 
 test("the heading names the question that is not finished and opens it", async () => {

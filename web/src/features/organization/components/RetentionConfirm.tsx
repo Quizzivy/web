@@ -1,3 +1,4 @@
+import type { RefObject } from "react";
 import { useTranslation } from "react-i18next";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import type { RetentionImpact } from "@/features/organization/api";
@@ -27,16 +28,21 @@ function lines(
  * RetentionConfirm is the question asked before a shorter retention is saved:
  * what tonight's sweep would delete under it, counted by the server. A
  * policy that deletes nothing yet says so. The question is answered before
- * the save, so Cancel leaves the form as it was.
+ * the save, so Cancel leaves the form as it was. It is an alert dialog: what
+ * the sweep deletes cannot be brought back. Closed, it gives focus back to
+ * the button that asked, or to `returnFocus` when that holds a control, which
+ * the caller sets once the save has taken the button away.
  */
 export function RetentionConfirm({
   impact,
   pending,
+  returnFocus,
   onConfirm,
   onCancel,
 }: Readonly<{
   impact: RetentionImpact | null;
   pending: boolean;
+  returnFocus?: RefObject<HTMLElement | null> | undefined;
   onConfirm: () => void;
   onCancel: () => void;
 }>) {
@@ -52,7 +58,9 @@ export function RetentionConfirm({
       description={t("systemSettings.retentionConfirm.hint")}
       confirmLabel={t("systemSettings.retentionConfirm.confirm")}
       destructive
+      alert
       pending={pending}
+      returnFocus={returnFocus}
       onConfirm={onConfirm}
     >
       {shown.length === 0 ? (

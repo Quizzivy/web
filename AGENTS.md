@@ -28,9 +28,9 @@ bump that file (a full commit id) when the web needs a newer API.
 
 ## Deploys
 
-Merging to `main` deploys to Cloudflare Pages (`.github/workflows/deploy.yml`)
-once the repository variable `WEB_DEPLOY` is `pages`; until production switches
-over from `SekiroKenjii/Quizzivy` it is unset and nothing deploys from here. The
-API deploys first: the web job refuses to deploy a build that pins a newer SDK
-than production serves. Deploys, secrets, tags and merges to `main` are the
-owner's.
+Merging to `main` deploys to Cloudflare Pages (`.github/workflows/deploy.yml`).
+Production has deployed from this repository since 2026-11-12 (v0.13.4), when
+the repository variable `WEB_DEPLOY` was set to `pages`; without it the workflow
+deploys nothing. The API deploys first: the web job refuses to deploy a build
+that pins a newer SDK than production serves. Deploys, secrets, tags and merges
+to `main` are the owner's.

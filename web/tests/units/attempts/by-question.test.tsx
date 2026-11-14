@@ -61,10 +61,23 @@ beforeEach(() => {
   );
 });
 
+/**
+ * renderReview renders the paper inside a focusable `main`, as the shell does:
+ * a dialog whose opener is gone gives focus back to that element.
+ */
 function renderReview() {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const router = createMemoryRouter(
-    [{ path: "/teacher/attempts/:id", element: <AttemptReviewPage /> }],
+    [
+      {
+        path: "/teacher/attempts/:id",
+        element: (
+          <main tabIndex={-1}>
+            <AttemptReviewPage />
+          </main>
+        ),
+      },
+    ],
     { initialEntries: [`/teacher/attempts/${ATTEMPT_ID}`] },
   );
   render(
@@ -111,5 +124,97 @@ describe("G-04, grading one question across every paper", () => {
 
     expect(screen.getByText("Phạm Gia Hân")).toBeInTheDocument();
     expect(screen.queryByText("Học viên 02")).toBeNull();
+  });
+});
+
+describe("G-04, moving to the next question (GF-7)", () => {
+  const SECOND_ID = "018f0000-0000-7000-8000-00000000aa03";
+
+  function answersOf(questionId: string) {
+    const paper = review();
+    const second = questionId === SECOND_ID;
+    return {
+      question: { ...paper.questions[1]!, id: questionId },
+      questionNumber: second ? 3 : 2,
+      questionCount: 3,
+      manualQuestionIds: [ESSAY_ID, SECOND_ID],
+      items: [
+        {
+          attemptId: ATTEMPT_ID,
+          studentId: paper.student.id,
+          studentName: "Nguyễn Đức Minh",
+          attemptNo: 1,
+          answer: { type: "text" as const, value: "I usually wake up at six." },
+          manualScore: second ? 4 : null,
+          graderComment: null,
+        },
+        {
+          attemptId: OTHER_ATTEMPT,
+          studentId: "018f0000-0000-7000-8000-0000000000e2",
+          studentName: "Phạm Gia Hân",
+          attemptNo: 1,
+          answer: { type: "text" as const, value: "I wake up 6 o'clock." },
+          manualScore: null,
+          graderComment: null,
+        },
+      ],
+    };
+  }
+
+  beforeEach(() => {
+    server.use(
+      http.get(`${BASE}/teacher/assignments/${ASSIGNMENT_ID}/answers`, ({ request }) =>
+        contractJson(
+          "/teacher/assignments/{id}/answers",
+          "get",
+          200,
+          answersOf(new URL(request.url).searchParams.get("questionId") ?? ""),
+        ),
+      ),
+    );
+  });
+
+  const box = (who: string) =>
+    screen.getByRole("spinbutton", { name: `Điểm cho ${who}` });
+
+  it("puts focus on the first answer still to mark when save-and-next leaves from a row", async () => {
+    const user = renderReview();
+    await user.click(await screen.findByRole("button", { name: "Chấm theo câu hỏi" }));
+    await screen.findByText("Unit 5 · Câu 2 / 3");
+
+    await user.type(box("Học viên 01"), "3{Control>}{Enter}{/Control}");
+
+    await waitFor(() => expect(grades).toHaveLength(1));
+    expect(await screen.findByText("Unit 5 · Câu 3 / 3")).toBeVisible();
+    await waitFor(() => expect(box("Học viên 02")).toHaveFocus());
+  });
+
+  it("lands on the first answer too when another row's unsaved mark is asked about first", async () => {
+    const user = renderReview();
+    await user.click(await screen.findByRole("button", { name: "Chấm theo câu hỏi" }));
+    await screen.findByText("Unit 5 · Câu 2 / 3");
+
+    await user.type(box("Học viên 02"), "2");
+    await user.type(box("Học viên 01"), "3{Control>}{Enter}{/Control}");
+    const ask = await screen.findByRole("dialog", {
+      name: "Rời trang khi điểm chưa lưu?",
+    });
+    await user.click(within(ask).getByRole("button", { name: "Rời đi" }));
+
+    expect(await screen.findByText("Unit 5 · Câu 3 / 3")).toBeVisible();
+    await waitFor(() => expect(box("Học viên 02")).toHaveFocus());
+  });
+
+  it("leaves focus on the heading's Next question when that is what was pressed", async () => {
+    const user = renderReview();
+    await user.click(await screen.findByRole("button", { name: "Chấm theo câu hỏi" }));
+    await screen.findByText("Unit 5 · Câu 2 / 3");
+    const next = screen.getByRole("button", { name: "Câu tiếp theo" });
+
+    await user.click(next);
+
+    expect(await screen.findByText("Unit 5 · Câu 3 / 3")).toBeVisible();
+    await screen.findByRole("spinbutton", { name: "Điểm cho Học viên 02" });
+    expect(next).toHaveFocus();
   });
 });

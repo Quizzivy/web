@@ -22,6 +22,7 @@ import {
   moveQuestionHandler,
   type GroupMoveDraft,
 } from "@tests/support/groupMove";
+import { installIntersectionObserver } from "@tests/support/intersection";
 import { storedGroupBundle } from "@tests/support/storedGroupBundle";
 import { viewport } from "@tests/support/viewport";
 import "@/lib/i18n";
@@ -998,6 +999,230 @@ describe("moving a question in the builder", () => {
       "Câu hỏi khác với bản gốc nên được lưu thành câu hỏi mới trong ngân hàng.",
     ])
       expect(screen.queryByText(message)).toBeNull();
+  });
+
+  describe("“From question bank” in a group's pane", () => {
+    const BANK_ONE = "018f0000-0000-7000-8000-0000000004f1";
+    const BANK_TWO = "018f0000-0000-7000-8000-0000000004f2";
+    const copyOf = new Map([
+      [BANK_ONE, "018f0000-0000-7000-8000-0000000004f3"],
+      [BANK_TWO, "018f0000-0000-7000-8000-0000000004f4"],
+    ]);
+    const ADD_ROW = "Thêm câu hỏi cho bài đọc này";
+    type OutlinePatch = {
+      expectedUpdatedAt: string;
+      sections: { id: string; units: { kind: "question" | "group"; id: string }[] }[];
+    };
+    let patches: OutlinePatch[];
+
+    const banked = (id: string, prompt: string) => ({
+      ...standalone,
+      id,
+      prompt,
+      usedInTests: 0,
+    });
+
+    beforeEach(() => {
+      installIntersectionObserver();
+      patches = [];
+      draft.copy = (questionId) =>
+        member(copyOf.get(questionId)!, `Copy of ${questionId.slice(-2)}`);
+      server.use(
+        http.get(`${BASE}/teacher/questions`, () =>
+          contractJson("/teacher/questions", "get", 200, {
+            facets: {
+              levels: { pre_a1: 0, a1: 0, a2: 0, b1: 0, b2: 0, c1: 0, c2: 0 },
+              skills: {
+                grammar: 0,
+                vocabulary: 0,
+                reading: 0,
+                listening: 0,
+                writing: 0,
+                speaking: 0,
+              },
+              all: 3,
+              single_choice: 0,
+              multiple_choice: 0,
+              true_false: 0,
+              fill_blank: 0,
+              short_answer: 3,
+              tfng: 0,
+              matching: 0,
+              essay: 0,
+            },
+            tags: [],
+            bankTotal: 3,
+            items: [
+              banked(QUESTION_ID, standalone.prompt),
+              banked(BANK_ONE, "Bank one"),
+              banked(BANK_TWO, "Bank two"),
+            ],
+            page: 1,
+            pageSize: 50,
+            total: 3,
+          }),
+        ),
+        http.get(`${BASE}/teacher/questions/:id`, ({ params }) =>
+          contractJson("/teacher/questions/{id}", "get", 200, {
+            ...standalone,
+            id: String(params.id),
+          }),
+        ),
+        http.patch(`${BASE}/teacher/tests/:id`, async ({ request }) => {
+          const body = (await request.json()) as OutlinePatch;
+          patches.push(body);
+          if (body.expectedUpdatedAt !== draft.test.updatedAt)
+            return HttpResponse.json(
+              { error: { code: "STALE_WRITE", message: "Đề đã được sửa ở nơi khác." } },
+              { status: 409 },
+            );
+          draft.test = {
+            ...draft.test,
+            updatedAt: new Date(Date.parse(draft.test.updatedAt) + 1000).toISOString(),
+            sections: draft.test.sections.map((section) => {
+              const sent = body.sections.find((item) => item.id === section.id);
+              return sent
+                ? {
+                    ...section,
+                    units: sent.units,
+                    questionIds: sent.units
+                      .filter((unit) => unit.kind === "question")
+                      .map((unit) => unit.id),
+                  }
+                : section;
+            }),
+          };
+          return contractJson("/teacher/tests/{id}", "patch", 200, draft.test);
+        }),
+      );
+    });
+
+    async function openPicker(user: ReturnType<typeof userEvent.setup>) {
+      const named = await screen.findAllByRole(
+        "button",
+        { name: "Reading club" },
+        { timeout: 5000 },
+      );
+      await user.click(named.find((button) => !button.hasAttribute("aria-expanded"))!);
+      const row = (
+        await screen.findByText(ADD_ROW, undefined, { timeout: 5000 })
+      ).closest("div")!;
+      await user.click(
+        within(row).getByRole("button", { name: "Từ ngân hàng câu hỏi" }),
+      );
+      return screen.findByRole("dialog", { name: "Thêm từ ngân hàng câu hỏi" });
+    }
+
+    it("adds the picked questions to the section, then has the server copy each into the group, in the order picked", async () => {
+      const user = renderBuilder();
+      const picker = await openPicker(user);
+
+      expect(
+        within(picker).getByText("Chọn câu hỏi để thêm vào Reading club."),
+      ).toBeVisible();
+      expect(
+        within(picker).queryByRole("button", { name: /Chọn cả/ }),
+      ).not.toBeInTheDocument();
+      await user.click(await within(picker).findByText("Bank two"));
+      await user.click(within(picker).getByText("Bank one"));
+      await user.click(within(picker).getByRole("button", { name: "Thêm 2 câu hỏi" }));
+
+      await waitFor(() => expect(draft.requests).toHaveLength(2), { timeout: 5000 });
+      expect(writes).toEqual([
+        `PATCH /teacher/tests/${TEST_ID}`,
+        `POST /teacher/tests/${TEST_ID}/questions/move`,
+        `POST /teacher/tests/${TEST_ID}/questions/move`,
+      ]);
+      expect(patches[0]!.sections[0]!.units).toEqual([
+        { kind: "question", id: QUESTION_ID },
+        { kind: "group", id: GROUP_ID },
+        { kind: "question", id: BANK_TWO },
+        { kind: "question", id: BANK_ONE },
+      ]);
+      expect(draft.requests).toEqual([
+        {
+          expectedUpdatedAt: "2026-01-01T00:00:01.000Z",
+          questionId: BANK_TWO,
+          to: { sectionId: SECTION_ID, groupId: GROUP_ID, index: 1 },
+          expectedGroupRevisions: [{ groupId: GROUP_ID, revision: 1 }],
+        },
+        {
+          expectedUpdatedAt: "2026-01-01T00:00:02.000Z",
+          questionId: BANK_ONE,
+          to: { sectionId: SECTION_ID, groupId: GROUP_ID, index: 2 },
+          expectedGroupRevisions: [{ groupId: GROUP_ID, revision: 2 }],
+        },
+      ]);
+      expect(
+        draft.groups.get(GROUP_ID)!.bundle.group.members.map((item) => item.questionId),
+      ).toEqual([MEMBER_ID, copyOf.get(BANK_TWO), copyOf.get(BANK_ONE)]);
+      expect(draft.test.sections[0]!.units).toEqual([
+        { kind: "question", id: QUESTION_ID },
+        { kind: "group", id: GROUP_ID },
+      ]);
+
+      expect(
+        await screen.findByText(
+          "Đã sao chép 2 câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
+        ),
+      ).toBeVisible();
+      expect(
+        screen.queryByText(
+          "Đã sao chép câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
+        ),
+      ).toBeNull();
+      const group = document.querySelector<HTMLElement>(
+        `[data-outline-group="${GROUP_ID}"]`,
+      )!;
+      await waitFor(() =>
+        expect(
+          within(group)
+            .getAllByRole("button", { name: /member|Copy/ })
+            .map((button) => button.textContent),
+        ).toEqual([
+          expect.stringMatching(/^2Group member/),
+          expect.stringMatching(/^3Copy of f2/),
+          expect.stringMatching(/^4Copy of f1/),
+        ]),
+      );
+      for (const id of [BANK_ONE, BANK_TWO])
+        expect(document.querySelector(`[data-outline-question="${id}"]`)).toBeNull();
+    }, 15_000);
+
+    it("leaves a question the server refuses, and those after it, in the section and says why", async () => {
+      const user = renderBuilder();
+      const picker = await openPicker(user);
+      await user.click(await within(picker).findByText("Bank one"));
+      await user.click(within(picker).getByText("Bank two"));
+      server.use(
+        http.post(`${BASE}/teacher/tests/:id/questions/move`, () =>
+          moveFailure(422, "VALIDATION_FAILED", "Bài đã đầy.", {
+            rule: "group_limits",
+          }),
+        ),
+      );
+      await user.click(within(picker).getByRole("button", { name: "Thêm 2 câu hỏi" }));
+
+      expect(
+        await screen.findByText(
+          "Bài này đã đầy: tối đa 200 câu hỏi và 4 MB nội dung.",
+          undefined,
+          { timeout: 5000 },
+        ),
+      ).toBeVisible();
+      expect(writes).toEqual([
+        `PATCH /teacher/tests/${TEST_ID}`,
+        `POST /teacher/tests/${TEST_ID}/questions/move`,
+      ]);
+      expect(screen.queryByText(/Đã sao chép/)).toBeNull();
+      for (const id of [BANK_ONE, BANK_TWO])
+        expect(
+          document.querySelector(`[data-outline-question="${id}"]`),
+        ).not.toBeNull();
+      expect(
+        draft.groups.get(GROUP_ID)!.bundle.group.members.map((item) => item.questionId),
+      ).toEqual([MEMBER_ID]);
+    }, 15_000);
   });
 
   it("asks for a reload when the test or a group changed elsewhere, and keeps the outline", async () => {

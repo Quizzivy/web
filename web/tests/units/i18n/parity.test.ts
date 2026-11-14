@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import vi from "@/lib/i18n/locales/vi.json";
 import en from "@/lib/i18n/locales/en.json";
+import i18n from "@/lib/i18n";
 import { formatDateTime, countdown, APP_TIME_ZONE } from "@/lib/i18n/datetime";
 
 /** Flatten to dotted key paths so a nested drift is caught, not just a top-level one. */
@@ -11,18 +12,53 @@ function keyPaths(obj: unknown, prefix = ""): string[] {
   );
 }
 
+/**
+ * Vietnamese has one plural category: `Intl.PluralRules("vi")` answers
+ * "other" for every count, so i18next reads a `vi` key ending in `_other` and
+ * never one ending in `_one`. `vi.json` rides in a student's first download
+ * (tests/integration/content/bundle.test.ts), so it holds the form that is
+ * read and no other. English keeps both.
+ */
 describe("locale parity", () => {
   const viKeys = keyPaths(vi).sort((a, b) => a.localeCompare(b));
   const enKeys = keyPaths(en).sort((a, b) => a.localeCompare(b));
 
-  it("has the same keys in vi and en", () => {
+  it("has the same keys in vi and en, but for the singular form vi never reads", () => {
     expect(
-      enKeys.filter((k) => !viKeys.includes(k)),
+      enKeys.filter((k) => !k.endsWith("_one") && !viKeys.includes(k)),
       "keys in en but missing from vi",
+    ).toEqual([]);
+    expect(
+      enKeys.filter(
+        (k) => k.endsWith("_one") && !viKeys.includes(k.replace(/_one$/, "_other")),
+      ),
+      "plural keys in en whose _other form is missing from vi",
     ).toEqual([]);
     expect(
       viKeys.filter((k) => !enKeys.includes(k)),
       "keys in vi but missing from en",
+    ).toEqual([]);
+  });
+
+  it("keeps no _one form in vi, where i18next reads _other for every count", () => {
+    for (const count of [0, 1, 2, 5, 21, 100])
+      expect(new Intl.PluralRules("vi").select(count)).toBe("other");
+    expect(viKeys.filter((k) => k.endsWith("_one"))).toEqual([]);
+  });
+
+  it("reads the one Vietnamese form for a count of one, and each English form for its count", () => {
+    const key = "imports.review.questionsCount";
+    expect(i18n.t(key, { count: 1, lng: "vi" })).toBe("1 câu hỏi");
+    expect(i18n.t(key, { count: 3, lng: "vi" })).toBe("3 câu hỏi");
+    expect(i18n.t(key, { count: 1, lng: "en" })).toBe("1 question");
+    expect(i18n.t(key, { count: 3, lng: "en" })).toBe("3 questions");
+  });
+
+  it("gives English both forms of every plural", () => {
+    expect(
+      enKeys.filter(
+        (k) => k.endsWith("_other") && !enKeys.includes(k.replace(/_other$/, "_one")),
+      ),
     ).toEqual([]);
   });
 

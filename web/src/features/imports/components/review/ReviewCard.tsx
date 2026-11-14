@@ -69,6 +69,8 @@ export function OpenPill({
  * its body under a rule. `headerId` is the header button's
  * `data-question-id`, the anchor the workspace scrolls and focuses. A card
  * with nothing open shows a check; `dimmed` fades a closed excluded card.
+ * `select` is the card's own control for a selection, drawn before the header
+ * button and outside it, so pressing it never opens the card.
  */
 export function ReviewCard({
   cardId,
@@ -81,6 +83,7 @@ export function ReviewCard({
   strike = false,
   meta,
   findings,
+  select,
   onToggle,
   children,
 }: Readonly<{
@@ -94,6 +97,7 @@ export function ReviewCard({
   strike?: boolean;
   meta?: string;
   findings: readonly ImportFinding[];
+  select?: ReactNode;
   onToggle: () => void;
   children?: ReactNode;
 }>) {
@@ -103,17 +107,21 @@ export function ReviewCard({
     <div
       data-card={cardId}
       className={cn(
-        "bg-card rounded-xl border transition-colors duration-150",
+        "bg-card grid grid-cols-[auto_minmax(0,1fr)] items-center rounded-xl border transition-colors duration-150",
         open ? "border-ring shadow-lg" : "shadow-card",
         dimmed && !open && "opacity-60",
       )}
     >
+      {select === undefined ? null : <span className="flex pl-3">{select}</span>}
       <button
         type="button"
         data-question-id={headerId}
         aria-expanded={open}
         onClick={onToggle}
-        className="flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left"
+        className={cn(
+          "flex w-full cursor-pointer items-center gap-2.5 rounded-xl px-3 py-2.5 text-left",
+          select === undefined ? "col-span-2" : "col-start-2 pl-2.5",
+        )}
       >
         <span className="bg-muted grid h-6.5 min-w-7 flex-none place-items-center rounded-[7px] px-1.5 text-xs font-semibold tabular-nums">
           {badge}
@@ -138,7 +146,7 @@ export function ReviewCard({
         ) : null}
         <Chevron aria-hidden="true" className="text-muted-fg size-3.75 flex-none" />
       </button>
-      {open ? children : null}
+      {open ? <div className="col-span-2 min-w-0">{children}</div> : null}
     </div>
   );
 }

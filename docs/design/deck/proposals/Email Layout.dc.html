@@ -226,7 +226,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 </x-dc>
 <script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
 const ORG = 'Quizzivy English Centre';
-const APP = 'https://app.quizzivy.com';
+// The web's two hosts since v0.13.5: students' pages at the root of one, the staff's under /teacher on the other.
+const MY = 'https://my.quizzivy.com', PORTAL = 'https://portal.quizzivy.com';
 const FONT = "-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,Helvetica,Arial,sans-serif";
 // Email colours: [use, light, dark, deck token]
 const COLOURS = [
@@ -255,7 +256,7 @@ const MAILS = {
     pre: ['Liên kết chỉ dùng được một lần và hết hạn sau 24 giờ.', 'The link works once and expires after 24 hours.'],
     head: ['Đặt mật khẩu cho tài khoản của bạn', 'Set a password for your account'],
     body: [['{org} đã tạo cho bạn một tài khoản Quizzivy. Hãy mở liên kết dưới đây để đặt mật khẩu và đăng nhập:', '{org} has created a Quizzivy account for you. Open the link below to set a password and sign in:']],
-    cta: ['Đặt mật khẩu', 'Set a password'], link: APP + '/set-password#token=3fQx…K9',
+    cta: ['Đặt mật khẩu', 'Set a password'], link: MY + '/set-password#token=3fQx…K9',
     notes: [['Liên kết chỉ dùng được một lần và hết hạn sau 24 giờ. Nếu liên kết đã hết hạn, hãy nhờ trung tâm gửi liên kết mới.', 'The link works once and expires after 24 hours. If it has expired, ask your centre for a new one.'], ['Nếu bạn không chờ thư này, hãy bỏ qua nó.', 'If you were not expecting this email, you can ignore it.']] },
   due: { tpl: 'assignment_due_soon', to: STUDENT, prefs: true, status: 'New',
     subject: ['Còn 24 giờ để nộp “' + TEST + '”', '24 hours left to hand in “' + TEST + '”'],
@@ -263,20 +264,20 @@ const MAILS = {
     head: ['Còn 24 giờ để nộp bài', '24 hours left to hand in'],
     body: [['Bạn chưa nộp bài kiểm tra dưới đây. Bài sẽ đóng khi hết hạn.', 'You have not handed in the test below. It closes at the due time.']],
     facts: [[L.test, TEST], [L.cls, CLS], [['Hạn nộp', 'Due'], ['20:00 thứ Sáu, 13/11/2026', 'Friday 13 Nov 2026, 20:00']], [['Thời gian làm bài', 'Time allowed'], ['60 phút', '60 minutes']]],
-    cta: ['Mở bài kiểm tra', 'Open the test'], link: APP + '/app/assignments/0193a7c2', notes: [] },
+    cta: ['Mở bài kiểm tra', 'Open the test'], link: MY + '/assignments/0193a7c2', notes: [] },
   result: { tpl: 'result_ready', to: STUDENT, prefs: true, status: 'New',
     subject: ['Đã có kết quả “' + TEST + '”', 'Your result for “' + TEST + '” is ready'],
     pre: ['Mở Quizzivy để xem điểm và nhận xét.', 'Open Quizzivy to see your score and feedback.'],
     head: ['Đã có kết quả bài kiểm tra', 'Your result is ready'],
     body: [['Giáo viên đã chấm xong bài kiểm tra dưới đây. Thư này không ghi điểm; bạn xem điểm và nhận xét trong Quizzivy.', 'Your teacher has finished grading the test below. This email does not show the score; you can see it, with any feedback, in Quizzivy.']],
     facts: [[L.test, TEST], [L.cls, CLS], [['Nộp lúc', 'Handed in'], ['19:42 thứ Năm, 12/11/2026', 'Thursday 12 Nov 2026, 19:42']]],
-    cta: ['Xem kết quả', 'See your result'], link: APP + '/app/results/0193a9f1', notes: [] },
+    cta: ['Xem kết quả', 'See your result'], link: MY + '/attempts/0193a9f1/result', notes: [] },
   message: { tpl: 'message_received', to: STUDENT, prefs: true, status: 'New',
     subject: ['Tin nhắn mới từ ' + TEACHER, 'New message from ' + TEACHER],
     pre: ['Trong lớp ' + CLS + '. Mở Quizzivy để đọc.', 'In ' + CLS + '. Open Quizzivy to read it.'],
     head: ['Bạn có tin nhắn mới', 'You have a new message'],
     body: [[TEACHER + ' đã nhắn cho bạn trong lớp ' + CLS + '. Tin nhắn chỉ đọc được trong Quizzivy, nên thư này không ghi nội dung.', TEACHER + ' sent you a message in ' + CLS + '. Messages can only be read in Quizzivy, so this email does not show it.']],
-    cta: ['Mở tin nhắn', 'Open the message'], link: APP + '/app/messages/teachers/0192c4d7', notes: [] },
+    cta: ['Mở tin nhắn', 'Open the message'], link: MY + '/messages/teachers/0192c4d7', notes: [] },
   shared: { tpl: 'content_shared', to: TEACHER, prefs: true, status: 'New',
     subject: [DUC + ' đã chia sẻ một bộ câu hỏi với bạn', DUC + ' shared a question set with you'],
     pre: ['“Collocations · B1”, quyền Có thể dùng.', '“Collocations · B1”, Can use.'],
@@ -284,21 +285,21 @@ const MAILS = {
     body: [[DUC + ' đã chia sẻ bộ câu hỏi dưới đây với bạn. Bộ vẫn thuộc về ' + DUC + '.', DUC + ' shared the question set below with you. It still belongs to ' + DUC + '.']],
     facts: [[['Tên', 'Name'], 'Collocations · B1'], [['Quyền', 'Access'], ['Có thể dùng', 'Can use']], [['Số câu hỏi', 'Questions'], '48']],
     quoteBy: ['Lời nhắn của ' + DUC, 'Message from ' + DUC], quote: ['Mình gom các câu collocation cho lớp B1, bạn dùng thử nhé.', 'I put the B1 collocation questions together. Try them with your class.'],
-    cta: ['Mở Được chia sẻ với tôi', 'Open Shared with me'], link: APP + '/teacher/shared-with-me', notes: [] },
+    cta: ['Mở Được chia sẻ với tôi', 'Open Shared with me'], link: PORTAL + '/teacher/shared-with-me', notes: [] },
   flagged: { tpl: 'attempt_flagged', to: TEACHER, prefs: true, status: 'New',
     subject: ['Một lượt làm bài bị gắn cờ: Lê Hoàng Nam', 'An attempt was flagged: Lê Hoàng Nam'],
     pre: ['Rời trang làm bài 3 lần trong “' + TEST + '”.', 'Left the test 3 times in “' + TEST + '”.'],
     head: ['Một lượt làm bài bị gắn cờ', 'An attempt was flagged'],
     body: [['Học viên rời trang làm bài nhiều hơn số lần đề cho phép. Bài vẫn được nộp; bạn xem lại rồi quyết định.', 'The student left the test more often than the test allows. The attempt was still handed in; review it and decide.']],
     facts: [[L.student, 'Lê Hoàng Nam'], [['Đề thi', 'Test'], TEST], [L.cls, CLS], [['Ghi nhận', 'Recorded'], ['Rời trang làm bài 3 lần', 'Left the test 3 times']]],
-    cta: ['Xem bài làm', 'Review the attempt'], link: APP + '/teacher/assignments/0193a7c2/attempts/0193a8e0', notes: [] },
+    cta: ['Xem bài làm', 'Review the attempt'], link: PORTAL + '/teacher/attempts/0193a8e0', notes: [] },
   weekly: { tpl: 'weekly_summary', to: TEACHER, prefs: true, status: 'New',
     subject: ['Tổng kết tuần 2/11 – 8/11', 'Weekly summary, 2 – 8 Nov'],
     pre: ['3 lớp, 41 bài nộp, 6 câu trả lời chờ chấm.', '3 classes, 41 submissions, 6 answers to grade.'],
     head: ['Tuần qua ở các lớp của bạn', 'Last week in your classes'],
     body: [['Từ thứ Hai 2/11 đến Chủ nhật 8/11.', 'Monday 2 Nov to Sunday 8 Nov.']],
     classes: [[CLS, 18, 72, 4, 1], ['IELTS Foundation A', 15, 64, 2, 0], ['TOEIC 600 Weekend', 8, 81, 0, 0]],
-    cta: ['Mở trang Tổng quan', 'Open the dashboard'], link: APP + '/teacher', notes: [] }
+    cta: ['Mở trang Tổng quan', 'Open the dashboard'], link: PORTAL + '/teacher', notes: [] }
 };
 const ORDER = ['invite', 'due', 'result', 'message', 'shared', 'flagged', 'weekly'];
 const NAMES = { invite: 'Account invite', due: 'Due soon', result: 'Result ready', message: 'New message', shared: 'Shared with you', flagged: 'Flagged attempt', weekly: 'Weekly summary' };
@@ -319,7 +320,7 @@ const PARTS = [
   ['Facts', 'A quieter block with 12px corners; on each row a quiet label and the value in bold', 'At most five rows, set apart by space. The label column is 160px, 116px at 360. Dates are written in full in the reader’s language.'],
   ['Quote', 'The same block: whose words they are, then the words in quotation marks', 'Only for a sharer’s own message.'],
   ['Class list', 'The same block: a name, then one line of counts', 'Only in the weekly summary. One entry for each class with activity.'],
-  ['Button', '44px tall, 8px corners, 16px bold', 'One per email, with a verb and the thing it opens. It leads to an app route on the app’s own address.'],
+  ['Button', '44px tall, 8px corners, 16px bold', 'One per email, with a verb and the thing it opens. It leads to a route on the reader’s own host: my.quizzivy.com for a student, portal.quizzivy.com for staff.'],
   ['Link line', '13px, the address in full, breaking anywhere', 'Always present under the button.'],
   ['Notes', '14px, quiet', 'What the reader must know about the link: that it works once, when it expires, what to do if the email is unexpected.'],
   ['Footer', '13px, quiet, on the ground under the panel', 'Why the reader got it; the settings link for a notification email; the centre’s name and “sent with Quizzivy”. Space sets it apart, not a line.'],
@@ -405,7 +406,7 @@ class Component extends DCLogic {
       .concat([m.cta + ':', m.link, ''])
       .concat(m.notes.flatMap(n => [n, '']))
       .concat(['--', m.why])
-      .concat(m.hasPrefs ? [m.prefs + ': ' + APP + (d.to === STUDENT ? '/app' : '/teacher') + '/settings/notifications'] : [])
+      .concat(m.hasPrefs ? [m.prefs + ': ' + (d.to === STUDENT ? MY : PORTAL + '/teacher') + '/settings/notifications'] : [])
       .concat([m.sent]);
     m.text = lines.join('\n');
 

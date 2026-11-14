@@ -1,0 +1,426 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R10 Learn · The student’s lesson · Proposal · 14 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The student’s lesson, for the kinds the deck does not draw</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws a student’s Lesson page once, for a reading: a pill, the title, the body, and “Mark as done” pinned to the bottom. R10 builds the page for five kinds (T-R10.16) and lists four of them for a drawing (DG-94). This page keeps the deck’s Lesson exactly as it is and draws the rest inside it: a video and a listening with a player and the teacher’s notes, flashcards and a test with one card and one button, a lesson opened while it is locked, the last lesson of a course, and the page loading and failing. Nothing in the deck’s Learn, Course, Flashcards, Test intro or Result screens changes, and no operation changes.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The deck’s page</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One page, the deck’s, with a different middle.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>The pill, the title, “Unit 2 · lesson 1 of 4”, the way back to the course and the button pinned to the bottom are the deck’s for every kind.</li>
+      <li><span style="color:var(--fg)">Only the middle changes:</span> a reading’s body, a player with notes under it, or one card.</li>
+      <li>The page keeps the deck’s own width, 720px in the middle of the screen. The one page frame of the teacher’s workspace (DG-205) is not the student’s.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">One button</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The button at the bottom is always the next thing to do.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>“Đánh dấu đã học” for a reading, a video and a listening, as the deck has it.</li>
+      <li><span style="color:var(--fg)">“Luyện 18 từ này” for flashcards, “Bắt đầu làm bài” or “Tiếp tục làm bài” for a test:</span> they open the deck’s Flashcards and Test screens, which bring the student back here.</li>
+      <li>Once the lesson is done the button is “Tiếp theo: …”, and on the course’s last lesson “Về khoá học”.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">When it cannot be shown</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">A reason and a way out, never a blank page.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>A lesson opened by its address while it is locked says why, in the words the course’s page uses, and leads back to the course.</li>
+      <li><span style="color:var(--fg)">A video that will not play</span> says so under the player, with “Thử lại”. The notes and the button stay.</li>
+      <li>Loading is the page’s own shape. A failed read is one sentence and “Thử lại”.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The lesson at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick the kind of lesson and its state in the bar above. The lesson’s own words stay in English, as the teacher wrote them. Everything without a number is the deck’s Lesson page.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px;line-height:1.5">
+            <header style="flex:none;height:60px;display:flex;align-items:center;gap:14px;padding:0 {{ f.padX }};border-bottom:1px solid var(--border);background:var(--bg)"><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span aria-label="{{ tx.back }}" style="width:36px;height:36px;flex:none;margin-left:-6px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:18px"></i></span><span style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ tx.barTitle }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.shell.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.shell.n }}</span></sc-if></sc-if></sc-if><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></span><span style="display:flex;align-items:center;gap:2px;margin-left:14px"><sc-for list="{{ sNav }}" as="n" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;font-size:14px;white-space:nowrap;color:var(--muted-fg)"><i class="icon-{{ n.icon }}" style="font-size:16px"></i>{{ n.label }}</span></sc-for></span></sc-if><span style="margin-left:auto;display:flex;align-items:center;gap:4px"><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-message-square" style="font-size:18px"></i></span><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-bell" style="font-size:18px"></i></span><span style="width:32px;height:32px;flex:none;margin-left:4px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;font-weight:600">BN</span></span></header>
+            <div style="flex:1;min-height:0;overflow:hidden;position:relative;padding:{{ f.mainPad }}">
+              <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                <sc-if value="{{ ls.ready }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ ls.hasHead }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:15px"></i>{{ ls.course }}</span></sc-if></sc-if><sc-if value="{{ ls.hasHead }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="display:flex;align-items:center;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;font-size:12.5px;color:{{ ls.pillFg }};background:{{ ls.pillBg }};border-radius:999px;padding:2px 9px"><i class="icon-{{ ls.icon }}" style="font-size:13px"></i>{{ ls.pill }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pill.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.pill.n }}</span></sc-if></sc-if></span><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ ls.title }}</div><span style="font-size:13px;color:var(--muted-fg)">{{ ls.where }}</span></div></sc-if><sc-if value="{{ ls.isReading }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:14px;font-size:16px;line-height:1.75"><p style="margin:0;text-wrap:pretty">{{ rd.p1 }}</p><div style="background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);overflow:hidden"><sc-for list="{{ rd.rules }}" as="lr" hint-placeholder-count="3"><div style="display:flex;gap:14px;padding:14px 16px;border-top:{{ lr.border }}"><span style="min-width:{{ f.ruleW }};font-size:14px;font-weight:600;color:{{ lr.color }}">{{ lr.k }}</span><span style="font-size:14.5px;line-height:1.6">{{ lr.v }}</span></div></sc-for></div><p style="margin:0;text-wrap:pretty">{{ rd.p2 }}</p><div style="padding:14px 16px;border-radius:12px;background:var(--accent-soft);font-size:14.5px;line-height:1.6"><span style="display:block;font-weight:600;margin-bottom:4px">{{ rd.tryTitle }}</span>{{ rd.tryText }}</div></div></sc-if><sc-if value="{{ ls.isVideo }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:flex-start;gap:10px"><div style="position:relative;flex:1;min-width:0;aspect-ratio:16/9;border-radius:14px;background:#0c1210;display:grid;place-items:center;overflow:hidden"><sc-if value="{{ md.plays }}" hint-placeholder-val="{{ true }}"><span style="width:56px;height:56px;border-radius:50%;background:rgba(255,255,255,.16);display:grid;place-items:center;color:#fff"><i class="icon-play" style="font-size:24px"></i></span></sc-if><sc-if value="{{ md.broken }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;align-items:center;gap:8px;color:rgba(255,255,255,.72);font-size:13px"><i class="icon-video-off" style="font-size:26px"></i></span></sc-if><div style="position:absolute;left:0;right:0;bottom:0;display:flex;align-items:center;gap:10px;padding:8px 12px;background:linear-gradient(transparent,rgba(0,0,0,.6));color:#fff;font-size:12px;font-variant-numeric:tabular-nums"><i class="icon-play" style="font-size:14px"></i><span style="white-space:nowrap">0:00 / {{ md.len }}</span><span style="flex:1;height:3px;border-radius:3px;background:rgba(255,255,255,.3)"></span><i class="icon-volume-2" style="font-size:14px"></i><i class="icon-maximize" style="font-size:14px"></i></div></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.player.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.player.n }}</span></sc-if></sc-if></div><sc-if value="{{ md.broken }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;align-items:center;gap:10px;flex-wrap:wrap;padding:10px 14px;border-radius:12px;background:var(--danger-soft);font-size:13.5px"><i class="icon-circle-alert" style="font-size:16px;color:var(--danger-ink);flex:none"></i><span style="flex:1 1 180px;min-width:0;text-wrap:pretty">{{ tx.videoFailed }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;font-weight:500;white-space:nowrap"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.broken.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.broken.n }}</span></sc-if></sc-if></div></sc-if></div></sc-if><sc-if value="{{ ls.isAudio }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px"><div style="flex:1;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:14px 16px"><span style="display:flex;align-items:center;gap:10px;height:40px;padding:0 14px;border-radius:999px;background:var(--muted);font-size:12.5px;font-variant-numeric:tabular-nums"><i class="icon-play" style="font-size:15px"></i><span style="white-space:nowrap">0:00 / {{ md.len }}</span><span style="flex:1;height:3px;border-radius:3px;background:var(--border)"></span><i class="icon-volume-2" style="font-size:15px"></i></span></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.player.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.player.n }}</span></sc-if></sc-if></div></sc-if><sc-if value="{{ ls.hasMedia }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ md.hasNotes }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:14px;font-size:16px;line-height:1.75"><sc-for list="{{ md.notes }}" as="np" hint-placeholder-count="2"><p style="margin:0;text-wrap:pretty">{{ np }}</p></sc-for></div></sc-if></sc-if><sc-if value="{{ ls.isCard }}" hint-placeholder-val="{{ false }}"><div style="background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px;display:flex;gap:16px;align-items:center;flex-wrap:wrap"><span style="width:48px;height:48px;border-radius:12px;display:grid;place-items:center;flex:none;background:{{ kc.tileBg }};color:{{ kc.tileFg }}"><i class="icon-{{ kc.tileIcon }}" style="font-size:22px"></i></span><span style="flex:1 1 220px;min-width:0"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:17px;font-weight:600;line-height:1.35">{{ kc.title }}<sc-if value="{{ kc.hasState }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:500;white-space:nowrap;background:{{ kc.stBg }};color:{{ kc.stFg }}"><span style="width:6px;height:6px;flex:none;border-radius:50%;background:{{ kc.stDot }}"></span>{{ kc.state }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.card.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.card.n }}</span></sc-if></sc-if></span><span style="display:block;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ kc.sub }}</span></span><sc-if value="{{ kc.hasScore }}" hint-placeholder-val="{{ false }}"><span style="display:flex;flex-direction:column;align-items:flex-end;gap:4px;min-width:96px"><span style="font-size:20px;font-weight:600;font-variant-numeric:tabular-nums;white-space:nowrap">{{ kc.score }}</span><span style="width:96px"><span style="display:block;height:6px;border-radius:6px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ kc.pct }};background:{{ kc.barColor }}"></span></span></span></span></sc-if><sc-if value="{{ kc.hasLink }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:10px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500;white-space:nowrap">{{ kc.link }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.link.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.link.n }}</span></sc-if></sc-if></span></sc-if></div></sc-if><sc-if value="{{ ls.isLocked }}" hint-placeholder-val="{{ false }}"><div style="background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:28px 22px;display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center"><span style="width:52px;height:52px;border-radius:14px;background:var(--muted);color:var(--muted-fg);display:grid;place-items:center"><i class="icon-lock" style="font-size:24px"></i></span><span style="display:flex;align-items:center;gap:8px;font-size:20px;font-weight:600">{{ tx.lockedTitle }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.locked.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.locked.n }}</span></sc-if></sc-if></span><span style="max-width:44ch;font-size:14px;color:var(--muted-fg);text-wrap:pretty">{{ lk.reason }}</span><span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:42px;padding:0 18px;margin-top:6px;border-radius:10px;background:var(--primary);color:var(--primary-fg);font-size:14px;font-weight:600;white-space:nowrap">{{ tx.backCourse }}</span></div></sc-if><sc-if value="{{ bt.show }}" hint-placeholder-val="{{ true }}"><div style="padding:12px 0 4px;display:flex;align-items:center;gap:10px"><span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:48px;padding:0 18px;border-radius:10px;font-size:15px;font-weight:600;white-space:nowrap;flex:1;min-width:0;background:var(--primary);color:var(--primary-fg)"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis">{{ bt.label }}</span><sc-if value="{{ bt.arrow }}" hint-placeholder-val="{{ true }}"><i class="icon-arrow-right" style="font-size:17px;flex:none"></i></sc-if></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.button.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.button.n }}</span></sc-if></sc-if></div></sc-if></sc-if>
+                <sc-if value="{{ ls.loading }}" hint-placeholder-val="{{ false }}"><div role="status" aria-label="{{ tx.loading }}" style="display:flex;flex-direction:column;gap:18px"><div style="display:flex;flex-direction:column;gap:10px"><span style="display:block;height:22px;width:132px;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:26px;width:min(440px,86%);border-radius:6px;background:var(--muted)"></span><span style="display:block;height:12px;width:150px;border-radius:6px;background:var(--muted)"></span></div><div style="display:flex;flex-direction:column;gap:13px"><span style="display:block;height:13px;width:100%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:13px;width:96%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:13px;width:72%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:150px;border-radius:14px;background:var(--muted)"></span><span style="display:block;height:13px;width:100%;border-radius:6px;background:var(--muted)"></span><span style="display:block;height:13px;width:88%;border-radius:6px;background:var(--muted)"></span></div><div style="display:flex;justify-content:center"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.skeleton.n }}</span></sc-if></sc-if></div></div></sc-if>
+                <sc-if value="{{ ls.failed }}" hint-placeholder-val="{{ false }}"><div style="border:1px dashed var(--border);border-radius:14px;background:var(--card);display:flex;flex-direction:column;align-items:center;gap:12px;text-align:center;padding:44px 18px"><span style="max-width:44ch;font-size:14px;color:var(--muted-fg);text-wrap:pretty">{{ tx.loadFailed }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.failed.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.failed.n }}</span></sc-if></sc-if></div></sc-if>
+              </div>
+            </div>
+            <sc-if value="{{ ts.show }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;left:50%;transform:translateX(-50%);bottom:{{ f.toastB }};z-index:9;display:flex;align-items:center;gap:10px;padding:12px 14px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);font-size:13.5px;white-space:nowrap;max-width:calc(100% - 32px)"><i class="icon-circle-check" style="font-size:16px;color:var(--success)"></i>{{ ts.text }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.toast.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal">{{ pin.toast.n }}</span></sc-if></sc-if></div></sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. On a phone the header is the deck’s for a detail page: a back arrow and “Bài học”, with no tab bar.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page does with it</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Student page, part by part, as it is. The right is this page. Nothing in the left column changes.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule of R10’s plan, or the part of the deck, behind it.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “Deck” and “Plan” say where the English comes from, “As today” that both strings are in the locale files now, “Earlier page” that the lesson editor’s page proposed them, and “New” that both are proposed here.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-R10.16</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each component the plan names takes from this page. No operation of T-R10.9 changes; two things it would need are listed.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// R10 · The student's lesson, for the kinds the deck does not draw. A proposal page for T-R10.16 (DG-94, DG-83).
+// [key, where, Tiếng Việt, English, where the English comes from]
+const STR = [
+  ['barTitle', 'Phone header', 'Bài học', 'Lesson', 'Deck'],
+  ['back', 'Phone header (accessible name)', 'Quay lại', 'Back', 'As today'],
+  ['kReading', 'Pill', 'Bài đọc', 'Reading', 'Earlier page'],
+  ['kVideo', 'Pill', 'Video', 'Video', 'Earlier page'],
+  ['kListening', 'Pill', 'Bài nghe', 'Listening', 'Earlier page'],
+  ['kFlashcards', 'Pill', 'Thẻ từ', 'Flashcards', 'Earlier page'],
+  ['kTest', 'Pill', 'Bài kiểm tra', 'Test', 'Earlier page'],
+  ['minutes', 'Pill', '{count} phút', '{count} min', 'As today'],
+  ['words', 'Pill', '{count} từ', '{count} words', 'As today'],
+  ['unitN', 'Heading', 'Chương {n}', 'Unit {n}', 'Earlier page'],
+  ['where', 'Heading', '{unit} · bài {a} trên {b}', '{unit} · lesson {a} of {b}', 'Earlier page'],
+  ['markDone', 'Button', 'Đánh dấu đã học', 'Mark as done', 'Deck'],
+  ['next', 'Button', 'Tiếp theo: {title}', 'Next: {title}', 'Deck'],
+  ['backCourse', 'Button, locked lesson', 'Về khoá học', 'Back to the course', 'New'],
+  ['doneToast', 'Toast', 'Đã học xong bài · {done} trên {total}', 'Lesson done · {done} of {total}', 'Deck'],
+  ['videoFailed', 'Video', 'Không phát được video. Kiểm tra mạng rồi thử lại.', 'The video could not be played. Check your connection and try again.', 'New'],
+  ['retry', 'Video, states', 'Thử lại', 'Retry', 'As today'],
+  ['practise', 'Flashcards', 'Luyện {count} từ này', 'Practise these {count} words', 'Plan'],
+  ['cardsTitle', 'Flashcards', '{count} từ cần luyện', '{count} words to practise', 'New'],
+  ['cardsSub', 'Flashcards', 'Bạn học xong bài khi đã ôn mỗi từ một lần.', 'The lesson is done once you have reviewed every word.', 'New'],
+  ['cardsDoneTitle', 'Flashcards', 'Đã ôn đủ {count} từ', 'All {count} words reviewed', 'New'],
+  ['cardsDoneSub', 'Flashcards', 'Các từ này sẽ quay lại trong Thẻ từ khi đến hạn ôn.', 'These words come back in Flashcards when they are due.', 'New'],
+  ['stNot', 'Test', 'Chưa làm', 'Not started', 'Deck'],
+  ['stProgress', 'Test', 'Đang làm', 'In progress', 'As today'],
+  ['stSubmitted', 'Test', 'Đã nộp', 'Submitted', 'As today'],
+  ['testNot', 'Test', 'Bài làm mở ở trang riêng. Nộp xong, bạn quay lại đây để học tiếp.', 'The test opens on its own page. Hand it in, then come back here to go on.', 'New'],
+  ['testProgress', 'Test', 'Câu trả lời của bạn đã được lưu, nhưng đồng hồ vẫn chạy.', 'Your answers are saved, but the timer keeps running.', 'Deck'],
+  ['testSubmitted', 'Test', 'Điểm sẽ hiện ở đây khi có.', 'Your score shows here when it is ready.', 'New'],
+  ['testGraded', 'Test', 'Xem từng câu trong trang kết quả.', 'See each question on the result page.', 'New'],
+  ['score', 'Test', '{earned} / {total}', '{earned} / {total}', 'As today'],
+  ['viewResult', 'Test', 'Xem kết quả', 'View result', 'New'],
+  ['start', 'Test, button', 'Bắt đầu làm bài', 'Start test', 'As today'],
+  ['resume', 'Test, button', 'Tiếp tục làm bài', 'Continue test', 'As today'],
+  ['lockedTitle', 'Locked lesson', 'Bài này chưa mở', 'This lesson is not open yet', 'New'],
+  ['lockOrder', 'Locked lesson', 'Hãy học xong các bài trước bài này.', 'Finish the lessons before this one first.', 'Deck'],
+  ['lockUnit', 'Locked lesson', 'Chương này mở khi bạn học xong chương trước.', 'This unit opens once you finish the one before it.', 'New'],
+  ['lockDate', 'Locked lesson', 'Chương này mở {date}.', 'This unit opens {date}.', 'Deck'],
+  ['loading', 'States', 'Đang tải…', 'Loading…', 'As today'],
+  ['loadFailed', 'States', 'Không tải được bài học.', 'Could not load the lesson.', 'Earlier page']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+// the deck's course for the student Bảo, “IELTS Reading Foundations”
+const COURSE = 'IELTS Reading Foundations';
+// [icon, name key, pill, ink, unit, lesson, of, title, minutes or words, the lesson after it]
+const KIND = {
+  reading: ['book-open-text', 'kReading', 'var(--info-soft)', 'var(--info-ink)', 2, 1, 4, 'How TFNG questions work', 10, 'Worked example: urban parks'],
+  video: ['circle-play', 'kVideo', 'var(--danger-soft)', 'var(--danger-ink)', 2, 2, 4, 'Worked example: urban parks', 9, 'Practice set A'],
+  listening: ['headphones', 'kListening', 'var(--warning-soft)', 'var(--warning-ink)', 3, 2, 3, 'Teacher walkthrough', 5, 'Headings practice'],
+  flashcards: ['layers', 'kFlashcards', 'var(--accent-soft)', 'var(--accent-ink)', 1, 3, 4, 'Unit 1 word list', 18, 'Check: skim a short article'],
+  test: ['file-text', 'kTest', 'var(--muted)', 'var(--fg)', 2, 3, 4, 'Practice set A', 0, 'Practice set B']
+};
+const KINDS = [['reading', 'Reading'], ['video', 'Video'], ['listening', 'Listening'], ['flashcards', 'Flashcards'], ['test', 'Test'], ['locked', 'Locked']];
+// the deck's own reading lesson, word for word
+const RD = {
+  p1: 'Each statement is about what the writer says, not about what is true in the real world. Your job is to find the part of the passage that talks about the same idea, then compare the two carefully.',
+  rules: [['True', 'The passage says the same thing, maybe in other words.', 'var(--success-ink)'], ['False', 'The passage says the opposite.', 'var(--danger-ink)'], ['Not given', 'The passage does not say anything about it.', 'var(--muted-fg)']],
+  p2: 'The hardest choice is usually between False and Not Given. Ask yourself: does the passage say the opposite? If yes, it is False. If the passage simply does not mention it, it is Not Given.',
+  tryTitle: 'Try it', tryText: 'Passage: "Most shop owners now support the scheme." Statement: "All shop owners support the scheme." The answer is False, because "most" contradicts "all".'
+};
+// the notes the lesson editor's page shows a teacher writing
+const VIDEO_NOTES = ['Watch how the teacher underlines the words that carry the meaning before looking at the passage.', 'Pause at 3:10 and try the second statement yourself.'];
+const AUDIO_NOTES = ['Listen once without the passage. Then listen again and note the three headings the teacher rules out, and why.'];
+
+const STATES = {
+  reading: [['open', 'As the deck draws it'], ['done', 'Marked as done'], ['last', 'The course’s last lesson'], ['loading', 'Loading'], ['error', 'Could not load']],
+  video: [['ready', 'With notes'], ['bare', 'No notes'], ['broken', 'Cannot play']],
+  listening: [['ready', 'With notes']],
+  flashcards: [['start', 'Not practised yet'], ['done', 'Practised']],
+  test: [['notStarted', 'Not started'], ['inProgress', 'In progress'], ['submitted', 'Handed in'], ['graded', 'Score shown']],
+  locked: [['order', 'Earlier lessons first'], ['unit', 'After the unit before'], ['date', 'On a date']]
+};
+const START = { reading: 'open', video: 'ready', listening: 'ready', flashcards: 'start', test: 'notStarted', locked: 'order' };
+const NOTES = {
+  'reading:open': [['pill', 'The deck’s pill, in Vietnamese: the kind’s icon and name, and the minutes.'], ['button', 'The deck’s button. It stays at the bottom of the screen while a long lesson scrolls.']],
+  'reading:done': [['toast', 'The deck’s toast, counting the course’s lessons. It sits above the button; at the deck’s 20px from the bottom it would lie on it.'], ['button', 'The button now leads on, by the next lesson’s whole title. The deck’s prototype writes “Next: Worked example”.']],
+  'reading:last': [['button', 'The course has no lesson after this one, so the button leads back to the course. The plan does not say what follows the last lesson.']],
+  'reading:loading': [['skeleton', 'The page’s own shape: a pill, a title, a line and the body. No button until the lesson is here.']],
+  'reading:error': [['failed', 'One sentence and “Thử lại”. The phone’s header keeps its way back.']],
+  'video:ready': [['pill', 'The pill takes the kind’s icon and colour from the tiles of the teacher’s course page: red for a video (Q1).'], ['player', 'The browser’s own player, as wide as the page, 16 by 9. Nothing plays by itself.'], ['button', 'The same button as a reading’s. It does not wait for the video to end.']],
+  'video:bare': [['player', 'A video with no notes is the player and the button.']],
+  'video:broken': [['broken', 'The video could not be fetched or played. One line under the player says so, and “Thử lại” asks for it again. The notes and the button stay.']],
+  'listening:ready': [['player', 'The browser’s own audio player, in a card. No play limit: a lesson is not a test.'], ['button', 'The same button.']],
+  'flashcards:start': [['card', 'One card, built like the summary on Learn’s Flashcards tab: how many words, and what finishes the lesson.'], ['button', 'The button opens the deck’s Flashcards screen for this lesson’s words. Its way back comes here.']],
+  'flashcards:done': [['card', 'Every word has been reviewed once, so the lesson is done. Nothing is pressed for it.'], ['button', 'The button leads on.']],
+  'test:notStarted': [['pill', 'A test lesson has no minutes of its own, so the pill is the kind alone.'], ['card', 'The test’s state, in the deck’s status pill, and one sentence.'], ['button', 'The product’s “Bắt đầu làm bài”. It opens the test’s own page, where the deck’s Start dialog asks before the timer runs.']],
+  'test:inProgress': [['card', 'An attempt is open. The sentence is the deck’s, from leaving a test.'], ['button', '“Tiếp tục làm bài” goes back into it.']],
+  'test:submitted': [['card', 'Handed in, so the lesson is done. The score is not shown yet: the teacher is still grading, or keeps it until the test closes.'], ['link', 'The result page shows what it may.'], ['button', 'The button leads on (Q2).']],
+  'test:graded': [['card', 'The score, as Grades draws one: the numbers and a bar.'], ['link', 'The way to each question.']],
+  'locked:order': [['locked', 'The lesson was opened by its address before the one before it was done. The sentence is the deck’s toast from the course’s page. The page names neither the lesson nor its course: a locked lesson answers with a reason and nothing else.']],
+  'locked:unit': [['locked', 'The lesson’s unit is still locked behind the unit before it.']],
+  'locked:date': [['locked', 'The unit opens on a date, written as the course’s page writes it.']]
+};
+const PIN_KEYS = ['shell', 'pill', 'player', 'broken', 'card', 'link', 'locked', 'skeleton', 'failed', 'button', 'toast'];
+// [part of the deck, what the deck draws, this page]
+const ADDS = [
+  ['Lesson: the heading', 'A pill “Reading · 10 min” in a reading’s colour, the title, “Unit 2 · lesson 1 of 4”, and on a desktop the way back to the course.', 'The same for every kind. The pill takes the kind’s icon and colour from the tiles of the teacher’s course page. A test has no minutes, so its pill is the kind alone.'],
+  ['Lesson: the title', '“How True / False / Not Given questions work” on the Lesson page, and “How TFNG questions work” on the course’s row for the same lesson.', 'One lesson has one title. The page uses the course row’s, which the teacher’s deck uses too.'],
+  ['Lesson: a reading’s body', 'Paragraphs, a table and a tinted box, at 16px.', 'Unchanged, word for word.'],
+  ['Lesson: “Mark as done”', 'A button that stays at the bottom. It turns into “Next: Worked example”, with the toast “Lesson done · 7 of 24”.', 'The same for a video and a listening. The toast sits above the button, not on it.'],
+  ['Lesson: video, listening, flashcards, test', 'Not drawn (DG-94).', 'A player and the notes; a player and the notes; one card and “Luyện 18 từ này”; one card with the test’s state and “Bắt đầu làm bài”.'],
+  ['Course: a lesson’s row', 'A state dot, the kind’s icon, “Reading · 10 min”, and “Up next”. A lesson that is not open yet gives the toast “Finish the lessons before this one first”.', 'Unchanged. An open row opens this page.'],
+  ['Course: a locked unit', 'A lock, with “Opens after Unit 2” or “Opens Mon 6 Oct”.', 'The same reasons, as a sentence, when a locked lesson is opened by its address.'],
+  ['Flashcards: the session', 'The card, the four grades, and “Done for today”.', 'Unchanged. A flashcards lesson opens it for the lesson’s words, and its way back comes here.'],
+  ['Test intro, Take test and Result', 'Drawn, with the Start dialog.', 'Unchanged. A test lesson opens the test’s own page.'],
+  ['The shell on a lesson', 'On a phone a back arrow and “Lesson”, with no tab bar. On a desktop the nav with nothing lit.', 'The same.'],
+  ['The last lesson of a course', 'Not drawn.', '“Về khoá học” where “Tiếp theo: …” would be.'],
+  ['A lesson opened while locked', 'Not drawn.', 'A card with the reason and the way back to the course.'],
+  ['A video that cannot play', 'Not drawn.', 'One line under the player, and “Thử lại”.'],
+  ['Loading and failing', 'Not drawn.', 'The page’s own shape; one sentence and “Thử lại”.'],
+  ['Vietnamese', 'English only (DG-20).', 'Every string, in the copy table below.']
+];
+// [when, what shows, rule]
+const WHENS = [
+  ['The lesson is a reading', 'The body, and “Đánh dấu đã học”.', 'The deck’s Lesson page.'],
+  ['The lesson is a video', 'The player, the notes when there are any, and “Đánh dấu đã học”.', 'T-R10.16: the browser’s video controls from a signed link, then the notes.'],
+  ['The lesson is a listening', 'An audio player in a card, the notes, and “Đánh dấu đã học”.', 'T-R10.16: plain audio controls, then the notes.'],
+  ['“Đánh dấu đã học” is pressed', 'The toast “Đã học xong bài · 7 trên 24”, and the button becomes “Tiếp theo: {title}”.', 'POST /app/lessons/{id}/complete answers done, total and next (T-R10.9).'],
+  ['The lesson was done before', '“Tiếp theo: {title}” from the start.', 'done on the lesson.'],
+  ['The lesson is the course’s last', '“Về khoá học” in the button’s place.', 'next is null. New on this page.'],
+  ['The video cannot be fetched or played', 'One line under the player, and “Thử lại”.', 'New on this page. The signed link can run out while the page stays open.'],
+  ['Flashcards, not every word reviewed', 'A card with the number of words, and “Luyện {n} từ này”.', 'T-R10.16. A flashcards lesson is done when every word of its list has been reviewed once.'],
+  ['Flashcards, every word reviewed', 'The card says so, and the button leads on.', 'done on the lesson.'],
+  ['A test, not started', '“Chưa làm”, one sentence, and “Bắt đầu làm bài”.', 'test.status is not_started. The button opens /app/assignments/{id}.'],
+  ['A test, an attempt open', '“Đang làm”, and “Tiếp tục làm bài”.', 'test.status is in_progress.'],
+  ['A test, handed in, no score to show', '“Đã nộp”, “Xem kết quả”, and the button leads on.', 'test.status is submitted, or graded with no score released.'],
+  ['A test, with its score', 'The score and a bar, “Xem kết quả”, and the button leads on.', 'test.score is present.'],
+  ['A locked lesson opened by its address', 'A card: “Bài này chưa mở”, the reason, “Về khoá học”.', '409 LESSON_LOCKED with its reason and opensOn (T-R10.9, T-R10.16).'],
+  ['A draft lesson, or a course out of reach', 'The product’s not-found page.', '404 (T-R10.9). Not drawn.'],
+  ['The lesson has not answered yet', 'The page’s own shape.', 'DG-83.'],
+  ['The lesson cannot load', '“Không tải được bài học.” and “Thử lại”.', 'DG-83.']
+];
+// [id, question, why it matters, default drawn, who decided it and when, the label when it was not the first default]
+const QUESTIONS = [
+  ['Q1 · The pill’s colour', 'Does the pill take the kind’s colour for every kind?', 'The deck’s pill for a reading is blue, the colour of a reading’s tile on the teacher’s course page. By the same rule a video’s is red and a listening’s amber. Red at the top of a page can read as a warning.', 'Yes: the kind’s colour, as the tiles have it.'],
+  ['Q2 · After a test is handed in', 'What is the button once the test is handed in?', 'The lesson is done at that moment, so the next one is open. The student may want the result first.', '“Tiếp theo: …” is the button, and “Xem kết quả” is in the card.'],
+  ['Q3 · “Đánh dấu đã học”', 'Is this the phrase for “Mark as done”?', 'It is on every reading, video and listening, and the teacher’s lesson editor quotes it. “Đánh dấu hoàn thành” and “Đã học xong” are the other candidates.', '“Đánh dấu đã học”.']
+];
+// [part in the plan, what it takes from this page]
+const HANDOFF = [
+  ['LessonPage', 'The deck’s Lesson page for every kind: the way back, the pill, the title, the line under it, the middle, the button. The skeleton, the failed state, and the card for a locked lesson.'],
+  ['LessonBody', 'A reading as the deck draws it. A video: the player at the page’s width, 16 by 9, then the notes; the line and “Thử lại” when it cannot play. A listening: the player in a card, then the notes. Flashcards and a test: one card.'],
+  ['MarkDoneBar', 'One button, by the lesson’s kind and state: “Đánh dấu đã học”, “Luyện {n} từ này”, “Bắt đầu làm bài”, “Tiếp tục làm bài”, “Tiếp theo: {title}”, “Về khoá học”. It never wraps: on a phone a long title is cut with an ellipsis. The toast above it.'],
+  ['What T-R10.9 would need', 'A locked lesson answers with its reason and opening date only. To lead back to the course, and to say “Opens after Unit 2” as the course’s page does, it would also carry the course’s id and the unit’s number. The page draws “Về khoá học” and a sentence that names no unit.'],
+  ['What the lesson does not carry', 'A test lesson’s number of questions: the course’s row says “14 questions”, and the lesson’s pill cannot. A lesson that is locked because of the lessons before it needs a reason of its own beside the three a unit has.'],
+  ['The deck’s screens', 'Nothing in Learn, Course, Flashcards, Test intro, Take test or Result changes. The first table sets them beside this page.'],
+  ['Locales', 'The copy table: thirty-nine strings, Vietnamese first. Ten are in the locale files today, and eight were proposed on the lesson editor’s page.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'The whole of the deck’s Student page for Learn (Learn, Student course, Lesson, Flashcards, and the shell’s detail header and toast), the deck’s Teacher page for the kinds’ tiles, R10’s plan (docs/plan/80-r10.md: its decisions on release rules and on completion, T-R10.9, T-R10.15, T-R10.16, T-R10.17), the product’s student shell and its words for starting and continuing a test, and the lesson editor’s page before this one. None of it is built for R10, so there was no screen to run.'],
+  ['What it leaves alone.', 'Every screen the deck draws. The page’s width is the deck’s 720px in the middle of the screen: the teacher’s page frame (DG-205) is not the student’s. No operation changes.'],
+  ['What is not drawn.', 'The Course page’s own states (T-R10.16 lists them; the deck draws the page). Learn and the Flashcards session, which the deck draws. A listening that cannot play: the same line under its player.']
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', kind: 'video', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en';
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const D = (a, b) => (vi ? a : b);
+    const kind = s.kind, st = s.st[kind], key = kind + ':' + st, locked = kind === 'locked', K = KIND[kind] || KIND.reading;
+    const noteList = NOTES[key] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const loading = st === 'loading', failed = st === 'error', ready = !loading && !failed;
+    const isMedia = kind === 'video' || kind === 'listening';
+
+    const amount = kind === 'flashcards' ? fmt(tx.words, { count: K[8] }) : kind === 'test' ? '' : fmt(tx.minutes, { count: K[8] });
+    const ls = {
+      ready, loading, failed, course: COURSE, hasHead: !locked, icon: K[0], pill: tx[K[1]] + (amount ? ' · ' + amount : ''), pillBg: K[2], pillFg: K[3], title: K[7],
+      where: fmt(tx.where, { unit: fmt(tx.unitN, { n: K[4] }), a: K[5], b: K[6] }),
+      isReading: kind === 'reading', isVideo: kind === 'video', isAudio: kind === 'listening', hasMedia: isMedia, isCard: kind === 'flashcards' || kind === 'test', isLocked: locked
+    };
+    const rd = { p1: RD.p1, p2: RD.p2, tryTitle: RD.tryTitle, tryText: RD.tryText, rules: RD.rules.map((x, i) => ({ k: x[0], v: x[1], color: x[2], border: i ? '1px solid var(--border)' : '0' })) };
+    const md = { plays: st !== 'broken', broken: st === 'broken', len: kind === 'video' ? '8:36' : '4:38', hasNotes: st !== 'bare', notes: kind === 'video' ? VIDEO_NOTES : AUDIO_NOTES };
+
+    // ---- the one card of a flashcards lesson and of a test lesson
+    const pill = { not: ['var(--muted)', 'var(--muted-fg)', 'var(--muted-fg)', tx.stNot], progress: ['var(--info-soft)', 'var(--info-ink)', 'var(--info)', tx.stProgress], submitted: ['var(--success-soft)', 'var(--success-ink)', 'var(--success)', tx.stSubmitted] };
+    const P = st === 'notStarted' ? pill.not : st === 'inProgress' ? pill.progress : pill.submitted;
+    const kc = kind === 'flashcards'
+      ? { tileBg: st === 'done' ? 'var(--success-soft)' : 'var(--accent-soft)', tileFg: st === 'done' ? 'var(--success-ink)' : 'var(--accent-ink)', tileIcon: st === 'done' ? 'check' : 'layers', title: fmt(st === 'done' ? tx.cardsDoneTitle : tx.cardsTitle, { count: K[8] }), sub: st === 'done' ? tx.cardsDoneSub : tx.cardsSub, hasState: false, state: '', stBg: 'transparent', stFg: 'inherit', stDot: 'transparent', hasScore: false, score: '', pct: '0%', barColor: 'transparent', hasLink: false, link: '' }
+      : { tileBg: 'var(--muted)', tileFg: 'var(--fg)', tileIcon: 'file-text', title: '', sub: st === 'notStarted' ? tx.testNot : st === 'inProgress' ? tx.testProgress : st === 'submitted' ? tx.testSubmitted : tx.testGraded, hasState: true, state: P[3], stBg: P[0], stFg: P[1], stDot: P[2], hasScore: st === 'graded', score: fmt(tx.score, { earned: 12, total: 14 }), pct: '86%', barColor: 'var(--success)', hasLink: st === 'submitted' || st === 'graded', link: tx.viewResult };
+    const lk = { reason: st === 'order' ? tx.lockOrder : st === 'unit' ? tx.lockUnit : fmt(tx.lockDate, { date: D('Th 2, 6 thg 10', 'Mon 6 Oct') }) };
+
+    // ---- the button at the bottom: always the next thing to do
+    const nextLabel = fmt(tx.next, { title: K[9] });
+    const label = kind === 'reading' ? (st === 'done' ? nextLabel : st === 'last' ? tx.backCourse : tx.markDone)
+      : isMedia ? tx.markDone
+      : kind === 'flashcards' ? (st === 'done' ? nextLabel : fmt(tx.practise, { count: K[8] }))
+      : st === 'notStarted' ? tx.start : st === 'inProgress' ? tx.resume : nextLabel;
+    const bt = { show: ready && !locked, label, arrow: !(kind === 'reading' && st === 'last') };
+    const ts = { show: key === 'reading:done', text: fmt(tx.doneToast, { done: 7, total: 24 }) };
+
+    const sNav = [['house', D('Trang chủ', 'Home')], ['users', D('Lớp', 'Classes')], ['book-open', D('Học tập', 'Learn')], ['chart-column', D('Điểm số', 'Grades')]].map(x => ({ icon: x[0], label: x[1] }));
+
+    const W = s.stageW || 1280;
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Student · Lesson · ' + w, desk: !phone, phone, pins: s.anno && !phone,
+      padX: phone ? '14px' : '24px', mainPad: phone ? '18px 16px 28px' : '32px 24px 48px', h1: phone ? '22px' : '26px', btnH: phone ? '40px' : '36px', ruleW: phone ? '84px' : '108px', toastB: phone ? '88px' : '108px'
+    });
+    const H = loading ? [570, 520] : failed ? [420, 400] : locked ? [400, 400] : key === 'video:ready' ? [880, 660] : key === 'video:broken' ? [960, 780] : key === 'video:bare' ? [770, 490] : { reading: [820, 1020], listening: [520, 480], flashcards: [480, 400], test: [480, 470] }[kind];
+    const frames = [mk(1280, H[0], Math.min(1, W / 1280), false, 'the page is 720 wide, in the middle, as in the deck'), mk(360, H[1], Math.min(1, W / 360), true, 'the same state on a phone')];
+
+    const ctl = [
+      { label: 'Lesson', opts: this.seg(KINDS, kind, v => this.setState({ kind: v })) },
+      { label: 'State', opts: this.seg(STATES[kind], st, v => this.setState(x => ({ st: { ...x.st, [kind]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const ink = { New: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)', 'Earlier page': 'var(--muted-fg)' };
+    const kLabel = (KINDS.find(x => x[0] === kind) || ['', ''])[1], stLabel = (STATES[kind].find(x => x[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, ls, rd, md, kc, lk, bt, ts, sNav, pin, frames, ctl, stageRef: this.stageRef,
+      chips: ['R10 · v0.17.0', 'T-R10.16', 'DG-94, DG-83', 'No change to the server’s plan', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, kind: 'video', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: 'What to look at on “' + kLabel + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: ink[r[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

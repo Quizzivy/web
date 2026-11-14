@@ -566,11 +566,49 @@ To view one, start the server above and open, for example,
   the page, the same day. T-R10.14 is changed to match in Quizzivy/docs#15.
 - 2026-11-14 — The sidebar's icons on the proposal pages. Eight pages drew "Shared with me"
   and "Media" with icons of their own. They now use the deck's (`users-round`, `audio-lines`).
+- 2026-11-14 — Sixteenth proposal page: `proposals/R10 Student Lesson.dc.html`, for DG-94 and
+  DG-83 (R10; T-R10.16). The deck draws the student's Lesson page for a reading. The page keeps
+  it as it is and draws the other kinds inside it: a video and a listening with the browser's
+  player and the teacher's notes; flashcards and a test with one card and one button; the
+  course's last lesson; a lesson opened while it is locked; loading, a failed read, and a video
+  that cannot play. Eighteen states, at 1280 and 360, light and dark, Vietnamese and English.
+  Its first table sets the deck's Learn screens beside it, part by part, and none of them
+  changes. No operation changes; what T-R10.9 would need for a locked lesson is on the page's
+  handoff. Its three questions for Thuong are on the page: the pill's colour, the button after
+  a test is handed in, and the phrase for "Mark as done".
 - 2026-11-14 — The page frame on the earlier proposal pages. Eight of them (R7 Shared With Me;
   R8 Session Popover, Terms, Week and Class Schedule, Attendance States; R9 Gradebook Weights,
   Gradebook Screen, Reports and Grades) held their teacher or admin page in the v2 deck's
   1320px or 1080px container. Each now holds it in the frame's 1600px (DG-205). Nothing moves
   on screen: at 1280 the frame is 976px wide and at 360 it is 332px, under either limit.
+- 2026-11-14 — Seventeenth proposal page: `proposals/R10 Course Detail.dc.html`, for DG-94,
+  DG-90 and DG-83 (R10; T-R10.13). The deck draws Course detail for a published course of the
+  teacher's own. The page keeps it as it is, in the workspace's page frame, and draws what it
+  leaves out: a draft course with "Phát hành", resting with its reason while no lesson is
+  published; "Chia sẻ" and a "…" menu in the heading, with the details edited in New course's
+  dialog, the delete confirmation, and the refusal when a class still has the course; a "…" on
+  each unit, to edit or delete it; a lesson lifted by its grip; a course shared with Can use
+  and with Can edit; a course with no unit, loading, and a failed read. Sixteen states, at
+  1280, 360 and 1920, light and dark, Vietnamese and English. Its first table sets the deck's
+  Courses part beside it, part by part, and none of it changes. No operation changes. Its four
+  questions for Thuong are on the page: unpublishing a course, where a course is renamed, a
+  menu on each unit, and the width from which the side cards sit beside the units (T-R10.13
+  says 1000px of content; the deck's layout gives about 800, and a 1280 screen has 976). The
+  lesson editor's page now writes a unit's "Open now" as "Mở ngay", the words this page uses.
+- 2026-11-14 — Eighteenth proposal page: `proposals/R10 Vocabulary.dc.html`, for DG-95, DG-90
+  and DG-83 (R10; T-R10.12). The deck draws Vocabulary and a word list for a teacher's own
+  lists. The page keeps both as they are, in the workspace's page frame, and draws what they
+  leave out: "Phát âm" in the word dialog, which is the Question editor's media field for one
+  audio file, with the browser's voice when there is none; an import's result, in the rows and
+  the table of Admin › Users' import; "Chia sẻ" and a "…" menu on a list, with its details
+  edited in New word list's dialog, the delete confirmation and its refusal; a list shared with
+  Can use and with Can edit; and the pages empty, loading and failing. Twenty states, at 1280,
+  360 and 1920, light and dark, Vietnamese and English. Its first table sets the deck's
+  Vocabulary part beside it, part by part, and none of it changes. No operation changes; what
+  T-R10.4 would need for a refused row is on the page's handoff. Its three questions for
+  Thuong are on the page: "Sửa thông tin" or "Đổi tên" for a list, the sign-off DG-95 asks
+  for, and the three words on the progress card. On a phone the table's two columns share the
+  width: the deck's minimums would push a row's "…" off a 360 screen.
 
 ## The brand
 

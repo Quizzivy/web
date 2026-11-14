@@ -7,11 +7,11 @@ Merging `release/*` into `main` ships the web to Cloudflare Pages: one project,
 `main`, only for the CI run of a push, and only while its commit is still the
 tip of `main`.
 
-**After the repository split:** until the owner switches production over from
-`SekiroKenjii/Quizzivy`, the repository variable `WEB_DEPLOY` is unset and the
-workflow deploys nothing. Set it to `pages` to turn deploys on. The API's
-deploy, its rollout notes and the operations docs are in `Quizzivy/api`
-(`docs/setup/`).
+**Since the repository split:** production has deployed from this repository
+since 2026-11-12 (v0.13.4), when the owner set the repository variable
+`WEB_DEPLOY` to `pages`. Without that variable the workflow deploys nothing,
+which is the way to hold deploys back. The API's deploy, its rollout notes and
+the operations docs are in `Quizzivy/api` (`docs/setup/`).
 
 ## The API goes first
 
@@ -32,7 +32,7 @@ gh variable set VITE_GOOGLE_CLIENT_ID --body '<client-id>.apps.googleusercontent
 gh variable set VITE_ORG_NAME --body '…'
 gh variable set VITE_ORG_FRONT_DESK_PHONE --body '…'
 gh variable set VITE_ORG_FRONT_DESK_HOURS --body '…'
-gh variable set WEB_DEPLOY --body pages  # only when production switches over
+gh variable set WEB_DEPLOY --body pages  # set since 2026-11-12; without it nothing deploys
 ```
 
 `VITE_GOOGLE_CLIENT_ID` is a variable, not a secret: it travels in the

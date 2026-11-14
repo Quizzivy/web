@@ -6,9 +6,9 @@ name: Deploy
 # deploys from Quizzivy/api, and first: the web job checks that production
 # already serves the SDK this build pins.
 #
-# Until production switches over from SekiroKenjii/Quizzivy, the repository
-# variable WEB_DEPLOY is unset and nothing deploys from here. Set it to `pages`
-# to deploy to Cloudflare Pages.
+# Production has deployed from here to Cloudflare Pages since 2026-11-12, when
+# the repository variable WEB_DEPLOY was set to `pages`. Without the variable
+# nothing deploys.
 #
 # It is a separate workflow, not a job inside CI, so a deploy that fails for an
 # infrastructure reason -- an expired token -- can be re-run on its own from
@@ -76,7 +76,7 @@ jobs:
           web=true
           case "${WEB_DEPLOY:-}" in
             pages) ;;
-            "") echo "::notice::WEB_DEPLOY is unset: production still deploys from SekiroKenjii/Quizzivy, so nothing is deployed"; web=false ;;
+            "") echo "::notice::WEB_DEPLOY is unset, so nothing is deployed"; web=false ;;
             *) echo "::error::WEB_DEPLOY must be pages or unset, not '$WEB_DEPLOY'"; exit 1 ;;
           esac
           if [ "$TRIGGER" = workflow_run ]; then

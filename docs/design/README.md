@@ -624,6 +624,22 @@ To view one, start the server above and open, for example,
   gone since v0.13.5. A student's links are now on my.quizzivy.com with no `/app` in front,
   the staff's on portal.quizzivy.com, and the two example routes that did not exist are the
   product's (`/attempts/{id}/result`, `/teacher/attempts/{id}`).
+- 2026-11-14 — Twentieth proposal page: `proposals/R11 Landing.dc.html`, for DG-100, DG-101,
+  DG-02 and DG-06 (R11; T-R11.3, T-R11.4a, T-R11.4b, T-R11.7). The owner asked for the Landing
+  of quizzivy.com ahead of the rest. The deck's Landing and R11's plan were made for one app
+  host; since v0.13.5 there are two, each with its own sign-in. The page takes the deck's
+  Landing section by section, as its own markup, and settles what the two hosts change:
+  "Đăng nhập" is one button with a choice for each host; the join box opens the student host
+  with the code; the apex holds no session and asks the API for nothing when it opens. It
+  draws what the deck leaves out: the menu below 960, the join box's refusals, the form's
+  consent and states. And it says only what the product has today: three feature cards and
+  three role points stand in until R7 to R10 ship what the deck's lines name, and there are
+  no testimonials until a person has agreed. Eighteen states at 1280 and 360 (768 for the
+  header), light and dark, Vietnamese and English. Its seven decisions for Thuong are on the
+  page, with what each of R11's tasks becomes and what the design needs from hosting: DNS for
+  the apex and `www`, a Pages domain, and the apex in the API's CORS list for open
+  operations. Two fixes to the deck's layout on a phone are on it too: the header, which is
+  406px wide on a 360 screen, and the row of role tabs, which is 78px too wide.
 
 ## The brand
 

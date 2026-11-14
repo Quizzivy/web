@@ -7,7 +7,7 @@ import {
   paneTitle,
   startGroup,
 } from "./support/groupPane";
-import { signInAsAdmin } from "./support/live";
+import { signIn, signInAsAdmin, TEACHER } from "./support/live";
 
 const AUDIO = fileURLToPath(new URL("./fixtures/unit5-listening.mp3", import.meta.url));
 
@@ -86,7 +86,12 @@ test("mixed builder saves new sections, moves complete groups, copies context an
       .getByRole("status")
       .filter({ hasText: "Đã lưu bản sao độc lập vào ngân hàng." }),
   ).toBeVisible();
-  await page.getByRole("button", { name: "Từ ngân hàng câu hỏi", exact: true }).click();
+  // The outline's entry: the open passage's pane has one of the same name in
+  // the row that adds a question, and the outline comes first.
+  await page
+    .getByRole("button", { name: "Từ ngân hàng câu hỏi", exact: true })
+    .first()
+    .click();
   await page
     .getByRole("button", {
       name: "Chọn cả bài đọc, bài điền từ hoặc bài nghe",
@@ -692,4 +697,64 @@ test("a copy that was edited in the group stays a new bank question when it is d
   expect((await setup.read(`/teacher/questions/${sourceId}`))["prompt"]).toBe(
     bankPrompt,
   );
+});
+
+test("a passage's pane takes questions from the bank: the section add, then the server's copy of each", async ({
+  page,
+}) => {
+  test.setTimeout(90_000);
+  // The seeded teacher: the admin's bank is empty.
+  await signIn(page, TEACHER, /\/teacher$/);
+  await page.goto("/teacher/tests");
+  await page.getByRole("button", { name: "Đề thi mới", exact: true }).click();
+  await expect(page).toHaveURL(/\/teacher\/tests\/[0-9a-f-]+\/edit$/);
+  await page.getByRole("button", { name: "Thêm phần", exact: true }).click();
+  await saved(page);
+  await startGroup(page, "Bài đọc và câu hỏi");
+  const title = `Bài đọc lấy từ ngân hàng ${Date.now()}`;
+  await paneTitle(page).fill(title);
+  await paneText(page).fill("Câu lạc bộ mở cửa vào thứ Bảy.");
+  await addPaneQuestion(page);
+  await page
+    .getByRole("textbox", { name: "Nội dung câu hỏi", exact: true })
+    .fill("Câu lạc bộ mở cửa vào ngày nào?");
+  await saved(page);
+
+  const writes: string[] = [];
+  page.on("response", (response) => {
+    const { pathname } = new URL(response.url());
+    if (response.request().method() !== "GET" && pathname.startsWith("/teacher/tests/"))
+      writes.push(
+        `${response.status()} ${response.request().method()} ${pathname.replace(/[0-9a-f-]{36}/g, ":id")}`,
+      );
+  });
+  await page
+    .getByRole("group", { name: "Thêm câu hỏi cho bài đọc này", exact: true })
+    .getByRole("button", { name: "Từ ngân hàng câu hỏi", exact: true })
+    .click();
+  const picker = page.getByRole("dialog", { name: "Thêm từ ngân hàng câu hỏi" });
+  await expect(picker.getByText(`Chọn câu hỏi để thêm vào ${title}.`)).toBeVisible();
+  await expect(picker.getByRole("button", { name: /^Chọn cả/ })).toHaveCount(0);
+  const rows = picker.getByRole("checkbox");
+  await rows.nth(0).click();
+  await rows.nth(1).click();
+  await picker.getByRole("button", { name: "Thêm 2 câu hỏi", exact: true }).click();
+
+  await expect(
+    page.getByText(
+      "Đã sao chép 2 câu hỏi vào bài này. Bản gốc vẫn ở ngân hàng câu hỏi.",
+      { exact: true },
+    ),
+  ).toBeVisible();
+  expect(writes).toEqual([
+    "200 PATCH /teacher/tests/:id",
+    "200 POST /teacher/tests/:id/questions/move",
+    "200 POST /teacher/tests/:id/questions/move",
+  ]);
+  const members = page.locator("[data-outline-group]").locator("[data-outline-row]");
+  await expect(members).toHaveCount(3);
+  await expect(page.locator("[data-outline-question]")).toHaveCount(3);
+  await page.reload();
+  await expect(members).toHaveCount(3);
+  await expect(page.locator("[data-outline-question]")).toHaveCount(3);
 });

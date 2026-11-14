@@ -2891,6 +2891,8 @@
     "moveGroupField": "Passage or recording",
     "moveGroupOption": "{{group}} · {{section}}",
     "movedIntoGroupCopied": "The question was copied in. The original stays in the question bank.",
+    "bankCopiedIntoGroup_one": "{{count}} question was copied in. The original stays in the question bank.",
+    "bankCopiedIntoGroup_other": "{{count}} questions were copied in. The originals stay in the question bank.",
     "movedOutRestored": "The original question is back in the test.",
     "movedOutEditedCopy": "The question differs from the original, so it was saved as a new bank question.",
     "moveGapBound": "The question answers a gap. Remove that gap first.",

@@ -5490,6 +5490,7 @@
       "doneOptionNamed": "Xong sửa lựa chọn {{label}}",
       "acceptedLimit": "Tối đa {{count}} đáp án, mỗi đáp án tối đa {{length}} ký tự. Phần vượt quá không được lưu.",
       "blankLimit": "Mỗi câu có tối đa {{max}} chỗ trống. Hãy bỏ bớt một chỗ trống trước khi thêm chỗ mới.",
+      "strayGaps": "Chỉ câu Điền từ mới có chỗ trống, nên câu {{type}} này chưa hợp lệ. Hãy xoá các chỗ trống còn lại trong nội dung, hoặc đổi dạng câu về Điền từ.",
       "excludeReason": "Lý do",
       "excludeHint": "Lưu cùng lần nhập để người khác biết vì sao.",
       "excludeConfirm": "Loại",

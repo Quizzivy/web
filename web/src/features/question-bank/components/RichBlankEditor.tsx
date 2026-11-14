@@ -19,13 +19,16 @@ const EMPTY: ProseDocument = {
  * keeps each blank's answers bound to its gap through formatting, moves, undo
  * and removal, and holds a prompt's media (DG-109). While `leaving` it asks "Switch to Markdown" under its toolbar.
  * `onEditor` hands the live editor to the host, for "Insert gap" elsewhere.
- * `label` names it, "Prompt" unless the host names it otherwise.
+ * `label` names it, "Prompt" unless the host names it otherwise. A document
+ * whose text is exactly `starter` opens empty, showing `placeholder`, and the
+ * starter stays stored until the first edit.
  */
 export function RichBlankEditor({
   value,
   leaving,
   focusOnMount = false,
   placeholder,
+  starter,
   label,
   onCancelLeave,
   onConfirmLeave,
@@ -36,6 +39,7 @@ export function RichBlankEditor({
   leaving: boolean;
   focusOnMount?: boolean;
   placeholder?: string | undefined;
+  starter?: string | undefined;
   label?: string | undefined;
   onCancelLeave: () => void;
   onConfirmLeave: () => void;
@@ -43,7 +47,12 @@ export function RichBlankEditor({
   onEditor?: ((editor: Editor | null) => void) | undefined;
 }>) {
   const { t } = useTranslation();
-  const [initial] = useState<ProseDocument>(() => value.promptContent ?? EMPTY);
+  const [initial] = useState<ProseDocument>(() =>
+    value.promptContent == null ||
+    (starter !== undefined && contentPlainText(value.promptContent) === starter)
+      ? EMPTY
+      : value.promptContent,
+  );
   useEffect(() => {
     if (focusOnMount) document.getElementById("question-prompt")?.focus();
   }, [focusOnMount]);

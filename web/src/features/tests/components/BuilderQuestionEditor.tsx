@@ -23,16 +23,13 @@ import { QuestionPromptAnswers } from "@/features/question-bank/components/Quest
 import { QUESTION_TYPE_ICONS } from "@/features/question-bank/components/questionTypeIcons";
 import { TagsField } from "@/features/question-bank/components/TagsField";
 import type { QuestionAi } from "@/features/question-bank/questionAi";
-import type {
-  QuestionType,
-  QuestionValues,
-} from "@/features/question-bank/questionSchema";
+import type { QuestionValues } from "@/features/question-bank/questionSchema";
 import {
   editorType,
   QUESTION_TYPES,
-  retype,
   typeLocked,
 } from "@/features/question-bank/questionType";
+import { useRetype } from "@/features/question-bank/useRetype";
 
 /**
  * BuilderQuestionActions are the "…" menu's commands, carried out by the
@@ -52,7 +49,8 @@ export type BuilderQuestionActions = Readonly<{
  * the test has a group, Delete question); then
  * the prompt, the answer area with its grading note, the question media, and
  * "More options" holding the explanation above the tags. The type menu keeps
- * the other types disabled while gaps bind answers, as the bank does. `ai`
+ * the other types disabled while gaps bind answers, and gives a type the
+ * teacher comes back to the answers it held, as the bank does. `ai`
  * offers "Write with AI" and "Suggest wrong options", as the bank's editor
  * does. A host that is not the builder's question pane, a group's card,
  * gives `menu`, the "…" menu's own items, in place of `actions`.
@@ -193,10 +191,7 @@ function TypeMenu({
   const locked = typeLocked(value);
   const Current = QUESTION_TYPE_ICONS[editorType(value.type)];
   const typeName = t(`questionEditor.type.${editorType(value.type)}`);
-  function choose(type: QuestionType) {
-    if (type === editorType(value.type)) return;
-    onChange(retype(value, type));
-  }
+  const choose = useRetype(value, onChange);
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>

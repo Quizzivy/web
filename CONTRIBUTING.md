@@ -9,7 +9,7 @@ Gitflow, as before the split.
 
 | Branch | Purpose |
 |---|---|
-| `main` | Released only, tagged `vX.Y.Z`. Merging to `main` deploys the web once `WEB_DEPLOY` is set (until then, nothing). |
+| `main` | Released only, tagged `vX.Y.Z`. Merging to `main` deploys the web to production (`docs/deploy.md`). |
 | `develop` | Integration. Every feature PR targets this. |
 | `feature/<task>-<slug>` | One task. Branch off `develop`. |
 | `release/<version>` | Release PR into `main`, then back-merged into `develop`. |

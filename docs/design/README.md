@@ -658,6 +658,13 @@ To view one, start the server above and open, for example,
   (768 for the header), light and dark, Vietnamese and English. Eight questions for Thuong.
   He answered the first the same evening: the page is written for learners first, with one
   card for teachers and one for the centre. The page marks it decided; seven are open.
+- 2026-11-14 — The Landing proposal loses its part for each role, on the owner's word. He
+  read the three cards ("Quizzivy dành cho ai") and said the admin's role is not there for
+  what its card listed; the gradebook, reports and attendance it named are a teacher's. He
+  asked for the whole part to go. The page now runs from the three rows to fair tests. The
+  header keeps three of the deck's four links ("Dành cho bạn" is gone), the three role
+  photos leave `proposals/landing/`, and the copy table is 67 strings. The first question
+  stays decided as learners first, without the two cards it spoke of.
 
 ## The brand
 

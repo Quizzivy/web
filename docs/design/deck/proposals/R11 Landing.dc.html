@@ -28,10 +28,10 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
   <div style="display:flex;align-items:center;gap:12px">
     <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
-    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · R11 · The Landing on quizzivy.com · Proposal · 14 Nov 2026</span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · The Landing on quizzivy.com · Proposal · 14 Nov 2026</span>
   </div>
-  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The Landing for quizzivy.com, with the app on two hosts</h1>
-  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The deck draws the Landing, and R11’s plan puts it on quizzivy.com. Both were made when the app was one host. Since v0.13.5 students are on my.quizzivy.com and staff on portal.quizzivy.com, each with its own sign-in, and quizzivy.com serves nothing yet. This page keeps the deck’s Landing, section by section, and settles what the two hosts change: where “Sign in” and the join box lead, what the page does for a visitor who is signed in, and which calls it makes. It also draws what the deck leaves out (the menu below 960, the join box’s refusals, the form’s consent and its states), and says only what the product has today. Each choice has a default, drawn in the frames, and is a question for the owner below.</p>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The Landing for quizzivy.com</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">This is the first page a visitor to quizzivy.com sees. The top is laid out the way a landing page usually is: one warm block of colour, one photo of a person, a short headline, and the product shown in two small pieces beside the photo instead of a screenshot. The words are the deck’s own, Vietnamese first. Below the top the page follows the deck’s Landing, with a photo for each kind of visitor. Under the frames is what the owner still has to decide, and a short list for the people who build it.</p>
   <div style="display:flex;flex-wrap:wrap;gap:6px">
     <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
   </div>
@@ -39,30 +39,30 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 
 <section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
-    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The apex</span>
-    <strong style="font-size:17px;font-weight:600;line-height:1.35">A page that leads to the two hosts. It signs nobody in.</strong>
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The look</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One photo, one colour, few words.</strong>
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
-      <li>“Đăng nhập” opens two choices: students go to my.quizzivy.com, teachers and admins to portal.quizzivy.com. Every link into the app is written in full, with its host.</li>
-      <li><span style="color:var(--fg)">The join box opens the code on the student host,</span> where the class is looked up, as a teacher’s link does.</li>
-      <li>The page holds no session and reads no cookie. A visitor who is signed in sees the Landing like anyone else, and their host takes them in.</li>
+      <li>The top of the page is a soft block of the brand’s lime, and the header sits on it. A person looks out from an arch with a lime circle behind.</li>
+      <li><span style="color:var(--fg)">Two pieces of the product rest on the photo:</span> a test question and a marked result. Both are the deck’s own.</li>
+      <li>Under the top, a strip of four short facts stands where a template keeps its big numbers. Quizzivy has no numbers to show yet.</li>
     </ul>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
-    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What it says</span>
-    <strong style="font-size:17px;font-weight:600;line-height:1.35">Only what the product has on the day it opens.</strong>
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The words</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The deck’s, as they are.</strong>
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
-      <li>Three of the deck’s six feature cards name modules that ship later (courses, flashcards, the gradebook). At launch their places go to what is there: imports from Word and PDF, the AI assistant, results.</li>
-      <li><span style="color:var(--fg)">Testimonials stay off the page until a real person has agreed to theirs,</span> as R11’s plan decided. The deck’s three name real people.</li>
-      <li>Each release that ships a module puts the deck’s line back. The table below lists them.</li>
+      <li>Every headline, card and answer is the deck’s Vietnamese. One word changes, “Vào lớp” to “Tham gia lớp”, to match the app, and “Five question types” loses its number.</li>
+      <li><span style="color:var(--fg)">Nothing is made up:</span> no count of learners, no awards, no customers’ logos, and no testimonials until the people named have agreed.</li>
+      <li>The photos are free stock photos. They stand in for the centre’s own.</li>
     </ul>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
-    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">What the deck leaves out</span>
-    <strong style="font-size:17px;font-weight:600;line-height:1.35">The menu below 960, the join box’s refusals, the form’s consent and states.</strong>
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The buttons</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">Each one leads to the right place.</strong>
     <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
-      <li>Below 960 the section links go into a menu, with the two sign-ins. Below 720 the language and the theme go there too: the deck’s header is 406px wide on a 360 screen.</li>
-      <li><span style="color:var(--fg)">The join box is the product’s own field:</span> it says why a code cannot be right before it leaves the page.</li>
-      <li>The form asks for consent, as DG-06 decided, and says what happened when a request cannot be sent.</li>
+      <li>“Đăng nhập” asks one thing, student or teacher, and opens that sign-in.</li>
+      <li><span style="color:var(--fg)">A class code opens the class</span> on the students’ site, as a teacher’s link does.</li>
+      <li>On a phone a menu holds the links, the two sign-ins, the language and the dark mode.</li>
     </ul>
   </div>
 </section>
@@ -77,8 +77,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 
 <section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
-    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The Landing, wide and on a phone</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Pick a part and its state in the bar above. “The whole page” is the Landing from top to bottom as it would open; the other parts show one section at the moment named. Every section is the deck’s own markup. What this page adds or changes carries a number.</p>
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The page, wide and on a phone</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Pick a part and its state in the bar above. “The whole page” is the Landing from top to bottom; the other parts show one piece of it at the moment named. A number marks what the notes beside the frames talk about.</p>
   </div>
   <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
     <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="2">
@@ -87,21 +87,21 @@ body{margin:0;-webkit-font-smoothing:antialiased}
         <div style="width:{{ fr.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
           <div data-screen-label="{{ fr.screen }}" style="width:{{ fr.w }}px;height:{{ fr.h }};zoom:{{ fr.s }};display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:15px;line-height:1.55;--shadow-lg:{{ shadowLg }}">
             <div style="flex:1;min-height:0;overflow:hidden"><div>
-<header style="position:relative;z-index:5;background:var(--bg);border-bottom:1px solid var(--border)">
+<div style="position:relative;background:{{ pg.bandBg }};overflow:hidden"><sc-if value="{{ pg.hero }}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="position:absolute;left:-80px;top:-110px;width:{{ fr.blob }};height:{{ fr.blob }};border-radius:50%;background:var(--accent-c);opacity:.3"></span><span aria-hidden="true" style="position:absolute;right:0;bottom:0;width:{{ fr.cornerW }};height:{{ fr.cornerH }};background:var(--primary);border-radius:100% 0 0 0"></span><sc-if value="{{ fr.wide }}" hint-placeholder-val="{{ true }}"><span aria-hidden="true" style="position:absolute;left:28px;bottom:96px;width:92px;height:110px;background-image:radial-gradient(var(--ring) 1.6px,transparent 1.8px);background-size:18px 18px;opacity:.6"></span><img aria-hidden="true" src="landing/arrow.svg" alt="" style="position:absolute;left:45%;top:156px;width:112px;height:auto"></sc-if></sc-if><header style="position:relative;z-index:5;background:transparent;border-bottom:1px solid {{ pg.headLine }}">
 <div style="max-width:1200px;margin:0 auto;height:64px;display:flex;align-items:center;gap:{{ fr.headGap }};padding:0 {{ fr.padX }}">
 <a aria-label="Quizzivy" style="display:flex;flex:none;text-decoration:underline;text-underline-offset:3px;color:var(--fg)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:28px"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../brand/quizzivy-logo-horizontal-on-dark.svg" alt="Quizzivy" style="height:28px"></sc-if></a>
 <sc-if value="{{ fr.wide }}" hint-placeholder-val="{{ true }}"><nav style="display:flex;gap:2px;margin-left:12px"><sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="4"><a style="height:36px;padding:0 12px;border-radius:8px;display:inline-flex;align-items:center;font-size:14px;color:var(--muted-fg);text-decoration:none;white-space:nowrap">{{ n.label }}</a></sc-for></nav></sc-if>
 <div style="margin-left:auto;display:flex;align-items:center;gap:6px">
-<sc-if value="{{ fr.notMobile }}" hint-placeholder-val="{{ true }}"><div style="display:flex;padding:3px;background:var(--muted);border-radius:8px;gap:2px"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-label="{{ l.aria }}" style="border:0;border-radius:6px;height:26px;padding:0 9px;font-size:12px;font-weight:600;cursor:pointer;background:{{ l.bg }};color:{{ l.fg }};box-shadow:{{ l.shadow }}">{{ l.label }}</button></sc-for></div>
+<sc-if value="{{ fr.notMobile }}" hint-placeholder-val="{{ true }}"><div style="display:flex;padding:3px;background:{{ pg.segBg }};border-radius:8px;gap:2px"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-label="{{ l.aria }}" style="border:0;border-radius:6px;height:26px;padding:0 9px;font-size:12px;font-weight:600;cursor:pointer;background:{{ l.bg }};color:{{ l.fg }};box-shadow:{{ l.shadow }}">{{ l.label }}</button></sc-for></div>
 <button type="button" aria-label="Toggle theme" style="width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;cursor:pointer"><i class="icon-{{ themeIcon }}" style="font-size:17px"></i></button></sc-if>
-<sc-if value="{{ fr.notMobile }}" hint-placeholder-val="{{ true }}"><span style="position:relative;display:inline-flex;align-items:center;gap:6px"><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.signin.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.signin.n }}</span></sc-if></sc-if><a role="button" aria-haspopup="menu" style="height:36px;padding:0 10px 0 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;border:1px solid var(--border);background:{{ hd.signBg }};color:var(--fg)">{{ t.signIn }}<i class="icon-chevron-down" style="font-size:14px;color:var(--muted-fg)"></i></a><sc-if value="{{ hd.signOpen }}" hint-placeholder-val="{{ false }}"><div role="menu" style="position:absolute;top:calc(100% + 6px);right:0;z-index:6;width:272px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:6px;text-align:left"><sc-for list="{{ hd.signRows }}" as="sr" hint-placeholder-count="2"><a role="menuitem" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;text-decoration:none;color:var(--fg)"><span style="width:34px;height:34px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ sr.icon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;line-height:1.35">{{ sr.label }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.35">{{ sr.host }}</span></span><i class="icon-arrow-right" style="font-size:15px;color:var(--muted-fg)"></i></a></sc-for></div></sc-if></span></sc-if>
+<sc-if value="{{ fr.notMobile }}" hint-placeholder-val="{{ true }}"><span style="position:relative;display:inline-flex;align-items:center;gap:6px"><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.signin.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.signin.n }}</span></sc-if></sc-if><a role="button" aria-haspopup="menu" style="height:36px;padding:0 10px 0 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;border:1px solid var(--border);background:{{ hd.signBg }};color:var(--fg)">{{ t.signIn }}<i class="icon-chevron-down" style="font-size:14px;color:var(--muted-fg)"></i></a><sc-if value="{{ hd.signOpen }}" hint-placeholder-val="{{ false }}"><div role="menu" style="position:absolute;top:calc(100% + 6px);right:0;z-index:6;width:304px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:6px;text-align:left"><sc-for list="{{ hd.signRows }}" as="sr" hint-placeholder-count="2"><a role="menuitem" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;text-decoration:none;color:var(--fg)"><span style="width:34px;height:34px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ sr.icon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;line-height:1.35">{{ sr.label }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.35">{{ sr.sub }}</span></span><i class="icon-arrow-right" style="font-size:15px;color:var(--muted-fg)"></i></a></sc-for></div></sc-if></span></sc-if>
 <a style="height:36px;padding:0 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;background:var(--primary);color:var(--primary-fg)">{{ t.consultShort }}</a><sc-if value="{{ fr.narrow }}" hint-placeholder-val="{{ false }}"><span role="button" aria-label="{{ t.menuOpen }}" style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;border:1px solid var(--border);background:{{ hd.menuBg }}"><i class="icon-menu" style="font-size:17px"></i></span><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.menuBtn.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.menuBtn.n }}</span></sc-if></sc-if></sc-if>
 </div>
 </div>
 </header>
-<sc-if value="{{ pg.hero }}" hint-placeholder-val="{{ true }}"><section style="max-width:1200px;margin:0 auto;padding:{{ fr.heroPad }};display:grid;grid-template-columns:{{ fr.heroCols }};gap:48px;align-items:center">
+<sc-if value="{{ pg.hero }}" hint-placeholder-val="{{ true }}"><section style="position:relative;z-index:1;max-width:1200px;margin:0 auto;padding:{{ fr.heroPad2 }};display:grid;grid-template-columns:{{ fr.heroCols }};gap:48px;align-items:center">
 <div style="display:flex;flex-direction:column;gap:22px;min-width:0">
-<span style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;min-height:28px;padding:3px 12px;border-radius:999px;border:1px solid var(--border);font-size:13px;color:var(--muted-fg)"><span style="width:7px;height:7px;flex:none;border-radius:50%;background:var(--accent-c)"></span>{{ t.eyebrow }}</span>
+<span style="display:inline-flex;align-self:flex-start;align-items:center;gap:8px;min-height:28px;padding:3px 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);font-size:13px;color:var(--muted-fg)"><span style="width:7px;height:7px;flex:none;border-radius:50%;background:var(--accent-c)"></span>{{ t.eyebrow }}</span>
 <h1 style="margin:0;font-size:{{ fr.h1Size }};font-weight:600;letter-spacing:-0.03em;line-height:1.08;text-wrap:balance">{{ t.heroTitle }}</h1>
 <p style="margin:0;font-size:18px;color:var(--muted-fg);line-height:1.6;max-width:520px;text-wrap:pretty">{{ t.heroSub }}</p>
 <div style="display:flex;flex-direction:column;gap:10px;max-width:440px">
@@ -110,27 +110,14 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <span style="font-size:13px;color:var(--muted-fg)">{{ t.orSignIn1 }} <a style="color:var(--fg);font-weight:500;text-decoration:underline;text-underline-offset:3px">{{ t.signIn }}</a> · <a style="color:var(--fg);font-weight:500;text-decoration:underline;text-underline-offset:3px">{{ t.consultLink }}</a> <sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.helper.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.helper.n }}</span></sc-if></sc-if></span>
 </div>
 </div>
-
-<div aria-hidden="true" data-qz="light" style="position:relative;min-width:0;padding-bottom:{{ fr.phonePad }};color:var(--fg)">
-<div style="border:1px solid var(--border);border-radius:14px;background:var(--card);box-shadow:var(--shadow-lg);overflow:hidden">
-<div style="height:34px;display:flex;align-items:center;gap:6px;padding:0 12px;border-bottom:1px solid var(--border);background:var(--sidebar)"><span style="width:9px;height:9px;flex:none;border-radius:50%;background:var(--border)"></span><span style="width:9px;height:9px;flex:none;border-radius:50%;background:var(--border)"></span><span style="width:9px;height:9px;flex:none;border-radius:50%;background:var(--border)"></span><span style="margin-left:10px;height:18px;flex:1;max-width:240px;border-radius:6px;background:var(--muted);font-size:10.5px;color:var(--muted-fg);display:flex;align-items:center;padding:0 8px">portal.quizzivy.com/teacher</span></div>
-<div style="display:flex;height:{{ fr.mockH }}">
-<div style="width:120px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);padding:12px 10px;display:flex;flex-direction:column;gap:6px"><sc-for list="{{ mockNav }}" as="m" hint-placeholder-count="7"><span style="display:flex;align-items:center;gap:6px;height:22px;padding:0 6px;border-radius:5px;background:{{ m.bg }};font-size:10px;color:{{ m.fg }};white-space:nowrap;overflow:hidden"><i class="icon-{{ m.icon }}" style="font-size:11px"></i>{{ m.label }}</span></sc-for></div>
-<div style="flex:1;min-width:0;padding:14px;display:flex;flex-direction:column;gap:10px">
-<span style="font-size:13px;font-weight:600">{{ t.mockGreeting }}</span>
-<div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px"><sc-for list="{{ mockKpis }}" as="k" hint-placeholder-count="3"><div style="border:1px solid var(--border);border-radius:8px;padding:8px 10px"><div style="font-size:9.5px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ k.label }}</div><div style="font-size:18px;font-weight:600;line-height:1.2">{{ k.value }}</div></div></sc-for></div>
-<div style="flex:1;border:1px solid var(--border);border-radius:8px;padding:10px;display:flex;flex-direction:column;gap:6px;min-height:0"><span style="font-size:10px;font-weight:600">{{ t.mockSubs }}</span><div style="flex:1;display:flex;align-items:flex-end;gap:4px"><sc-for list="{{ mockBars }}" as="b" hint-placeholder-count="14"><span style="flex:1;border-radius:3px 3px 1px 1px;height:{{ b.h }};background:{{ b.c }}"></span></sc-for></div></div>
-</div>
-</div>
-</div>
-<div style="position:absolute;right:{{ fr.phoneRight }};bottom:0;width:{{ fr.phoneW }};border:1px solid var(--border);border-radius:22px;background:var(--card);box-shadow:var(--shadow-lg);padding:10px;display:flex;flex-direction:column;gap:8px">
+<div aria-hidden="true" style="position:relative;min-width:0;height:{{ fr.visH }}"><span style="position:absolute;right:{{ fr.dotsR }};top:0;width:92px;height:110px;background-image:radial-gradient(var(--ring) 1.6px,transparent 1.8px);background-size:18px 18px;opacity:.6"></span><span style="position:absolute;left:50%;top:{{ fr.discTop }};width:{{ fr.disc }};height:{{ fr.disc }};margin-left:{{ fr.discML }};border-radius:50%;background:var(--accent-c)"></span><div style="position:absolute;left:50%;bottom:0;width:{{ fr.photoW }};height:{{ fr.photoH }};margin-left:{{ fr.photoML }};border-radius:{{ fr.photoR }};overflow:hidden;background:var(--muted);box-shadow:var(--shadow-lg)"><img src="landing/hero.jpg" alt="" style="display:block;width:100%;height:100%;object-fit:cover;object-position:50% 18%"></div><div data-qz="light" style="position:absolute;left:{{ fr.qLeft }};top:{{ fr.qTop }};width:{{ fr.qW }};color:var(--fg);border:1px solid var(--border);border-radius:18px;background:var(--card);box-shadow:var(--shadow-lg);padding:10px;display:flex;flex-direction:column;gap:8px">
 <div style="display:flex;align-items:center;justify-content:space-between"><span style="font-size:9.5px;color:var(--muted-fg)">{{ t.mockQ }}</span><span style="display:inline-flex;align-items:center;gap:4px;height:18px;padding:0 7px;border-radius:999px;background:var(--muted);font-size:9.5px;font-weight:600"><i class="icon-timer" style="font-size:10px"></i>38:12</span></div>
 <span style="font-size:11.5px;font-weight:500;line-height:1.4">{{ t.mockPrompt }}</span>
 <sc-for list="{{ mockOpts }}" as="o" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:7px;min-height:28px;padding:4px 8px;border-radius:8px;border:1.5px solid {{ o.border }};font-size:10px;line-height:1.3"><span style="width:12px;height:12px;flex:none;border-radius:50%;border:1.5px solid {{ o.ring }};background:{{ o.dot }}"></span>{{ o.text }}</span></sc-for>
 <span style="height:26px;border-radius:7px;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center;font-size:10px;font-weight:600">{{ t.mockNext }}</span>
-</div>
-</div>
-</section></sc-if>
+</div><div data-qz="light" style="position:absolute;right:{{ fr.rRight }};bottom:{{ fr.rBottom }};display:flex;align-items:center;gap:10px;padding:10px 12px;border-radius:14px;border:1px solid var(--border);background:var(--card);color:var(--fg);box-shadow:var(--shadow-lg)"><span style="width:32px;height:32px;flex:none;border-radius:9px;background:var(--success-soft);color:var(--success-ink);display:grid;place-items:center"><i class="icon-circle-check" style="font-size:17px"></i></span><span style="min-width:0"><span style="display:block;font-size:13px;font-weight:600;white-space:nowrap">{{ hv.resultTitle }}</span><span style="display:block;font-size:11.5px;color:var(--muted-fg);white-space:nowrap">{{ hv.resultSub }}</span></span><span style="height:22px;padding:0 9px;border-radius:999px;font-size:11.5px;font-weight:600;display:inline-flex;align-items:center;white-space:nowrap;background:var(--success-soft);color:var(--success-ink)">{{ hv.resultScore }}</span></div><span style="position:absolute;left:{{ fr.pinL }};top:{{ fr.pinT }}"><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.photo.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.photo.n }}</span></sc-if></sc-if></span></div>
+</section></sc-if></div>
+<sc-if value="{{ pg.hero }}" hint-placeholder-val="{{ true }}"><div style="position:relative;z-index:2;max-width:1200px;margin:{{ fr.factsUp }} auto {{ fr.factsDown }};padding:0 {{ fr.padX }}"><div style="background:var(--card);border:1px solid var(--border);border-radius:18px;box-shadow:var(--shadow-lg);padding:{{ fr.factsPad }};display:grid;grid-template-columns:{{ fr.factsCols }};gap:{{ fr.factsGap }}"><sc-for list="{{ facts }}" as="fa" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:14px;min-width:0"><span style="width:44px;height:44px;flex:none;border-radius:12px;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center"><i class="icon-{{ fa.icon }}" style="font-size:22px"></i></span><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:{{ fr.factSize }};font-weight:600;letter-spacing:-0.01em;line-height:1.25">{{ fa.title }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ fa.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.facts.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.facts.n }}</span></sc-if></sc-if></sc-if></span><span style="display:block;font-size:13.5px;color:var(--muted-fg);line-height:1.4">{{ fa.sub }}</span></span></div></sc-for></div></div></sc-if>
 <sc-if value="{{ pg.features }}" hint-placeholder-val="{{ false }}"><section style="border-top:1px solid var(--border);background:var(--sidebar)">
 <div style="max-width:1200px;margin:0 auto;padding:{{ fr.secPad }};display:flex;flex-direction:column;gap:36px">
 <div style="max-width:640px;display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;font-weight:600;color:var(--accent-ink)">{{ t.featEyebrow }}</span><h2 style="margin:0;font-size:{{ fr.h2Size }};font-weight:600;letter-spacing:-0.02em;line-height:1.15;text-wrap:balance">{{ t.featTitle }}</h2><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.features.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.features.n }}</span></sc-if></sc-if></div>
@@ -144,10 +131,10 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <div role="tablist" style="display:flex;padding:3px;background:var(--muted);border-radius:10px;gap:2px;width:{{ fr.tabsW }}"><sc-for list="{{ roleTabs }}" as="r" hint-placeholder-count="3"><button type="button" role="tab" aria-selected="{{ r.on }}" style="border:0;border-radius:8px;height:36px;padding:0 {{ fr.tabPad }};flex:{{ fr.tabFlex }};justify-content:center;font-size:{{ fr.tabSize }};font-weight:500;white-space:nowrap;display:flex;align-items:center;gap:7px;background:{{ r.bg }};color:{{ r.fg }};box-shadow:{{ r.shadow }}"><sc-if value="{{ fr.notMobile }}" hint-placeholder-val="{{ true }}"><i class="icon-{{ r.icon }}" style="font-size:15px"></i></sc-if>{{ r.label }}</button></sc-for></div></div>
 <div style="display:grid;grid-template-columns:{{ fr.roleCols }};gap:28px;align-items:center;border:1px solid var(--border);border-radius:18px;padding:{{ fr.rolePad }};background:var(--card)">
 <div style="display:flex;flex-direction:column;gap:14px;min-width:0"><span style="font-size:22px;font-weight:600;letter-spacing:-0.01em;line-height:1.3">{{ role.title }}</span><sc-for list="{{ role.points }}" as="p" hint-placeholder-count="4"><div style="display:flex;gap:12px;align-items:flex-start"><span style="width:24px;height:24px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;margin-top:1px"><i class="icon-check" style="font-size:13px"></i></span><span style="font-size:15px;line-height:1.55"><b style="font-weight:600">{{ p.h }}</b> <span style="color:var(--muted-fg)">{{ p.b }}</span></span></div></sc-for><a style="align-self:flex-start;margin-top:4px;display:inline-flex;align-items:center;gap:6px;height:40px;padding:0 16px;border-radius:9px;border:1px solid var(--border);font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;color:var(--fg)">{{ role.cta }}<i class="icon-arrow-right" style="font-size:15px"></i></a><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.roleCta.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.roleCta.n }}</span></sc-if></sc-if></div>
-<div aria-hidden="true" style="border:1px solid var(--border);border-radius:12px;background:var(--sidebar);padding:14px;display:flex;flex-direction:column;gap:8px;min-width:0">
+<div aria-hidden="true" style="position:relative;min-width:0;padding-bottom:{{ fr.roleDrop }}"><div style="border-radius:16px;overflow:hidden;aspect-ratio:3/2;background:var(--muted)"><sc-if value="{{ role.isTeacher }}" hint-placeholder-val="{{ true }}"><img src="landing/role-teacher.jpg" alt="" style="display:block;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ role.isStudent }}" hint-placeholder-val="{{ false }}"><img src="landing/role-student.jpg" alt="" style="display:block;width:100%;height:100%;object-fit:cover"></sc-if><sc-if value="{{ role.isAdmin }}" hint-placeholder-val="{{ false }}"><img src="landing/role-admin.jpg" alt="" style="display:block;width:100%;height:100%;object-fit:cover"></sc-if></div><div style="position:absolute;left:{{ fr.roleCardL }};right:{{ fr.roleCardR }};bottom:0;border:1px solid var(--border);border-radius:14px;background:var(--card);box-shadow:var(--shadow-lg);padding:12px;display:flex;flex-direction:column;gap:8px">
 <span style="font-size:11px;font-weight:600;color:var(--muted-fg)">{{ role.mockTitle }}</span>
 <sc-for list="{{ role.rows }}" as="rw" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;padding:9px 11px;border-radius:9px;border:1px solid var(--border);background:var(--card)"><span style="width:26px;height:26px;flex:none;border-radius:{{ rw.radius }};background:var(--muted);display:grid;place-items:center;font-size:9.5px;font-weight:600"><i class="icon-{{ rw.icon }}" style="font-size:13px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:12.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rw.a }}</span><span style="display:block;font-size:11px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rw.b }}</span></span><span style="height:20px;padding:0 8px;border-radius:999px;font-size:10.5px;font-weight:500;display:inline-flex;align-items:center;white-space:nowrap;background:{{ rw.pillBg }};color:{{ rw.pillFg }}">{{ rw.pill }}</span></div></sc-for>
-</div>
+</div><span style="position:absolute;right:10px;top:10px"><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.rolePhoto.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.rolePhoto.n }}</span></sc-if></sc-if></span></div>
 </div>
 </section></sc-if>
 <sc-if value="{{ pg.integrity }}" hint-placeholder-val="{{ false }}"><section style="background:var(--primary);color:var(--primary-fg)">
@@ -194,7 +181,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <div style="max-width:1200px;margin:0 auto;padding:16px {{ fr.padX }} 28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted-fg)"><span style="display:inline-flex;align-items:center;gap:8px">© 2026 Quizzivy<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.footer.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.footer.n }}</span></sc-if></sc-if></span><span>{{ t.footAddr }}</span></div>
 </footer></sc-if>
             </div></div>
-            <sc-if value="{{ fr.sheet }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;z-index:20;background:var(--overlay)"></div><div role="dialog" aria-modal="true" aria-label="{{ t.menuTitle }}" style="position:absolute;z-index:21;top:0;right:0;bottom:0;width:min(320px,88%);display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--border);box-shadow:var(--shadow-lg)"><div style="height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px 0 20px;border-bottom:1px solid var(--border)"><span style="display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600">{{ t.menuTitle }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sheet.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.sheet.n }}</span></sc-if></sc-if></span><span role="button" aria-label="{{ t.menuClose }}" style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-x" style="font-size:18px"></i></span></div><div style="flex:1;min-height:0;display:flex;flex-direction:column;padding:10px 12px"><sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="4"><a style="display:flex;align-items:center;height:48px;padding:0 8px;border-radius:8px;font-size:16px;font-weight:500;text-decoration:none;color:var(--fg)">{{ n.label }}</a></sc-for><div style="height:1px;background:var(--border);margin:10px 8px"></div><span style="display:inline-flex;align-items:center;gap:8px;padding:4px 8px 6px;font-size:12.5px;font-weight:600;color:var(--muted-fg)">{{ t.signIn }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sheetSign.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.sheetSign.n }}</span></sc-if></sc-if></span><sc-for list="{{ hd.signRows }}" as="sr" hint-placeholder-count="2"><a role="menuitem" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;text-decoration:none;color:var(--fg)"><span style="width:34px;height:34px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ sr.icon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;line-height:1.35">{{ sr.label }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.35">{{ sr.host }}</span></span><i class="icon-arrow-right" style="font-size:15px;color:var(--muted-fg)"></i></a></sc-for><sc-if value="{{ fr.mobile }}" hint-placeholder-val="{{ false }}"><div style="height:1px;background:var(--border);margin:10px 8px"></div><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 8px"><span style="font-size:14px">{{ t.language }}</span><div style="display:flex;padding:3px;background:var(--muted);border-radius:8px;gap:2px"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;border-radius:6px;height:26px;padding:0 9px;font-size:12px;font-weight:600;background:{{ l.bg }};color:{{ l.fg }};box-shadow:{{ l.shadow }}">{{ l.label }}</span></sc-for></div></div><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 4px"><span style="display:inline-flex;align-items:center;gap:8px;font-size:14px">{{ t.darkMode }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sheetPrefs.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.sheetPrefs.n }}</span></sc-if></sc-if></span><span role="switch" aria-checked="{{ isDark }}" style="width:38px;height:22px;flex:none;border-radius:999px;padding:2px;background:{{ hd.themeTrack }};display:flex;justify-content:{{ hd.themeSide }}"><span style="width:18px;height:18px;flex:none;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span></div></sc-if></div></div></sc-if>
+            <sc-if value="{{ fr.sheet }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;z-index:20;background:var(--overlay)"></div><div role="dialog" aria-modal="true" aria-label="{{ t.menuTitle }}" style="position:absolute;z-index:21;top:0;right:0;bottom:0;width:min(320px,88%);display:flex;flex-direction:column;background:var(--card);border-left:1px solid var(--border);box-shadow:var(--shadow-lg)"><div style="height:64px;flex:none;display:flex;align-items:center;justify-content:space-between;gap:10px;padding:0 12px 0 20px;border-bottom:1px solid var(--border)"><span style="display:inline-flex;align-items:center;gap:8px;font-size:15px;font-weight:600">{{ t.menuTitle }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sheet.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.sheet.n }}</span></sc-if></sc-if></span><span role="button" aria-label="{{ t.menuClose }}" style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-x" style="font-size:18px"></i></span></div><div style="flex:1;min-height:0;display:flex;flex-direction:column;padding:10px 12px"><sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="4"><a style="display:flex;align-items:center;height:48px;padding:0 8px;border-radius:8px;font-size:16px;font-weight:500;text-decoration:none;color:var(--fg)">{{ n.label }}</a></sc-for><div style="height:1px;background:var(--border);margin:10px 8px"></div><span style="display:inline-flex;align-items:center;gap:8px;padding:4px 8px 6px;font-size:12.5px;font-weight:600;color:var(--muted-fg)">{{ t.signIn }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sheetSign.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.sheetSign.n }}</span></sc-if></sc-if></span><sc-for list="{{ hd.signRows }}" as="sr" hint-placeholder-count="2"><a role="menuitem" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;text-decoration:none;color:var(--fg)"><span style="width:34px;height:34px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ sr.icon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;line-height:1.35">{{ sr.label }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.35">{{ sr.sub }}</span></span><i class="icon-arrow-right" style="font-size:15px;color:var(--muted-fg)"></i></a></sc-for><sc-if value="{{ fr.mobile }}" hint-placeholder-val="{{ false }}"><div style="height:1px;background:var(--border);margin:10px 8px"></div><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:4px 8px"><span style="font-size:14px">{{ t.language }}</span><div style="display:flex;padding:3px;background:var(--muted);border-radius:8px;gap:2px"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;border-radius:6px;height:26px;padding:0 9px;font-size:12px;font-weight:600;background:{{ l.bg }};color:{{ l.fg }};box-shadow:{{ l.shadow }}">{{ l.label }}</span></sc-for></div></div><div style="display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 8px 4px"><span style="display:inline-flex;align-items:center;gap:8px;font-size:14px">{{ t.darkMode }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sheetPrefs.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.sheetPrefs.n }}</span></sc-if></sc-if></span><span role="switch" aria-checked="{{ isDark }}" style="width:38px;height:22px;flex:none;border-radius:999px;padding:2px;background:{{ hd.themeTrack }};display:flex;justify-content:{{ hd.themeSide }}"><span style="width:18px;height:18px;flex:none;border-radius:50%;background:#fff;box-shadow:0 1px 2px rgba(0,0,0,.2)"></span></span></div></sc-if></div></div></sc-if>
           </div>
         </div>
       </figure>
@@ -209,10 +196,21 @@ body{margin:0;-webkit-font-smoothing:antialiased}
   </div>
 </section>
 
+
+<section data-screen-label="Photos" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The photos</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Four free stock photos from StockSnap, each under CC0: free to use, with no credit needed. They are cropped and made smaller, and kept beside this page in <code>proposals/landing/</code> with a list of where each came from. The people in them are not the centre’s students or staff. On the real page, photos of the centre’s own classes would say more, and need each person’s agreement.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(min(100%,240px),1fr));gap:14px">
+<figure style="margin:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;display:flex;flex-direction:column;gap:10px"><img src="landing/hero.jpg" alt="" style="display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:50% 20%;border-radius:8px"><figcaption style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">The top of the page</span><span style="font-size:12.5px;color:var(--muted-fg)">Matt Moloney · StockSnap · CC0</span></figcaption></figure><figure style="margin:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;display:flex;flex-direction:column;gap:10px"><img src="landing/role-teacher.jpg" alt="" style="display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:50% 20%;border-radius:8px"><figcaption style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">Teachers</span><span style="font-size:12.5px;color:var(--muted-fg)">Bruce Mars · StockSnap · CC0</span></figcaption></figure><figure style="margin:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;display:flex;flex-direction:column;gap:10px"><img src="landing/role-student.jpg" alt="" style="display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:50% 20%;border-radius:8px"><figcaption style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">Students</span><span style="font-size:12.5px;color:var(--muted-fg)">Nguyen Nguyen · StockSnap · CC0</span></figcaption></figure><figure style="margin:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:12px;display:flex;flex-direction:column;gap:10px"><img src="landing/role-admin.jpg" alt="" style="display:block;width:100%;aspect-ratio:3/2;object-fit:cover;object-position:50% 20%;border-radius:8px"><figcaption style="display:flex;flex-direction:column;gap:2px"><span style="font-weight:600">Centre admins</span><span style="font-size:12.5px;color:var(--muted-fg)">Kristin Hardwick · StockSnap · CC0</span></figcaption></figure>
+  </div>
+</section>
+
 <section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
-    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What the deck draws, and what this page does with it</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Landing, section by section, as it is. The right is this page. A section with nothing in the right column but “Unchanged” is the deck’s, word for word.</p>
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The deck’s Landing, and this page</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is the deck’s Landing, section by section. The right is what this page does with it.</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:820px">
@@ -224,12 +222,12 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 
 <section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
-    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Where each link leads, and what each state shows</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule behind it: the product as it is since v0.13.5, R11’s plan, or a choice this page makes.</p>
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Where each button leads</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">For the people who build it. The last column says why.</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:820px">
-      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What happens</span><span>Rule</span></div>
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What happens</span><span>Why</span></div>
       <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
     </div>
   </div>
@@ -238,7 +236,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words this page adds or changes</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The deck’s Landing has every other string in both languages, and they stay as they are. “Plan” says the English is R11’s, “As today” that both strings are in the product’s locale files, “Changed” that the deck says something else, which the first column quotes, and “New” that both are proposed here.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The deck’s Landing has every other string, in both languages, and they stay as they are. “Deck” says the words are the deck’s, used in a new place; “Changed” that the deck says something else, which the first column quotes; “Plan” that the English is R11’s; “As today” that the product already says it; and “New” that both are proposed here.</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:860px">
@@ -250,8 +248,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
-    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Decisions for the owner</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. The first four are the ones the two hosts ask again.</p>
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For the owner to decide</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -260,8 +258,8 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 
 <section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
-    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For R11’s tasks, and for hosting</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each task of R11’s plan becomes under these defaults, and what the design needs from infrastructure. Nothing here is switched on by this page.</p>
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For the people who build it</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What the page needs when it is built, in R11’s tasks and in hosting. Nothing here is switched on by this page.</p>
   </div>
   <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
     <div style="min-width:720px">
@@ -327,43 +325,38 @@ const D = {
 };
 const PILL = { warning: ['var(--warning-soft)', 'var(--warning-ink)'], success: ['var(--success-soft)', 'var(--success-ink)'], info: ['var(--info-soft)', 'var(--info-ink)'], accent: ['var(--accent-soft)', 'var(--accent-ink)'], muted: ['var(--muted)', 'var(--muted-fg)'] };
 
-// R11 · The Landing on quizzivy.com, with the app on two hosts. A proposal page for T-R11.3, T-R11.4a, T-R11.4b and T-R11.7
+// R11 · The Landing on quizzivy.com. A proposal page for T-R11.3, T-R11.4a, T-R11.4b and T-R11.7
 // (DG-100, DG-101, DG-02, DG-06). T, D and PILL above are the deck's.
-const MY = 'my.quizzivy.com', PORTAL = 'portal.quizzivy.com', ORG = 'Quizzivy English Centre', PHONE = '028 3812 4567';
-// The words this page adds, and the deck's words it changes: [key, where, Tiếng Việt, English, status]
+const ORG = 'Quizzivy English Centre', PHONE = '028 3812 4567';
+// The words this page adds, and the deck's words it changes or uses in a new place: [key, where, Tiếng Việt, English, status]
 const STR = [
-  ['joinClass', 'Hero: the join box’s button. The deck: “Vào lớp”', 'Tham gia lớp', 'Join class', 'Changed'],
-  ['signStudents', 'Sign-in menu, menu below 960', 'Học viên', 'Students', 'New'],
-  ['signStaff', 'Sign-in menu, menu below 960', 'Giáo viên và quản trị', 'Teachers and admins', 'New'],
-  ['menuOpen', 'Header below 960 (accessible name)', 'Mở menu', 'Open menu', 'New'],
-  ['menuTitle', 'Menu below 960', 'Menu', 'Menu', 'New'],
-  ['menuClose', 'Menu below 960 (accessible name)', 'Đóng menu', 'Close menu', 'New'],
-  ['language', 'Menu below 720', 'Ngôn ngữ', 'Language', 'As today'],
-  ['darkMode', 'Menu below 720', 'Giao diện tối', 'Dark mode', 'As today'],
-  ['joinShort', 'Hero: the join box', 'Nhập đủ 8 ký tự.', 'Enter all 8 characters.', 'Plan'],
-  ['joinExcluded', 'Hero: the join box', 'Mã lớp không bao giờ có 0, O, 1 hoặc I.', 'Codes never use 0, O, 1 or I.', 'As today'],
+  ['joinClass', 'The join box’s button. The deck: “Vào lớp”', 'Tham gia lớp', 'Join class', 'Changed'],
   ['featBody1', 'Features, card 1. The deck: “Five question types, …”', 'Nhiều dạng câu hỏi, chia nhóm, có audio và hình ảnh. Dùng lại mọi câu trong ngân hàng.', 'Many question types, groups, audio and images. Reuse anything from the question bank.', 'Changed'],
-  ['featImportT', 'Features at launch, card 4', 'Nhập đề có sẵn', 'Bring in the tests you have', 'New'],
-  ['featImportB', 'Features at launch, card 4', 'Tải lên tệp Word hoặc PDF. Quizzivy tách thành câu hỏi, và bạn duyệt từng câu trước khi dùng.', 'Upload a Word or PDF file. Quizzivy reads the questions out of it, and you check each one before it is used.', 'New'],
-  ['featAiT', 'Features at launch, card 5', 'Trợ lý AI soạn nháp', 'An assistant for drafts', 'New'],
-  ['featAiB', 'Features at launch, card 5', 'Gợi ý câu hỏi và biến thể của đề. Không gì được thêm khi giáo viên chưa đọc qua.', 'It suggests questions and variants of a test. Nothing is added until a teacher has read it.', 'New'],
-  ['featResultsT', 'Features at launch, card 6', 'Xem kết quả', 'See results', 'New'],
-  ['featResultsB', 'Features at launch, card 6', 'Kết quả của từng học viên ở mỗi bài, cùng bảng tổng quan những việc cần bạn hôm nay.', 'Each student’s result on every test, and a dashboard of what needs you today.', 'New'],
-  ['roleQueueB', 'Teachers at launch, point 3. The deck: “with keyboard shortcuts and comment snippets.”', 'gom mọi bài đang chờ bạn chấm.', 'that gathers every answer waiting for you.', 'Changed'],
-  ['roleNotifyH', 'Teachers at launch, point 4. The deck: “Messages”', 'Thông báo', 'Notifications', 'Changed'],
-  ['roleNotifyB', 'Teachers at launch, point 4', 'khi có bài nộp, bài bị gắn cờ hoặc bài sắp đóng.', 'when work comes in, is flagged, or is about to close.', 'Changed'],
-  ['roleRemindH', 'Students at launch, point 4. The deck: “Daily flashcards”', 'Lời nhắc', 'Reminders', 'Changed'],
-  ['roleRemindB', 'Students at launch, point 4', 'trước khi bài đóng và khi có kết quả.', 'before a test closes and when a result is ready.', 'Changed'],
-  ['rowUpcomingB', 'Students at launch, the mock’s third row. The deck: “Environment words · 12 to review”', 'Mở Thứ 2, 29/9', 'Opens Mon 29 Sep', 'Changed'],
-  ['rowUpcomingPill', 'Students at launch, the mock’s third row', 'Sắp mở', 'Upcoming', 'Changed'],
-  ['consentA', 'Consultation: consent, before the link', 'Tôi đồng ý để {org} dùng họ tên và số điện thoại của tôi để gọi lại tư vấn khoá học, như nêu trong ', 'I agree that {org} may use my name and phone number to call me back about courses, as described in the ', 'Plan'],
-  ['privacyNotice', 'Consultation: consent, the link', 'thông báo về quyền riêng tư', 'privacy notice', 'Plan'],
+  ['fact1', 'Four facts: from the deck’s FAQ', 'Mọi thiết bị', 'Any device', 'Deck'],
+  ['fact1s', 'Four facts', 'Điện thoại, máy tính bảng, laptop', 'Phone, tablet or laptop', 'Deck'],
+  ['fact2', 'Four facts: from the deck’s FAQ', 'Bài làm tự lưu', 'Saves as you go', 'Deck'],
+  ['fact2s', 'Four facts', 'Đáp án lưu sau vài giây', 'Answers save every few seconds', 'Deck'],
+  ['fact3', 'Four facts: from the deck’s Features', 'Chấm tự động', 'Marks itself', 'Deck'],
+  ['fact3s', 'Four facts', 'Câu trắc nghiệm và điền từ', 'Choice and blank questions', 'Deck'],
+  ['fact4', 'Four facts: from the deck’s Students tab', 'Vào lớp bằng mã', 'Join with a code', 'Deck'],
+  ['fact4s', 'Four facts', 'Không cần cài đặt', 'No set-up needed', 'Deck'],
+  ['signStudents', 'Sign-in menu', 'Học viên', 'Students', 'New'],
+  ['signStudentsSub', 'Sign-in menu', 'Làm bài và xem kết quả', 'Take tests and see results', 'New'],
+  ['signStaff', 'Sign-in menu', 'Giáo viên và quản trị', 'Teachers and admins', 'New'],
+  ['signStaffSub', 'Sign-in menu', 'Soạn đề, chấm bài, quản lý lớp', 'Build tests, grade, run classes', 'New'],
+  ['menuOpen', 'Header below 960 (read aloud)', 'Mở menu', 'Open menu', 'New'],
+  ['menuTitle', 'Menu below 960', 'Menu', 'Menu', 'New'],
+  ['menuClose', 'Menu below 960 (read aloud)', 'Đóng menu', 'Close menu', 'New'],
+  ['language', 'Menu on a phone', 'Ngôn ngữ', 'Language', 'As today'],
+  ['darkMode', 'Menu on a phone', 'Giao diện tối', 'Dark mode', 'As today'],
+  ['joinShort', 'The join box', 'Nhập đủ 8 ký tự.', 'Enter all 8 characters.', 'Plan'],
+  ['joinExcluded', 'The join box', 'Mã lớp không bao giờ có 0, O, 1 hoặc I.', 'Codes never use 0, O, 1 or I.', 'As today'],
+  ['consentA', 'Consultation: the box to tick, before the link', 'Tôi đồng ý để {org} dùng họ tên và số điện thoại của tôi để gọi lại tư vấn khoá học, như nêu trong ', 'I agree that {org} may use my name and phone number to call me back about courses, as described in the ', 'Plan'],
+  ['privacyNotice', 'Consultation: the link in it', 'thông báo về quyền riêng tư', 'privacy notice', 'Plan'],
   ['errConsent', 'Consultation', 'Vui lòng đồng ý để chúng tôi liên hệ trước khi gửi.', 'Please agree to be contacted before sending.', 'Plan'],
   ['sending', 'Consultation: the button while it sends', 'Đang gửi…', 'Sending…', 'Plan'],
   ['errLimited', 'Consultation', 'Có quá nhiều yêu cầu từ kết nối này. Hãy thử lại sau {n} phút.', 'Too many requests from this connection. Try again in {n} minutes.', 'Plan'],
   ['errFailed', 'Consultation', 'Chưa gửi được yêu cầu. Vui lòng thử lại, hoặc gọi {phone}.', 'We couldn’t send your request. Please try again, or call {phone}.', 'Plan'],
-  ['faqA1', 'FAQ, answer 1. The deck: “…then sign in or create an account.”', 'Giáo viên gửi mã 8 ký tự hoặc đường link. Học viên nhập mã ở trang này hoặc trong app, rồi đăng nhập. Nếu trung tâm bật đăng nhập bằng Google, học viên mới có tài khoản ngay ở bước này.', 'The teacher shares an 8-character code or a link. Students enter it on this page or in the app, then sign in. If the centre has Google sign-in on, a new student gets an account at that step.', 'Changed'],
-  ['faqA5', 'FAQ, answer 5. The deck: “You will get a temporary password…”', 'Nhờ giáo viên hoặc trung tâm đặt lại. Bạn sẽ nhận email có liên kết để đặt mật khẩu mới, hoặc một mật khẩu tạm để đổi khi đăng nhập.', 'Ask your teacher or the centre to reset it. You get an email with a link to set a new password, or a temporary password to change when you sign in.', 'Changed'],
   ['footStudents', 'Footer: Get started. The deck: “Sign in”', 'Học viên đăng nhập', 'Student sign-in', 'Changed'],
   ['footStaff', 'Footer: Get started', 'Giáo viên đăng nhập', 'Teacher sign-in', 'New'],
   ['footJoin', 'Footer: Get started. The deck: “Vào lớp”', 'Tham gia lớp', 'Join a class', 'Changed'],
@@ -373,91 +366,89 @@ const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] !
 
 const PARTS = [['page', 'The whole page'], ['header', 'Header and menus'], ['join', 'The join box'], ['roles', 'For each role'], ['form', 'The consultation form']];
 const STATES = {
-  page: [['today', 'At launch'], ['later', 'After R10, with testimonials']],
+  page: [['plain', 'As it opens'], ['quotes', 'With testimonials']],
   header: [['signin', 'The sign-in menu'], ['sheet', 'The menu below 960']],
   join: [['empty', 'Empty'], ['ready', 'A whole code'], ['short', 'Not all 8 characters'], ['excluded', 'A character no code has']],
   roles: [['teacher', 'Teachers'], ['student', 'Students'], ['admin', 'Centre admins']],
-  form: [['empty', 'Empty'], ['name', 'No name'], ['consent', 'No consent'], ['sending', 'Sending'], ['sent', 'Sent'], ['limited', 'Too many requests'], ['failed', 'Could not send']]
+  form: [['empty', 'Empty'], ['name', 'No name'], ['consent', 'Box not ticked'], ['sending', 'Sending'], ['sent', 'Sent'], ['limited', 'Too many requests'], ['failed', 'Could not send']]
 };
-const START = { page: 'today', header: 'signin', join: 'ready', roles: 'student', form: 'empty' };
+const START = { page: 'plain', header: 'signin', join: 'ready', roles: 'student', form: 'empty' };
 const NOTES = {
-  'page:today': [['signin', '“Đăng nhập” is one button with two choices, one for each host (Q1).'], ['join', 'The deck’s join box, with a code spelt from the product’s alphabet as its placeholder (DG-02).'], ['helper', 'Beside a class code, “Đăng nhập” is the student’s sign-in.'], ['features', 'Six cards, all true today. The last three stand in for courses, flashcards and the gradebook until those ship (Q5).'], ['roleCta', 'Each role’s button opens that role’s host.'], ['consent', 'A consent box above the button, unticked (DG-06). There are no testimonials yet: none has a person’s consent (Q6).'], ['footer', 'The footer has a sign-in link for each host, “Tham gia lớp” on the student host, “Quyền riêng tư”, and “Trạng thái hệ thống” to a real page.']],
-  'page:later': [['features', 'The deck’s six cards, once R9 and R10 have shipped what they name. “Five question types” still loses its number.'], ['quotes', 'The deck’s section, shown once each person has agreed to their quote. Until then it is not on the page.']],
-  'header:signin': [['signin', 'Two choices, each with its host written out, so a visitor knows where the click leads. A student and a teacher never share a sign-in page since v0.13.5.'], ['menuBtn', 'From 720 to 959 the section links are in the menu; “Đăng nhập” stays in the header.']],
-  'header:sheet': [['sheet', 'Below 960 the deck drops the section links and puts nothing in their place (DG-100). A menu button at the end of the header opens this sheet, from the right, as the product’s sheets open. Any link closes it, and so does Esc.'], ['sheetSign', 'The same two sign-ins as the header’s menu.'], ['sheetPrefs', 'Below 720 the language and the theme are here: the deck’s header is 406px wide on a 360 screen.']],
-  'join:empty': [['join', 'The placeholder is a code spelt from the product’s alphabet, which has no 0, O, 1 or I. The button rests until there are eight characters.']],
-  'join:ready': [['join', 'Eight characters: the deck’s green edge, and the button wakes. It opens my.quizzivy.com/join/K7QM-2PXA, where the class is looked up. The deck drops the code; the page passes it.']],
-  'join:short': [['joinErr', 'Enter pressed with fewer than eight characters. The page says so and goes nowhere.']],
-  'join:excluded': [['joinErr', 'The product’s own field keeps a 0, O, 1 or I on screen so it can say why the code cannot be right, and this is its sentence.']],
-  'roles:teacher': [['roleCta', 'The button opens portal.quizzivy.com. Until R7 ships messages, the fourth point is the notifications a teacher gets today; the third says what the grading queue does today.']],
-  'roles:student': [['roleCta', 'The button opens my.quizzivy.com. Until R10 ships flashcards, the fourth point is the reminders a student gets today, and the mock’s third row is a test that is about to open.']],
-  'roles:admin': [['roleCta', 'The button opens portal.quizzivy.com, where an admin signs in as a teacher does. Every point is true today.']],
-  'form:empty': [['consent', 'The consent box, unticked, with a link to the privacy notice. The deck’s line under the button stays.']],
-  'form:name': [['err', 'The deck’s rule: nothing until the first try, then one line at a time. The name comes first, then the phone, then the consent.']],
-  'form:consent': [['err', 'Everything else is right and the box is unticked. Its edge turns red and the line says what is missing.']],
+  'page:plain': [['signin', '“Đăng nhập” is one button. It asks student or teacher, and opens that sign-in.'], ['join', 'The deck’s join box. A whole code opens the class on the students’ site.'], ['helper', 'Beside a class code, “Đăng nhập” is the student’s.'], ['photo', 'One photo of a person, in an arch on a lime circle. Two pieces of the product rest on it: a test question and a marked result, both the deck’s.'], ['facts', 'Four short facts where a template keeps its big numbers. Each is something the deck’s Landing already says further down.'], ['rolePhoto', 'Each kind of visitor has a photo, with the first two rows of the deck’s small list over its corner.'], ['consent', 'A box to tick before sending, with a link to the privacy notice.'], ['footer', 'The footer has a sign-in link for students and one for teachers, and “Quyền riêng tư”.']],
+  'page:quotes': [['quotes', 'The deck’s section. It is on the page only once each person named has agreed to their quote.']],
+  'header:signin': [['signin', 'Two choices, each with a line that says what is behind it. A student and a teacher sign in on different sites.'], ['menuBtn', 'From 720 to 959 wide the section links are in the menu; “Đăng nhập” stays in the header.']],
+  'header:sheet': [['sheet', 'Below 960 wide the deck drops the section links and puts nothing in their place. A menu button at the end of the header opens this panel from the right.'], ['sheetSign', 'The same two sign-ins as in the header’s menu.'], ['sheetPrefs', 'On a phone the language and the dark mode are here: the header has no room for them.']],
+  'join:empty': [['join', 'The grey code is an example. The button rests until there are eight characters.']],
+  'join:ready': [['join', 'Eight characters: the edge turns green and the button wakes. It opens that class on the students’ site.']],
+  'join:short': [['joinErr', 'Enter pressed with fewer than eight characters. The page says so and stays where it is.']],
+  'join:excluded': [['joinErr', 'No code has a 0, O, 1 or I, because they are easy to mix up. The box says so, in the words the app already uses.']],
+  'roles:teacher': [['rolePhoto', 'A teacher at work, and the top of the deck’s grading list.'], ['roleCta', 'The button opens the teachers’ site.']],
+  'roles:student': [['rolePhoto', 'A student, and the top of the deck’s list of what is coming up.'], ['roleCta', 'The button opens the students’ site.']],
+  'roles:admin': [['rolePhoto', 'Someone at the centre’s desk, and the top of the deck’s list of what needs attention.'], ['roleCta', 'The button opens the teachers’ site, where an admin signs in too.']],
+  'form:empty': [['consent', 'The box to tick, unticked, with a link to the privacy notice. The deck’s line under the button stays.']],
+  'form:name': [['err', 'Nothing is said until the first try. Then one line at a time: the name, the phone, the box.']],
+  'form:consent': [['err', 'Everything else is right and the box is not ticked. Its edge turns red and the line says what is missing.']],
   'form:sending': [['submit', 'The button rests and reads “Đang gửi…” until the answer comes.']],
   'form:sent': [['sent', 'The deck’s thanks, with the name that was typed, and a way to send another.']],
-  'form:limited': [['err', 'The server’s limit for one connection. The form keeps what was typed.']],
-  'form:failed': [['err', 'No answer, or an error. The line gives the front desk’s number as the other way to reach the centre.']]
+  'form:limited': [['err', 'Too many tries from one place. The form keeps what was typed.']],
+  'form:failed': [['err', 'It could not be sent. The line gives the front desk’s number as the other way to reach the centre.']]
 };
-const PIN_KEYS = ['signin', 'menuBtn', 'join', 'joinErr', 'helper', 'features', 'roleCta', 'quotes', 'consent', 'err', 'submit', 'sent', 'footer', 'sheet', 'sheetSign', 'sheetPrefs'];
+const PIN_KEYS = ['signin', 'menuBtn', 'join', 'joinErr', 'helper', 'photo', 'facts', 'features', 'roleCta', 'rolePhoto', 'quotes', 'consent', 'err', 'submit', 'sent', 'footer', 'sheet', 'sheetSign', 'sheetPrefs'];
 // [section of the deck's Landing, what the deck draws, this page]
 const ADDS = [
-  ['Header', 'The logo, four section links from 960, EN / VI, the theme button, “Sign in” from 720, and “Book a consultation”. Below 960 the links are gone and nothing takes their place; at 360 the row is 406px wide.', '“Đăng nhập” opens two choices. Below 960 a menu button opens a sheet with the links and the two sign-ins; below 720 the language and the theme are in the sheet too.'],
-  ['Hero', 'An eyebrow, the title, the subtitle, the join box with “ABCD-1234” in it, “Already have an account? Sign in · book a free consultation”, and two product mocks. Joining drops the code.', 'The same. The placeholder is “K7QM-2PXA” (DG-02); the box says why a code cannot be right; a whole code opens the student host with the code. The mock’s address reads portal.quizzivy.com/teacher, and the mocks keep a light surface in the dark theme (DG-35).'],
-  ['Features', 'Six cards. Three name what R9 and R10 ship: courses, flashcards, the gradebook and reports.', 'At launch the first three, and three for what is there: imports, the AI assistant, results. The deck’s three return as their releases ship. “Five question types” loses its number.'],
-  ['For each role', 'Three tabs, four points each, a button to that role’s app, and a small mock. On a 360 screen the row of tabs is 78px wider than the screen.', 'The same. Two of the teacher’s points and one of the student’s name what is not there yet, and say something else until it is. Each button opens that role’s host. On a phone the three tabs share the row, without their icons.'],
+  ['Header', 'The logo, four links, EN / VI, the dark mode button, “Sign in” and “Book a consultation”, on a white bar. Below 960 wide the links are gone; on a phone the row does not fit.', 'The same row, on the colour of the top of the page. “Đăng nhập” opens two choices. Below 960 a menu takes the links.'],
+  ['Hero', 'A small label, the headline, one sentence, the join box, and two grey mock screens.', 'The same words and the same join box. In place of the mock screens: one photo of a person, with a test question and a marked result resting on it, and a few plain shapes around.'],
+  ['Four facts', 'Not there.', 'A strip under the top with four things the deck already says elsewhere: any device, answers save, marking, joining with a code.'],
+  ['Features', 'Six cards.', 'The same six. “Five question types” loses its number, which is out of date.'],
+  ['For each role', 'Three tabs, four points each, a button, and a small list.', 'The same words. A photo of that person, with the first two rows of the list over its corner. On a phone the three tabs share the row.'],
   ['Fair tests', 'The dark band and its four cards.', 'Unchanged.'],
-  ['Testimonials', 'Three quotes, under the names of real people.', 'Not on the page until each person has agreed to theirs, as R11’s plan decided. Drawn under “After R10, with testimonials”.'],
-  ['Consultation', 'The contacts, and a form: name, phone, interests, who it is for, a time, “Request a call back”, one line for an error, and the thanks.', 'The same, with a consent box above the button (DG-06), and three more answers where the error line is: sending, too many requests, could not send (DG-101).'],
-  ['FAQ', 'Five questions, the first open.', 'Unchanged, but for answers 1 and 5, which say what the product no longer does.'],
-  ['Footer', 'The logo, three columns, © and the address. “Sign in” and “Join a class” open the sign-in page; “Status” opens the maintenance frame.', 'A sign-in link for each host; “Tham gia lớp” on the student host; “Trạng thái hệ thống” to /status; and “Quyền riêng tư” to /privacy, which the deck lacks.'],
-  ['The language', 'Both languages, opening in English.', 'Vietnamese first (DG-100). “Vào lớp” becomes “Tham gia lớp”, the word on the product’s Join page.']
+  ['Testimonials', 'Three quotes, under the names of real people.', 'Not on the page until each person has agreed. Drawn under “With testimonials”.'],
+  ['Consultation', 'The contacts, and a form with one line for a mistake and a thank-you.', 'The same, with a box to tick before sending, and what the form says while it sends and when it cannot.'],
+  ['FAQ', 'Five questions, the first open.', 'Unchanged.'],
+  ['Footer', 'The logo, three columns of links, © and the address.', 'A sign-in link for students and one for teachers, “Quyền riêng tư”, and “Trạng thái hệ thống” leading to a real page.']
 ];
 const WHENS = [
-  ['“Đăng nhập” in the header', 'Two choices: “Học viên” opens https://my.quizzivy.com/login, “Giáo viên và quản trị” opens https://portal.quizzivy.com/login.', 'Since v0.13.5 each host signs in its own accounts. quizzivy.com has no sign-in page (Q1).'],
+  ['“Đăng nhập” in the header', 'Two choices. “Học viên” opens https://my.quizzivy.com/login; “Giáo viên và quản trị” opens https://portal.quizzivy.com/login.', 'Students and staff have had separate sites and separate sign-ins since v0.13.5.'],
   ['“Đăng nhập” under the join box', 'https://my.quizzivy.com/login.', 'It stands beside a class code, which only a student has.'],
-  ['Eight characters and “Tham gia lớp”', 'https://my.quizzivy.com/join/K7QM-2PXA, where the class is looked up and the student signs in.', '/join is on the student host. A link written by path would be a 404 here, as web#55 found on the staff host.'],
-  ['Enter with fewer than eight characters', '“Nhập đủ 8 ký tự.” The page goes nowhere.', 'T-R11.4a, DG-02.'],
-  ['A 0, O, 1 or I in the code', '“Mã lớp không bao giờ có 0, O, 1 hoặc I.”', 'The product’s field (`features/join/code.ts`) and its sentence.'],
-  ['A role’s button', '“Mở khu vực giáo viên” and “Mở trang quản trị” open https://portal.quizzivy.com, “Mở ứng dụng học viên” opens https://my.quizzivy.com.', 'Each host sends a signed-out visitor to its sign-in and a signed-in one to their console.'],
-  ['A visitor who is signed in opens quizzivy.com', 'The Landing, as for anyone.', 'The page holds no session (Q2). R11’s plan sent them to their console through a cookie on the whole domain.'],
-  ['The page opens', 'No request to the API. The contacts come from the build.', 'R11’s rule, kept (Q4). Its reason was a database that slept; the one that stands is a page that opens when the API is down.'],
-  ['The form is sent', '“Đang gửi…”, then the thanks. One request, to POST /public/leads.', 'T-R11.6. The API has to accept that call from https://quizzivy.com, with no credentials.'],
-  ['The name is empty, the phone has fewer than 9 digits, or the box is unticked', 'One line, in that order, and a red edge on what is wrong.', 'The deck’s rule and order, with consent last (T-R11.7).'],
-  ['Too many requests, or no answer', 'One line, and the form keeps what was typed.', 'T-R11.7, DG-101.'],
-  ['Narrower than 960', 'The section links are in the menu.', 'DG-100.'],
-  ['Narrower than 720', '“Đăng nhập”, the language and the theme are in the menu too. The header keeps the logo, “Đăng ký tư vấn” and the menu button.', 'This page: the deck’s row does not fit a phone (Q7).'],
-  ['“Trạng thái hệ thống”, “Quyền riêng tư”', 'quizzivy.com/status and quizzivy.com/privacy.', 'T-R11.8. Neither page is drawn here.'],
-  ['Any other address on quizzivy.com', 'The not-found page, with the two hosts to go to.', 'This page: the apex serves the Landing and its two pages, and no page of the app.']
+  ['Eight characters and “Tham gia lớp”', 'https://my.quizzivy.com/join/K7QM-2PXA, where the class is found and the student signs in.', 'Joining is on the students’ site. The link has to carry the full address.'],
+  ['Enter with fewer than eight characters', '“Nhập đủ 8 ký tự.” The page stays.', 'R11’s plan (T-R11.4a).'],
+  ['A 0, O, 1 or I in the code', '“Mã lớp không bao giờ có 0, O, 1 hoặc I.”', 'The app’s own join box says this today.'],
+  ['A role’s button', 'Teachers and admins: https://portal.quizzivy.com. Students: https://my.quizzivy.com.', 'Each site sends a visitor to its sign-in, or straight in if they are signed in.'],
+  ['A visitor who is signed in opens quizzivy.com', 'The Landing, as for anyone.', 'The page does not know who is signed in, and does not ask.'],
+  ['The page opens', 'It asks the server for nothing. The phone, email and address are part of the page.', 'So the page opens even when the app is down.'],
+  ['The form is sent', '“Đang gửi…”, then the thanks. This is the page’s one call to the server.', 'R11’s plan (T-R11.6).'],
+  ['No name, a phone with fewer than 9 digits, or the box not ticked', 'One line, in that order, and a red edge on what is wrong.', 'The deck’s rule and order, with the box last.'],
+  ['Too many tries, or no answer', 'One line, and the form keeps what was typed.', 'R11’s plan (T-R11.7).'],
+  ['Narrower than 960', 'The section links are in the menu.', 'The deck leaves them out.'],
+  ['Narrower than 720', '“Đăng nhập”, the language and the dark mode are in the menu too.', 'The deck’s header is 406px wide on a 360 screen.'],
+  ['“Trạng thái hệ thống”, “Quyền riêng tư”', 'quizzivy.com/status and quizzivy.com/privacy.', 'R11’s plan (T-R11.8). Neither page is drawn here.']
 ];
 // [id, question, why, default]
 const QUESTIONS = [
-  ['Q1 · Signing in from the Landing', 'Is one “Đăng nhập” with two choices the way in?', 'The deck has one sign-in page and one button for it. There are now two pages on two hosts, and the Landing cannot tell a student from a teacher. Two buttons would crowd the header; sending everyone to the student host first would make every teacher take a second step.', 'One button, two choices, each with its host written out.'],
-  ['Q2 · A visitor who is already signed in', 'Does quizzivy.com show them the Landing, or take them to their console?', 'R11’s plan took them in, by a cookie on the whole domain that only says “signed in”. With two hosts that cookie would also have to say which one, the API would set it on every sign-in, and the Landing would read it on every visit. Without it the Landing is a plain page, and a signed-in visitor is one click from their console.', 'The Landing, for everyone. No cookie, and no session on quizzivy.com.'],
-  ['Q3 · Where a join link lives', 'Do class links and QR codes stay on my.quizzivy.com?', 'R11’s plan moved them to quizzivy.com/join/…, a shorter address to print. Joining now happens on the student host, so a link on quizzivy.com would have to be sent on to it.', 'They stay on my.quizzivy.com. The Landing’s box opens the same address.'],
-  ['Q4 · What the Landing asks the API', 'Nothing when it opens, and one request when the form is sent?', 'R11’s plan kept the page off the API so that a visit would not wake a sleeping database. The database is now on the centre’s own server and does not sleep. What is left is that the page opens when the API is down, and that the contacts change only at a build.', 'Nothing when it opens. The form’s request and /status are the only calls, each on a visitor’s own action.'],
-  ['Q5 · What the page says before R7 to R10 ship', 'Do the three cards and three points that name later modules say something else until then?', 'R11’s plan put the Landing last because its words sell every module, and decided that the words state what shipped. Opened now, half the Features section would promise courses, flashcards and a gradebook that are not there.', 'Yes: imports, the AI assistant and results at launch, and the deck’s lines return as each release ships.'],
-  ['Q6 · Testimonials', 'Does the section stay off the page until people have agreed?', 'The deck’s three quotes carry the names of real people, the owner among them. R11’s plan decided a quote nobody gave is a made-up review.', 'Off the page, with no gap where it was, until a quote has a person’s consent.'],
-  ['Q7 · The header on a phone', 'Do the language and the theme go into the menu below 720?', 'The deck’s header keeps both beside the logo and “Đăng ký tư vấn”, and is 406px wide on a 360 screen. Something has to move, and the menu is one tap away.', 'Below 720: the logo, “Đăng ký tư vấn” and the menu button. The rest is in the menu.']
+  ['Q1 · The photos', 'Stock photos for now, and the centre’s own on the real page?', 'The four photos are free stock photos, picked to show the layout. The people in them are not the centre’s students or teachers.', 'Stock photos in this drawing. The centre’s own on the real page, once there are some.'],
+  ['Q2 · Signing in', 'Is one “Đăng nhập” with two choices right?', 'Students and teachers now sign in on different sites, and this page cannot tell which a visitor is. Two buttons would crowd the header.', 'One button, two choices.'],
+  ['Q3 · Three cards ahead of the product', 'Do the cards for courses, flashcards and the gradebook wait until the product has them?', 'The frames show the deck’s six feature cards. The product does not have those three yet.', 'All six are drawn. If the page opens before those exist, the three wait.'],
+  ['Q4 · Testimonials', 'Do they stay off the page until people have agreed?', 'The deck’s three quotes carry the names of real people, the owner among them. Nobody has said those words.', 'Off the page until a quote has its person’s agreement.'],
+  ['Q5 · A visitor who is already signed in', 'Do they see this page like anyone else?', 'R11’s plan sent them straight to their own pages. That needs the page to find out who they are on every visit.', 'They see the Landing. Their site is one click away.'],
+  ['Q6 · Class links', 'Do the links and QR codes teachers hand out stay as they are?', 'R11’s plan moved them to quizzivy.com/join. They work today on the students’ site.', 'They stay. The join box here opens the same address.'],
+  ['Q7 · The header on a phone', 'Do the language and the dark mode go into the menu?', 'There is no room for them beside the logo, “Đăng ký tư vấn” and the menu button on a phone.', 'Yes, on screens narrower than 720.']
 ];
 const HANDOFF = [
-  ['T-R11.1 · The session hint cookie', 'Not needed under Q2’s default. The Landing reads no cookie and asks for no session.'],
-  ['T-R11.2 · The apex as a second origin', 'Much smaller. quizzivy.com is not an origin of the app: no Google redirect address, no cookie, no call with credentials. It reaches two open operations, POST /public/leads and GET /public/status, so the API’s list of origins gains https://quizzivy.com for calls without credentials.'],
-  ['T-R11.3 · The root route', 'On the Landing’s host, / is the Landing for every visitor; /privacy and /status are its other pages; any other path is the not-found page with the two hosts. `host.ts` gains a third kind beside `student` and `staff`. No refresh and no move to a console.'],
-  ['T-R11.4a, T-R11.4b · The Landing', 'As written, with what the frames add: the sign-in menu and the sheet; the join box as the product’s field (`clean`, `group`, `hasExcluded`), opening the student host with the code; every link into the app written with its host, never by path; the words of the table above; no testimonials until one has consent.'],
-  ['T-R11.5 · Join links and QR codes on the apex', 'Not needed under Q3’s default. They are on my.quizzivy.com since v0.13.5.'],
-  ['T-R11.7 · The consultation form', 'As written. The frames give the consent box, the order of the three errors, and the four states.'],
-  ['Infrastructure, in the hosting session, on the owner’s word', 'DNS records for quizzivy.com and www.quizzivy.com, both proxied. quizzivy.com as a third custom domain of the Pages project quizzivy-web, or a project of its own if the Landing is built apart. www sent on to the apex. https://quizzivy.com in the API’s CORS list, for open operations and without credentials. Nothing changes in the Google OAuth client. If Q3 goes the other way, one more rule: quizzivy.com/join/* sent on to my.quizzivy.com/join/*.'],
-  ['Values the build needs', 'The front desk’s phone, the centre’s email and its address (`VITE_ORG_FRONT_DESK_PHONE`, `VITE_ORG_EMAIL`, `VITE_ORG_ADDRESS`), each line hidden when unset, and the Landing’s host.'],
-  ['Not on this page', '/privacy and /status, the Admin list of consultation requests, the email a request sends to the centre, and the Open Graph image. They are R11’s other drawings.'],
-  ['Locales', 'The copy table: ' + STR.length + ' strings this page adds or changes, Vietnamese first. Every other string is the deck’s, in both languages.']
+  ['The photos and graphics', 'In `proposals/landing/`, with `CREDITS.md` naming each photo’s source. For the real page: the centre’s own photos, or these, in the same shapes.'],
+  ['The top of the page', 'A block of the brand’s soft lime with the header on it; the photo in an arch, a lime circle behind, the deck’s test card and a result row on top; a strip of four facts that overlaps the block’s lower edge. On a phone the pieces stack and the strip is one column.'],
+  ['T-R11.4a, T-R11.4b · The Landing', 'As written, with what the frames add: the sign-in menu and the menu below 960; the join box as the app’s own (`features/join/code.ts`), opening the students’ site with the code; every link into the app written with its full address; no testimonials until one has its person’s agreement.'],
+  ['T-R11.7 · The consultation form', 'As written. The frames give the box to tick, the order of the three mistakes, and the four states.'],
+  ['T-R11.1, T-R11.5', 'Not needed if Q5 and Q6 stay as drawn: the page reads no cookie, and class links stay where they are.'],
+  ['T-R11.2, T-R11.3', 'Smaller. quizzivy.com is a page, not a third site of the app: nobody signs in on it. It serves the Landing, /privacy and /status, and a not-found page for anything else.'],
+  ['Hosting, on the owner’s word', 'DNS for quizzivy.com and www.quizzivy.com. quizzivy.com as a custom domain of the Pages project (or of one of its own), with www sent on to it. https://quizzivy.com allowed to call the server’s two open operations, sending a request and reading the status, with no sign-in. Nothing changes in the Google sign-in set-up.'],
+  ['Not on this page', '/privacy and /status, the not-found page, the Admin list of requests, the email a request sends, and the picture shown when the link is shared.'],
+  ['Locales', 'The copy table: ' + STR.length + ' strings this page adds or changes, Vietnamese first. Every other string is the deck’s.']
 ];
 const METHOD = [
-  ['What this was drawn from.', 'The whole of the deck’s Landing (its template, its two languages and its script), R11’s plan (docs/plan/81-r11.md, with its note of 2026-11-13 on the two hosts; T-R11.1 to T-R11.7), the gap register (DG-100, DG-101, DG-02, DG-06, DG-35), and in the product the two hosts’ rules (`app/host.ts`, web#51 and web#55), the join field (`features/join/code.ts`) and the Join page’s words. The sections in the frames are the deck’s own markup, taken from its file and made inert; this page adds the parts with a number.'],
-  ['What it leaves alone.', 'The deck’s layout, type, colours and every word it does not list. No operation changes.'],
-  ['What could not be checked.', 'Whether each line the Landing keeps is true of the product today was checked against the modules the web has, not by using each one. The owner knows the product better: Q5’s cards are his to confirm.'],
-  ['What is not drawn.', 'The widths between 360 and 1280 other than 768. The not-found page of quizzivy.com. /privacy and /status.']
+  ['What this was drawn from.', 'The deck’s Landing, whole. The owner’s reference, a landing page for an online course site: a warm block of colour, one photo of a person, a short headline, a row of numbers under it. R11’s plan (docs/plan/81-r11.md) and the gap register. In the app: how the two sites link to each other, and the join box.'],
+  ['What it leaves alone.', 'The deck’s words, type and colours. The sections below the top are the deck’s own markup, taken from its file.'],
+  ['What is not known.', 'Numbers that would be true: how many learners, how many classes. The strip under the top says four facts instead, and can take numbers when there are some.'],
+  ['What is not drawn.', 'Widths other than 360, 768 and 1280. The pages the footer leads to.']
 ];
 
 class Component extends DCLogic {
@@ -486,28 +477,23 @@ class Component extends DCLogic {
     const noteList = NOTES[key] || [];
     const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
     noteList.forEach((n, i) => { pin[n[0]] = { on: true, n: String(i + 1) }; });
-    const later = key === 'page:later';
     const seg = on => ({ bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', shadow: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' });
+    const hero = part !== 'form' && part !== 'roles';
 
     // ---- the header, its sign-in menu and the menu below 960
     const hd = {
       signOpen: key === 'header:signin', signBg: key === 'header:signin' ? 'var(--muted)' : 'var(--card)', menuBg: key === 'header:sheet' ? 'var(--muted)' : 'var(--card)',
-      signRows: [['user', t.signStudents, MY], ['graduation-cap', t.signStaff, PORTAL]].map(r => ({ icon: r[0], label: r[1], host: r[2] })),
+      signRows: [['user', t.signStudents, t.signStudentsSub], ['graduation-cap', t.signStaff, t.signStaffSub]].map(r => ({ icon: r[0], label: r[1], sub: r[2] })),
       themeTrack: dark ? 'var(--primary)' : 'var(--border)', themeSide: dark ? 'flex-end' : 'flex-start'
     };
 
-    // ---- the join box: the product's field
+    // ---- the join box: the app's own
     const jb = { empty: ['K7QM-2PXA', 'var(--muted-fg)', 'var(--border)', 0.55, ''], ready: ['K7QM-2PXA', 'var(--fg)', 'var(--success)', 1, ''], short: ['K7QM-2', 'var(--fg)', 'var(--danger)', 0.55, t.joinShort], excluded: ['K7Q0-2PXA', 'var(--fg)', 'var(--danger)', 0.55, t.joinExcluded] }[part === 'join' ? st : 'empty'];
 
-    // ---- the words that are true at launch, and the deck's once its modules ship
-    const feats = D.features[L].map(f => [...f]);
-    feats[0][2] = t.featBody1;
-    if (!later) { feats[3] = ['file-up', t.featImportT, t.featImportB]; feats[4] = ['sparkles', t.featAiT, t.featAiB]; feats[5] = ['chart-column', t.featResultsT, t.featResultsB]; }
+    // ---- the deck's words
+    const feats = D.features[L].map(f => [...f]); feats[0][2] = t.featBody1;
     const roleId = part === 'roles' ? st : 'teacher', R = D.roles[roleId], r = R[L];
-    const points = r[2].map(pt => [...pt]), rows = r[5].map(o => [...o]);
-    if (!later && roleId === 'teacher') { points[2] = [points[2][0], t.roleQueueB]; points[3] = [t.roleNotifyH, t.roleNotifyB]; }
-    if (!later && roleId === 'student') { points[3] = [t.roleRemindH, t.roleRemindB]; rows[2] = ['clipboard-list', 'Unit 5 · Reading', t.rowUpcomingB, t.rowUpcomingPill, 'muted']; }
-    const faqs = D.faqs[L].map(q => [...q]); faqs[0][1] = t.faqA1; faqs[4][1] = t.faqA5;
+    const result = D.roles.student[L][5][3];      // the deck's marked test: “Unit 3 · Grammar”, “Đã chấm”, “8 / 10”
     const anchors = D.foot[L][0], help = D.foot[L][2];
     const foot = [anchors, [D.foot[L][1][0], [t.footStudents, t.footStaff, t.footJoin, D.foot[L][1][1][2][1]]], [help[0], [help[1][0][1], help[1][1][1], t.footPrivacy, help[1][2][1]]]];
 
@@ -524,21 +510,27 @@ class Component extends DCLogic {
       submitLabel: fs === 'sending' ? t.sending : (vi ? 'Gửi yêu cầu tư vấn' : 'Request a call back'), submitOp: fs === 'sending' ? 0.6 : 1
     };
     const sent = fs === 'sent';
-    const bars = [6, 9, 4, 12, 15, 3, 2, 8, 11, 14, 18, 10, 13, 17];
 
     // ---- the frames: the deck's breakpoints, 720 and 960, and its type steps
     const W = s.stageW || 1280;
     const mk = (w, h, sub) => { const mobile = w < 720, wide = w >= 960, sc = Math.min(1, W / w); return {
       w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: 'Landing · ' + w, pins: s.anno, mobile, notMobile: !mobile, wide, narrow: !wide, sheet: key === 'header:sheet' && !wide,
       headGap: mobile ? '10px' : '16px', tabsW: mobile ? '100%' : 'auto', tabPad: mobile ? '8px' : '16px', tabFlex: mobile ? '1 1 auto' : '0 0 auto', tabSize: mobile ? '13px' : '14px',
-      padX: mobile ? '18px' : '28px', heroPad: mobile ? '40px 18px 56px' : '72px 28px 88px', secPad: mobile ? '56px 18px' : '88px 28px',
+      padX: mobile ? '18px' : '28px', heroPad2: mobile ? '28px 18px 92px' : wide ? '52px 28px 108px' : '44px 28px 100px', secPad: mobile ? '56px 18px' : '88px 28px',
       heroCols: wide ? 'minmax(0,1fr) minmax(0,1.05fr)' : 'minmax(0,1fr)', h1Size: mobile ? '38px' : w < 1100 ? '48px' : '58px', h2Size: mobile ? '28px' : '38px',
-      mockH: mobile ? '230px' : '300px', phoneW: mobile ? '168px' : '200px', phoneRight: mobile ? '-4px' : '-18px', phonePad: mobile ? '120px' : '70px',
-      roleCols: wide ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)', rolePad: mobile ? '20px' : '32px', footCols: wide ? '1.4fr repeat(3,minmax(0,1fr))' : mobile ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))'
+      roleCols: wide ? 'minmax(0,1fr) minmax(0,1fr)' : 'minmax(0,1fr)', rolePad: mobile ? '20px' : '32px', footCols: wide ? '1.4fr repeat(3,minmax(0,1fr))' : mobile ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))',
+      // the photo and what is around it
+      visH: mobile ? '372px' : '520px', disc: mobile ? '270px' : '420px', discTop: mobile ? '30px' : '22px', discML: mobile ? '-105px' : '-190px',
+      photoW: mobile ? '220px' : '330px', photoH: mobile ? '310px' : '462px', photoML: mobile ? '-80px' : '-145px', photoR: mobile ? '110px 110px 22px 22px' : '165px 165px 28px 28px',
+      qLeft: mobile ? '0' : wide ? '0' : '9%', qTop: mobile ? '96px' : '150px', qW: mobile ? '138px' : '204px', rRight: mobile ? '0' : wide ? '0' : '9%', rBottom: mobile ? '22px' : '60px',
+      dotsR: mobile ? '0' : wide ? '8px' : '12%', pinL: mobile ? '56%' : '54%', pinT: mobile ? '36px' : '30px',
+      blob: mobile ? '220px' : '300px', cornerW: mobile ? '84px' : '170px', cornerH: mobile ? '64px' : '130px',
+      factsUp: mobile ? '-60px' : '-56px', factsDown: mobile ? '44px' : '68px', factsPad: mobile ? '18px' : '26px 30px', factsCols: mobile ? 'minmax(0,1fr)' : wide ? 'repeat(4,minmax(0,1fr))' : 'repeat(2,minmax(0,1fr))', factsGap: mobile ? '16px' : '22px', factSize: mobile ? '16px' : '18px',
+      roleDrop: mobile ? '118px' : '60px', roleCardL: mobile ? '12px' : '28px', roleCardR: mobile ? '12px' : '28px'      // on a phone the list sits mostly under the photo, so the face stays in view
     }; };
-    const frames = (key === 'header:signin' ? [mk(1280, '520px', 'the menu under “Đăng nhập”'), mk(768, '520px', 'from 720 to 959: the same menu, and a menu button')]
-      : key === 'header:sheet' ? [mk(768, '700px', 'from 720 to 959: the section links and the two sign-ins'), mk(360, '760px', 'a phone: the language and the theme too')]
-      : [mk(1280, 'auto', part === 'page' ? 'the whole page' : 'the section, under the header'), mk(360, 'auto', 'the same on a phone')]).map((fr, i) => ({ ...fr, pins: s.anno && (i === 0 || part === 'header') }));
+    const frames = (key === 'header:signin' ? [mk(1280, '560px', 'the menu under “Đăng nhập”'), mk(768, '560px', 'from 720 to 959 wide: the same menu, and a menu button')]
+      : key === 'header:sheet' ? [mk(768, '700px', 'from 720 to 959 wide: the section links and the two sign-ins'), mk(360, '760px', 'a phone: the language and the dark mode too')]
+      : [mk(1280, 'auto', part === 'page' ? 'the whole page' : 'this part of the page'), mk(360, 'auto', 'the same on a phone')]).map((fr, i) => ({ ...fr, pins: s.anno && (i === 0 || part === 'header') }));
 
     const ctl = [
       { label: 'Part', opts: this.seg(PARTS, part, v => this.setState({ part: v })) },
@@ -546,29 +538,29 @@ class Component extends DCLogic {
       { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
       { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
     ];
-    const ink = { New: 'var(--accent-ink)', Changed: 'var(--accent-ink)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const ink = { New: 'var(--accent-ink)', Changed: 'var(--accent-ink)', Deck: 'var(--muted-fg)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
     const pLabel = (PARTS.find(o => o[0] === part) || ['', ''])[1], stLabel = (STATES[part].find(o => o[0] === st) || ['', ''])[1];
     return {
       theme, isLight: !dark, isDark: dark, t, pin, hd, jb: { value: jb[0], fg: jb[1], border: jb[2], op: jb[3], hasErr: !!jb[4], err: jb[4] }, f, sent, notSent: !sent,
       sentBody: (vi ? 'Tư vấn viên sẽ gọi cho ' : 'An adviser will call ') + name + (vi ? ' trong vòng 1 ngày làm việc.' : ' within one working day.'),
       shadowLg: dark ? '0 24px 48px -16px rgba(0,0,0,.7)' : '0 24px 48px -16px rgba(20,28,30,.22),0 2px 6px rgba(20,28,30,.06)',
-      pg: { hero: part !== 'form' && part !== 'roles', features: part === 'page', roles: part === 'page' || part === 'roles', integrity: part === 'page', quotes: later, consult: part === 'page' || part === 'form', faq: part === 'page', footer: part === 'page' },
+      pg: { hero, features: part === 'page', roles: part === 'page' || part === 'roles', integrity: part === 'page', quotes: key === 'page:quotes', consult: part === 'page' || part === 'form', faq: part === 'page', footer: part === 'page',
+        bandBg: hero ? 'var(--accent-soft)' : 'var(--bg)', headLine: hero ? 'transparent' : 'var(--border)', segBg: hero ? 'var(--card)' : 'var(--muted)' },
+      hv: { resultTitle: result[1], resultSub: result[2], resultScore: result[3] },
+      facts: [['smartphone', t.fact1, t.fact1s], ['save', t.fact2, t.fact2s], ['check-check', t.fact3, t.fact3s], ['key-round', t.fact4, t.fact4s]].map((o, i) => ({ icon: o[0], title: o[1], sub: o[2], pin: i === 0 })),
       navLinks: D.nav[L].map(n => ({ label: n[1] })),
       langs: [['en', 'EN', 'English'], ['vi', 'VI', 'Tiếng Việt']].map(([id, label, aria]) => ({ label, aria, ...seg(L === id) })), themeIcon: dark ? 'sun' : 'moon',
-      mockNav: [['layout-dashboard', vi ? 'Tổng quan' : 'Dashboard', 1], ['clipboard-list', vi ? 'Bài tập' : 'Assignments'], ['square-pen', vi ? 'Chấm bài' : 'Grading'], ['graduation-cap', vi ? 'Lớp học' : 'Classes'], ['file-text', vi ? 'Đề thi' : 'Tests'], ['library', vi ? 'Ngân hàng' : 'Question bank'], ['chart-column', vi ? 'Báo cáo' : 'Reports']].map(m => ({ icon: m[0], label: m[1], bg: m[2] ? 'var(--hover)' : 'transparent', fg: m[2] ? 'var(--fg)' : 'var(--muted-fg)' })),
-      mockKpis: [[vi ? 'Cần chấm' : 'To grade', '6'], [vi ? 'Gắn cờ' : 'Flagged', '3'], [vi ? 'Đang làm' : 'Taking now', '5']].map(k => ({ label: k[0], value: k[1] })),
-      mockBars: bars.map((v, i) => ({ h: Math.round(v / 18 * 100) + '%', c: i === bars.length - 1 ? 'var(--accent-c)' : 'var(--hover)' })),
       mockOpts: (vi ? ['Đúng', 'Sai', 'Không có thông tin'] : ['True', 'False', 'Not given']).map((o, i) => ({ text: o, border: i === 1 ? 'var(--primary)' : 'var(--border)', ring: i === 1 ? 'var(--primary)' : 'var(--ring)', dot: i === 1 ? 'var(--primary)' : 'transparent' })),
       features: feats.map(o => ({ icon: o[0], title: o[1], body: o[2] })),
       roleTabs: ['teacher', 'student', 'admin'].map(id => ({ label: D.roles[id][L][0], icon: D.roles[id].icon, on: roleId === id, ...seg(roleId === id) })),
-      role: { title: r[1], points: points.map(pt => ({ h: pt[0], b: pt[1] })), cta: r[3], mockTitle: r[4], rows: rows.map(o => ({ icon: o[0], a: o[1], b: o[2], pill: o[3], pillBg: PILL[o[4]][0], pillFg: PILL[o[4]][1], radius: o[0] === 'user' ? '50%' : '7px' })) },
+      role: { title: r[1], points: r[2].map(pt => ({ h: pt[0], b: pt[1] })), cta: r[3], mockTitle: r[4], isTeacher: roleId === 'teacher', isStudent: roleId === 'student', isAdmin: roleId === 'admin', rows: r[5].slice(0, 2).map(o => ({ icon: o[0], a: o[1], b: o[2], pill: o[3], pillBg: PILL[o[4]][0], pillFg: PILL[o[4]][1], radius: o[0] === 'user' ? '50%' : '7px' })) },
       integrity: D.integrity[L].map(o => ({ icon: o[0], title: o[1], body: o[2] })),
       quotes: D.quotes[L].map(o => ({ text: o[0], name: o[1], role: o[2], initials: o[1].split(' ').slice(-1)[0][0] + o[1].split(' ')[0][0], bg: PILL[o[3]][0], fg: PILL[o[3]][1] })),
       contacts: [['phone', PHONE], ['mail', 'hello@quizzivy.com'], ['map-pin', t.footAddr]].map(c => ({ icon: c[0], text: c[1] })),
-      faqs: faqs.map((q, i) => ({ q: q[0], a: q[1], open: i === 0, icon: i === 0 ? 'minus' : 'plus' })),
+      faqs: D.faqs[L].map((q, i) => ({ q: q[0], a: q[1], open: i === 0, icon: i === 0 ? 'minus' : 'plus' })),
       footCols2: foot.map((c, i) => ({ title: c[0], links: (i === 0 ? c[1].map(l => l[1]) : c[1]).map(label => ({ label })) })),
       frames, ctl, stageRef: this.stageRef,
-      chips: ['R11 · v1.0.0', 'T-R11.3, T-R11.4a, T-R11.4b, T-R11.7', 'DG-100, DG-101, DG-02, DG-06', 'Two hosts since v0.13.5', 'Vietnamese first'],
+      chips: ['R11 · v1.0.0', 'DG-100, DG-101, DG-02, DG-06', 'Photos: StockSnap, CC0', 'Vietnamese first'],
       reset: () => this.setState({ lang: 'vi', theme: null, part: 'page', st: { ...START } }),
       anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(o => ({ anno: !o.anno })),
       pinsNote: part === 'header' ? 'The numbers are on both frames, each where its part is.' : 'The numbers are on the first frame.',

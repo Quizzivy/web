@@ -656,6 +656,8 @@ To view one, start the server above and open, for example,
   brand's lime; the brush stroke, sparkle, squiggle and underline were drawn for the page
   and take the theme's colours. Fifteen states now (the role tabs are gone), at 1280 and 360
   (768 for the header), light and dark, Vietnamese and English. Eight questions for Thuong.
+  He answered the first the same evening: the page is written for learners first, with one
+  card for teachers and one for the centre. The page marks it decided; seven are open.
 
 ## The brand
 

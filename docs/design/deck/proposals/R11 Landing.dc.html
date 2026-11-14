@@ -218,7 +218,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
 <section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
   <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
     <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For the owner to decide</h2>
-    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default. The first is decided; seven are open.</p>
   </div>
   <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
     <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
@@ -444,9 +444,9 @@ const WHENS = [
   ['Narrower than 720', '“Đăng nhập”, the language and the dark mode are in the menu too.', 'The deck’s header is 406px wide on a 360 screen.'],
   ['“Trạng thái hệ thống”, “Quyền riêng tư”', 'quizzivy.com/status and quizzivy.com/privacy.', 'R11’s plan (T-R11.8). Neither page is drawn here.']
 ];
-// [id, question, why, default]
+// [id, question, why, default, who decided and when (when decided)]
 const QUESTIONS = [
-  ['Q1 · The words', 'Is the page written for learners first?', 'The deck’s Landing spoke to someone who runs classes. This page speaks to a student of the centre, and says what teachers and the centre see. It calls the centre “Quizzivy English Centre”, as the deck does.', 'Learners first, with one card for teachers and one for the centre.'],
+  ['Q1 · The words', 'Is the page written for learners first?', 'The deck’s Landing spoke to someone who runs classes. This page speaks to a student of the centre, and says what teachers and the centre see. It calls the centre “Quizzivy English Centre”, as the deck does.', 'Learners first, with one card for teachers and one for the centre.', 'the owner, 2026-11-14'],
   ['Q2 · Ahead of the product', 'Does the page wait for lessons, flashcards, grades and the timetable?', 'The rows and the cards speak of lessons, flashcards, messages, the timetable, attendance and grades. The product has tests today; the rest comes with R7 to R10.', 'The page opens with v1.0, when all of it exists. If it opens sooner, the lines about what is missing wait.'],
   ['Q3 · The photos and the pictures', 'Stock photos and unDraw’s illustrations for now, and the centre’s own photos on the real page?', 'The four photos are free stock photos and the five illustrations are unDraw’s, picked to show the layout. unDraw’s licence allows using them in a project; it does not allow passing them on as a set.', 'As drawn. The centre’s own photos on the real page, once there are some.'],
   ['Q4 · Signing in', 'Is one “Đăng nhập” with two choices right?', 'Students and teachers now sign in on different sites, and this page cannot tell which a visitor is. Two buttons would crowd the header.', 'One button, two choices.'],

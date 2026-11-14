@@ -11,6 +11,7 @@ import { Alert } from "@/components/ui/alert";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { onStudentHost } from "@/app/host";
 import { AuthLayout } from "@/features/auth/AuthLayout";
 import { login } from "@/features/auth/api";
 import { GoogleMark } from "@/features/auth/components/GoogleMark";
@@ -35,7 +36,9 @@ import { checkLogoutCleanup } from "@/features/auth/useSession";
 /**
  * LoginPage is §5.1's password sign-in and §5.3's Google entry point. When a
  * visitor arrives from joining a class, it names the class and hands the
- * signed-in user back to `/join/:code` to finish.
+ * signed-in user back to `/join/:code` to finish. Its link for a visitor who
+ * holds a class code names the student host's join page from the staff host,
+ * which has none (§5.8).
  */
 export default function LoginPage() {
   const { t } = useTranslation();
@@ -129,6 +132,7 @@ export default function LoginPage() {
   }
 
   const shown = error ?? (showGoogle ? google.error : null);
+  const joinElsewhere = onStudentHost("/join");
 
   return (
     <AuthLayout
@@ -136,12 +140,21 @@ export default function LoginPage() {
         joinCodes ? (
           <p>
             {t("login.haveCode")}{" "}
-            <Link
-              to="/join"
-              className="text-fg font-medium underline underline-offset-[3px]"
-            >
-              {t("login.joinClass")}
-            </Link>
+            {joinElsewhere === null ? (
+              <Link
+                to="/join"
+                className="text-fg font-medium underline underline-offset-[3px]"
+              >
+                {t("login.joinClass")}
+              </Link>
+            ) : (
+              <a
+                href={joinElsewhere}
+                className="text-fg font-medium underline underline-offset-[3px]"
+              >
+                {t("login.joinClass")}
+              </a>
+            )}
           </p>
         ) : undefined
       }

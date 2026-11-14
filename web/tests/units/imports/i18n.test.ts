@@ -37,10 +37,11 @@ function lookup(tree: unknown, key: string): unknown {
     );
 }
 
+/** resolves says a key has its string, or the plural forms its locale reads: both in English, `_other` alone in Vietnamese. */
 function resolves(tree: unknown, key: string): boolean {
   if (typeof lookup(tree, key) === "string") return true;
   return (
-    typeof lookup(tree, `${key}_one`) === "string" &&
+    (tree === vi || typeof lookup(tree, `${key}_one`) === "string") &&
     typeof lookup(tree, `${key}_other`) === "string"
   );
 }

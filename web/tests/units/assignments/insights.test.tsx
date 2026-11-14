@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { screen, waitFor, within } from "@testing-library/react";
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 import type { components } from "@/lib/api/schema";
 import { api } from "@/lib/api/client";
 import vi_ from "@/lib/i18n/locales/vi.json";
@@ -106,11 +106,13 @@ function serve({
   ],
   previewVersion = 3,
   previewed = [],
+  previewHeld,
 }: {
   handedIn?: number;
   answers?: (() => Response | Promise<Response>)[];
   previewVersion?: number;
   previewed?: (string | null)[];
+  previewHeld?: Promise<Response | void>;
 } = {}) {
   serveDetail(detailAssignment(), {
     rows: [
@@ -136,40 +138,45 @@ function serve({
   const bodies: (string | null)[] = [];
   let call = 0;
   server.use(
-    http.get(`${DETAIL_API}/teacher/tests/${DETAIL_TEST_ID}/preview`, ({ request }) => {
-      previewed.push(new URL(request.url).searchParams.get("version"));
-      return contractJson("/teacher/tests/{id}/preview", "get", 200, {
-        version: previewVersion,
-        questions: [],
-        groups: [
-          {
-            id: "018f0000-0000-7000-8000-00000000aa10",
-            sectionId: "018f0000-0000-7000-8000-00000000aa04",
-            title: "Reading",
-            instructions: null,
-            questionIds: [],
-            stimuli: [
-              {
-                id: "018f0000-0000-7000-8000-00000000aa11",
-                title: "Urban green space",
-                content: {
-                  format: "semantic_v1",
-                  blocks: [
-                    {
-                      type: "paragraph",
-                      content: [{ type: "text", text: PASSAGE, marks: [] }],
-                    },
-                  ],
+    http.get(
+      `${DETAIL_API}/teacher/tests/${DETAIL_TEST_ID}/preview`,
+      async ({ request }) => {
+        previewed.push(new URL(request.url).searchParams.get("version"));
+        const instead = await previewHeld;
+        if (instead) return instead;
+        return contractJson("/teacher/tests/{id}/preview", "get", 200, {
+          version: previewVersion,
+          questions: [],
+          groups: [
+            {
+              id: "018f0000-0000-7000-8000-00000000aa10",
+              sectionId: "018f0000-0000-7000-8000-00000000aa04",
+              title: "Reading",
+              instructions: null,
+              questionIds: [],
+              stimuli: [
+                {
+                  id: "018f0000-0000-7000-8000-00000000aa11",
+                  title: "Urban green space",
+                  content: {
+                    format: "semantic_v1",
+                    blocks: [
+                      {
+                        type: "paragraph",
+                        content: [{ type: "text", text: PASSAGE, marks: [] }],
+                      },
+                    ],
+                  },
+                  gaps: [],
                 },
-                gaps: [],
-              },
-            ],
-            recordings: [],
-            assets: [],
-          },
-        ],
-      });
-    }),
+              ],
+              recordings: [],
+              assets: [],
+            },
+          ],
+        });
+      },
+    ),
     http.post(INSIGHTS_PATH, async ({ request }) => {
       bodies.push(await request.text());
       const answer = answers[Math.min(call, answers.length - 1)]!;
@@ -290,6 +297,21 @@ describe("Explain results with AI", () => {
       "Để AI giải thích kết quả, hãy bật “Cho AI đọc bài làm của học viên” trong Cài đặt › Trợ lý AI.",
     );
     expect(screen.queryByRole("button", { name: copy.explain })).toBeNull();
+  });
+
+  it("reads no passages while reading student answers is off, though the assistant is on (N2-1)", async () => {
+    useAuthStore.setState({
+      accessToken: "token",
+      user: { ...teacherUser, preferences: { ai: { readStudentAnswers: false } } },
+    });
+    const previewed: (string | null)[] = [];
+    serve({ previewed });
+    renderDetail("questions");
+    await screen.findByRole("link", { name: "Cài đặt › Trợ lý AI" });
+    await screen.findByText("Term for streets closed to cars");
+    await new Promise((resolve) => setTimeout(resolve, 50));
+    expect(previewed).toEqual([]);
+    expect(reached()).not.toContain("get /teacher/tests/{id}/preview");
   });
 
   it("is disabled with the reason while the teacher is paused, and calls nothing", async () => {
@@ -470,6 +492,46 @@ describe("Make a practice set", () => {
       expect(within(dialog).queryByText(PASSAGE)).toBeNull();
     },
   );
+
+  it("waits for the passages when the practice set is asked for before they have been read, and starts from them (N2-2)", async () => {
+    let release!: () => void;
+    const previewHeld = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    const previewed: (string | null)[] = [];
+    serve({ previewed, previewHeld });
+    const user = renderDetail("questions");
+    await user.click(await explainButton());
+    const panel = await screen.findByRole("region", { name: copy.title });
+    await waitFor(() => expect(previewed).toEqual(["3"]));
+    await user.click(within(panel).getByRole("button", { name: copy.practice }));
+
+    release();
+    const dialog = await screen.findByRole("dialog", { name: vi_.ai.generate.title });
+    expect(within(dialog).getByLabelText(vi_.ai.generate.source)).toHaveValue(PASSAGE);
+  });
+
+  it("opens the practice set without passages when they cannot be read", async () => {
+    serve({
+      previewHeld: Promise.resolve(
+        HttpResponse.json(
+          { error: { code: "INTERNAL", message: "Máy chủ gặp lỗi.", requestId: "r" } },
+          { status: 500 },
+        ),
+      ),
+    });
+    const user = renderDetail("questions");
+    await user.click(await explainButton());
+    const panel = await screen.findByRole("region", { name: copy.title });
+    await user.click(within(panel).getByRole("button", { name: copy.practice }));
+
+    const dialog = await screen.findByRole(
+      "dialog",
+      { name: vi_.ai.generate.title },
+      { timeout: 5000 },
+    );
+    expect(within(dialog).queryByDisplayValue(PASSAGE)).toBeNull();
+  });
 
   it("brings back a practice set that finished behind a closed drawer from the toast", async () => {
     serve();

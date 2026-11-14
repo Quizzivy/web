@@ -61,6 +61,70 @@ describe("the confirm dialog", () => {
     );
   });
 
+  it("opens on a field its caller passes as children: a reason to type, a value to pick (GF-5)", async () => {
+    const { rerender } = render(
+      <ConfirmDialog
+        open
+        onOpenChange={() => {}}
+        title="Huỷ lượt 1?"
+        confirmLabel="Huỷ"
+      >
+        <p>
+          Xem <a href="/help">hướng dẫn</a>.
+        </p>
+        <label>
+          Lý do
+          <textarea />
+        </label>
+      </ConfirmDialog>,
+    );
+    await waitFor(() =>
+      expect(screen.getByRole("textbox", { name: "Lý do" })).toHaveFocus(),
+    );
+    rerender(
+      <ConfirmDialog open={false} onOpenChange={() => {}} title="x" confirmLabel="x" />,
+    );
+    rerender(
+      <ConfirmDialog
+        open
+        onOpenChange={() => {}}
+        title="Gia hạn?"
+        confirmLabel="Gia hạn"
+        onConfirm={() => {}}
+      >
+        <button type="button" role="combobox" aria-expanded="false" aria-controls="m">
+          10 phút
+        </button>
+        <input aria-label="Lý do" />
+      </ConfirmDialog>,
+    );
+    await waitFor(() => expect(screen.getByRole("combobox")).toHaveFocus());
+  });
+
+  it("still opens on Cancel when the children hold nothing to type or pick: a tick box, a link, a button", async () => {
+    render(
+      <ConfirmDialog
+        open
+        onOpenChange={() => {}}
+        title="Đóng ngay?"
+        confirmLabel="Đóng ngay"
+        destructive
+        onConfirm={() => {}}
+      >
+        <a href="/help">Hướng dẫn</a>
+        <button type="button">Xem danh sách</button>
+        <label>
+          <input type="checkbox" /> Nộp bài cho học viên đang làm
+        </label>
+        <input type="hidden" value="x" />
+        <textarea disabled aria-label="Ghi chú" />
+      </ConfirmDialog>,
+    );
+    await waitFor(() =>
+      expect(screen.getByRole("button", { name: "Huỷ" })).toHaveFocus(),
+    );
+  });
+
   it("keeps the confirming button off while disabled", () => {
     render(
       <ConfirmDialog

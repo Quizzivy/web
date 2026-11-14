@@ -60,6 +60,7 @@ import {
   withMembers,
   type GroupGapBinding,
   type GroupMaterial,
+  type OptionOrder,
   type GroupQuestion,
   type GroupRecording,
 } from "../model";
@@ -311,6 +312,7 @@ export function GroupWorkspace({
   const words = useRef(new Map<string, string>());
   const restore = useRef(new Map<string, RemovedGap>());
   const bindings = useRef(new Map<string, GroupGapBinding>());
+  const orders = useRef(new Map<string, OptionOrder>());
   const knownRecordings = useRef(new Map<string, GroupRecording>());
   const editor = useRef<Editor | null>(null);
   const faces = useRef<(gapId: string) => GapFace | undefined>(() => undefined);
@@ -501,6 +503,34 @@ export function GroupWorkspace({
     );
   }
 
+  /**
+   * answerGap writes a gap's card. A gap with no wrong option left is typed
+   * and has no options to keep in order, so the choice the teacher made for
+   * them is remembered here, for as long as the pane is open, and given back
+   * when the gap has wrong options again.
+   */
+  function answerGap(
+    gap: GapQuestion,
+    answer: Parameters<QuestionActions["answer"]>[1],
+  ) {
+    const current = latest.current;
+    const known = gapQuestions(current).get(gap.questionId) ?? gap;
+    const member = current.group.members.find(
+      (item) => item.questionId === gap.questionId,
+    );
+    if (known.mode === "choice" && member)
+      orders.current.set(gap.questionId, member.optionOrder);
+    commit(
+      withGapAnswer(
+        current,
+        known,
+        answer,
+        prompts,
+        orders.current.get(gap.questionId),
+      ),
+    );
+  }
+
   function addQuestion(type: QuestionType) {
     const starter = newGroupQuestion(t);
     const question: GroupQuestion =
@@ -648,15 +678,7 @@ export function GroupWorkspace({
   };
   const questionActions: QuestionActions = {
     open,
-    answer: (gap, answer) =>
-      commit(
-        withGapAnswer(
-          latest.current,
-          gapQuestions(latest.current).get(gap.questionId) ?? gap,
-          answer,
-          prompts,
-        ),
-      ),
+    answer: answerGap,
     changeQuestion,
     keepOrder: (id, fixed) =>
       changeMembers(id, (member) => ({

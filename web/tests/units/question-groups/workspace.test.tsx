@@ -125,6 +125,56 @@ test("a gap's card lists the word on its row and turns the gap into a choice wit
   expect(latest.current.group.stimuli[0]!.gaps[0]!.kind).toBe("blank");
 });
 
+test("“Keep the options in order” comes back with the wrong options of a gap that was typed in between", async () => {
+  const latest = mount(cloze());
+  const user = userEvent.setup();
+  await user.click(screen.getByRole("button", { name: /make/ }));
+  const card = screen
+    .getByRole("heading", { name: t("groups.pane.gapHead", { number: 9 }) })
+    .closest("[data-group-card]") as HTMLElement;
+  const member = () => latest.current.group.members[0]!;
+  const type = () => latest.current.questions[0]!.input.type;
+  const empty = within(card)
+    .getAllByRole("textbox", { name: /^Lựa chọn [A-D]$/ })
+    .find((row) => (row as HTMLInputElement).value === "")!;
+  const keepOrder = async () => {
+    await user.click(
+      within(card).getByRole("button", { name: t("builder.editor.more") }),
+    );
+    return screen.findByRole("menuitemcheckbox", { name: t("groups.fixedOptions") });
+  };
+
+  const close = async () => {
+    await user.keyboard("{Escape}");
+    await waitFor(() => expect(screen.queryByRole("menu")).toBeNull());
+  };
+
+  await user.type(empty, "do");
+  await waitFor(() => expect(type()).toBe("single_choice"));
+  await user.click(await keepOrder());
+  await waitFor(() => expect(member().optionOrder).toBe("fixed"));
+  await close();
+
+  await user.clear(empty);
+  await waitFor(() => expect(type()).toBe("fill_blank"));
+  expect(member().optionOrder).toBe("shuffle");
+  expect(groupIssue(latest.current)).toBeNull();
+
+  await user.type(empty, "does");
+  await waitFor(() => expect(type()).toBe("single_choice"));
+  expect(member().optionOrder).toBe("fixed");
+  expect(await keepOrder()).toBeChecked();
+
+  await user.click(screen.getByRole("menuitemcheckbox"));
+  await waitFor(() => expect(member().optionOrder).toBe("shuffle"));
+  await close();
+  await user.clear(empty);
+  await waitFor(() => expect(type()).toBe("fill_blank"));
+  await user.type(empty, "did");
+  await waitFor(() => expect(type()).toBe("single_choice"));
+  expect(member().optionOrder).toBe("shuffle");
+});
+
 test("“Remove gap” puts the word back in the text and takes the question with it", async () => {
   const latest = mount(cloze());
   const user = userEvent.setup();

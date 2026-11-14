@@ -13,6 +13,7 @@ import {
   type GroupGapBinding,
   type GroupMaterial,
   type GroupQuestion,
+  type OptionOrder,
 } from "./model";
 
 type Input = GroupQuestion["input"];
@@ -274,13 +275,17 @@ export function gapRows(bundle: GroupBundle, gap: GapQuestion): GapRow[] {
  * order, and its gap is bound to the question; with none it is a fill-in
  * question whose blank accepts the correct row's word and `also`, and its gap
  * is bound to that blank. A prompt still one of the defaults follows the mode.
- * The question keeps its id, points, explanation and tags.
+ * The question keeps its id, points, explanation and tags. A typed gap has no
+ * options to order, so its member goes back to "shuffle"; `kept` is how the
+ * gap ordered its options the last time it was a choice, and a gap that
+ * becomes a choice again orders them so.
  */
 export function withGapAnswer(
   bundle: GroupBundle,
   gap: GapQuestion,
   answer: { rows: readonly GapRow[]; also: readonly string[]; prompt: string },
   prompts: GapPrompts,
+  kept: OptionOrder = "shuffle",
   newId: () => string = () => crypto.randomUUID(),
 ): GroupBundle {
   const current = bundle.questions.find((question) => question.id === gap.questionId);
@@ -323,6 +328,7 @@ export function withGapAnswer(
                 input.type,
                 member.optionOrder,
                 current.input.type,
+                kept,
               ),
             }
           : member,

@@ -109,7 +109,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
               <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
 
                 <sc-if value="{{ m.isWizard }}" hint-placeholder-val="{{ true }}">
-                  <div style="width:100%;max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
                     <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ wz.title }}</div><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ wz.desc }}</div></sc-if></div>
                     <div style="display:grid;grid-template-columns:repeat({{ f.stepCols }},minmax(0,1fr));gap:8px"><sc-for list="{{ wz.steps }}" as="sp" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:8px;min-width:0;padding:8px 10px;border-radius:10px;border:1px solid {{ sp.border }};background:var(--card)"><span style="width:22px;height:22px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:11.5px;font-weight:600;background:{{ sp.numBg }};color:{{ sp.numFg }}">{{ sp.num }}</span><span style="min-width:0;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sp.label }}</span></div></sc-for></div>
                     <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
@@ -128,7 +128,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                 </sc-if>
 
                 <sc-if value="{{ m.isSettings }}" hint-placeholder-val="{{ false }}">
-                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
                     <div style="display:flex;flex-direction:column;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:14px"></i>{{ ad.back }}</span><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">Reading Mock</span><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);font-size:12px;font-weight:500;white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--success)"></span>{{ ad.live }}</span></div></div>
                     <div style="display:flex;gap:20px;border-bottom:1px solid var(--border)"><sc-for list="{{ ad.tabs }}" as="dt" hint-placeholder-count="3"><span style="padding:0 2px 10px;font-size:13.5px;white-space:nowrap;font-weight:500;color:{{ dt.fg }};box-shadow:{{ dt.line }}">{{ dt.label }}</span></sc-for></div>
                     <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px;align-items:start">
@@ -144,7 +144,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                 </sc-if>
 
                 <sc-if value="{{ m.isGradebook }}" hint-placeholder-val="{{ false }}">
-                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
                     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="min-width:0"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.gbTitle }}</div><div style="display:flex;align-items:center;gap:8px;margin-top:2px;color:var(--muted-fg);font-size:14px"><span style="min-width:0;text-wrap:pretty">{{ gb.sub }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.shares.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.shares.n }}</span></sc-if></sc-if></div></div><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-download" style="font-size:15px"></i>{{ tx.gbExport }}</span></div>
                     <div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;max-width:100%;align-self:flex-start;overflow:hidden"><sc-for list="{{ gb.classes }}" as="gc" hint-placeholder-count="4"><span style="border-radius:7px;height:30px;padding:0 12px;font-size:13px;white-space:nowrap;display:grid;place-items:center;background:{{ gc.bg }};color:{{ gc.fg }};box-shadow:{{ gc.ring }};font-weight:500">{{ gc.label }}</span></sc-for></div>
                     <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">

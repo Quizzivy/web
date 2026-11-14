@@ -548,13 +548,23 @@ To view one, start the server above and open, for example,
   Reports in it.
 - 2026-11-14 — Fifteenth proposal page: `proposals/R10 Lesson Editor.dc.html`, for DG-94 and
   DG-83 (R10; T-R10.14). The deck draws a lesson as a row in its course, and the row opens
-  nothing. The page draws the screen behind it from parts the deck has: the course's heading,
-  the question builder's editor and media block, and the product's upload row. A reading has a
-  body and its minutes; a video and a listening have a file, a player and notes; flashcards and
-  a test choose a word list and a test. One footer saves, publishes and deletes. Twenty-one
-  states, at 1280 and 360, light and dark, Vietnamese and English. No operation changes. Its
-  three questions for Thuong are on the page: the Vietnamese word for a unit, whether a
-  lesson's kind can change, and "Phát hành" or "Xuất bản".
+  nothing. The page draws the screen behind it in the workspace's page frame (DG-205), from
+  parts the deck and the product have: the page heading with the builder's title, pressed to
+  rename it; the question builder's editor and media block; the product's upload row; and a
+  300px side column docked as the assignment wizard's summary is. A reading has a body and its
+  minutes; a video and a listening have a file, a player and notes; flashcards and a test
+  choose a word list and a test. The side column says where the lesson sits, what students
+  will see, and lists the unit's lessons. One footer saves, publishes and deletes. Twenty-two
+  states, at 1280, 360 and 1920, light and dark, Vietnamese and English. No operation changes.
+  Its five questions for Thuong are on the page: the Vietnamese word for a unit, whether a
+  lesson's kind can change, "Phát hành" or "Xuất bản", what the side column holds, and a footer
+  or the top of the page for Save. The first drawing centred a 760px column and had a title
+  field; the owner pointed at the page-width rule and at the builder's title the same day.
+- 2026-11-14 — The page frame on the earlier proposal pages. Eight of them (R7 Shared With Me;
+  R8 Session Popover, Terms, Week and Class Schedule, Attendance States; R9 Gradebook Weights,
+  Gradebook Screen, Reports and Grades) held their teacher or admin page in the v2 deck's
+  1320px or 1080px container. Each now holds it in the frame's 1600px (DG-205). Nothing moves
+  on screen: at 1280 the frame is 976px wide and at 360 it is 332px, under either limit.
 
 ## The brand
 

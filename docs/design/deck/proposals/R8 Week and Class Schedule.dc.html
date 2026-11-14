@@ -126,7 +126,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                 </sc-if>
 
                 <sc-if value="{{ m.isCal }}" hint-placeholder-val="{{ false }}">
-                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
                     <div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap">
                       <div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;white-space:nowrap">{{ tx.wkRange }}</div>
                       <div style="display:flex;gap:8px;align-items:center"><div style="display:flex;border:1px solid var(--border);border-radius:8px;overflow:hidden;background:var(--card)"><span style="width:{{ f.navBtn }};height:{{ f.navBtn }};display:grid;place-items:center"><i class="icon-chevron-left" style="font-size:16px"></i></span><span style="height:{{ f.navBtn }};padding:0 12px;border-left:1px solid var(--border);border-right:1px solid var(--border);display:grid;place-items:center;font-size:13px;font-weight:500;white-space:nowrap">{{ tx.today }}</span><span style="width:{{ f.navBtn }};height:{{ f.navBtn }};display:grid;place-items:center"><i class="icon-chevron-right" style="font-size:16px"></i></span></div><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.navBtn }};padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-plus" style="font-size:15px"></i>{{ tx.addSession }}</span></div>
@@ -156,7 +156,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                 </sc-if>
 
                 <sc-if value="{{ m.isClasses }}" hint-placeholder-val="{{ false }}">
-                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.classesTitle }}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"><sc-for list="{{ m.ghost }}" as="g" hint-placeholder-count="3"><div style="height:150px;border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;display:flex;flex-direction:column;gap:10px"><span style="display:block;height:13px;width:{{ g.w }};border-radius:6px;background:var(--muted);"></span><span style="display:block;height:10px;width:46%;border-radius:6px;background:var(--muted);"></span></div></sc-for></div></div>
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:16px"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.classesTitle }}</div><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:14px"><sc-for list="{{ m.ghost }}" as="g" hint-placeholder-count="3"><div style="height:150px;border:1px solid var(--border);border-radius:12px;background:var(--card);padding:16px;display:flex;flex-direction:column;gap:10px"><span style="display:block;height:13px;width:{{ g.w }};border-radius:6px;background:var(--muted);"></span><span style="display:block;height:10px;width:46%;border-radius:6px;background:var(--muted);"></span></div></sc-for></div></div>
                 </sc-if>
               </div>
             </div>

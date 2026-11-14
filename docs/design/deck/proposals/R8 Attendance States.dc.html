@@ -109,7 +109,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
               <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
 
                 <sc-if value="{{ m.isPage }}" hint-placeholder-val="{{ true }}">
-                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
                     <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.attTitle }}</div><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ tx.attLead }}</div></div>
                     <sc-if value="{{ m.hasGroups }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ m.groups }}" as="ag" hint-placeholder-count="3">
                       <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
@@ -130,7 +130,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
                 </sc-if>
 
                 <sc-if value="{{ m.isReg }}" hint-placeholder-val="{{ false }}">
-                  <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
                     <div style="display:flex;align-items:flex-end;justify-content:space-between;gap:12px;flex-wrap:wrap">
                       <div style="min-width:0;display:flex;flex-direction:column;gap:4px;flex:1 1 280px"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;white-space:nowrap;font-size:13px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:14px"></i>{{ tx.classes }}</span><div style="display:flex;align-items:center;gap:10px;flex-wrap:wrap"><span style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;white-space:nowrap">IELTS 6.5 Evening</span><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:999px;background:var(--muted);font-size:12px;font-weight:500;white-space:nowrap">{{ m.countLabel }}</span></div></div>
                       <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-user-plus" style="font-size:15px"></i>{{ tx.addStudent }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-clipboard-list" style="font-size:15px"></i>{{ tx.assign }}</span></div></sc-if>

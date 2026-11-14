@@ -506,8 +506,8 @@ class Component extends DCLogic {
       menuL: phone ? '0' : 'auto', menuR: phone ? 'auto' : '0', morePos: phone ? 'static' : 'relative',
       dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '480px', dlgR: phone ? '16px 16px 0 0' : '12px'
     });
-    const H = loading ? [760, 620] : failed ? [760, 340] : empty ? [760, 700] : [1180, edit ? 2200 : draftCourse || use ? 1850 : 2080];
-    const frames = [mk(1280, H[0], Math.min(1, W / 1280), false, 'the frame is 976 wide beside the sidebar'), mk(360, H[1], Math.min(1, W / 360), true, 'the same state on a phone')];
+    const H = loading ? [760, 620] : failed ? [760, 340] : empty ? [760, 700] : [1180, dg.open ? 760 : edit ? 2200 : draftCourse || use ? 1850 : 2080];
+    const frames = [mk(1280, H[0], Math.min(1, W / 1280), false, 'the frame is 976 wide beside the sidebar'), mk(360, H[1], Math.min(1, W / 360), true, dg.open ? 'a phone’s screen: the dialog is a sheet at its bottom edge' : 'the same state on a phone')];
     const wide = [mk(1920, H[0], Math.min(1, W / 1920), false, 'the frame is 1592 wide, inside 40px gutters')];
 
     const ctl = [

@@ -595,6 +595,20 @@ To view one, start the server above and open, for example,
   menu on each unit, and the width from which the side cards sit beside the units (T-R10.13
   says 1000px of content; the deck's layout gives about 800, and a 1280 screen has 976). The
   lesson editor's page now writes a unit's "Open now" as "Mở ngay", the words this page uses.
+- 2026-11-14 — Eighteenth proposal page: `proposals/R10 Vocabulary.dc.html`, for DG-95, DG-90
+  and DG-83 (R10; T-R10.12). The deck draws Vocabulary and a word list for a teacher's own
+  lists. The page keeps both as they are, in the workspace's page frame, and draws what they
+  leave out: "Phát âm" in the word dialog, which is the Question editor's media field for one
+  audio file, with the browser's voice when there is none; an import's result, in the rows and
+  the table of Admin › Users' import; "Chia sẻ" and a "…" menu on a list, with its details
+  edited in New word list's dialog, the delete confirmation and its refusal; a list shared with
+  Can use and with Can edit; and the pages empty, loading and failing. Twenty states, at 1280,
+  360 and 1920, light and dark, Vietnamese and English. Its first table sets the deck's
+  Vocabulary part beside it, part by part, and none of it changes. No operation changes; what
+  T-R10.4 would need for a refused row is on the page's handoff. Its three questions for
+  Thuong are on the page: "Sửa thông tin" or "Đổi tên" for a list, the sign-off DG-95 asks
+  for, and the three words on the progress card. On a phone the table's two columns share the
+  width: the deck's minimums would push a row's "…" off a 360 screen.
 
 ## The brand
 

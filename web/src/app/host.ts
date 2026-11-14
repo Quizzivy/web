@@ -52,6 +52,16 @@ export function studentOrigin(): string {
 }
 
 /**
+ * onStudentHost is how a link on this host has to write the address of one of
+ * the student's pages, `/join` among them: null where this host serves the
+ * page itself, so a router link reaches it, and the full address on the
+ * student host from the staff host, where the same path is a 404.
+ */
+export function onStudentHost(path: string): string | null {
+  return hostKind() === "staff" ? `${studentOrigin()}${path}` : null;
+}
+
+/**
  * otherHostSignIn is the sign-in page of the host this one is not, for an
  * account that was refused here because it belongs there. Null where one host
  * serves every page.

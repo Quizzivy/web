@@ -10,7 +10,11 @@ import {
 } from "../units/attempts/fixtures";
 import type { AttemptListRow, GradingQueueItem } from "../../src/features/attempts/api";
 
-async function prepare(page: Page, theme: "light" | "dark") {
+async function prepare(
+  page: Page,
+  theme: "light" | "dark",
+  patch: Partial<GradingQueueItem> = {},
+) {
   let grades = 0;
   let finishes = 0;
   let mark = false;
@@ -29,6 +33,7 @@ async function prepare(page: Page, theme: "light" | "dark") {
     score: null,
     comment: null,
     sampleAnswer: "I get up at half past six every morning.",
+    ...patch,
   };
   await page.addInitScript(() => localStorage.setItem("quizzivy.locale", "vi"));
   await page.emulateMedia({ colorScheme: theme });
@@ -143,6 +148,40 @@ for (const theme of ["light", "dark"] as const) {
       ).toBeVisible();
     });
   }
+}
+
+for (const form of ["Markdown", "rich text"] as const) {
+  test(`the prompt reads 15px on a 24px line when it is stored as ${form} (F-28)`, async ({
+    page,
+  }) => {
+    const prompt = "Write about your morning.";
+    await prepare(
+      page,
+      "light",
+      form === "Markdown"
+        ? {}
+        : {
+            promptContent: {
+              format: "semantic_v1",
+              blocks: [
+                {
+                  type: "paragraph",
+                  content: [{ type: "text", text: prompt, marks: [] }],
+                },
+              ],
+            },
+          },
+    );
+    await page.setViewportSize({ width: 1280, height: 900 });
+    await page.goto("/teacher/grading");
+    const line = page.getByRole("main").locator("p", { hasText: prompt });
+    await expect(line).toHaveCount(1);
+    expect(
+      await line.evaluate((node) => node.closest(".semantic-content") !== null),
+    ).toBe(form === "rich text");
+    await expect(line).toHaveCSS("font-size", "15px");
+    await expect(line).toHaveCSS("line-height", "24px");
+  });
 }
 
 test("progress uses 200ms native ease and is static under reduced motion", async ({

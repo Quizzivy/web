@@ -195,20 +195,44 @@ function ActiveEditor({
 /**
  * ContentEditor edits a validated candidate in the deck's frame: the toolbar,
  * the box, the notice band and the word-count footer. Callers must key each
- * document to isolate its undo history. The frame's minimum height, text size
- * and footer default by profile; `fileNotice` is what the notice band says
- * about a pasted or dropped file; `readOnly` renders the document with
- * `ContentView` and no toolbar or footer. `onEditor` receives the live editor
- * once it exists and `null` when it goes, for a host command that acts at its
- * caret; it must be a stable callback. `ownGapTool` leaves the toolbar's
- * "Insert gap" out, for a host that draws its own gap command in `tools`, and
- * `footerStart` replaces the footer's paste hint with the host's own line.
+ * document to isolate its undo history. A profile is part of that key: the
+ * document is validated and every edit filtered by the profile the editor
+ * mounted with, so a change of `profile` mounts a new editor on that render's
+ * `initialContent`, with a new history, and a caller that changes a field's
+ * profile hands it the document as it then stands. The frame's minimum height,
+ * text size and footer default by profile; `fileNotice` is what the notice
+ * band says about a pasted or dropped file; `readOnly` renders the document
+ * with `ContentView` and no toolbar or footer. `onEditor` receives the live
+ * editor once it exists and `null` when it goes, for a host command that acts
+ * at its caret; it must be a stable callback. `ownGapTool` leaves the
+ * toolbar's "Insert gap" out, for a host that draws its own gap command in
+ * `tools` or whose field takes no new gap, and `footerStart` replaces the
+ * footer's paste hint with the host's own line.
  */
 export function ContentEditor<
   D extends SemanticContent | ProseDocument = SemanticContent,
 >(props: Readonly<ContentEditorProps<D>>) {
-  const { t } = useTranslation();
   const profile = props.profile ?? "document";
+  return (
+    <ProfiledEditor
+      key={profile}
+      {...props}
+      onChange={props.onChange as (content: SemanticContent | ProseDocument) => void}
+      profile={profile}
+    />
+  );
+}
+
+/** ProfiledEditor is one mount of the editor: its document as first given, under one profile. */
+function ProfiledEditor({
+  profile,
+  ...props
+}: Readonly<
+  Omit<ContentEditorProps<SemanticContent | ProseDocument>, "profile"> & {
+    profile: EditorProfile;
+  }
+>) {
+  const { t } = useTranslation();
   const frame = FRAMES[profile];
   const [initial] = useState(() => validateForProfile(props.initialContent, profile));
   const style = frameStyle(
@@ -241,7 +265,6 @@ export function ContentEditor<
       profile={profile}
       footer={props.footer ?? frame.footer}
       initialContent={initial.value}
-      onChange={props.onChange as (content: SemanticContent | ProseDocument) => void}
       style={style}
     />
   );

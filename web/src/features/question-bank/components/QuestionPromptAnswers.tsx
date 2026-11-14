@@ -15,7 +15,7 @@ import { QuestionProseField } from "./QuestionProseField";
  * (a fill-in-the-blank's with its gaps) under "Write the question students
  * will read", then the type's answers and grading note, whose "Insert gap"
  * places a gap at the prompt's caret. `clearPromptOnFocus` opens a prompt
- * that still holds the starter text empty. `promptLabel` names the prompt,
+ * that still holds the starter text empty, whatever the type. `promptLabel` names the prompt,
  * "Prompt" unless the page names it otherwise. `ai` offers "Suggest wrong
  * options" on a choice question's options.
  */
@@ -43,6 +43,7 @@ export function QuestionPromptAnswers({
           value={value}
           onChange={onChange}
           onEditor={setPromptEditor}
+          clearOnFocus={clearPromptOnFocus}
           placeholder={placeholder}
           label={label}
         />

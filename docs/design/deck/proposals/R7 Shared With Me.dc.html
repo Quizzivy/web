@@ -107,7 +107,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
               </sc-if>
 
               <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
-                <div style="width:100%;max-width:1320px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
+                <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:{{ f.gap }}">
                   <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.title }}</div><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ tx.lead }}</div></div>
                   <div style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--muted);font-size:13px;line-height:1.55"><i class="icon-info" style="font-size:15px;margin-top:2px;flex:none;color:var(--muted-fg)"></i><span><b style="font-weight:600">{{ tx.canUse }}</b> {{ tx.useText }} <b style="font-weight:600">{{ tx.canEdit }}</b> {{ tx.editText }}</span></div>
                   <div style="display:flex;align-items:center;justify-content:space-between;gap:10px;flex-wrap:wrap">
@@ -434,7 +434,7 @@ class Component extends DCLogic {
     const nav = [
       { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('messages', 'message-square', vi ? 'Tin nhắn' : 'Messages')] },
       { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', vi ? 'Lớp học' : 'Classes'), item('students', 'users', vi ? 'Học viên' : 'Students')] },
-      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'share-2', tx.title, mine.length), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'image', vi ? 'Thư viện media' : 'Media')] }
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'users-round', tx.title, mine.length), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'audio-lines', vi ? 'Thư viện media' : 'Media')] }
     ];
 
     const W = s.stageW || 1280;

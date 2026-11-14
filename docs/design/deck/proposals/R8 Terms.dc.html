@@ -102,7 +102,7 @@ body{margin:0;-webkit-font-smoothing:antialiased}
               </div>
 
               <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
-                <div style="width:100%;max-width:1080px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
                   <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ sh.title }}</div><div style="margin-top:2px;color:var(--muted-fg);font-size:14px">{{ sh.hint }}</div></div>
                   <div style="display:flex;gap:24px;align-items:flex-start;flex-wrap:wrap">
                     <div style="flex:0 1 {{ f.navW }};min-width:0;max-width:100%;display:flex;flex-direction:{{ f.navDir }};gap:2px;overflow:hidden"><sc-for list="{{ sections }}" as="sx" hint-placeholder-count="5"><span style="display:flex;align-items:center;gap:10px;height:36px;flex:none;padding:0 12px;border-radius:8px;white-space:nowrap;font-size:13.5px;background:{{ sx.bg }};color:{{ sx.fg }};font-weight:{{ sx.weight }}"><i class="icon-{{ sx.icon }}" style="font-size:16px"></i>{{ sx.label }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ sx.on }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.section.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.section.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div>

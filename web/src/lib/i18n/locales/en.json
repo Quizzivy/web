@@ -4397,7 +4397,7 @@
       "partial": "Partly correct",
       "pending": "To grade",
       "unanswered": "Unanswered",
-      "removed": "Removed",
+      "removed": "Removed under the retention policy",
       "banded": "Graded on a band"
     },
     "studentAnswer": "Student's answer",
@@ -4584,7 +4584,8 @@
       "correct": "Correct",
       "wrong": "Wrong",
       "partial": "Partly correct",
-      "banded": "Graded on a band"
+      "banded": "Graded on a band",
+      "removed": "Removed under the retention policy"
     },
     "points": "{{earned}} / {{total}}",
     "waiting": "Waiting",

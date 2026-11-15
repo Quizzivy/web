@@ -1934,6 +1934,29 @@ describe("an answer the centre's retention policy removed", () => {
     expect(within(kept).getByText("was written")).toBeVisible();
   });
 
+  // RM-1, the owner's call of 2026-11-15: a removed answer nobody marked comes
+  // with no mark, and reads as removed, not as a settled 0.
+  it("names a removed answer nobody marked as removed, with no mark and not wrong", async () => {
+    serve(
+      scored([
+        essay(1, "Bài viết không ai chấm", null, {
+          answerRemoved: true,
+          pendingManual: false,
+          earned: null,
+        }),
+        choice(2, AB, [1], { prompt: "Câu còn giữ", earned: 1 }),
+      ]),
+    );
+    renderResult();
+    const gone = (await screen.findByText("Bài viết không ai chấm")).closest(
+      "article",
+    )!;
+    expect(within(gone).getByText("Đã xoá theo chính sách lưu trữ")).toBeVisible();
+    expect(within(gone).queryByText("Sai")).toBeNull();
+    expect(within(gone).queryByText(/^0 \/ /)).toBeNull();
+    expect(gone).toHaveAttribute("data-verdict", "removed");
+  });
+
   it("reads as the deck's English", async () => {
     await i18n.changeLanguage("en");
     serve(

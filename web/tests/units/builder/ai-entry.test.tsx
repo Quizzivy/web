@@ -333,7 +333,7 @@ const MEMBER_ID = "018f0000-0000-7000-8000-0000000000e2";
 const STIMULUS_ID = "018f0000-0000-7000-8000-0000000000e3";
 const PARKS =
   "Parks cool the streets in summer, and cities are planting more trees every year.";
-const GROUP_BUTTON = "Thêm 2 câu vào nhóm Reading club";
+const GROUP_BUTTON = "Thêm 2 câu vào “Reading club”";
 
 function member(id: string, prompt: string): GroupBundle["questions"][number] {
   return {
@@ -589,7 +589,7 @@ describe("Generate in a test with a shared-context group", () => {
 
     expect(
       await within(dialog).findByText(
-        "Một nhóm chứa tối đa 200 câu, và nhóm Reading club chỉ còn chỗ cho 1 câu. Hãy bỏ chọn bớt rồi thử lại.",
+        "Một bài đọc, bài điền từ hay bài nghe chứa tối đa 200 câu, và “Reading club” chỉ còn chỗ cho 1 câu. Hãy bỏ chọn bớt rồi thử lại.",
       ),
     ).toBeVisible();
     await waitFor(() => expect(add).toBeEnabled());

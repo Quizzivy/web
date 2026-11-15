@@ -64,6 +64,7 @@ import {
   type ExamSelection,
   type WholeTestFact,
 } from "./ExamPane";
+import { importGroupName } from "../../groupName";
 import { QuestionEditor } from "./QuestionEditor";
 import { ExcludeDialog, PointsDialog } from "./ReviewDialogs";
 import { PhoneNote, ReviewBanners } from "./ReviewBanners";
@@ -433,7 +434,7 @@ export function ReviewWorkspace({
               question.id,
               t("imports.review.contextGroup", {
                 section: current.title,
-                group: group.label ?? "",
+                group: importGroupName(group, t),
               }),
             );
       }

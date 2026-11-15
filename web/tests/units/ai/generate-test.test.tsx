@@ -254,7 +254,9 @@ describe("Generate for the whole test", () => {
     await user.clear(reading);
     await user.type(reading, "2");
     expect(
-      within(rows[1]!).getByText("1 bài đọc × 2 câu = 2 câu, mỗi bài vào nhóm của nó"),
+      within(rows[1]!).getByText(
+        "1 bài đọc × 2 câu = 2 câu, mỗi câu vào bài đọc của nó",
+      ),
     ).toBeVisible();
     const grammarCount = within(rows[0]!).getByRole("textbox", {
       name: `${ai.generate.planCount} · Ngữ pháp`,

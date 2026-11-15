@@ -65,7 +65,7 @@ afterEach(() => {
 
 const passage = () => screen.getByRole("article", { name: previewGroup.title });
 const drawer = () => screen.getByRole("article", { hidden: true });
-const openDrawer = () => screen.getByRole("button", { name: "Mở ngữ liệu" });
+const openDrawer = () => screen.getByRole("button", { name: "Mở bài đọc" });
 
 function mount() {
   const router = createMemoryRouter(

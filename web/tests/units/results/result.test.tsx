@@ -234,7 +234,7 @@ it("keeps shared material under a result filter and follows gaps to a hidden que
   await screen.findByText(group.title);
   expect(screen.queryByText("Nội dung bài nghe")).not.toBeInTheDocument();
   expect(
-    screen.getByText("Đã nghe 3 lượt · Quy định 2 lượt cho cả nhóm"),
+    screen.getByText("Đã nghe 3 lượt · Quy định 2 lượt cho cả bài nghe"),
   ).toBeVisible();
   await user.click(screen.getByRole("button", { name: "Sai" }));
   expect(screen.getByRole("button", { name: "Sai" })).toHaveAttribute(
@@ -309,7 +309,7 @@ it("keeps shared material above the first of its questions that the filter keeps
   expect(places()).toEqual(["1.", "material", "2.", "3."]);
   await userEvent.setup().click(screen.getByRole("button", { name: "Sai" }));
   expect(places()).toEqual(["1.", "material", "3."]);
-  expect(screen.getByText("Ngữ liệu dùng chung · Câu 2–3")).toBeVisible();
+  expect(screen.getByText("Bài nghe · Câu 2–3")).toBeVisible();
 });
 
 it("keeps the group's tables and images on the paper surface", async () => {

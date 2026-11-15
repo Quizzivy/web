@@ -303,7 +303,7 @@ describe("the footer below 768", () => {
     const footer = nav();
     expect(footer).toBeVisible();
 
-    await user.click(screen.getByRole("button", { name: "Mở ngữ liệu" }));
+    await user.click(screen.getByRole("button", { name: "Mở bài đọc" }));
     const backdrop = document.querySelector("[data-drawer-backdrop]")!;
     expect(nav()).toBe(footer);
     expect(footer).toBeVisible();

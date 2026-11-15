@@ -105,9 +105,10 @@ export default defineConfig({
   webServer: {
     // Two builds, as a deploy makes them: the app, and the landing site with
     // the centre's lines only it prints (the app's own specs expect the name
-    // and the front-desk phone unset).
+    // and the front-desk phone unset). The name is LANDING_CENTRE in
+    // tests/e2e/support/hosts.ts.
     command:
-      'pnpm build && VITE_ORG_NAME="Quizzivy English Centre" VITE_ORG_FRONT_DESK_PHONE="036 321 6199" VITE_ORG_EMAIL=hello@quizzivy.com VITE_ORG_ADDRESS="TP. Hồ Chí Minh" VITE_ORG_ADDRESS_EN="Ho Chi Minh City" VITE_LANDING_URL=https://quizzivy.com pnpm build:landing && node tests/e2e/support/serve-hosts.mjs',
+      'pnpm build && VITE_ORG_NAME="Sao Mai English Centre" VITE_ORG_FRONT_DESK_PHONE="036 321 6199" VITE_ORG_EMAIL=hello@quizzivy.com VITE_ORG_ADDRESS="TP. Hồ Chí Minh" VITE_ORG_ADDRESS_EN="Ho Chi Minh City" VITE_LANDING_URL=https://quizzivy.com pnpm build:landing && node tests/e2e/support/serve-hosts.mjs',
     url: "http://localhost:4173",
     reuseExistingServer: !process.env["CI"],
     timeout: 120_000,

@@ -91,6 +91,15 @@ against the 200 KB the plan allows; on its own it takes 146 KiB, and
   `VITE_ORG_NAME`, `VITE_ORG_FRONT_DESK_PHONE`, `VITE_ORG_EMAIL`, and
   `VITE_ORG_ADDRESS` with its English form `VITE_ORG_ADDRESS_EN`. A line that
   is unset is hidden.
+- **The centre's name** is `VITE_ORG_NAME` and nothing else (the owner,
+  2026-11-15: "Ms Giau English Centre"). No string of the site and no tag of
+  `landing.html` spells a name: the lines that name the centre say `{{org}}`
+  (the sentence under the headline, the label above the consultation, the
+  consent a visitor ticks, the footer, the notice's first part), and the
+  page's two description tags say `%VITE_ORG_NAME%`, which the build fills.
+  A build that sets no name prints the product's, "Quizzivy", in every one of
+  those places; that is for a local build only, and a deploy of the site
+  refuses to go out without the variable.
 - **Its one address.** `LANDING_ORIGIN` at the top of `deploy.yml`
   (`https://quizzivy.com`) reaches the build as `VITE_LANDING_URL`. The
   Landing and the notice name themselves by it (`<link rel="canonical">`, set

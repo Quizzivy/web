@@ -293,13 +293,14 @@ const PILL = { warning: ['var(--warning-soft)', 'var(--warning-ink)'], success: 
 
 // R11 · The Landing on quizzivy.com. A proposal page for T-R11.3, T-R11.4a, T-R11.4b and T-R11.7
 // (DG-100, DG-101, DG-02, DG-06). T, D and PILL above are the deck's.
-const ORG = 'Quizzivy English Centre', PHONE = '036 321 6199', MAIL = 'hello@quizzivy.com';
+// The centre's name is the build's VITE_ORG_NAME (the owner, 2026-11-15: “Ms Giau English Centre”). No line of the copy spells a name: each says {org}.
+const ORG = 'Ms Giau English Centre', PHONE = '036 321 6199', MAIL = 'hello@quizzivy.com';
 // The words this page adds or changes: [key, where and what a new line rests on, Tiếng Việt, English, status]
 const STR = [
   ['h1a', 'Top: the headline, first part. The deck: “Quản lý lớp tiếng Anh gọn gàng ở một nơi”', 'Học tiếng Anh trên lớp,', 'Learn English in class,', 'Changed'],
   ['h1b', 'Top: the headline, the words with a line under them', 'làm bài', 'take your tests', 'Changed'],
   ['h1c', 'Top: the headline, last part', 'trên Quizzivy', 'on Quizzivy', 'Changed'],
-  ['heroSub', 'Top: what Quizzivy is today. Rests on the spec’s first line and on what the app does now: assignments, the test page, results, grading', 'Quizzivy là hệ thống kiểm tra trực tuyến của Quizzivy English Centre. Học viên làm bài giáo viên giao ngay trên điện thoại, rồi xem điểm, đáp án và nhận xét; giáo viên soạn đề, chấm bài và xem lại từng lượt làm.', 'Quizzivy is the online testing system of Quizzivy English Centre. Students take the tests their teacher assigns on their phone, then see their score, the answers and comments; teachers build tests, mark them and review every attempt.', 'Changed'],
+  ['heroSub', 'Top: what Quizzivy is today. Rests on the spec’s first line and on what the app does now: assignments, the test page, results, grading', 'Quizzivy là hệ thống kiểm tra trực tuyến của {org}. Học viên làm bài giáo viên giao ngay trên điện thoại, rồi xem điểm, đáp án và nhận xét; giáo viên soạn đề, chấm bài và xem lại từng lượt làm.', 'Quizzivy is the online testing system of {org}. Students take the tests their teacher assigns on their phone, then see their score, the answers and comments; teachers build tests, mark them and review every attempt.', 'Changed'],
   ['joinClass', 'The join box’s button. The deck: “Vào lớp”', 'Tham gia lớp', 'Join class', 'Changed'],
   ['stepsTitle', 'Four steps: the title', 'Quizzivy hoạt động như thế nào', 'How Quizzivy works', 'New'],
   ['s1t', 'Step 1. Rests on class codes and join links', 'Tham gia lớp bằng mã', 'Join your class with a code', 'New'],
@@ -330,7 +331,7 @@ const STR = [
   ['rcp2', 'Row 3. Rests on the result’s filter (“Sai”)', 'Lọc nhanh những câu bạn làm sai', 'Filter to the questions you got wrong', 'New'],
   ['rcp3', 'Row 3. Rests on an essay’s criteria', 'Bài luận có thể được chấm theo từng tiêu chí', 'An essay can be marked criterion by criterion', 'New'],
   ['h1bL', 'Later (R10) · the headline, the words with a line under them', 'luyện tiếp', 'keep practising', 'Later'],
-  ['heroSubL', 'Later (R10) · the sentence under the headline', 'Quizzivy là hệ thống học trực tuyến của Quizzivy English Centre. Học viên học bài theo từng unit, ôn từ vựng mỗi ngày và làm bài kiểm tra ngay trên điện thoại; giáo viên chấm bài, nhận xét và theo dõi từng lớp.', 'Quizzivy is the online learning system of Quizzivy English Centre. Students work through lessons unit by unit, review vocabulary every day and take tests on their phone; teachers mark, comment and follow every class.', 'Later'],
+  ['heroSubL', 'Later (R10) · the sentence under the headline', 'Quizzivy là hệ thống học trực tuyến của {org}. Học viên học bài theo từng unit, ôn từ vựng mỗi ngày và làm bài kiểm tra ngay trên điện thoại; giáo viên chấm bài, nhận xét và theo dõi từng lớp.', 'Quizzivy is the online learning system of {org}. Students work through lessons unit by unit, review vocabulary every day and take tests on their phone; teachers mark, comment and follow every class.', 'Later'],
   ['sL2t', 'Later (R10) · step 2', 'Học bài theo từng unit', 'Study unit by unit', 'Later'],
   ['sL2b', 'Later (R10) · step 2', 'Bài đọc, bài nghe và video được giáo viên xếp sẵn theo thứ tự.', 'Reading, listening and video lessons, in the order your teacher set.', 'Later'],
   ['sL3t', 'Later (R10) · step 3', 'Ôn từ vựng mỗi ngày', 'Review words every day', 'Later'],
@@ -355,7 +356,7 @@ const STR = [
   ['r3p1', 'Later (R10) · row 3', 'Câu trắc nghiệm và điền từ được chấm tự động', 'Choice and blank questions mark themselves', 'Later'],
   ['r3p2', 'Later (R10) · row 3', 'Bài viết do giáo viên chấm theo band, có nhận xét', 'Essays are marked by your teacher on a band, with comments', 'Later'],
   ['r3p3', 'Later (R10) · row 3', 'Kết quả cho biết điểm theo từng kỹ năng', 'Results show a score for each skill', 'Later'],
-  ['footAboutL', 'Later (R10) · the footer, under the logo', 'Hệ thống học và kiểm tra tiếng Anh trực tuyến của Quizzivy English Centre.', 'The online English learning and testing system of Quizzivy English Centre.', 'Later'],
+  ['footAboutL', 'Later (R10) · the footer, under the logo', 'Hệ thống học và kiểm tra tiếng Anh trực tuyến của {org}.', 'The online English learning and testing system of {org}.', 'Later'],
   ['intTitle', 'Fair tests: the title. The deck: “Biết rõ chuyện gì đã xảy ra trong mỗi bài làm”', 'Bài kiểm tra công bằng cho cả lớp', 'Fair tests for the whole class', 'Changed'],
   ['intSub', 'Fair tests. Rests on the rules a student reads before starting (spec §9) and on §10', 'Trước khi bắt đầu, học viên đọc quy định của bài bằng lời dễ hiểu. Trong lúc làm, Quizzivy ghi lại những gì xảy ra, còn quyết định là của giáo viên.', 'Before starting, students read the test’s rules in plain words. During the test Quizzivy records what happens, and the decision is the teacher’s.', 'Changed'],
   ['i1t', 'Fair tests, 1. The deck’s four points, in plainer words', 'Làm bài toàn màn hình', 'Fullscreen', 'Changed'],
@@ -366,6 +367,7 @@ const STR = [
   ['i3b', 'Fair tests, 3', 'Giáo viên chọn cách xử lý: nhắc học viên, báo cho giáo viên hoặc tự nộp bài.', 'The teacher chooses: warn the student, flag it for the teacher, or submit the test.', 'Changed'],
   ['i4t', 'Fair tests, 4', 'Xem lại được từng lượt làm', 'Every attempt can be looked at again', 'Changed'],
   ['i4b', 'Fair tests, 4', 'Giờ bắt đầu, những lần rời bài và giờ nộp đều được ghi lại.', 'The start, each time away and the submit are recorded, with the time.', 'Changed'],
+  ['consultEyebrow', 'Consultation: the label above the title. The deck: “Khoá học tại Quizzivy English Centre”', 'Khoá học tại {org}', 'Courses at {org}', 'Changed'],
   ['faqHelp', 'Questions: under the title', 'Chưa thấy câu trả lời? Gọi {phone} hoặc viết cho {mail}.', 'No answer here? Call {phone} or write to {mail}.', 'New'],
   ['signStudents', 'Sign-in menu', 'Học viên', 'Students', 'New'],
   ['signStudentsSub', 'Sign-in menu', 'Làm bài và xem kết quả', 'Take tests and see results', 'New'],
@@ -384,7 +386,7 @@ const STR = [
   ['sending', 'Consultation: the button while it sends', 'Đang gửi…', 'Sending…', 'Plan'],
   ['errLimited', 'Consultation', 'Có quá nhiều yêu cầu từ kết nối này. Hãy thử lại sau {n} phút.', 'Too many requests from this connection. Try again in {n} minutes.', 'Plan'],
   ['errFailed', 'Consultation', 'Chưa gửi được yêu cầu. Vui lòng thử lại, hoặc gọi {phone}.', 'We couldn’t send your request. Please try again, or call {phone}.', 'Plan'],
-  ['footAbout', 'Footer: under the logo. The deck: “Bài kiểm tra, bài học và luyện tập cho lớp tiếng Anh. Làm cùng giáo viên tại TP. Hồ Chí Minh.”', 'Hệ thống kiểm tra tiếng Anh trực tuyến của Quizzivy English Centre.', 'The online English testing system of Quizzivy English Centre.', 'Changed'],
+  ['footAbout', 'Footer: under the logo. The deck: “Bài kiểm tra, bài học và luyện tập cho lớp tiếng Anh. Làm cùng giáo viên tại TP. Hồ Chí Minh.”', 'Hệ thống kiểm tra tiếng Anh trực tuyến của {org}.', 'The online English testing system of {org}.', 'Changed'],
   ['footAddr', 'Footer and the consultation: the address. The deck gives a street address', 'TP. Hồ Chí Minh', 'Ho Chi Minh City', 'Changed'],
   ['footStudents', 'Footer: Get started. The deck: “Sign in”', 'Học viên đăng nhập', 'Student sign-in', 'Changed'],
   ['footStaff', 'Footer: Get started', 'Giáo viên đăng nhập', 'Teacher sign-in', 'New'],
@@ -451,7 +453,7 @@ const WHENS = [
 ];
 // [id, question, why, default, who decided and when (when decided), the label to print in place of the usual one]
 const QUESTIONS = [
-  ['Q1 · The words', 'Is the page written for learners first?', 'The deck’s Landing spoke to someone who runs classes. This page speaks to a student of the centre. It calls the centre “Quizzivy English Centre”, as the deck does.', 'Learners first. The part for each role is off the page, on his word the same evening.', 'the owner, 2026-11-14', 'Decided (the owner, 2026-11-14):'],
+  ['Q1 · The words', 'Is the page written for learners first?', 'The deck’s Landing spoke to someone who runs classes. This page speaks to a student of the centre. It names the centre by the build’s own value, “Ms Giau English Centre” (the owner, 2026-11-15); the deck’s Landing wrote “Quizzivy English Centre” into its lines.', 'Learners first. The part for each role is off the page, on his word the same evening.', 'the owner, 2026-11-14', 'Decided (the owner, 2026-11-14):'],
   ['Q2 · Ahead of the product', 'Does the page wait for lessons and flashcards?', 'The third drawing spoke of lessons in units, flashcards and a daily reminder. The product has tests today; lessons and flashcards come with R10.', 'It opens sooner, and says only what the product has today. The lines about lessons and vocabulary wait for R10; they are drawn under “Later, with lessons and vocabulary”.', 'the owner, 2026-11-14', 'Decided (the owner, 2026-11-14):'],
   ['Q3 · The photo and the pictures', 'A stock photo and unDraw’s illustrations for now, and the centre’s own photo on the real page?', 'The photo at the top is a free stock photo and the five illustrations are unDraw’s, picked to show the layout. unDraw’s licence allows using them in a project; it does not allow passing them on as a set.', 'As drawn. The centre’s own photo on the real page, once there is one.'],
   ['Q4 · Signing in', 'Is one “Đăng nhập” with two choices right?', 'Students and teachers now sign in on different sites, and this page cannot tell which a visitor is. Two buttons would crowd the header.', 'One button, two choices.'],
@@ -508,6 +510,7 @@ class Component extends DCLogic {
     const part = s.part, st = s.st[part], key = part + ':' + st;
     const later = key === 'page:later';      // the page once lessons and vocabulary are out
     if (later) { t.h1b = x.h1bL; t.heroSub = x.heroSubL; t.footAbout = x.footAboutL; }
+    ['heroSub', 'consultEyebrow', 'footAbout'].forEach(k => { t[k] = fmt(t[k], { org: ORG }); });      // the lines that name the centre
     const noteList = NOTES[key] || [];
     const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
     noteList.forEach((n, i) => { pin[n[0]] = { on: true, n: String(i + 1) }; });

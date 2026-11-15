@@ -32,7 +32,7 @@
       "h1a": "Học tiếng Anh trên lớp,",
       "h1b": "làm bài",
       "h1c": "trên Quizzivy",
-      "sub": "Quizzivy là hệ thống kiểm tra trực tuyến của Quizzivy English Centre. Học viên làm bài giáo viên giao ngay trên điện thoại, rồi xem điểm, đáp án và nhận xét; giáo viên soạn đề, chấm bài và xem lại từng lượt làm.",
+      "sub": "Quizzivy là hệ thống kiểm tra trực tuyến của {{org}}. Học viên làm bài giáo viên giao ngay trên điện thoại, rồi xem điểm, đáp án và nhận xét; giáo viên soạn đề, chấm bài và xem lại từng lượt làm.",
       "haveCode": "Bạn có mã lớp từ giáo viên?",
       "codeLabel": "Mã lớp",
       "joinClass": "Tham gia lớp",
@@ -109,7 +109,7 @@
       }
     },
     "consult": {
-      "eyebrow": "Khoá học tại Quizzivy English Centre",
+      "eyebrow": "Khoá học tại {{org}}",
       "title": "Chưa biết chọn khoá nào?",
       "sub": "Để lại thông tin, tư vấn viên sẽ gọi lại cho bạn và có thể xếp lịch kiểm tra trình độ miễn phí.",
       "name": "Họ và tên",
@@ -179,7 +179,7 @@
       }
     },
     "footer": {
-      "about": "Hệ thống kiểm tra tiếng Anh trực tuyến của Quizzivy English Centre.",
+      "about": "Hệ thống kiểm tra tiếng Anh trực tuyến của {{org}}.",
       "product": "Sản phẩm",
       "start": "Bắt đầu",
       "help": "Hỗ trợ",

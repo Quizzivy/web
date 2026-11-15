@@ -5,9 +5,13 @@ import { vi } from "vitest";
 import { landingI18n, type Locale } from "@/features/landing/i18n";
 import en from "@/features/landing/locales/en.json";
 
-/** CENTRE is the centre's lines as a build of the landing site sets them. */
+/**
+ * CENTRE is the centre's lines as a build of the landing site sets them. The
+ * name is one no source file spells, so a line that names a centre by itself
+ * shows beside it.
+ */
 export const CENTRE = {
-  name: "Quizzivy English Centre",
+  name: "Sao Mai English Centre",
   phone: "036 321 6199",
   email: "hello@quizzivy.com",
   address: "TP. Hồ Chí Minh",

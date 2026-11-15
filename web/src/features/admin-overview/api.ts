@@ -24,7 +24,7 @@ export function adminOverviewQuery() {
   });
 }
 
-/** adminSummaryQuery reads `GET /admin/summary`, the one count the sidebar draws. */
+/** adminSummaryQuery reads `GET /admin/summary`, the counts the sidebar draws from one read. */
 export function adminSummaryQuery() {
   return queryOptions({
     queryKey: ADMIN_SUMMARY_KEY,

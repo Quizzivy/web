@@ -50,6 +50,7 @@ const settings = {
     databaseBytes: { value: 10 * 1024 ** 3, source: "neon_launch" },
     warnAtPercent: { value: 80, source: "app" },
   },
+  leadRecipients: [],
   revision: 7,
   updatedAt: "2026-10-14T09:00:00Z",
   updatedBy: adminUser.id,

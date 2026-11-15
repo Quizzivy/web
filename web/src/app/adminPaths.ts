@@ -3,12 +3,14 @@ export const ADMIN_HOME = "/admin";
 
 /**
  * ADMIN_PATHS are the console's addresses in the sidebar's order. Settings
- * takes a section beneath it (`SETTINGS_SECTIONS`); an export takes its id.
+ * takes a section beneath it (`SETTINGS_SECTIONS`); an export takes its id,
+ * and the consultation requests take the id of the one that is open.
  */
 export const ADMIN_PATHS = {
   overview: ADMIN_HOME,
   users: "/admin/users",
   roles: "/admin/roles",
+  leads: "/admin/leads",
   classes: "/admin/classes",
   ai: "/admin/ai",
   audit: "/admin/audit",
@@ -58,5 +60,5 @@ export function consolePath(pathname: string): boolean {
   if (FLAT.has(path)) return true;
   const rest = path.slice(ADMIN_PATHS.settings.length + 1);
   if (path.startsWith(`${ADMIN_PATHS.settings}/`)) return SETTINGS_SECTIONS.has(rest);
-  return /^\/admin\/exports\/[^/]+$/.test(path);
+  return /^\/admin\/(?:exports|leads)\/[^/]+$/.test(path);
 }

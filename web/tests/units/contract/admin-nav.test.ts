@@ -68,7 +68,7 @@ function routeFor(address: string): RouteObject | undefined {
 
 describe("the Admin sidebar against the contract", () => {
   it("opens, with each destination, a read the contract has or a later task adds, under the permission it declares", () => {
-    expect(ITEMS).toHaveLength(8);
+    expect(ITEMS).toHaveLength(9);
     expect(disagreements(ITEMS)).toEqual([]);
   });
 
@@ -131,6 +131,7 @@ describe("the Admin sidebar against the contract", () => {
       "(index)",
       "users",
       "roles",
+      "leads/:id?",
       "classes",
       "ai",
       "audit",

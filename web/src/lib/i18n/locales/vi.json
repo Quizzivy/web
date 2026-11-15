@@ -417,6 +417,8 @@
       "import.source_completed": "Đã tải xong tệp nguồn của lần nhập Word",
       "import.source_reserved": "Đã giữ chỗ tệp nguồn cho lần nhập Word",
       "integrity.retained": "Đã xoá nhật ký chống gian lận quá hạn lưu",
+      "lead.deleted": "Đã xoá yêu cầu tư vấn",
+      "lead.updated": "Đã cập nhật yêu cầu tư vấn",
       "maintenance.cancelled": "Đã huỷ lịch bảo trì",
       "maintenance.ended": "Đã kết thúc bảo trì",
       "maintenance.scheduled": "Đã lên lịch bảo trì",
@@ -437,6 +439,7 @@
       "question_group.updated": "Đã cập nhật nhóm câu hỏi",
       "refresh_token.reuse_detected": "Phát hiện một phiên đăng nhập bị dùng lại",
       "retention.answers_removed": "Đã xoá câu trả lời quá hạn lưu",
+      "retention.leads_removed": "Đã xoá yêu cầu tư vấn quá hạn lưu",
       "role.created": "Đã tạo vai trò",
       "role.permissions_changed": "Đã thay đổi quyền của vai trò",
       "role.updated": "Đã cập nhật vai trò",
@@ -555,7 +558,9 @@
         "data_export": "Xuất dữ liệu",
         "maintenance_window": "Lịch bảo trì",
         "organization": "Trung tâm",
-        "user_import": "Lần nhập người dùng"
+        "user_import": "Lần nhập người dùng",
+        "lead": "Yêu cầu tư vấn",
+        "leads": "Yêu cầu tư vấn"
       }
     },
     "diff": {
@@ -793,6 +798,7 @@
       "overview": "Tổng quan",
       "users": "Người dùng",
       "roles": "Vai trò & quyền",
+      "leads": "Yêu cầu tư vấn",
       "classes": "Lớp học",
       "ai": "Tín dụng AI",
       "audit": "Nhật ký kiểm tra",
@@ -801,7 +807,8 @@
     },
     "count": {
       "mustChangePassword_other": "{{count}} người cần đổi mật khẩu",
-      "creditRequests_other": "{{count}} yêu cầu thêm tín dụng đang chờ"
+      "creditRequests_other": "{{count}} yêu cầu thêm tín dụng đang chờ",
+      "newLeads_other": "{{count}} yêu cầu tư vấn mới"
     },
     "account": {
       "settings": "Cài đặt hệ thống",
@@ -1328,6 +1335,58 @@
       "adding": "Đang thêm {{done}}/{{total}} người…"
     }
   },
+  "leads": {
+    "lead": "Những người đã nhờ trung tâm gọi lại.",
+    "one": "Yêu cầu tư vấn",
+    "all": "Tất cả",
+    "search": "Tìm theo tên hoặc số điện thoại",
+    "column": {
+      "name": "Họ tên",
+      "phone": "Điện thoại",
+      "interests": "Quan tâm",
+      "for": "Dành cho",
+      "time": "Giờ tiện gọi",
+      "received": "Nhận lúc"
+    },
+    "status": {
+      "new": "Mới",
+      "contacted": "Đã liên hệ",
+      "closed": "Đã đóng"
+    },
+    "interest": {
+      "ielts": "IELTS",
+      "toeic": "TOEIC",
+      "communication": "Giao tiếp",
+      "kids": "Tiếng Anh trẻ em",
+      "business": "Tiếng Anh thương mại"
+    },
+    "for": {
+      "self": "Bản thân",
+      "child": "Con tôi",
+      "company": "Công ty tôi"
+    },
+    "time": {
+      "any": "Lúc nào cũng được",
+      "morning": "Buổi sáng, 8:00–12:00",
+      "afternoon": "Buổi chiều, 13:00–17:00",
+      "evening": "Buổi tối, 18:00–20:00"
+    },
+    "empty": "Chưa có yêu cầu tư vấn nào.",
+    "noMatch": "Không có yêu cầu phù hợp.",
+    "loadFailed": "Không tải được danh sách yêu cầu.",
+    "noun_other": "yêu cầu",
+    "oneFailed": "Không tải được yêu cầu này.",
+    "notFound": "Không tìm thấy yêu cầu này.",
+    "consent": "Đồng ý",
+    "consented": "Thông báo {{version}}, lúc {{at}}",
+    "handled": "Xử lý",
+    "note": "Ghi chú",
+    "saved": "Đã lưu yêu cầu",
+    "delete": {
+      "title": "Xoá yêu cầu này?",
+      "body": "Dùng khi người gửi đề nghị trung tâm xoá thông tin của họ."
+    }
+  },
   "systemSettings": {
     "title": "Cài đặt hệ thống",
     "hint": "Áp dụng cho mọi người ở {{organization}}.",
@@ -1350,7 +1409,11 @@
       "contactEmail": "Email liên hệ",
       "frontDeskPhone": "Điện thoại quầy lễ tân",
       "frontDeskHours": "Giờ làm việc của quầy lễ tân",
-      "address": "Địa chỉ"
+      "address": "Địa chỉ",
+      "leadRecipients": "Yêu cầu tư vấn mới gửi tới",
+      "leadRecipientsHint": "Họ nhận một email không có số điện thoại, kèm đường dẫn tới yêu cầu đó.",
+      "leadRecipientsAdd": "Thêm email…",
+      "leadRecipientsRemove": "Bỏ {{email}}"
     },
     "logo": {
       "title": "Thay logo",
@@ -1403,6 +1466,8 @@
       "addressTooLong": "Địa chỉ tối đa 300 ký tự.",
       "domainInvalid": "Tên miền không hợp lệ.",
       "domainsTooMany": "Tối đa 50 tên miền.",
+      "recipientInvalid": "Email không hợp lệ.",
+      "recipientsTooMany": "Tối đa 5 địa chỉ email.",
       "noMethod": "Phải bật ít nhất một cách đăng nhập.",
       "limitPeople": "Nhập số nguyên từ 1 đến 1.000.000, hoặc để trống.",
       "limitEmailsPerDay": "Nhập số nguyên từ 1 đến 100.000, hoặc để trống.",
@@ -5871,6 +5936,10 @@
       "admin-settings": {
         "name": "Cài đặt hệ thống",
         "blurb": "Thông tin trung tâm, chính sách đăng nhập và thời hạn lưu trữ."
+      },
+      "admin-leads": {
+        "name": "Yêu cầu tư vấn",
+        "blurb": "Danh sách yêu cầu tư vấn, việc xử lý và xoá từng yêu cầu."
       },
       "student": {
         "name": "Ứng dụng học viên",

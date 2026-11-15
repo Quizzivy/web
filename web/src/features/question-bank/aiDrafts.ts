@@ -73,6 +73,9 @@ export function draftQuestion(
           text,
           isCorrect: keys.has(text),
         })),
+        ...(question.type === "multiple_choice" && question.selectCount != null
+          ? { selectCount: question.selectCount }
+          : {}),
       };
     case "true_false":
       return { ...base, options: trueFalseOptions(isTrue(question.answerKey[0])) };
@@ -92,9 +95,20 @@ export function draftQuestion(
         ],
       };
     case "short_answer":
-      return { ...base, sampleAnswer: question.answerKey[0] ?? null };
+      return {
+        ...base,
+        sampleAnswer: question.answerKey[0] ?? null,
+        ...(question.maxWords != null ? { maxWords: question.maxWords } : {}),
+      };
     case "essay":
-      return { ...base, sampleAnswer: question.answerKey[0] ?? null, rubric: [] };
+      return {
+        ...base,
+        sampleAnswer: question.answerKey[0] ?? null,
+        rubric: [],
+        ...(question.essayMaxWords != null
+          ? { essayMaxWords: question.essayMaxWords }
+          : {}),
+      };
     case "matching": {
       const options = question.options ?? [];
       const items = (question.matchItems ?? []).map((item) => ({

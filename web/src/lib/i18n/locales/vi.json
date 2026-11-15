@@ -2874,6 +2874,8 @@
     "checkAnswers": "Mọi câu hỏi đều có đáp án đúng",
     "checkPoints": "Mọi câu hỏi đều có điểm",
     "checkGroups": "Mọi bài đọc, bài điền từ và bài nghe đều có tiêu đề hoặc hướng dẫn",
+    "checkGroupUntitled": "{{name}}: chưa có tiêu đề hay hướng dẫn",
+    "groupInSection": "{{kind}} trong “{{section}}”",
     "fixIt": "Sửa",
     "fixBeforePublishing": "Hãy sửa các mục trên trước khi phát hành.",
     "changeNote": "Ghi chú thay đổi",

@@ -25,6 +25,10 @@ import {
   withMembers,
 } from "@/features/question-groups/model";
 
+/** jsdom does no layout; ProseMirror measures a range when Undo scrolls the selection into view. */
+Range.prototype.getClientRects ??= () => [] as unknown as DOMRectList;
+Range.prototype.getBoundingClientRect ??= () => new DOMRect();
+
 const prompts: GapPrompts = {
   typed: t("groups.pane.gapPromptTyped"),
   choice: t("groups.pane.gapPromptChoice"),

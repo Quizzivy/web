@@ -8,7 +8,7 @@ import type { Locale } from "./i18n";
  */
 export const PRIVACY_NOTICE = {
   version: "2026-11",
-  effectiveFrom: "2026-11-14",
+  effectiveFrom: "2026-11-15",
 } as const;
 
 /** FALLBACK_ORG_NAME names the centre where the build sets no name. */

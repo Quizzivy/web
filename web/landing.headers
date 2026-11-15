@@ -1,0 +1,10 @@
+
+# The landing site's own rules. Its build appends this file to public/_headers
+# (vite.landing.config.ts). The site's Pages project also answers on its
+# pages.dev host and on a host per deployment, with the same pages as
+# quizzivy.com: neither is to be indexed beside it.
+https://:project.pages.dev/*
+  X-Robots-Tag: noindex
+
+https://:version.:project.pages.dev/*
+  X-Robots-Tag: noindex

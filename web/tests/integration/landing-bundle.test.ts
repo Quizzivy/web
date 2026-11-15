@@ -1,3 +1,4 @@
+import { readFileSync } from "node:fs";
 import { resolve } from "node:path";
 import { gzipSync } from "node:zlib";
 import { build } from "vite";
@@ -12,7 +13,8 @@ type OutputChunk = {
   dynamicImports: string[];
   code: string;
 };
-type BuildOutput = { output: ({ type: "asset"; fileName: string } | OutputChunk)[] };
+type OutputAsset = { type: "asset"; fileName: string; source: string | Uint8Array };
+type BuildOutput = { output: (OutputAsset | OutputChunk)[] };
 
 /**
  * The landing site is a build of its own (vite.landing.config.ts), so that a
@@ -22,10 +24,12 @@ type BuildOutput = { output: ({ type: "asset"; fileName: string } | OutputChunk)
  */
 const ROOT = resolve(import.meta.dirname, "../..");
 const LIMIT = 200 * 1000;
+const SITE = "https://quizzivy.com";
 
 let output: BuildOutput["output"];
 
 beforeAll(async () => {
+  process.env["VITE_LANDING_URL"] = SITE;
   const result = (await build({
     root: ROOT,
     configFile: resolve(ROOT, "vite.landing.config.ts"),
@@ -109,5 +113,41 @@ describe("the landing site's build", () => {
   it("writes a version.json beside the page, as the app's build does", () => {
     const files = output.map((item) => item.fileName);
     expect(files).toContain("version.json");
+  });
+
+  const text = (fileName: string) => {
+    const asset = output.find(
+      (item): item is OutputAsset =>
+        item.type === "asset" && item.fileName === fileName,
+    );
+    if (!asset) throw new Error(`the build wrote no ${fileName}`);
+    return typeof asset.source === "string"
+      ? asset.source
+      : new TextDecoder().decode(asset.source);
+  };
+
+  it("names the site's published address in robots.txt, the sitemap and the page's share tag", () => {
+    expect(text("robots.txt")).toBe(
+      `User-agent: *\nAllow: /\n\nSitemap: ${SITE}/sitemap.xml\n`,
+    );
+    const listed = [...text("sitemap.xml").matchAll(/<loc>([^<]+)<\/loc>/g)].map(
+      (match) => match[1],
+    );
+    expect(listed).toEqual([`${SITE}/`, `${SITE}/privacy`]);
+    expect(text("landing.html")).toContain(
+      `<meta property="og:url" content="${SITE}/">`,
+    );
+  });
+
+  it("keeps the Pages project's own hosts out of search results, and no other host", () => {
+    const rules = readFileSync(resolve(ROOT, "landing.headers"), "utf8")
+      .split("\n")
+      .filter((line) => line.trim() !== "" && !line.startsWith("#"));
+    expect(rules).toEqual([
+      "https://:project.pages.dev/*",
+      "  X-Robots-Tag: noindex",
+      "https://:version.:project.pages.dev/*",
+      "  X-Robots-Tag: noindex",
+    ]);
   });
 });

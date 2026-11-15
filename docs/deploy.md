@@ -91,6 +91,14 @@ against the 200 KB the plan allows; on its own it takes 146 KiB, and
   `VITE_ORG_NAME`, `VITE_ORG_FRONT_DESK_PHONE`, `VITE_ORG_EMAIL`, and
   `VITE_ORG_ADDRESS` with its English form `VITE_ORG_ADDRESS_EN`. A line that
   is unset is hidden.
+- **Its one address.** `LANDING_ORIGIN` at the top of `deploy.yml`
+  (`https://quizzivy.com`) reaches the build as `VITE_LANDING_URL`. The
+  Landing and the notice name themselves by it (`<link rel="canonical">`, set
+  by the page, and `og:url`), and the build writes `robots.txt` and
+  `sitemap.xml` naming it. The Pages project also answers on its `pages.dev`
+  host and on a host per deployment, with the same pages: `landing.headers`,
+  which the build appends to the app's `_headers`, sends
+  `X-Robots-Tag: noindex` on both.
 - **Deploying it.** The same `Web → Cloudflare Pages` job builds both outputs
   from one commit and checks both before it deploys either: the app first,
   then the landing site, to the project the repository variable

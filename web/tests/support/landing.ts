@@ -18,6 +18,9 @@ export const CENTRE = {
 export const STUDENT_HOST = "https://my.quizzivy.com";
 export const STAFF_HOST = "https://portal.quizzivy.com";
 
+/** SITE is the address the landing site is published at. */
+export const SITE = "https://quizzivy.com";
+
 /**
  * landingBuild sets the build values of the landing site: the app's two hosts
  * and the centre's lines; `unset` names the lines the build leaves out.
@@ -27,6 +30,7 @@ export function landingBuild(
 ) {
   vi.stubEnv("VITE_STUDENT_APP_URL", STUDENT_HOST);
   vi.stubEnv("VITE_STAFF_APP_URL", STAFF_HOST);
+  vi.stubEnv("VITE_LANDING_URL", SITE);
   vi.stubEnv("VITE_ORG_NAME", unset.includes("name") ? "" : CENTRE.name);
   vi.stubEnv("VITE_ORG_FRONT_DESK_PHONE", unset.includes("phone") ? "" : CENTRE.phone);
   vi.stubEnv("VITE_ORG_EMAIL", unset.includes("email") ? "" : CENTRE.email);

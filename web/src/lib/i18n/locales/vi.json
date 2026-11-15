@@ -2531,6 +2531,7 @@
     "settings": "Cài đặt câu hỏi",
     "tags": "Thẻ",
     "typeLabel": "Loại câu hỏi",
+    "typeChangedDrops": "Đã đổi sang {{type}}. Một số đáp án của loại cũ đã bị bỏ.",
     "type": {
       "essay": "Bài luận",
       "fill_blank": "Điền từ",

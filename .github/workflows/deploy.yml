@@ -203,6 +203,47 @@ jobs:
       - name: Assert security headers are included
         run: cmp web/public/_headers web/dist/_headers
 
+      # The landing site (docs/deploy.md, "The landing site"): quizzivy.com's
+      # pages, a build output of its own for a Pages project of its own. It is
+      # built and checked here, before anything is deployed, so one commit
+      # either ships both or neither. The repository variable
+      # LANDING_PAGES_PROJECT names the project; unset, the site is not built.
+      - name: Build the landing site
+        if: ${{ vars.LANDING_PAGES_PROJECT != '' }}
+        working-directory: web
+        env:
+          VITE_API_BASE_URL: ${{ env.API_ORIGIN }}
+          VITE_STUDENT_APP_URL: ${{ env.STUDENT_ORIGIN }}
+          VITE_STAFF_APP_URL: ${{ env.STAFF_ORIGIN }}
+          VITE_ORG_NAME: ${{ vars.VITE_ORG_NAME }}
+          VITE_ORG_FRONT_DESK_PHONE: ${{ vars.VITE_ORG_FRONT_DESK_PHONE }}
+          VITE_ORG_EMAIL: ${{ vars.VITE_ORG_EMAIL }}
+          VITE_ORG_ADDRESS: ${{ vars.VITE_ORG_ADDRESS }}
+          VITE_ORG_ADDRESS_EN: ${{ vars.VITE_ORG_ADDRESS_EN }}
+          QUIZZIVY_BUILD: ${{ needs.resolve.outputs.sha }}
+        run: pnpm build:landing
+
+      # The site's form and its links are the whole reason it talks to
+      # anything: a build without these origins sends requests to localhost
+      # and people to pages of its own that do not exist.
+      - name: Assert the landing site points at production
+        if: ${{ vars.LANDING_PAGES_PROJECT != '' }}
+        working-directory: web
+        env:
+          BUILD: ${{ needs.resolve.outputs.sha }}
+        run: |
+          for origin in "$API_ORIGIN" "$STUDENT_ORIGIN" "$STAFF_ORIGIN"; do
+            grep -rqF "$origin" dist-landing/assets/*.js || {
+              echo "::error::$origin is not in the landing site -- its VITE_ variable did not reach the build"
+              exit 1; }
+          done
+          test -f dist-landing/index.html || { echo "::error::the landing site has no index.html"; exit 1; }
+          grep -qF "\"build\":\"$BUILD\"" dist-landing/version.json || {
+            echo "::error::the landing site's version.json does not name $BUILD"; exit 1; }
+          cmp public/_headers dist-landing/_headers
+          cmp public/_redirects dist-landing/_redirects
+          echo "the landing site targets $API_ORIGIN and links to $STUDENT_ORIGIN and $STAFF_ORIGIN"
+
       # A pinned direct call, with no installer between us and the deploy tool.
       # wrangler-action installed wrangler into web/ at deploy time with
       # whatever package manager it found there -- an unpinned `pnpm add` into
@@ -217,3 +258,18 @@ jobs:
           CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
         run: npx --yes wrangler@${{ env.WRANGLER_VERSION }} pages deploy dist --project-name=${{ env.PAGES_PROJECT }} --branch=main
+
+      # After the app, from the same commit and with the same account. The
+      # links on the landing site lead into the app, so the app goes first.
+      - name: Deploy the landing site
+        if: ${{ vars.LANDING_PAGES_PROJECT != '' }}
+        working-directory: web
+        env:
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_API_TOKEN }}
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          LANDING_PAGES_PROJECT: ${{ vars.LANDING_PAGES_PROJECT }}
+        run: npx --yes wrangler@${{ env.WRANGLER_VERSION }} pages deploy dist-landing --project-name="$LANDING_PAGES_PROJECT" --branch=main
+
+      - name: Say that the landing site was left out
+        if: ${{ vars.LANDING_PAGES_PROJECT == '' }}
+        run: echo "::notice::LANDING_PAGES_PROJECT is unset, so the landing site is not built or deployed"

@@ -15,7 +15,7 @@ import sonarjs from "eslint-plugin-sonarjs";
 
 export default [
   {
-    ignores: ["dist/**", "node_modules/**"],
+    ignores: ["dist/**", "dist-landing/**", "node_modules/**"],
   },
   js.configs.recommended,
   ...tseslint.configs.recommended,

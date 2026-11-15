@@ -70,6 +70,12 @@ host for every page on 4173, the `baseURL` every spec that names no host runs
 on. `hosts.spec.ts` (stubbed) and `hosts.live.spec.ts` are the specs that open
 4174 and 4175.
 
+The landing site is a second build (`pnpm build:landing`, into
+`web/dist-landing`), which the same script serves on `http://localhost:4176`.
+`landing.spec.ts` (stubbed) is the spec that opens it, and
+`tests/integration/landing-bundle.test.ts` builds it to hold what the Landing
+downloads under 200 KB.
+
 The live API is started to match: `STUDENT_APP_URL` and `STAFF_APP_URL` are
 those two origins and `CORS_ALLOWED_ORIGINS` lists all three, in the job's
 `env` here and in the slow tail's. A local API needs the same three settings

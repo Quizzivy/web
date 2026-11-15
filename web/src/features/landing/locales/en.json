@@ -1,0 +1,289 @@
+{
+  "app": {
+    "name": "Quizzivy"
+  },
+  "landing": {
+    "meta": {
+      "title": "Quizzivy · Online English testing"
+    },
+    "nav": {
+      "features": "Features",
+      "integrity": "Fair tests",
+      "faq": "FAQ",
+      "label": "Sections of this page"
+    },
+    "header": {
+      "home": "Quizzivy, back to the top",
+      "signIn": "Sign in",
+      "consult": "Book a consultation",
+      "students": "Students",
+      "studentsSub": "Take tests and see results",
+      "staff": "Teachers and admins",
+      "staffSub": "Build tests, grade, run classes",
+      "menuOpen": "Open menu",
+      "menuTitle": "Menu",
+      "menuClose": "Close menu",
+      "language": "Language",
+      "darkMode": "Dark mode",
+      "toDark": "Dark mode",
+      "toLight": "Light mode"
+    },
+    "hero": {
+      "h1a": "Learn English in class,",
+      "h1b": "take your tests",
+      "h1c": "on Quizzivy",
+      "sub": "Quizzivy is the online testing system of Quizzivy English Centre. Students take the tests their teacher assigns on their phone, then see their score, the answers and comments; teachers build tests, mark them and review every attempt.",
+      "haveCode": "Have a class code from your teacher?",
+      "codeLabel": "Class code",
+      "joinClass": "Join class",
+      "joinShort": "Enter all 8 characters.",
+      "joinExcluded": "Codes never use 0, O, 1 or I.",
+      "orSignIn": "Already have an account?",
+      "signIn": "Sign in",
+      "consultLink": "book a free consultation"
+    },
+    "steps": {
+      "title": "How Quizzivy works",
+      "s1": {
+        "title": "Join your class with a code",
+        "body": "Your teacher sends an 8-character class code or a link. Enter it and you are in your class."
+      },
+      "s2": {
+        "title": "Get the tests your teacher assigns",
+        "body": "New tests show on your first page with when they open and close. Quizzivy reminds you before one closes."
+      },
+      "s3": {
+        "title": "Take them on any device",
+        "body": "Read the test’s rules, then take it on a phone or a laptop. Every answer saves itself."
+      },
+      "s4": {
+        "title": "See your results",
+        "body": "Once marked, you see your score, the answers and your teacher’s comments."
+      }
+    },
+    "rows": {
+      "title": "What is inside Quizzivy",
+      "a": {
+        "kicker": "Kinds of question",
+        "title": "Listening, reading, blanks, matching and essays in one test",
+        "body": "Teachers build tests from eight kinds of question: one answer, several answers, true/false, true/false/not given, blanks, short answers, matching and essays. A recording plays inside the test, and a reading passage comes with its questions.",
+        "p1": "A recording has the number of plays the teacher sets",
+        "p2": "Questions arranged in parts and by skill",
+        "p3": "A question can carry an image"
+      },
+      "b": {
+        "kicker": "Taking a test",
+        "title": "Take tests on any device, and lose nothing if the connection drops",
+        "body": "Before you start you read the test’s rules: the time, the number of attempts, when the score comes. A timer runs while you work and every answer is saved at once; if the connection drops, your work saves when it is back.",
+        "p1": "After a reload or a closed tab, you carry on",
+        "p2": "When time runs out, the test is handed in with what you answered",
+        "p3": "The teacher can allow several attempts and keep the best score"
+      },
+      "c": {
+        "kicker": "Results",
+        "title": "See what you got right and wrong, and what your teacher said",
+        "body": "Choice and blank questions mark themselves. Essays are marked by your teacher on a band, with comments. Quizzivy tells you when a result is ready.",
+        "p1": "The right answers and explanations, when the teacher shows them",
+        "p2": "Filter to the questions you got wrong",
+        "p3": "An essay can be marked criterion by criterion"
+      }
+    },
+    "fair": {
+      "title": "Fair tests for the whole class",
+      "sub": "Before starting, students read the test’s rules in plain words. During the test Quizzivy records what happens, and the decision is the teacher’s.",
+      "i1": {
+        "title": "Fullscreen",
+        "body": "Leaving the test is recorded. A few seconds away is ignored."
+      },
+      "i2": {
+        "title": "No copy, no paste",
+        "body": "Questions cannot be copied out and answers cannot be pasted in."
+      },
+      "i3": {
+        "title": "A warning, not an accusation",
+        "body": "The teacher chooses: warn the student, flag it for the teacher, or submit the test."
+      },
+      "i4": {
+        "title": "Every attempt can be looked at again",
+        "body": "The start, each time away and the submit are recorded, with the time."
+      }
+    },
+    "consult": {
+      "eyebrow": "Courses at Quizzivy English Centre",
+      "title": "Not sure which course fits?",
+      "sub": "Leave your details and our advisers will call you back. They can arrange a free placement test.",
+      "name": "Full name",
+      "phone": "Phone",
+      "phonePlaceholder": "09xx xxx xxx",
+      "interest": "Interested in",
+      "who": "The course is for",
+      "time": "Best time to call",
+      "interests": {
+        "ielts": "IELTS",
+        "toeic": "TOEIC",
+        "communication": "Communication",
+        "kids": "Kids English",
+        "business": "Business English"
+      },
+      "whoOptions": {
+        "self": "Myself",
+        "child": "My child",
+        "company": "My company"
+      },
+      "times": {
+        "any": "Any time",
+        "morning": "Morning, 8:00–12:00",
+        "afternoon": "Afternoon, 13:00–17:00",
+        "evening": "Evening, 18:00–20:00"
+      },
+      "consentA": "I agree that {{org}} may use my name and phone number to call me back about courses, as described in the ",
+      "privacyNotice": "privacy notice",
+      "consentB": ".",
+      "submit": "Request a call back",
+      "sending": "Sending…",
+      "privacy": "We only use your number to call you back about courses.",
+      "errName": "Please enter your name.",
+      "errPhone": "Please enter a valid phone number.",
+      "errConsent": "Please agree to be contacted before sending.",
+      "errLimited": "Too many requests from this connection. Try again in {{count}} minutes.",
+      "errFailed": "We couldn’t send your request. Please try again, or call {{phone}}.",
+      "errFailedNoPhone": "We couldn’t send your request. Please try again.",
+      "sentTitle": "Thanks, we got it",
+      "sentBody": "An adviser will call {{name}} within one working day.",
+      "sendAnother": "Send another request"
+    },
+    "faq": {
+      "title": "Questions",
+      "help": "No answer here? Call {{phone}} or write to {{mail}}.",
+      "helpPhone": "No answer here? Call {{phone}}.",
+      "helpMail": "No answer here? Write to {{mail}}.",
+      "q1": {
+        "q": "How do students join a class?",
+        "a": "The teacher shares an 8-character code or a link. Students enter it on this page or in the app, then sign in or create an account."
+      },
+      "q2": {
+        "q": "Can students take tests on a phone?",
+        "a": "Yes. Tests work on phones, tablets and laptops, and answers save automatically every few seconds."
+      },
+      "q3": {
+        "q": "Does Quizzivy stop cheating?",
+        "a": "No browser can fully stop it. Quizzivy blocks copy and paste, records every time a student leaves the test, and lets the teacher decide what to do."
+      },
+      "q4": {
+        "q": "Can I sign in with Google?",
+        "a": "Yes, if your centre allows it. You can also use an email and password from your teacher."
+      },
+      "q5": {
+        "q": "I forgot my password. What now?",
+        "a": "Ask your teacher or the centre to reset it. You will get a temporary password and choose a new one when you sign in."
+      }
+    },
+    "footer": {
+      "about": "The online English testing system of Quizzivy English Centre.",
+      "product": "Product",
+      "start": "Get started",
+      "help": "Help",
+      "copyright": "© {{year}} Quizzivy",
+      "students": "Student sign-in",
+      "staff": "Teacher sign-in",
+      "join": "Join a class",
+      "consult": "Book a consultation",
+      "status": "Status",
+      "questions": "Questions",
+      "privacy": "Privacy"
+    }
+  },
+  "privacy": {
+    "title": "Privacy notice",
+    "lead": "When you send the consultation form on quizzivy.com, you give us your name and phone number. This page says what we receive, what we use it for, how long we keep it and what your rights are.",
+    "version": "Version {{v}} · in effect from {{date}}",
+    "print": "Print this page",
+    "summary": {
+      "title": "In short",
+      "s1": {
+        "label": "We receive",
+        "text": "Your name, your phone number and the three choices you make in the form."
+      },
+      "s2": {
+        "label": "We use it to",
+        "text": "Call you back about courses and arrange a placement test. Nothing else."
+      },
+      "s3": {
+        "label": "We keep it for",
+        "text": "12 months, then it is deleted automatically."
+      },
+      "s4": {
+        "label": "You can",
+        "text": "Ask to see, correct or delete it, or withdraw your consent, at any time."
+      }
+    },
+    "p1t": "Who is responsible",
+    "p1a": "{{org}} is responsible for what you send through this page.",
+    "p2t": "What we receive",
+    "p2a": "Only what you put in the consultation form:",
+    "p2b1": "Your full name",
+    "p2b2": "Your phone number",
+    "p2b3": "The courses you are interested in, who the course is for, and the best time to call",
+    "p2b4": "The language of the page when you sent it, the time you agreed, and the version of this notice",
+    "p2c": "We do not store your IP address or anything about your device with the request. The server holds the IP address in memory for a short time only, to stop the form being sent too many times.",
+    "p3t": "What we use it for",
+    "p3a": "So that one of the centre’s advisers can call you back about courses, and arrange a placement test if you want one. We use it for that only: not for advertising, and we do not sell it to anyone.",
+    "p4t": "Why we may use it",
+    "p4a": "Because you agreed. Before sending the form you tick the box to agree; without the tick the form is not sent. This is the basis under Viet Nam’s Law on Personal Data Protection (Law No. 91/2025/QH15).",
+    "p5t": "Who can see it, and where it is kept",
+    "p5a": "Only the centre’s advisers and admins can see your request.",
+    "p5b": "When a request arrives, the centre gets an email about it. The email has your first name, the courses you are interested in, who the course is for and the best time to call. It does not have your phone number.",
+    "p5c1": "Requests are stored on Quizzivy’s server, in Ho Chi Minh City.",
+    "p5c2": "Backups are encrypted and kept with Cloudflare.",
+    "p5c3": "The email is sent through Resend.",
+    "p5d": "Cloudflare and Resend are companies abroad, so the backups and the email may be handled outside Viet Nam.",
+    "p6t": "How long we keep it",
+    "p6a": "We keep your request for 12 months from the day you send it, and then it is deleted automatically. You can ask us to delete it sooner at any time.",
+    "p7t": "Your rights",
+    "p7a": "You have the right to:",
+    "p7b1": "Know what we hold about you",
+    "p7b2": "Ask us to correct it",
+    "p7b3": "Ask us to delete it",
+    "p7b4": "Withdraw your consent, and we will not call you again",
+    "p7c": "To use any of these, write to {{mail}} or call {{phone}}.",
+    "p8t": "Children",
+    "p8a": "The form asks only about the person sending it. When you ask on behalf of your child, we do not ask for the child’s name, age or anything else about them on this page.",
+    "p9t": "When you only visit the page",
+    "p9a": "quizzivy.com uses no tracking cookies and no third-party measuring tools. Your browser only remembers the language and the light or dark look you chose, on your own device.",
+    "p10t": "What this notice covers",
+    "p10a": "This notice is about quizzivy.com and its consultation form. What Quizzivy holds for student and teacher accounts is outside this notice.",
+    "p11t": "When this notice changes",
+    "p11a": "Each time it changes, the version and the date at the top change with it. Your request is always stored with the version you agreed to.",
+    "p7cMail": "To use any of these, write to {{mail}}.",
+    "p7cPhone": "To use any of these, call {{phone}}."
+  },
+  "statusPage": {
+    "normalT": "All systems normal",
+    "normalB": "No update is planned.",
+    "normalRow": "Working normally",
+    "checked": "checked at {{time}}",
+    "planT": "Quizzivy will be updated soon",
+    "planB": "From {{from}} to {{to}}. Tests that close during the update are extended.",
+    "planRow1": "Starts {{time}}",
+    "planRow2": "Everything works for now",
+    "activeT": "Quizzivy is being updated",
+    "activeB": "We’ll be back by {{time}}. Tests that close during the update are extended.",
+    "started": "Started {{time}}",
+    "duration": "about {{minutes}} min",
+    "saved": "Answers and results saved",
+    "activeF": "Your answers and results are kept. Nothing is lost.",
+    "checkingT": "Checking…",
+    "errorT": "We couldn’t check the status",
+    "errorB": "Your connection may be weak, or Quizzivy is not answering. Try again in a few minutes.",
+    "check": "Check again",
+    "home": "Back to the home page",
+    "foot": "Need help now? Call {{phone}}."
+  },
+  "notFound": {
+    "title": "This page doesn’t exist",
+    "body": "The link may be old, or the test or class it pointed to was removed.",
+    "action": "Go to home",
+    "back": "Go back",
+    "footnote": "Got here from a teacher’s link? Ask them to send it again."
+  }
+}

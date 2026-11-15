@@ -15,7 +15,7 @@ import path from "node:path";
  * own. The deploy sets QUIZZIVY_BUILD to the commit it ships; any other build
  * gets an id of its own.
  */
-function appVersion(): Plugin {
+export function appVersion(): Plugin {
   const pkg = JSON.parse(
     readFileSync(path.resolve(import.meta.dirname, "package.json"), "utf8"),
   ) as { version: string };

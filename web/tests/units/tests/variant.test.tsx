@@ -151,6 +151,7 @@ beforeEach(() => {
   serveDetail();
   aiOn();
   writes = [];
+  deleteRefused = false;
   questionBody = null;
   outlineBody = null;
   server.use(
@@ -193,8 +194,19 @@ beforeEach(() => {
       );
     }),
     http.patch(`${BASE}/teacher/tests/:id`, async ({ params, request }) => {
+      const body = (await request.json()) as { status?: string };
+      if (body.status === "archived") {
+        writes.push(`archive test ${String(params["id"])}`);
+        return contractJson("/teacher/tests/{id}", "patch", 200, {
+          ...testFixture(),
+          id: COPY,
+          status: "archived",
+          currentVersion: 0,
+          nextVersion: 1,
+        });
+      }
       writes.push(`save outline ${String(params["id"])}`);
-      outlineBody = (await request.json()) as typeof outlineBody;
+      outlineBody = body as typeof outlineBody;
       return contractJson("/teacher/tests/{id}", "patch", 200, {
         ...testFixture(),
         id: COPY,
@@ -203,8 +215,56 @@ beforeEach(() => {
         nextVersion: 1,
       });
     }),
+    http.get(`${BASE}/teacher/tests/:id`, ({ params }) =>
+      contractJson(
+        "/teacher/tests/{id}",
+        "get",
+        200,
+        params["id"] === COPY
+          ? {
+              ...testFixture(),
+              id: COPY,
+              status: "draft",
+              currentVersion: 0,
+              nextVersion: 1,
+            }
+          : detail.test,
+      ),
+    ),
+    http.delete(`${BASE}/teacher/tests/:id`, ({ params }) => {
+      writes.push(`delete test ${String(params["id"])}`);
+      return deleteRefused
+        ? contractJson("/teacher/tests/{id}", "delete", 409, refusal("CONFLICT"))
+        : new Response(null, { status: 204 });
+    }),
   );
 });
+
+let deleteRefused = false;
+
+/** One section holding one group, as a test's outline carries it. */
+function groupSections(group: string) {
+  return [
+    {
+      id: SECTION_ID,
+      ordinal: 0,
+      title: "Đọc hiểu",
+      instructions: null,
+      questionIds: [],
+      units: [{ kind: "group" as const, id: group }],
+    },
+  ];
+}
+
+function refusal(code: string) {
+  return {
+    error: {
+      code,
+      message: "Refused.",
+      requestId: "018f0000-0000-7000-8000-0000000000ef",
+    },
+  };
+}
 
 afterEach(() => {
   useAuthStore.setState({ accessToken: null, user: null });
@@ -273,16 +333,6 @@ describe("Make a variant", () => {
   });
 
   it("writes a member's changes to the copy's own group, never to the test's group", async () => {
-    const groupSections = (group: string) => [
-      {
-        id: SECTION_ID,
-        ordinal: 0,
-        title: "Đọc hiểu",
-        instructions: null,
-        questionIds: [],
-        units: [{ kind: "group" as const, id: group }],
-      },
-    ];
     detail.test = testFixture({ sections: groupSections(GROUP) });
     let groupBody: { bundle: StoredGroup["bundle"]; expectedRevision: number } | null =
       null;
@@ -517,7 +567,99 @@ describe("Make a variant", () => {
       expect(await within(dialog).findByRole("alert")).toHaveTextContent(
         ai.variant.changed,
       );
-      expect(writes).toEqual([`duplicate test ${TEST_ID}`]);
+      expect(writes).toEqual([
+        `duplicate test ${TEST_ID}`,
+        `archive test ${COPY}`,
+        `delete test ${COPY}`,
+      ]);
+    });
+  });
+
+  describe("when a write fails half-way (VR-3)", () => {
+    async function saveARefusedGroupWrite() {
+      detail.test = testFixture({ sections: groupSections(GROUP) });
+      server.use(
+        http.post(`${BASE}/teacher/ai/tests/:id/variant`, () =>
+          contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
+            changes: [
+              {
+                questionId: MEMBERS[1]!,
+                number: 2,
+                kind: "reword",
+                title: "What do parks do? (2)",
+                before: "What do parks do? (2)",
+                after: "What are parks good for?",
+                payload: { prompt: "What are parks good for?" },
+              },
+            ],
+            usage: { credits: 2600, left: 15000 },
+          }),
+        ),
+        http.get(`${BASE}/teacher/question-groups/:id`, ({ params }) =>
+          contractJson(
+            "/teacher/question-groups/{id}",
+            "get",
+            200,
+            params["id"] === COPY_GROUP
+              ? storedGroup(COPY_GROUP, COPY_MEMBERS, COPY_OPTIONS)
+              : storedGroup(GROUP, MEMBERS, MEMBER_OPTIONS),
+          ),
+        ),
+        http.put(`${BASE}/teacher/question-groups/:id`, ({ params }) => {
+          writes.push(`update group ${String(params["id"])}`);
+          return contractJson(
+            "/teacher/question-groups/{id}",
+            "put",
+            409,
+            refusal("CONFLICT"),
+          );
+        }),
+        http.post(`${BASE}/teacher/tests/:id/duplicate`, ({ params }) => {
+          writes.push(`duplicate test ${String(params["id"])}`);
+          return contractJson("/teacher/tests/{id}/duplicate", "post", 201, {
+            ...testFixture({ sections: groupSections(COPY_GROUP) }),
+            id: COPY,
+            status: "draft",
+            currentVersion: 0,
+            nextVersion: 1,
+          });
+        }),
+      );
+      const { user } = renderDetail();
+      await user.click(await screen.findByRole("button", { name: ai.entry.variant }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: ai.variant.run }));
+      await user.click(
+        await within(dialog).findByRole("button", {
+          name: "Lưu 1 thay đổi thành bản nháp",
+        }),
+      );
+      return dialog;
+    }
+
+    it("deletes the half-written copy and says the variant failed", async () => {
+      const dialog = await saveARefusedGroupWrite();
+
+      expect(
+        await within(dialog).findByRole("alert", {}, { timeout: 3000 }),
+      ).toHaveTextContent(ai.variant.failed);
+      expect(writes).toEqual([
+        `duplicate test ${TEST_ID}`,
+        `save outline ${COPY}`,
+        `update group ${COPY_GROUP}`,
+        `archive test ${COPY}`,
+        `delete test ${COPY}`,
+      ]);
+    });
+
+    it("says the copy is still there when it cannot be deleted either", async () => {
+      deleteRefused = true;
+      const dialog = await saveARefusedGroupWrite();
+
+      expect(
+        await within(dialog).findByRole("alert", {}, { timeout: 3000 }),
+      ).toHaveTextContent(ai.variant.kept);
+      expect(writes.at(-1)).toBe(`delete test ${COPY}`);
     });
   });
 

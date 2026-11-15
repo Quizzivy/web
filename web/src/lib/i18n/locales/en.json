@@ -322,7 +322,9 @@
       "open": "Open the variant",
       "testTitle": "{{title}} · Variant",
       "invalid": "The change to Q{{n}} can’t be saved as it is. Clear it and try again.",
-      "changed": "The test changed while saving, so its copy was left unchanged. Make the variant again."
+      "changed": "The test changed while saving, so the variant was not made. Make the variant again.",
+      "failed": "The variant could not be made. The half-made copy was deleted.",
+      "kept": "The variant could not be made. The half-made copy is still in your tests; you can delete it."
     },
     "cleanup": {
       "title": "Clean up the question bank",

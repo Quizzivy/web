@@ -45,6 +45,8 @@ export function VariantAction({
       title: variantTitle(),
       invalid: (n) => t("ai.variant.invalid", { n }),
       changed: t("ai.variant.changed"),
+      failed: t("ai.variant.failed"),
+      kept: t("ai.variant.kept"),
     });
     await client.invalidateQueries({ queryKey: ["teacher-tests"] });
     return id;

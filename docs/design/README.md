@@ -679,6 +679,23 @@ To view one, start the server above and open, for example,
   names what the Landing needs before it can open: the operation the form sends to
   (T-R11.6), and the privacy notice and the status page it links to (T-R11.8), none of
   which is built or drawn.
+- 2026-11-14 — Twenty-first proposal page: `proposals/R11 Privacy and Status.dc.html`, for
+  T-R11.8 (DG-06, DG-100). The owner asked for the two pages the Landing leads to. The
+  privacy notice sits between the Landing's header and footer: one 720px column with a
+  title, the version and a button to print, a summary of four facts on a soft panel, and
+  eleven short numbered parts; a "Printed" state shows it on paper. Its words say what
+  R11's plan says the form collects, why, who sees it and for how long, in plain
+  Vietnamese. Three of the plan's facts had moved and are drawn as they are now, each with
+  a question: requests are kept on the server in Ho Chi Minh City (the plan lists Fly.io
+  and Neon), the law named is No. 91/2025/QH15 (the plan names Decree 13/2023, replaced on
+  1 January 2026; read in summaries, not the texts), and the version is drawn as 2026-11
+  (the plan says 2026-10). The notice has had no legal review (O-R11.1). The status page
+  is on the deck's system frame with five states; "being updated" is the app's own
+  maintenance page, with "Về trang chủ" added, and "all normal" has a drawing made from
+  the deck's maintenance one. Seven states at 1280 and 360 (794 for paper), light and
+  dark, Vietnamese and English; 70 strings, seven of them the app's. Eight questions for
+  Thuong. The handoff says what the notice promises of the build, and that the 12-month
+  deletion's nightly run has not reached the database since it moved.
 
 ## The brand
 

@@ -1,0 +1,506 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · The privacy notice and the status page of quizzivy.com · Proposal · 14 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">The privacy notice and the status page</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">The Landing of quizzivy.com leads to two pages that nobody has drawn. The consultation form’s box to tick links to a privacy notice, and the footer links to a status page. This page draws both. The notice is written in plain words, Vietnamese first, from what R11’s plan says the form collects and keeps; three of the plan’s facts have gone out of date and are asked about below. The status page sits on the deck’s system frame and says one of five things. Under the frames is what the owner still has to decide, and a short list for the people who build it.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The privacy notice</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">One column to read, four facts first.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>It sits between the Landing’s header and footer. A title, one sentence, the version, and a button to print it.</li>
+      <li><span style="color:var(--fg)">A summary on a soft panel:</span> what is received, what for, how long, and what the reader can ask for. Then eleven short numbered parts.</li>
+      <li>Every sentence says something R11’s plan says about the form. It has not had a legal review; that is the plan’s open item O-R11.1.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">Three facts that moved</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The plan was written before them.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li><span style="color:var(--fg)">Where requests are kept.</span> The plan names Fly.io and Neon. Since 12 November the server is in Ho Chi Minh City.</li>
+      <li><span style="color:var(--fg)">Which law.</span> The plan names Decree 13/2023. A law on personal data has been in force since 1 January 2026, and that decree was replaced.</li>
+      <li><span style="color:var(--fg)">The version.</span> The plan calls the first version 2026-10. Nothing was published then.</li>
+    </ul>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">The status page</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">The deck’s system frame, five states.</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <li>All normal, an update is planned, being updated, checking, and could not check.</li>
+      <li><span style="color:var(--fg)">“Being updated” is the app’s own maintenance page,</span> with its words as they are today.</li>
+      <li>“All normal” needs a drawing the deck does not have. It is the deck’s maintenance drawing with its broken line made whole.</li>
+    </ul>
+  </div>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The two pages, wide and on a phone</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Pick a page and its state in the bar above. A number marks what the notes beside the frames talk about.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="fr" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ fr.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ fr.title }}</strong> · {{ fr.sub }}</figcaption>
+        <div style="width:{{ fr.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ fr.screen }}" data-qz="{{ pg.qz }}" style="width:{{ fr.w }}px;height:{{ fr.h }};zoom:{{ fr.s }};display:flex;flex-direction:column;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:15px;line-height:1.55;--shadow-lg:{{ shadowLg }}">
+<sc-if value="{{ pg.isPrivacy }}" hint-placeholder-val="{{ true }}"><div style="flex:1;min-height:0;overflow:hidden"><div><sc-if value="{{ pg.screen }}" hint-placeholder-val="{{ true }}"><div style="position:relative;background:var(--bg)"><header style="position:relative;z-index:5;background:transparent;border-bottom:1px solid {{ pg.headLine }}">
+<div style="max-width:1200px;margin:0 auto;height:64px;display:flex;align-items:center;gap:{{ fr.headGap }};padding:0 {{ fr.padX }}">
+<a aria-label="Quizzivy" style="display:flex;flex:none;text-decoration:underline;text-underline-offset:3px;color:var(--fg)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:28px"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../brand/quizzivy-logo-horizontal-on-dark.svg" alt="Quizzivy" style="height:28px"></sc-if></a>
+<sc-if value="{{ fr.wide }}" hint-placeholder-val="{{ true }}"><nav style="display:flex;gap:2px;margin-left:12px"><sc-for list="{{ navLinks }}" as="n" hint-placeholder-count="4"><a style="height:36px;padding:0 12px;border-radius:8px;display:inline-flex;align-items:center;font-size:14px;color:var(--muted-fg);text-decoration:none;white-space:nowrap">{{ n.label }}</a></sc-for></nav></sc-if>
+<div style="margin-left:auto;display:flex;align-items:center;gap:6px">
+<sc-if value="{{ fr.notMobile }}" hint-placeholder-val="{{ true }}"><div style="display:flex;padding:3px;background:{{ pg.segBg }};border-radius:8px;gap:2px"><sc-for list="{{ langs }}" as="l" hint-placeholder-count="2"><button type="button" aria-label="{{ l.aria }}" style="border:0;border-radius:6px;height:26px;padding:0 9px;font-size:12px;font-weight:600;cursor:pointer;background:{{ l.bg }};color:{{ l.fg }};box-shadow:{{ l.shadow }}">{{ l.label }}</button></sc-for></div>
+<button type="button" aria-label="Toggle theme" style="width:36px;height:36px;display:grid;place-items:center;border:0;border-radius:8px;background:transparent;cursor:pointer"><i class="icon-{{ themeIcon }}" style="font-size:17px"></i></button></sc-if>
+<sc-if value="{{ fr.notMobile }}" hint-placeholder-val="{{ true }}"><span style="position:relative;display:inline-flex;align-items:center;gap:6px"><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.signin.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.signin.n }}</span></sc-if></sc-if><a role="button" aria-haspopup="menu" style="height:36px;padding:0 10px 0 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;border:1px solid var(--border);background:{{ hd.signBg }};color:var(--fg)">{{ t.signIn }}<i class="icon-chevron-down" style="font-size:14px;color:var(--muted-fg)"></i></a><sc-if value="{{ hd.signOpen }}" hint-placeholder-val="{{ false }}"><div role="menu" style="position:absolute;top:calc(100% + 6px);right:0;z-index:6;width:304px;background:var(--card);border:1px solid var(--border);border-radius:10px;box-shadow:var(--shadow-lg);padding:6px;text-align:left"><sc-for list="{{ hd.signRows }}" as="sr" hint-placeholder-count="2"><a role="menuitem" style="display:flex;align-items:center;gap:10px;padding:8px;border-radius:6px;text-decoration:none;color:var(--fg)"><span style="width:34px;height:34px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ sr.icon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;line-height:1.35">{{ sr.label }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.35">{{ sr.sub }}</span></span><i class="icon-arrow-right" style="font-size:15px;color:var(--muted-fg)"></i></a></sc-for></div></sc-if></span></sc-if>
+<a style="height:36px;padding:0 14px;border-radius:8px;display:inline-flex;align-items:center;gap:6px;font-size:14px;font-weight:500;text-decoration:none;white-space:nowrap;background:var(--primary);color:var(--primary-fg)">{{ t.consultShort }}</a><sc-if value="{{ fr.narrow }}" hint-placeholder-val="{{ false }}"><span role="button" aria-label="{{ t.menuOpen }}" style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;border:1px solid var(--border);background:{{ hd.menuBg }}"><i class="icon-menu" style="font-size:17px"></i></span><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.menuBtn.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.menuBtn.n }}</span></sc-if></sc-if></sc-if>
+</div>
+</div>
+</header></div></sc-if>
+<main style="max-width:1200px;margin:0 auto;padding:{{ fr.docPad }}"><article style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:{{ fr.docGap }}"><sc-if value="{{ pg.print }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;padding-bottom:14px;border-bottom:1px solid var(--border)"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:24px"><span style="display:inline-flex;align-items:center;gap:8px;font-size:12.5px;color:var(--muted-fg)">quizzivy.com/privacy<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.paper.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.paper.n }}</span></sc-if></sc-if></span></div></sc-if><header style="display:flex;flex-direction:column;gap:14px"><h1 style="margin:0;font-size:{{ fr.h1p }};font-weight:600;letter-spacing:-0.025em;line-height:1.15;text-wrap:balance">{{ t.pTitle }}</h1><p style="margin:0;font-size:{{ fr.leadSize }};color:var(--muted-fg);line-height:1.6;text-wrap:pretty">{{ t.pLead }}</p><div style="display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted-fg)"><i class="icon-file-text" style="font-size:15px"></i>{{ verLine }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.ver.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.ver.n }}</span></sc-if></sc-if></span><sc-if value="{{ pg.screen }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:8px"><button type="button" style="height:36px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);color:var(--fg);font-size:13.5px;font-weight:500;display:inline-flex;align-items:center;gap:7px;white-space:nowrap"><i class="icon-printer" style="font-size:15px"></i>{{ t.pPrint }}</button><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.print.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.print.n }}</span></sc-if></sc-if></span></sc-if></div></header><section style="border-radius:20px;background:var(--accent-soft);padding:{{ fr.sumPad }};display:flex;flex-direction:column;gap:16px"><h2 style="margin:0;display:flex;align-items:center;gap:10px;font-size:17px;font-weight:600">{{ t.pSumTitle }}<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.summary.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.summary.n }}</span></sc-if></sc-if></h2><div style="display:grid;grid-template-columns:{{ fr.sumCols }};gap:{{ fr.sumGap }}"><sc-for list="{{ summary }}" as="sm" hint-placeholder-count="4"><div style="display:flex;align-items:flex-start;gap:12px;min-width:0"><span style="width:38px;height:38px;flex:none;border-radius:12px;background:var(--card);display:grid;place-items:center"><i class="icon-{{ sm.icon }}" style="font-size:18px;color:var(--accent-ink)"></i></span><span style="min-width:0;display:flex;flex-direction:column;gap:2px"><span style="font-size:13px;font-weight:600;color:var(--accent-ink)">{{ sm.label }}</span><span style="font-size:15px;line-height:1.5;text-wrap:pretty">{{ sm.text }}</span></span></div></sc-for></div></section><sc-for list="{{ sections }}" as="sec" hint-placeholder-count="6"><section style="display:flex;flex-direction:column;gap:10px"><h2 style="margin:0;display:flex;align-items:baseline;gap:10px;font-size:{{ fr.h2p }};font-weight:600;letter-spacing:-0.015em;line-height:1.3"><span style="flex:none;font-size:14px;font-weight:600;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ sec.n }}</span><span style="min-width:0;text-wrap:balance">{{ sec.title }}</span><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ sec.pinOn }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none;align-self:center">{{ sec.pinN }}</span></sc-if></sc-if></h2><sc-for list="{{ sec.blocks }}" as="bl" hint-placeholder-count="2"><sc-if value="{{ bl.isP }}" hint-placeholder-val="{{ true }}"><p style="margin:0;font-size:16px;line-height:1.7;text-wrap:pretty">{{ bl.text }}</p></sc-if><sc-if value="{{ bl.isList }}" hint-placeholder-val="{{ false }}"><ul style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:8px"><sc-for list="{{ bl.items }}" as="li" hint-placeholder-count="3"><li style="display:flex;align-items:flex-start;gap:10px;font-size:16px;line-height:1.6"><span style="width:6px;height:6px;flex:none;margin-top:10px;border-radius:50%;background:var(--accent-c)"></span><span style="flex:1;min-width:0;text-wrap:pretty">{{ li }}</span></li></sc-for></ul></sc-if><sc-if value="{{ bl.isLines }}" hint-placeholder-val="{{ false }}"><div style="border:1px solid var(--border);border-radius:14px;background:var(--card);padding:4px 16px"><sc-for list="{{ bl.lines }}" as="ln" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:12px;padding:11px 0;border-top:{{ ln.border }};font-size:15.5px"><i class="icon-{{ ln.icon }}" style="font-size:17px;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;overflow-wrap:anywhere">{{ ln.text }}</span></div></sc-for></div></sc-if></sc-for></section></sc-for></article></main>
+<sc-if value="{{ pg.screen }}" hint-placeholder-val="{{ true }}"><footer style="border-top:1px solid var(--border);background:var(--sidebar)">
+<div style="max-width:1200px;margin:0 auto;padding:48px {{ fr.padX }} 28px;display:grid;grid-template-columns:{{ fr.footCols }};gap:32px">
+<div style="display:flex;flex-direction:column;gap:12px;min-width:0"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:28px;align-self:flex-start"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../brand/quizzivy-logo-horizontal-on-dark.svg" alt="Quizzivy" style="height:28px;align-self:flex-start"></sc-if><span style="font-size:14px;color:var(--muted-fg);line-height:1.6;max-width:300px">{{ t.footAbout }}</span></div>
+<sc-for list="{{ footCols2 }}" as="fc" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:10px"><span style="font-size:13px;font-weight:600">{{ fc.title }}</span><sc-for list="{{ fc.links }}" as="l" hint-placeholder-count="4"><a style="font-size:14px;color:var(--muted-fg);text-decoration:none">{{ l.label }}</a></sc-for></div></sc-for>
+</div>
+<div style="max-width:1200px;margin:0 auto;padding:16px {{ fr.padX }} 28px;border-top:1px solid var(--border);display:flex;justify-content:space-between;gap:12px;flex-wrap:wrap;font-size:13px;color:var(--muted-fg)"><span style="display:inline-flex;align-items:center;gap:8px">© 2026 Quizzivy<sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.footer.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.footer.n }}</span></sc-if></sc-if></span><span>{{ t.footAddr }}</span></div>
+</footer></sc-if></div></div></sc-if>
+<sc-if value="{{ pg.isStatus }}" hint-placeholder-val="{{ false }}"><div style="flex:1;min-height:0;display:flex;background:var(--bg);font-size:14px;line-height:1.5"><sc-if value="{{ fr.wide }}" hint-placeholder-val="{{ true }}"><aside style="flex:0 0 44%;max-width:620px;background:var(--sidebar);border-right:1px solid var(--border);display:flex;flex-direction:column;justify-content:space-between;padding:40px 48px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:32px;align-self:flex-start"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../brand/quizzivy-logo-horizontal-on-dark.svg" alt="Quizzivy" style="height:32px;align-self:flex-start"></sc-if><div aria-hidden="true" style="align-self:center;color:var(--fg);position:relative"><sc-if value="{{ sp.artNormal }}" hint-placeholder-val="{{ true }}"><svg viewBox="0 0 260 260" width="300" height="300" fill="none" stroke="currentColor" aria-hidden="true"><g fill="currentColor" fill-opacity="0.3" stroke="none"><rect x="40" y="52" width="180" height="12" rx="6"></rect><rect x="40" y="76" width="150" height="12" rx="6"></rect><rect x="40" y="100" width="172" height="12" rx="6"></rect></g><rect x="40" y="124" width="158" height="12" rx="6" fill="currentColor" stroke="none"></rect><g fill="currentColor" fill-opacity="0.3" stroke="none"><rect x="40" y="162" width="164" height="12" rx="6"></rect><rect x="40" y="186" width="132" height="12" rx="6"></rect><rect x="40" y="210" width="176" height="12" rx="6"></rect></g><circle cx="228" cy="130" r="12" stroke-width="2" stroke-opacity="0.8"></circle><path d="M222.5 130.5 l4 4 l7 -8" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"></path></svg></sc-if><sc-if value="{{ sp.artMaint }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 260 260" width="300" height="300" fill="none" stroke="currentColor" aria-hidden="true"><g fill="currentColor" fill-opacity="0.3" stroke="none"><rect x="40" y="52" width="180" height="12" rx="6"></rect><rect x="40" y="76" width="150" height="12" rx="6"></rect><rect x="40" y="100" width="172" height="12" rx="6"></rect></g><rect x="40" y="124" width="158" height="12" rx="6" stroke-width="2" stroke-dasharray="6 6" stroke-opacity="0.8"></rect><g fill="currentColor" fill-opacity="0.3" stroke="none"><rect x="40" y="162" width="164" height="12" rx="6"></rect><rect x="40" y="186" width="132" height="12" rx="6"></rect><rect x="40" y="210" width="176" height="12" rx="6"></rect></g><path d="M212 130 H228" stroke-width="2" stroke-opacity="0.55" stroke-dasharray="2 6" stroke-linecap="round"></path><circle cx="236" cy="130" r="5.5" fill="currentColor" stroke="none"></circle></svg></sc-if><sc-if value="{{ sp.artError }}" hint-placeholder-val="{{ false }}"><svg viewBox="0 0 260 260" width="300" height="300" aria-hidden="true"><g fill="currentColor" fill-opacity="0.3"><rect x="40" y="52" width="180" height="12" rx="6"></rect><rect x="40" y="76" width="150" height="12" rx="6"></rect><rect x="40" y="100" width="172" height="12" rx="6"></rect></g><g fill="currentColor"><rect x="40" y="124" width="74" height="12" rx="6"></rect><rect x="136" y="132" width="62" height="12" rx="6"></rect><circle cx="125" cy="135" r="3.5"></circle></g><g fill="currentColor" fill-opacity="0.3"><rect x="40" y="162" width="164" height="12" rx="6"></rect><rect x="40" y="186" width="132" height="12" rx="6"></rect><rect x="40" y="210" width="176" height="12" rx="6"></rect></g></svg></sc-if><span style="position:absolute;right:0;top:0"><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.art.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.art.n }}</span></sc-if></sc-if></span></div><span style="font-size:12.5px;color:var(--muted-fg)">{{ orgName }}</span></aside></sc-if><main style="flex:1;min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:center;padding:{{ fr.mainPad }}"><sc-if value="{{ fr.narrow }}" hint-placeholder-val="{{ false }}"><div style="margin-bottom:28px;align-self:center"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../brand/quizzivy-logo-horizontal-color.svg" alt="Quizzivy" style="height:28px"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../brand/quizzivy-logo-horizontal-on-dark.svg" alt="Quizzivy" style="height:28px"></sc-if></div></sc-if><div style="width:100%;max-width:380px;display:flex;flex-direction:column"><h1 style="margin:0;font-size:24px;font-weight:600;letter-spacing:-0.02em;line-height:1.25;text-wrap:balance">{{ sp.title }} <sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.state.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.state.n }}</span></sc-if></sc-if></h1><sc-if value="{{ sp.hasBody }}" hint-placeholder-val="{{ true }}"><p style="margin:8px 0 0;font-size:14.5px;color:var(--muted-fg);line-height:1.6;text-wrap:pretty">{{ sp.body }}</p></sc-if><sc-if value="{{ sp.hasRows }}" hint-placeholder-val="{{ true }}"><div style="margin-top:16px;display:flex;flex-direction:column;border:1px solid var(--border);border-radius:10px;overflow:hidden"><sc-for list="{{ sp.rows }}" as="mr" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:10px;padding:10px 12px;border-top:{{ mr.border }};font-size:13.5px"><i class="icon-{{ mr.icon }}" style="font-size:15px;color:{{ mr.color }}"></i><span style="flex:1;min-width:0">{{ mr.text }}</span><span style="font-size:12.5px;color:var(--muted-fg);white-space:nowrap;font-variant-numeric:tabular-nums">{{ mr.meta }}</span></div></sc-for></div></sc-if><div style="margin-top:20px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px"><button type="button" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:{{ fr.btnH }};padding:0 18px;border-radius:9px;font-size:{{ fr.btnFs }};font-weight:500;white-space:nowrap;border:0;background:var(--primary);color:var(--primary-fg);opacity:{{ sp.checkOp }}">{{ t.stCheck }}</button><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.check.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.check.n }}</span></sc-if></sc-if></span><span style="display:flex;align-items:center;gap:8px"><a role="button" style="width:100%;display:inline-flex;align-items:center;justify-content:center;gap:8px;height:{{ fr.btnH }};padding:0 18px;border-radius:9px;font-size:{{ fr.btnFs }};font-weight:500;white-space:nowrap;box-sizing:border-box;border:1px solid var(--border);background:var(--card);color:var(--fg);text-decoration:none">{{ t.stHome }}</a><sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.home.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.home.n }}</span></sc-if></sc-if></span></div><p style="margin:24px 0 0;font-size:13px;color:var(--muted-fg);text-align:center;text-wrap:pretty">{{ sp.foot }} <sc-if value="{{ fr.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.foot.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none">{{ pin.foot.n }}</span></sc-if></sc-if></p></div></main></div></sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-family:'Be Vietnam Pro',sans-serif;font-size:11px;font-weight:700;line-height:1;letter-spacing:0;text-transform:none;margin-top:1px">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">{{ pinsNote }}</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The plan and the deck, and this page</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The left column is what R11’s plan asks for (T-R11.8) or what the deck draws. The right is what this page draws.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The plan or the deck</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What each thing does</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">For the people who build it. The last column says why.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What happens</span><span>Why</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words on these two pages</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Every line, in both languages, Vietnamese first. “New” was written for this page from what the plan says, and the first column says which part of it. “Plan” is R11’s own English. “As today” is what the app already says on its maintenance page. The Landing’s header and footer keep the Landing’s words, which are on its own page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>English from</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For the owner to decide</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For the people who build it</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What the two pages need when they are built, in R11’s tasks. Nothing here is switched on by this page.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component in the plan</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// The deck’s own words and data for the Landing, copied from “Quizzivy Landing.dc.html”, for the header and the footer the privacy notice sits between. Only the paths of its links to other deck pages differ: they are written from this folder.
+const T = {
+  en: {
+    signIn: 'Sign in', consultShort: 'Book a consultation', consultLink: 'book a free consultation', eyebrow: 'Tests, lessons and practice for English classes',
+    heroTitle: 'Run your English classes in one calm place', heroSub: 'Teachers build tests and courses, students practise and take tests on any device, and the centre sees how every class is doing.',
+    haveCode: 'Have a class code from your teacher?', classCode: 'Class code', joinClass: 'Join class', orSignIn1: 'Already have an account?',
+    mockGreeting: 'Good evening, Giàu', mockSubs: 'Submissions · 14 days', mockQ: 'Question 3 of 8', mockPrompt: 'Homes near parks always sell for 15% more.', mockNext: 'Next',
+    featEyebrow: 'Features', featTitle: 'Everything a class needs, without the clutter',
+    rolesEyebrow: 'Made for each role', rolesTitle: 'Each person sees only what they need',
+    intEyebrow: 'Fair tests', intTitle: 'Know what happened during every test', intSub: 'A browser cannot stop cheating. Quizzivy records what happens so you can decide, and tells students the rules before they start.',
+    quotesTitle: 'What teachers and students say',
+    consultEyebrow: 'Courses at Quizzivy English Centre', consultTitle: 'Not sure which course fits?', consultSub: 'Leave your details and our advisers will call you back. They can arrange a free placement test.',
+    fName: 'Full name', fPhone: 'Phone', fInterest: 'Interested in', fWho: 'The course is for', fTime: 'Best time to call',
+    sentTitle: 'Thanks, we got it', sendAnother: 'Send another request', privacy: 'We only use your number to call you back about courses.',
+    faqTitle: 'Questions', footAbout: 'Tests, lessons and practice for English classes. Built with teachers in Ho Chi Minh City.', footAddr: '123 Nguyễn Thị Minh Khai, District 3, Ho Chi Minh City',
+  },
+  vi: {
+    signIn: 'Đăng nhập', consultShort: 'Đăng ký tư vấn', consultLink: 'đăng ký tư vấn miễn phí', eyebrow: 'Bài kiểm tra, bài học và luyện tập cho lớp tiếng Anh',
+    heroTitle: 'Quản lý lớp tiếng Anh gọn gàng ở một nơi', heroSub: 'Giáo viên soạn đề và khoá học, học viên luyện tập và làm bài trên mọi thiết bị, còn trung tâm nắm được tình hình từng lớp.',
+    haveCode: 'Bạn có mã lớp từ giáo viên?', classCode: 'Mã lớp', joinClass: 'Vào lớp', orSignIn1: 'Đã có tài khoản?',
+    mockGreeting: 'Chào buổi tối, Giàu', mockSubs: 'Bài nộp · 14 ngày', mockQ: 'Câu 3 / 8', mockPrompt: 'Nhà gần công viên luôn bán cao hơn 15%.', mockNext: 'Tiếp',
+    featEyebrow: 'Tính năng', featTitle: 'Đủ mọi thứ một lớp học cần, không rườm rà',
+    rolesEyebrow: 'Dành cho từng vai trò', rolesTitle: 'Mỗi người chỉ thấy những gì mình cần',
+    intEyebrow: 'Làm bài công bằng', intTitle: 'Biết rõ chuyện gì đã xảy ra trong mỗi bài làm', intSub: 'Trình duyệt không thể ngăn gian lận. Quizzivy ghi lại mọi thứ để bạn quyết định, và cho học viên biết quy định trước khi bắt đầu.',
+    quotesTitle: 'Giáo viên và học viên nói gì',
+    consultEyebrow: 'Khoá học tại Quizzivy English Centre', consultTitle: 'Chưa biết chọn khoá nào?', consultSub: 'Để lại thông tin, tư vấn viên sẽ gọi lại cho bạn và có thể xếp lịch kiểm tra trình độ miễn phí.',
+    fName: 'Họ và tên', fPhone: 'Số điện thoại', fInterest: 'Quan tâm', fWho: 'Khoá học dành cho', fTime: 'Thời gian tiện gọi',
+    sentTitle: 'Cảm ơn, chúng tôi đã nhận', sendAnother: 'Gửi yêu cầu khác', privacy: 'Chúng tôi chỉ dùng số điện thoại để gọi lại tư vấn khoá học.',
+    faqTitle: 'Câu hỏi thường gặp', footAbout: 'Bài kiểm tra, bài học và luyện tập cho lớp tiếng Anh. Làm cùng giáo viên tại TP. Hồ Chí Minh.', footAddr: '123 Nguyễn Thị Minh Khai, Quận 3, TP. Hồ Chí Minh',
+  },
+};
+const D = {
+  nav: { en: [['#features', 'Features'], ['#roles', 'For you'], ['#integrity', 'Fair tests'], ['#faq', 'FAQ']], vi: [['#features', 'Tính năng'], ['#roles', 'Dành cho bạn'], ['#integrity', 'Làm bài công bằng'], ['#faq', 'Hỏi đáp']] },
+  features: { en: [['file-text', 'Tests in minutes', 'Five question types, groups, audio and images. Reuse anything from the question bank.'], ['clipboard-list', 'Assign with clear rules', 'Pick the class, the window and the time limit. Students see the rules in plain words.'], ['square-pen', 'Grade faster', 'Choice and blank questions mark themselves. Grade open answers by student or by question.'], ['book-open', 'Courses and lessons', 'Units that open in order, with reading, video, listening and tests.'], ['layers', 'Flashcards that stick', 'Word lists with daily review. Hard words come back sooner.'], ['chart-column', 'See progress', 'Gradebook, reports by skill and a heads-up when someone falls behind.']], vi: [['file-text', 'Soạn đề trong vài phút', 'Năm dạng câu hỏi, chia nhóm, có audio và hình ảnh. Dùng lại mọi câu trong ngân hàng.'], ['clipboard-list', 'Giao bài với quy định rõ ràng', 'Chọn lớp, thời gian mở và giới hạn làm bài. Học viên đọc quy định bằng lời dễ hiểu.'], ['square-pen', 'Chấm nhanh hơn', 'Câu trắc nghiệm và điền từ tự chấm. Câu tự luận chấm theo học viên hoặc theo câu.'], ['book-open', 'Khoá học và bài học', 'Các unit mở theo thứ tự, gồm bài đọc, video, nghe và bài kiểm tra.'], ['layers', 'Flashcard nhớ lâu', 'Bộ từ vựng ôn mỗi ngày. Từ khó sẽ quay lại sớm hơn.'], ['chart-column', 'Theo dõi tiến bộ', 'Sổ điểm, báo cáo theo kỹ năng và nhắc khi học viên chậm tiến độ.']] },
+  roles: {
+    teacher: { icon: 'graduation-cap', en: ['Teachers', 'Spend class time teaching, not on admin', [['A calm dashboard', 'shows only what needs you today.'], ['Question bank', 'with tags, filters and bulk actions.'], ['Grading queue', 'with keyboard shortcuts and comment snippets.'], ['Messages', 'to one student or the whole class.']], 'Open teacher workspace', 'Grading queue', [['user', 'Lê Hoàng Nam', 'Reading Mock · Q14', '1 left', 'warning'], ['user', 'Đặng Quốc Huy', 'Reading Mock · Q14', '1 left', 'warning'], ['user', 'Võ Khánh Linh', 'Writing Task 1', 'Essay', 'muted'], ['user', 'Trần Minh Anh', 'Reading Mock', 'Done', 'success']]], vi: ['Giáo viên', 'Dành thời gian để dạy, không phải làm giấy tờ', [['Bảng điều khiển gọn', 'chỉ hiện việc cần làm hôm nay.'], ['Ngân hàng câu hỏi', 'có tag, bộ lọc và thao tác hàng loạt.'], ['Hàng chờ chấm bài', 'có phím tắt và nhận xét soạn sẵn.'], ['Tin nhắn', 'cho từng học viên hoặc cả lớp.']], 'Mở khu vực giáo viên', 'Hàng chờ chấm', [['user', 'Lê Hoàng Nam', 'Reading Mock · Câu 14', 'Còn 1', 'warning'], ['user', 'Đặng Quốc Huy', 'Reading Mock · Câu 14', 'Còn 1', 'warning'], ['user', 'Võ Khánh Linh', 'Writing Task 1', 'Tự luận', 'muted'], ['user', 'Trần Minh Anh', 'Reading Mock', 'Xong', 'success']]], href: '../Quizzivy Teacher.dc.html' },
+    student: { icon: 'user', en: ['Students', 'Know what is due and pick up where you left off', [['Join with a code', 'from your teacher, no set-up needed.'], ['Tests that save as you go', 'on a phone or a laptop.'], ['Clear results', 'with the correct answers and your teacher’s comments.'], ['Daily flashcards', 'for the words from your lessons.']], 'Open student app', 'Coming up', [['file-text', 'Reading · Green space', 'In progress · 38 min left', 'Continue', 'info'], ['headphones', 'Unit 4 · Listening', 'Thu 25 Sep', 'Due soon', 'warning'], ['layers', 'Environment words', '12 to review', 'Practice', 'accent'], ['circle-check', 'Unit 3 · Grammar', 'Graded', '8 / 10', 'success']]], vi: ['Học viên', 'Biết bài nào sắp đến hạn và làm tiếp chỗ đang dừng', [['Vào lớp bằng mã', 'giáo viên gửi, không cần cài đặt.'], ['Bài làm tự lưu', 'trên điện thoại hay laptop.'], ['Kết quả rõ ràng', 'kèm đáp án đúng và nhận xét của giáo viên.'], ['Flashcard mỗi ngày', 'cho từ vựng trong bài học.']], 'Mở ứng dụng học viên', 'Sắp tới', [['file-text', 'Reading · Green space', 'Đang làm · còn 38 phút', 'Làm tiếp', 'info'], ['headphones', 'Unit 4 · Listening', 'Thứ 5, 25/9', 'Sắp hạn', 'warning'], ['layers', 'Từ vựng Environment', '12 từ cần ôn', 'Luyện', 'accent'], ['circle-check', 'Unit 3 · Grammar', 'Đã chấm', '8 / 10', 'success']]], href: '../Quizzivy Student.dc.html' },
+    admin: { icon: 'shield', en: ['Centre admins', 'Keep people, classes and settings in order', [['Users and roles', 'with custom roles and a permission table.'], ['Every class', 'across teachers, with join codes you control.'], ['An audit log', 'that cannot be edited or deleted.'], ['Sign-in rules', 'including Google and allowed email domains.']], 'Open admin console', 'Needs attention', [['key-round', '4 people', 'Must change their password', 'Review', 'warning'], ['user-x', '11 accounts', 'Never signed in', 'Review', 'muted'], ['graduation-cap', 'Summer Camp 2026', 'Teacher is disabled', 'Fix', 'info'], ['hard-drive', 'Storage', 'Media 25% · Import documents 30%', 'OK', 'success']]], vi: ['Quản trị trung tâm', 'Quản lý người dùng, lớp học và cài đặt gọn gàng', [['Người dùng và vai trò', 'có vai trò tuỳ chỉnh và bảng phân quyền.'], ['Mọi lớp học', 'của tất cả giáo viên, mã tham gia do bạn kiểm soát.'], ['Nhật ký thay đổi', 'không thể sửa hay xoá.'], ['Quy định đăng nhập', 'gồm Google và tên miền email được phép.']], 'Mở trang quản trị', 'Cần xử lý', [['key-round', '4 người', 'Phải đổi mật khẩu', 'Xem', 'warning'], ['user-x', '11 tài khoản', 'Chưa từng đăng nhập', 'Xem', 'muted'], ['graduation-cap', 'Summer Camp 2026', 'Giáo viên đã bị vô hiệu', 'Sửa', 'info'], ['hard-drive', 'Dung lượng', 'Media 25% · Tài liệu nhập đề 30%', 'Ổn', 'success']]], href: '../Quizzivy Admin.dc.html' },
+  },
+  integrity: { en: [['maximize', 'Fullscreen and focus', 'Leaving the test counts. Short absences under a few seconds are ignored.'], ['clipboard-x', 'No copy and paste', 'Questions cannot be copied out and answers cannot be pasted in.'], ['flag', 'Flags, not accusations', 'Warn, flag for the teacher or submit automatically. You choose.'], ['scroll-text', 'A full timeline', 'Every start, focus loss and submit, with the time, for each attempt.']], vi: [['maximize', 'Toàn màn hình và tập trung', 'Rời bài làm sẽ được tính. Rời vài giây ngắn được bỏ qua.'], ['clipboard-x', 'Chặn copy và dán', 'Không copy được câu hỏi ra ngoài, không dán được đáp án vào.'], ['flag', 'Gắn cờ, không buộc tội', 'Cảnh báo, gắn cờ cho giáo viên hoặc tự nộp bài. Bạn chọn.'], ['scroll-text', 'Dòng thời gian đầy đủ', 'Mỗi lần bắt đầu, rời bài và nộp bài đều có giờ, cho từng lượt làm.']] },
+  quotes: { en: [['Grading 24 reading tests used to take my whole Sunday. Now the choice questions are done before I open the app.', 'Giàu Bùi', 'IELTS teacher', 'accent'], ['I like that it saves every answer. My wifi dropped once and I lost nothing.', 'Nguyễn Gia Bảo', 'Student, IELTS Foundation A', 'info'], ['We moved four teachers over in a week. The join codes meant no one had to type student lists.', 'Thường Võ', 'Centre manager', 'muted']], vi: [['Trước đây chấm 24 bài reading mất cả Chủ nhật. Giờ câu trắc nghiệm đã chấm xong trước khi tôi mở app.', 'Giàu Bùi', 'Giáo viên IELTS', 'accent'], ['Em thích là bài làm tự lưu. Có lần mất wifi mà em không mất câu nào.', 'Nguyễn Gia Bảo', 'Học viên, IELTS Foundation A', 'info'], ['Chúng tôi chuyển bốn giáo viên sang trong một tuần. Nhờ mã tham gia nên không ai phải nhập danh sách học viên.', 'Thường Võ', 'Quản lý trung tâm', 'muted']] },
+  courses: { en: ['IELTS', 'TOEIC', 'Communication', 'Kids English', 'Business English'], vi: ['IELTS', 'TOEIC', 'Giao tiếp', 'Tiếng Anh trẻ em', 'Tiếng Anh thương mại'] },
+  who: { en: ['Myself', 'My child', 'My company'], vi: ['Bản thân', 'Con tôi', 'Công ty tôi'] },
+  times: { en: [['any', 'Any time'], ['morning', 'Morning, 8:00–12:00'], ['afternoon', 'Afternoon, 13:00–17:00'], ['evening', 'Evening, 18:00–20:00']], vi: [['any', 'Lúc nào cũng được'], ['morning', 'Buổi sáng, 8:00–12:00'], ['afternoon', 'Buổi chiều, 13:00–17:00'], ['evening', 'Buổi tối, 18:00–20:00']] },
+  faqs: { en: [['How do students join a class?', 'The teacher shares an 8-character code or a link. Students enter it on this page or in the app, then sign in or create an account.'], ['Can students take tests on a phone?', 'Yes. Tests work on phones, tablets and laptops, and answers save automatically every few seconds.'], ['Does Quizzivy stop cheating?', 'No browser can fully stop it. Quizzivy blocks copy and paste, records every time a student leaves the test, and lets the teacher decide what to do.'], ['Can I sign in with Google?', 'Yes, if your centre allows it. You can also use an email and password from your teacher.'], ['I forgot my password. What now?', 'Ask your teacher or the centre to reset it. You will get a temporary password and choose a new one when you sign in.']], vi: [['Học viên vào lớp bằng cách nào?', 'Giáo viên gửi mã 8 ký tự hoặc đường link. Học viên nhập mã ở trang này hoặc trong app, rồi đăng nhập hoặc tạo tài khoản.'], ['Học viên làm bài trên điện thoại được không?', 'Được. Bài làm chạy trên điện thoại, máy tính bảng và laptop, đáp án tự lưu sau vài giây.'], ['Quizzivy có ngăn gian lận không?', 'Không trình duyệt nào ngăn hoàn toàn được. Quizzivy chặn copy/dán, ghi lại mỗi lần học viên rời bài và để giáo viên quyết định.'], ['Tôi đăng nhập bằng Google được không?', 'Được, nếu trung tâm cho phép. Bạn cũng có thể dùng email và mật khẩu giáo viên cấp.'], ['Tôi quên mật khẩu thì sao?', 'Nhờ giáo viên hoặc trung tâm đặt lại. Bạn sẽ nhận mật khẩu tạm và chọn mật khẩu mới khi đăng nhập.']] },
+  foot: { en: [['Product', [['#features', 'Features'], ['#integrity', 'Fair tests'], ['#faq', 'FAQ']]], ['Get started', [['../Quizzivy Sign in.dc.html#login', 'Sign in'], ['../Quizzivy Sign in.dc.html#join', 'Join a class'], ['#consult', 'Book a consultation']]], ['Help', [['../Quizzivy System pages.dc.html#maintenance', 'Status'], ['#faq', 'Questions'], ['mailto:hello@quizzivy.com', 'hello@quizzivy.com']]]], vi: [['Sản phẩm', [['#features', 'Tính năng'], ['#integrity', 'Làm bài công bằng'], ['#faq', 'Hỏi đáp']]], ['Bắt đầu', [['../Quizzivy Sign in.dc.html#login', 'Đăng nhập'], ['../Quizzivy Sign in.dc.html#join', 'Vào lớp'], ['#consult', 'Đăng ký tư vấn']]], ['Hỗ trợ', [['../Quizzivy System pages.dc.html#maintenance', 'Trạng thái hệ thống'], ['#faq', 'Câu hỏi'], ['mailto:hello@quizzivy.com', 'hello@quizzivy.com']]]] },
+};
+const PILL = { warning: ['var(--warning-soft)', 'var(--warning-ink)'], success: ['var(--success-soft)', 'var(--success-ink)'], info: ['var(--info-soft)', 'var(--info-ink)'], accent: ['var(--accent-soft)', 'var(--accent-ink)'], muted: ['var(--muted)', 'var(--muted-fg)'] };
+
+// R11 · The privacy notice and the status page of quizzivy.com. A proposal page for T-R11.8 (DG-06, DG-100).
+// T, D and PILL above are the deck's, for the Landing's header and footer.
+const ORG = 'Quizzivy English Centre', PHONE = '036 321 6199', MAIL = 'hello@quizzivy.com';
+const VERSION = '2026-11';      // the plan says 2026-10; see Q3
+// The Landing's own words for its header and footer, as "R11 Landing.dc.html" has them: [Tiếng Việt, English]
+const LAND = {
+  signStudents: ['Học viên', 'Students'], signStudentsSub: ['Làm bài và xem kết quả', 'Take tests and see results'], signStaff: ['Giáo viên và quản trị', 'Teachers and admins'], signStaffSub: ['Soạn đề, chấm bài, quản lý lớp', 'Build tests, grade, run classes'],
+  menuOpen: ['Mở menu', 'Open menu'], footAbout: ['Hệ thống kiểm tra tiếng Anh trực tuyến của Quizzivy English Centre.', 'The online English testing system of Quizzivy English Centre.'], footAddr: ['TP. Hồ Chí Minh', 'Ho Chi Minh City'],
+  footStudents: ['Học viên đăng nhập', 'Student sign-in'], footStaff: ['Giáo viên đăng nhập', 'Teacher sign-in'], footJoin: ['Tham gia lớp', 'Join a class'], footPrivacy: ['Quyền riêng tư', 'Privacy']
+};
+// The words of the two pages: [key, where and what the line rests on, Tiếng Việt, English, status]
+const STR = [
+  ['pTitle', 'Privacy: the title. The plan’s name for the page, as the form’s box calls it', 'Thông báo về quyền riêng tư', 'Privacy notice', 'Plan'],
+  ['pLead', 'Privacy: the sentence under the title', 'Khi bạn gửi form đăng ký tư vấn trên quizzivy.com, bạn giao cho chúng tôi họ tên và số điện thoại. Trang này nói rõ chúng tôi nhận những gì, dùng để làm gì, giữ trong bao lâu và bạn có những quyền gì.', 'When you send the consultation form on quizzivy.com, you give us your name and phone number. This page says what we receive, what we use it for, how long we keep it and what your rights are.', 'New'],
+  ['pVer', 'Privacy: the version line. T-R11.8: the version and its date are shown', 'Phiên bản {v} · có hiệu lực từ {date}', 'Version {v} · in effect from {date}', 'New'],
+  ['pPrint', 'Privacy: the button. T-R11.8: printable', 'In trang này', 'Print this page', 'New'],
+  ['pSumTitle', 'Privacy: the summary’s title', 'Tóm tắt', 'In short', 'New'],
+  ['sum1l', 'Summary, 1', 'Chúng tôi nhận', 'We receive', 'New'],
+  ['sum1', 'Summary, 1. Rests on the form’s fields (T-R11.6)', 'Họ tên, số điện thoại và ba lựa chọn bạn điền trong form.', 'Your name, your phone number and the three choices you make in the form.', 'New'],
+  ['sum2l', 'Summary, 2', 'Dùng để', 'We use it to', 'New'],
+  ['sum2', 'Summary, 2. T-R11.8: a call back about courses and a placement test', 'Gọi lại tư vấn khoá học và xếp lịch kiểm tra trình độ. Không dùng vào việc khác.', 'Call you back about courses and arrange a placement test. Nothing else.', 'New'],
+  ['sum3l', 'Summary, 3', 'Giữ trong', 'We keep it for', 'New'],
+  ['sum3', 'Summary, 3. D18: 12 months, then automatic deletion', '12 tháng, sau đó hệ thống tự xoá.', '12 months, then it is deleted automatically.', 'New'],
+  ['sum4l', 'Summary, 4', 'Bạn có thể', 'You can', 'New'],
+  ['sum4', 'Summary, 4. T-R11.8: the rights', 'Yêu cầu xem, sửa, xoá, hoặc rút lại sự đồng ý bất cứ lúc nào.', 'Ask to see, correct or delete it, or withdraw your consent, at any time.', 'New'],
+  ['p1t', 'Part 1: the title', 'Ai chịu trách nhiệm', 'Who is responsible', 'New'],
+  ['p1a', 'Part 1. T-R11.8: the organisation’s name, address and email, from the build’s values', '{org} chịu trách nhiệm về thông tin bạn gửi qua trang này.', '{org} is responsible for what you send through this page.', 'New'],
+  ['p2t', 'Part 2: the title', 'Chúng tôi nhận những gì', 'What we receive', 'New'],
+  ['p2a', 'Part 2', 'Chỉ những gì bạn tự điền trong form đăng ký tư vấn:', 'Only what you put in the consultation form:', 'New'],
+  ['p2b1', 'Part 2. The form’s fields (T-R11.6)', 'Họ và tên', 'Your full name', 'New'],
+  ['p2b2', 'Part 2', 'Số điện thoại', 'Your phone number', 'New'],
+  ['p2b3', 'Part 2', 'Khoá học bạn quan tâm, khoá học dành cho ai và thời gian tiện gọi', 'The courses you are interested in, who the course is for, and the best time to call', 'New'],
+  ['p2b4', 'Part 2. T-R11.6 stores the locale, the time of consent and the notice’s version', 'Ngôn ngữ của trang lúc bạn gửi, thời điểm bạn đồng ý và phiên bản của thông báo này', 'The language of the page when you sent it, the time you agreed, and the version of this notice', 'New'],
+  ['p2c', 'Part 2. The plan: “A lead stores no IP address or user agent”; the limiter holds the IP in memory only', 'Chúng tôi không lưu địa chỉ IP hay thông tin về thiết bị của bạn cùng với yêu cầu. Máy chủ chỉ giữ địa chỉ IP tạm thời trong bộ nhớ, để chặn việc gửi form quá nhiều lần.', 'We do not store your IP address or anything about your device with the request. The server holds the IP address in memory for a short time only, to stop the form being sent too many times.', 'New'],
+  ['p3t', 'Part 3: the title', 'Dùng để làm gì', 'What we use it for', 'New'],
+  ['p3a', 'Part 3. T-R11.8, and the deck’s line under the form’s button', 'Để tư vấn viên của trung tâm gọi lại cho bạn về khoá học, và xếp lịch kiểm tra trình độ nếu bạn muốn. Chúng tôi chỉ dùng thông tin này cho việc đó, không dùng để quảng cáo và không bán cho ai.', 'So that one of the centre’s advisers can call you back about courses, and arrange a placement test if you want one. We use it for that only: not for advertising, and we do not sell it to anyone.', 'New'],
+  ['p4t', 'Part 4: the title', 'Vì sao chúng tôi được dùng', 'Why we may use it', 'New'],
+  ['p4a', 'Part 4. T-R11.8: the legal basis is consent. The law named is Q2’s default, not the plan’s', 'Vì bạn đã đồng ý. Trước khi gửi form, bạn đánh dấu vào ô đồng ý; không đánh dấu thì form không gửi đi. Đây là căn cứ theo Luật Bảo vệ dữ liệu cá nhân của Việt Nam (Luật số 91/2025/QH15).', 'Because you agreed. Before sending the form you tick the box to agree; without the tick the form is not sent. This is the basis under Viet Nam’s Law on Personal Data Protection (Law No. 91/2025/QH15).', 'New'],
+  ['p5t', 'Part 5: the title', 'Ai xem được, và lưu ở đâu', 'Who can see it, and where it is kept', 'New'],
+  ['p5a', 'Part 5. T-R11.8: the centre’s advisers and admins', 'Chỉ tư vấn viên và quản trị viên của trung tâm xem được yêu cầu của bạn.', 'Only the centre’s advisers and admins can see your request.', 'New'],
+  ['p5b', 'Part 5. The plan: “The notification email carries no phone number”', 'Khi có yêu cầu mới, trung tâm nhận một email báo tin. Email này chỉ có tên của bạn, khoá học bạn quan tâm, khoá học dành cho ai và thời gian tiện gọi. Email không có số điện thoại.', 'When a request arrives, the centre gets an email about it. The email has your first name, the courses you are interested in, who the course is for and the best time to call. It does not have your phone number.', 'New'],
+  ['p5c1', 'Part 5. Where things are since 2026-11-12, not the plan’s list (Q1)', 'Yêu cầu được lưu trên máy chủ của Quizzivy, đặt tại TP. Hồ Chí Minh.', 'Requests are stored on Quizzivy’s server, in Ho Chi Minh City.', 'New'],
+  ['p5c2', 'Part 5 (Q1)', 'Bản sao lưu được mã hoá và giữ tại Cloudflare.', 'Backups are encrypted and kept with Cloudflare.', 'New'],
+  ['p5c3', 'Part 5 (Q1)', 'Email báo tin được gửi qua dịch vụ Resend.', 'The email is sent through Resend.', 'New'],
+  ['p5d', 'Part 5 (Q1). The plan’s open item O-R11.1 is about data handled outside Viet Nam', 'Cloudflare và Resend là công ty ở nước ngoài, nên bản sao lưu và email báo tin có thể được xử lý ngoài Việt Nam.', 'Cloudflare and Resend are companies abroad, so the backups and the email may be handled outside Viet Nam.', 'New'],
+  ['p6t', 'Part 6: the title', 'Giữ trong bao lâu', 'How long we keep it', 'New'],
+  ['p6a', 'Part 6. D18, and “an admin can delete one on request”', 'Chúng tôi giữ yêu cầu của bạn 12 tháng kể từ ngày gửi, sau đó hệ thống tự động xoá. Bạn có thể yêu cầu xoá sớm hơn bất cứ lúc nào.', 'We keep your request for 12 months from the day you send it, and then it is deleted automatically. You can ask us to delete it sooner at any time.', 'New'],
+  ['p7t', 'Part 7: the title', 'Quyền của bạn', 'Your rights', 'New'],
+  ['p7a', 'Part 7', 'Bạn có quyền:', 'You have the right to:', 'New'],
+  ['p7b1', 'Part 7. T-R11.8: to access', 'Biết chúng tôi đang giữ thông tin gì về bạn', 'Know what we hold about you', 'New'],
+  ['p7b2', 'Part 7. T-R11.8: to correct', 'Yêu cầu sửa nếu thông tin chưa đúng', 'Ask us to correct it', 'New'],
+  ['p7b3', 'Part 7. T-R11.8: to delete', 'Yêu cầu xoá', 'Ask us to delete it', 'New'],
+  ['p7b4', 'Part 7. T-R11.8: to withdraw consent', 'Rút lại sự đồng ý, và chúng tôi sẽ không gọi cho bạn nữa', 'Withdraw your consent, and we will not call you again', 'New'],
+  ['p7c', 'Part 7. T-R11.8: through the contact email. The phone is added', 'Để dùng các quyền này, viết cho {mail} hoặc gọi {phone}.', 'To use any of these, write to {mail} or call {phone}.', 'New'],
+  ['p8t', 'Part 8: the title', 'Trẻ em', 'Children', 'New'],
+  ['p8a', 'Part 8. T-R11.8: nothing is collected about a child', 'Form chỉ hỏi thông tin của người gửi. Khi bạn đăng ký cho con, chúng tôi không hỏi tên, tuổi hay bất kỳ thông tin nào của trẻ trên trang này.', 'The form asks only about the person sending it. When you ask on behalf of your child, we do not ask for the child’s name, age or anything else about them on this page.', 'New'],
+  ['p9t', 'Part 9: the title', 'Khi bạn chỉ xem trang', 'When you only visit the page', 'New'],
+  ['p9a', 'Part 9. Rests on the Landing as drawn (it reads no cookie) and on the app, which loads no measuring tool', 'Trang quizzivy.com không dùng cookie theo dõi và không dùng công cụ đo lường của bên thứ ba. Trình duyệt của bạn chỉ ghi nhớ ngôn ngữ và giao diện sáng hoặc tối bạn chọn, ngay trên máy của bạn.', 'quizzivy.com uses no tracking cookies and no third-party measuring tools. Your browser only remembers the language and the light or dark look you chose, on your own device.', 'New'],
+  ['p10t', 'Part 10: the title', 'Thông báo này nói về gì', 'What this notice covers', 'New'],
+  ['p10a', 'Part 10. O-R11.3’s default: the site and the form; accounts have no notice yet (Q4)', 'Thông báo này nói về trang quizzivy.com và form đăng ký tư vấn. Dữ liệu của tài khoản học viên và giáo viên trên Quizzivy không thuộc phạm vi của thông báo này.', 'This notice is about quizzivy.com and its consultation form. What Quizzivy holds for student and teacher accounts is outside this notice.', 'New'],
+  ['p11t', 'Part 11: the title', 'Khi thông báo thay đổi', 'When this notice changes', 'New'],
+  ['p11a', 'Part 11. The plan: the stored version says what each person agreed to', 'Mỗi lần thay đổi, phiên bản và ngày ở đầu trang sẽ đổi theo. Yêu cầu của bạn luôn được ghi kèm phiên bản mà bạn đã đồng ý.', 'Each time it changes, the version and the date at the top change with it. Your request is always stored with the version you agreed to.', 'New'],
+  ['stNormalT', 'Status, all normal: the title. T-R11.8’s English', 'Mọi thứ đang hoạt động bình thường', 'All systems normal', 'Plan'],
+  ['stNormalB', 'Status, all normal', 'Không có lịch cập nhật nào sắp tới.', 'No update is planned.', 'New'],
+  ['stNormalRow', 'Status, all normal: the row', 'Hoạt động bình thường', 'Working normally', 'New'],
+  ['stChecked', 'Status: when it was last checked', 'kiểm tra lúc {time}', 'checked at {time}', 'New'],
+  ['stPlanT', 'Status, an update is planned: the title', 'Quizzivy sắp được cập nhật', 'Quizzivy will be updated soon', 'New'],
+  ['stPlanB', 'Status, an update is planned. T-R11.8: its times, and the plan’s second sentence, which is the app’s today', 'Từ {from} đến {to}. Bài kiểm tra đóng trong lúc cập nhật sẽ được gia hạn.', 'From {from} to {to}. Tests that close during the update are extended.', 'Plan'],
+  ['stPlanRow1', 'Status, an update is planned: the first row. The app’s Vietnamese; “Starts” for “Started”', 'Bắt đầu lúc {time}', 'Starts {time}', 'New'],
+  ['stPlanRow2', 'Status, an update is planned: the second row', 'Bây giờ mọi thứ vẫn hoạt động', 'Everything works for now', 'New'],
+  ['stActiveT', 'Status, being updated: the app’s `maintenance.title`', 'Quizzivy đang được cập nhật', 'Quizzivy is being updated', 'As today'],
+  ['stActiveB', 'Status, being updated: `maintenance.body`', 'Chúng tôi sẽ trở lại lúc {time}. Bài kiểm tra đóng trong lúc cập nhật sẽ được gia hạn.', 'We’ll be back by {time}. Tests that close during the update are extended.', 'As today'],
+  ['stStarted', 'Status, being updated: `maintenance.started`', 'Bắt đầu lúc {time}', 'Started {time}', 'As today'],
+  ['stDuration', 'Status: `maintenance.duration`', 'khoảng {minutes} phút', 'about {minutes} min', 'As today'],
+  ['stSaved', 'Status, being updated: `maintenance.saved`', 'Bài làm và kết quả đã được lưu', 'Answers and results saved', 'As today'],
+  ['stActiveF', 'Status, being updated: `maintenance.footnote`', 'Bài làm và kết quả của bạn vẫn được giữ nguyên. Không có gì bị mất.', 'Your answers and results are kept. Nothing is lost.', 'As today'],
+  ['stCheckingT', 'Status, checking: the title', 'Đang kiểm tra…', 'Checking…', 'New'],
+  ['stErrorT', 'Status, could not check: the title. T-R11.8’s English', 'Chưa kiểm tra được trạng thái', 'We couldn’t check the status', 'Plan'],
+  ['stErrorB', 'Status, could not check', 'Có thể kết nối của bạn đang yếu, hoặc Quizzivy chưa trả lời. Hãy thử lại sau ít phút.', 'Your connection may be weak, or Quizzivy is not answering. Try again in a few minutes.', 'New'],
+  ['stCheck', 'Status: the first button. The app’s `maintenance.check`', 'Kiểm tra lại', 'Check again', 'As today'],
+  ['stHome', 'Status: the second button', 'Về trang chủ', 'Back to the home page', 'New'],
+  ['stFoot', 'Status: the line at the bottom, but while being updated', 'Cần giúp ngay? Gọi {phone}.', 'Need help now? Call {phone}.', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+const PARTS = [['privacy', 'The privacy notice'], ['status', 'The status page']];
+const STATES = {
+  privacy: [['read', 'As it opens'], ['print', 'Printed']],
+  status: [['normal', 'All normal'], ['planned', 'An update is planned'], ['active', 'Being updated'], ['checking', 'Checking'], ['error', 'Could not check']]
+};
+const START = { privacy: 'read', status: 'normal' };
+const NOTES = {
+  'privacy:read': [['ver', 'The version and the day it took effect. The form stores this version with each request.'], ['print', 'Prints the notice without the header, the footer or this button.'], ['summary', 'Four facts first, for someone who reads no further.'], ['sec:1', 'The centre’s name, address, email and phone, from the same values the Landing uses. A line that is not set is left out.'], ['sec:4', 'The law named here is not the decree R11’s plan names. See the second question.'], ['sec:5', 'Where requests are kept is not what R11’s plan lists. See the first question.'], ['sec:10', 'The notice covers this site and its form. Accounts have no notice yet: the fourth question.']],
+  'privacy:print': [['paper', 'On paper: the logo, the address of the page, and the notice. No header, no footer, no button, and always light.']],
+  'status:normal': [['state', 'No update is planned and the server answered.'], ['art', 'The deck has no drawing for this. It is the deck’s maintenance drawing with its broken line made whole and a tick.'], ['check', 'Asks the server again. The page asks once when it opens, and never by itself after that.'], ['home', 'Leads to quizzivy.com. The deck’s frame has no way back.'], ['foot', 'The centre’s phone, for someone whose test is not working.']],
+  'status:planned': [['state', 'An update is planned. The page says from when to when, in the reader’s own time, and that tests which close meanwhile are extended.']],
+  'status:active': [['state', 'The app’s own maintenance page, word for word.'], ['home', 'The one thing added to it here. The Landing still opens while the app is being updated.']],
+  'status:checking': [['check', 'While the answer is on its way the button rests.']],
+  'status:error': [['state', 'No answer, or too many checks in a short time. The page says so and does not guess which.'], ['art', 'The deck’s drawing for an error.']]
+};
+const PIN_KEYS = ['signin', 'menuBtn', 'footer', 'ver', 'print', 'summary', 'paper', 'state', 'art', 'check', 'home', 'foot'];
+// [part, the plan or the deck, this page]
+const ADDS = [
+  ['Privacy · the page', 'T-R11.8: inside the Landing’s header and footer, a 720px column, printable, with the version and its date. The deck draws nothing.', 'That, with a title, one sentence, the version line with a button to print, a summary of four facts on a soft panel, and eleven short numbered parts.'],
+  ['Privacy · who is responsible', 'The organisation’s name, address and email, from the build’s values.', 'A small card with the name, the address, the email and the phone. A line that is not set is left out.'],
+  ['Privacy · what, why, how long, rights, children', 'What the form collects and why; 12 months, then automatic deletion; to access, correct, delete and withdraw; nothing about a child.', 'As the plan says, in plain words. One more line says what is not stored: the IP address and the device.'],
+  ['Privacy · where it is kept', 'The centre’s advisers and admins, and the processors: Fly.io, Neon, Cloudflare, Resend.', 'The server in Ho Chi Minh City, encrypted backups with Cloudflare, the email through Resend. That is where things are since 12 November 2026 (Q1).'],
+  ['Privacy · the law', 'Consent, under Decree 13/2023/ND-CP.', 'Consent, under Law No. 91/2025/QH15, in force since 1 January 2026 (Q2).'],
+  ['Privacy · the version', 'The first version is 2026-10.', 'Drawn as 2026-11, the month it would be published (Q3).'],
+  ['Privacy · what it covers', 'O-R11.3: the site and the form; a notice for accounts is for after v1.0.', 'One part says so. Another says the site uses no tracking cookies and no measuring tools.'],
+  ['Status · the frame', 'The deck’s system pages: a panel with a drawing, and a narrow column. Its footer link “Status” opens the maintenance frame.', 'The same frame, with five states of its own.'],
+  ['Status · all normal', 'T-R11.8: “All systems normal”, with a tick.', 'That, a row with the time it was checked, and a drawing in the deck’s manner.'],
+  ['Status · an update is planned', 'T-R11.8: its times, and “Tests that close during the update are extended.”', 'That, and the deck’s two rows: when it starts and about how long, and that everything works for now.'],
+  ['Status · being updated', 'T-R11.8: R1’s maintenance content.', 'The app’s maintenance page as it is today, with “Về trang chủ” added.'],
+  ['Status · checking, could not check', 'T-R11.8: “We couldn’t check the status.”, with a way to try again. Checking is not mentioned.', 'Both drawn. While checking, the button rests.']
+];
+const WHENS = [
+  ['“Thông báo về quyền riêng tư” in the form’s box, “Quyền riêng tư” in the footer', 'Opens quizzivy.com/privacy. From the form it opens in a new tab, so what was typed stays.', 'T-R11.7.'],
+  ['“In trang này”', 'The browser’s print. On paper: no header, no footer, no button, always light, and the address of the page beside the logo.', 'T-R11.8: printable.'],
+  ['A link in the notice’s header', 'Leads to that part of the Landing: quizzivy.com/#features and so on. “Đăng ký tư vấn” leads to the form.', 'The header is the Landing’s, on another page.'],
+  ['The centre’s address, email or phone is not set', 'That line is left out of the card in part 1. Parts 7 and the status page’s last line leave out what is missing.', 'T-R11.8: the org lines are hidden when unset.'],
+  ['The language', 'Vietnamese by default, English with EN, as on the Landing. The version is the same in both.', 'One notice, two languages.'],
+  ['“Trạng thái hệ thống” in the footer', 'Opens quizzivy.com/status.', 'The deck sends it to its maintenance frame, which is one state of a page that did not exist.'],
+  ['The status page opens', '“Đang kiểm tra…”, then one of four answers. It asks the server once.', 'T-R11.8: on mount and on “Check again”.'],
+  ['“Kiểm tra lại”', 'Asks again. The button rests until the answer comes.', 'The server’s answer is at most 30 seconds old.'],
+  ['No answer, or too many checks', '“Chưa kiểm tra được trạng thái”, with “Kiểm tra lại”.', 'The page cannot tell a weak connection from a server that is down.'],
+  ['An update that is planned starts while the page is open', 'Nothing changes until “Kiểm tra lại”.', 'The page does not ask by itself.'],
+  ['“Về trang chủ”', 'quizzivy.com.', 'The Landing asks the server for nothing, so it opens whatever the status.'],
+  ['The times', 'In the reader’s own time zone, with the date added when it is not today.', 'As the app’s maintenance page does.']
+];
+// [id, question, why, default, who decided and when (when decided), the label to print in place of the usual one]
+const QUESTIONS = [
+  ['Q1 · Where requests are kept', 'Is this where a request is kept and who touches it?', 'R11’s plan lists Fly.io, Neon, Cloudflare and Resend. Since the move of 12 November 2026 the database is on the server in Ho Chi Minh City; its encrypted backups go to Cloudflare; email goes through Resend. A public notice has to name the right ones, and may have to name the company the server is rented from.', 'As drawn: the server in Ho Chi Minh City, backups with Cloudflare, email through Resend, and one sentence that the last two are abroad.'],
+  ['Q2 · Which law the notice names', 'Does the notice name the 2025 law, not the 2023 decree?', 'R11’s plan says “under Decree 13/2023/ND-CP”. The Law on Personal Data Protection (No. 91/2025/QH15) has been in force since 1 January 2026, and Decree 356/2025/ND-CP took the place of Decree 13. This was read in law firms’ summaries, not in the texts themselves.', 'The 2025 law, by its number. Whoever advises the centre checks the wording (the plan’s O-R11.1).'],
+  ['Q3 · The version and its date', 'Is the first version named for the month it is published?', 'R11’s plan calls it 2026-10, and the form stores that label with every request. Nothing was published in October. The frames show 2026-11 and the day of this drawing.', 'The month it goes out, and the day it goes out. Both are set when the Landing opens.'],
+  ['Q4 · Accounts', 'Does the notice stay about the site and the form only?', 'Students and teachers have accounts, test answers and what is recorded during a test. R11’s plan leaves a notice for those until after v1.0 (O-R11.3). The frames say in one part that accounts are outside this notice.', 'The site and the form only, said plainly.'],
+  ['Q5 · How soon the centre answers', 'Does the notice promise a time to answer a request?', 'It says how to ask to see, correct or delete, and gives no time. R11’s plan gives none. The law may set one.', 'No time is promised until the legal review gives one.'],
+  ['Q6 · A way back during an update', 'Does “Về trang chủ” show while Quizzivy is being updated?', 'R11’s plan shows the app’s maintenance page as it is, which has one button. On quizzivy.com the Landing still opens during an update, and the frame has no other way back.', 'Yes, on every state.'],
+  ['Q7 · The drawing for “all normal”', 'Is the new drawing right?', 'The deck draws four: not found, no access, an error, an update. None says that all is well. This one is the update drawing with its broken line made whole and a tick.', 'As drawn.'],
+  ['Q8 · The phone on the status page', 'Does the last line give the centre’s phone?', 'Someone opens this page when a test will not load. A number to call is the most useful thing on it. It is left out when the centre’s phone is not set.', 'Yes: “Cần giúp ngay? Gọi 036 321 6199.”']
+];
+const HANDOFF = [
+  ['T-R11.8 · The privacy notice', 'As written, with what the frames give: the title block, the summary panel, eleven numbered parts, the card of the centre’s lines, and the print look. The text is in the copy table. It goes out only after the owner’s answers to Q1 to Q5.'],
+  ['T-R11.8 · The status page', 'As written, on the app’s `SystemFrame`, with five states. “Being updated” is `MaintenancePage` as it is, plus “Về trang chủ”. “All normal” needs one more drawing beside the four in `errorArt.tsx`; the frame’s is in this page’s markup.'],
+  ['What the notice promises', 'Each of these has to be true of what is built, or the notice changes: a request stores no IP address and nothing about the device (T-R11.6); the email to the centre has no phone number; requests are deleted after 12 months.'],
+  ['The 12 months', 'The deletion runs in the nightly retention sweep (D18, O-R11.5). The sweep was written for a database it could reach from outside. Since 12 November the database is on the server’s private network, and the scheduled run has not reached it. The promise needs that put right before the Landing opens.'],
+  ['The version', 'The form sends the notice’s version and the server refuses any other (T-R11.6). Whatever Q3 decides is the one value in that list.'],
+  ['The centre’s lines', '`VITE_ORG_NAME`, `VITE_ORG_ADDRESS`, `VITE_ORG_EMAIL` and `VITE_ORG_FRONT_DESK_PHONE`, as on the Landing: Quizzivy English Centre, TP. Hồ Chí Minh, hello@quizzivy.com, 036 321 6199.'],
+  ['The header and the footer', 'The Landing’s, as drawn in “R11 Landing”: three links, “Đăng nhập” with two choices, the menu below 960. On these pages its links lead back to the Landing.'],
+  ['Not on this page', 'The page for an address that does not exist (the app’s own, with its first button leading to quizzivy.com), the Admin list of requests, the email a request sends, and the picture shown when the link is shared.'],
+  ['Locales', 'The copy table: ' + STR.length + ' strings, Vietnamese first. Seven are the app’s own maintenance strings.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'R11’s plan: T-R11.6 to T-R11.8, its decisions on consent, on what a request stores and on the status page, and its open items. The deck’s system pages, whole, and the app’s maintenance page and its strings. The server’s answer for the status. Where the product runs since 12 November 2026. For the law, a search of what is in force now.'],
+  ['What it leaves alone.', 'The deck’s system frame and its drawings, the app’s maintenance words, and the Landing’s header and footer.'],
+  ['What is not known.', 'The exact wording a lawyer would want, the company the server is rented from, and the day the notice takes effect.'],
+  ['What is not drawn.', 'Widths other than 360 and 1280, and 794 for paper. The notice’s second printed page.']
+];
+// The notice's parts: [number, title key, blocks]. A block is ['p', key], ['list', [keys]] or ['lines'].
+const SECTIONS = [
+  [1, 'p1t', [['p', 'p1a'], ['lines']]], [2, 'p2t', [['p', 'p2a'], ['list', ['p2b1', 'p2b2', 'p2b3', 'p2b4']], ['p', 'p2c']]], [3, 'p3t', [['p', 'p3a']]], [4, 'p4t', [['p', 'p4a']]],
+  [5, 'p5t', [['p', 'p5a'], ['p', 'p5b'], ['list', ['p5c1', 'p5c2', 'p5c3']], ['p', 'p5d']]], [6, 'p6t', [['p', 'p6a']]], [7, 'p7t', [['p', 'p7a'], ['list', ['p7b1', 'p7b2', 'p7b3', 'p7b4']], ['p', 'p7c']]],
+  [8, 'p8t', [['p', 'p8a']]], [9, 'p9t', [['p', 'p9a']]], [10, 'p10t', [['p', 'p10a']]], [11, 'p11t', [['p', 'p11a']]]
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', part: 'privacy', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const L = s.lang === 'en' ? 'en' : 'vi', vi = L === 'vi';
+    const x = {}; STR.forEach(r => { x[r[0]] = r[vi ? 2 : 3]; }); Object.keys(LAND).forEach(k => { x[k] = LAND[k][vi ? 0 : 1]; });
+    const t = { ...T[L], ...x };
+    const part = s.part, st = s.st[part], key = part + ':' + st;
+    const print = key === 'privacy:print', dark = theme === 'dark' && !print;      // paper is always light
+    const noteList = NOTES[key] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    const secPin = {};
+    noteList.forEach((n, i) => { if (n[0].startsWith('sec:')) secPin[n[0].slice(4)] = String(i + 1); else pin[n[0]] = { on: true, n: String(i + 1) }; });
+    const seg = on => ({ bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', shadow: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' });
+    const say = (k, o) => fmt(t[k], { org: ORG, mail: MAIL, phone: PHONE, ...o });
+
+    // ---- the Landing's header and footer, at rest
+    const hd = { signOpen: false, signBg: 'var(--card)', menuBg: 'var(--card)', signRows: [['user', t.signStudents, t.signStudentsSub], ['graduation-cap', t.signStaff, t.signStaffSub]].map(r => ({ icon: r[0], label: r[1], sub: r[2] })) };
+    const anchors = D.foot[L][0], help = D.foot[L][2];
+    const foot = [anchors, [D.foot[L][1][0], [t.footStudents, t.footStaff, t.footJoin, D.foot[L][1][1][2][1]]], [help[0], [help[1][0][1], help[1][1][1], t.footPrivacy, help[1][2][1]]]];
+
+    // ---- the notice
+    const lines = [['building-2', ORG], ['map-pin', t.footAddr], ['mail', MAIL], ['phone', PHONE]].map((o, i) => ({ icon: o[0], text: o[1], border: i ? '1px solid var(--border)' : '0' }));
+    const sections = SECTIONS.map(([n, title, blocks]) => ({
+      n: String(n).padStart(2, '0'), title: t[title], pinOn: !!secPin[n], pinN: secPin[n] || '',
+      blocks: blocks.map(b => ({ isP: b[0] === 'p', isList: b[0] === 'list', isLines: b[0] === 'lines', text: b[0] === 'p' ? say(b[1]) : '', items: b[0] === 'list' ? b[1].map(k => say(k)) : [], lines: b[0] === 'lines' ? lines : [] }))
+    }));
+
+    // ---- the status page: a window from 21:30 to 22:30 today, checked at 14:32
+    const rows = (...r) => r.map((o, i) => ({ icon: o[0], color: o[1], text: o[2], meta: o[3] || '', border: i ? '1px solid var(--border)' : '0' }));
+    const SP = {
+      normal: { title: t.stNormalT, body: t.stNormalB, rows: rows(['circle-check', 'var(--success-ink)', t.stNormalRow, say('stChecked', { time: '14:32' })]), foot: say('stFoot'), art: 'normal' },
+      planned: { title: t.stPlanT, body: say('stPlanB', { from: '21:30', to: '22:30' }), rows: rows(['clock', 'var(--warning-ink)', say('stPlanRow1', { time: '21:30' }), say('stDuration', { minutes: 60 })], ['circle-check', 'var(--success-ink)', t.stPlanRow2, say('stChecked', { time: '14:32' })]), foot: say('stFoot'), art: 'maint' },
+      active: { title: t.stActiveT, body: say('stActiveB', { time: '22:30' }), rows: rows(['clock', 'var(--warning-ink)', say('stStarted', { time: '21:30' }), say('stDuration', { minutes: 60 })], ['circle-check', 'var(--success-ink)', t.stSaved]), foot: t.stActiveF, art: 'maint' },
+      checking: { title: t.stCheckingT, body: '', rows: [], foot: say('stFoot'), art: 'normal', resting: true },
+      error: { title: t.stErrorT, body: t.stErrorB, rows: [], foot: say('stFoot'), art: 'error' }
+    }[part === 'status' ? st : 'normal'];
+    const sp = { ...SP, hasBody: !!SP.body, hasRows: SP.rows.length > 0, checkOp: SP.resting ? 0.6 : 1, artNormal: SP.art === 'normal', artMaint: SP.art === 'maint', artError: SP.art === 'error' };
+
+    // ---- the frames: the Landing's breakpoints for the notice (720, 960), the system frame's for the status (1024)
+    const W = s.stageW || 1280;
+    const mk = (w, h, sub, name) => { const mobile = w < 720, wide = part === 'status' ? w >= 1024 : w >= 960, sc = Math.min(1, W / w); return {
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: name + ' · ' + w, pins: s.anno, mobile, notMobile: !mobile, wide, narrow: !wide,
+      headGap: mobile ? '10px' : '16px', padX: mobile ? '18px' : '28px', footCols: wide ? '1.4fr repeat(3,minmax(0,1fr))' : mobile ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))',
+      docPad: print ? '48px 56px' : mobile ? '32px 18px 56px' : '56px 28px 88px', docGap: mobile ? '28px' : '36px', h1p: mobile ? '30px' : '40px', leadSize: mobile ? '16px' : '18px', h2p: mobile ? '19px' : '22px',
+      sumPad: mobile ? '18px' : '24px 26px', sumCols: mobile ? 'minmax(0,1fr)' : 'repeat(2,minmax(0,1fr))', sumGap: mobile ? '14px' : '18px 24px',
+      mainPad: wide ? '48px' : '32px 20px', btnH: wide ? '38px' : '44px', btnFs: wide ? '14px' : '15px'
+    }; };
+    const frames = (print ? [mk(794, 'auto', 'a sheet of A4, the first of two', 'Privacy')]
+      : part === 'privacy' ? [mk(1280, 'auto', 'the whole page', 'Privacy'), mk(360, 'auto', 'the same on a phone', 'Privacy')]
+      : [mk(1280, '720px', 'a laptop', 'Status'), mk(360, '720px', 'a phone', 'Status')]).map((fr, i) => ({ ...fr, pins: s.anno && i === 0 }));
+
+    const ctl = [
+      { label: 'Page', opts: this.seg(PARTS, part, v => this.setState({ part: v })) },
+      { label: 'State', opts: this.seg(STATES[part], st, v => this.setState(o => ({ st: { ...o.st, [part]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const ink = { New: 'var(--accent-ink)', Plan: 'var(--muted-fg)', 'As today': 'var(--muted-fg)' };
+    const pLabel = (PARTS.find(o => o[0] === part) || ['', ''])[1], stLabel = (STATES[part].find(o => o[0] === st) || ['', ''])[1];
+    return {
+      theme, isLight: !dark, isDark: dark, t, pin, hd, sp, sections, orgName: ORG,
+      verLine: say('pVer', { v: VERSION, date: vi ? '14/11/2026' : '14 Nov 2026' }),
+      summary: [['inbox', 'sum1'], ['phone-call', 'sum2'], ['calendar-clock', 'sum3'], ['hand', 'sum4']].map(o => ({ icon: o[0], label: t[o[1] + 'l'], text: t[o[1]] })),
+      shadowLg: dark ? '0 24px 48px -16px rgba(0,0,0,.7)' : '0 24px 48px -16px rgba(20,28,30,.22),0 2px 6px rgba(20,28,30,.06)',
+      pg: { isPrivacy: part === 'privacy', isStatus: part === 'status', print, screen: !print, qz: dark ? 'dark' : 'light', headLine: 'var(--border)', segBg: 'var(--muted)' },
+      navLinks: D.nav[L].filter(n => n[0] !== '#roles').map(n => ({ label: n[1] })),
+      langs: [['en', 'EN', 'English'], ['vi', 'VI', 'Tiếng Việt']].map(([id, label, aria]) => ({ label, aria, ...seg(L === id) })), themeIcon: dark ? 'sun' : 'moon',
+      footCols2: foot.map((c, i) => ({ title: c[0], links: (i === 0 ? c[1].map(l => l[1]) : c[1]).map(label => ({ label })) })),
+      frames, ctl, stageRef: this.stageRef,
+      chips: ['R11 · T-R11.8', 'DG-06, DG-100', 'Not yet reviewed by a lawyer', 'Vietnamese first'],
+      reset: () => this.setState({ lang: 'vi', theme: null, part: 'privacy', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(o => ({ anno: !o.anno })),
+      pinsNote: 'The numbers are on the first frame.',
+      notesTitle: 'What to look at on “' + pLabel + ' · ' + stLabel + '”', notes: noteList.map((n, i) => ({ n: String(i + 1), text: n[1] })),
+      adds: ADDS.map(o => ({ part: o[0], deck: o[1], page: o[2] })), whens: WHENS.map(o => ({ when: o[0], what: o[1], cause: o[2] })),
+      copyRows: STR.map(o => ({ where: o[1], vi: o[2], en: o[3], status: o[4], tone: ink[o[4]] })),
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: !!q[4], label: q[5] || (q[4] ? 'Decided (' + q[4] + '), as drawn:' : 'Default drawn:') })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(o => ({ head: o[0], text: o[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

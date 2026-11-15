@@ -4960,6 +4960,8 @@
       "removeText": "Remove the text",
       "removeGap": "Remove gap",
       "removeGapDone": "Gap {{number}} removed. “{{word}}” is back in the text.",
+      "gapsLostByEdit_one": "This edit removed a gap and its question: question {{numbers}}.",
+      "gapsLostByEdit_other": "This edit removed {{count}} gaps and their questions: questions {{numbers}}.",
       "summary_one": "{{count}} question · {{points}} pts",
       "summary_other": "{{count}} questions · {{points}} pts",
       "gapCount_one": "{{count}} gap",

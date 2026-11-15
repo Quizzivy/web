@@ -32,7 +32,7 @@
       "h1a": "Learn English in class,",
       "h1b": "take your tests",
       "h1c": "on Quizzivy",
-      "sub": "Quizzivy is the online testing system of Quizzivy English Centre. Students take the tests their teacher assigns on their phone, then see their score, the answers and comments; teachers build tests, mark them and review every attempt.",
+      "sub": "Quizzivy is the online testing system of {{org}}. Students take the tests their teacher assigns on their phone, then see their score, the answers and comments; teachers build tests, mark them and review every attempt.",
       "haveCode": "Have a class code from your teacher?",
       "codeLabel": "Class code",
       "joinClass": "Join class",
@@ -109,7 +109,7 @@
       }
     },
     "consult": {
-      "eyebrow": "Courses at Quizzivy English Centre",
+      "eyebrow": "Courses at {{org}}",
       "title": "Not sure which course fits?",
       "sub": "Leave your details and our advisers will call you back. They can arrange a free placement test.",
       "name": "Full name",
@@ -179,7 +179,7 @@
       }
     },
     "footer": {
-      "about": "The online English testing system of Quizzivy English Centre.",
+      "about": "The online English testing system of {{org}}.",
       "product": "Product",
       "start": "Get started",
       "help": "Help",

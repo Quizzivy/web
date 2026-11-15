@@ -14,10 +14,32 @@ const HEADERS = "landing.headers";
 /** The pages a search engine is told of: the Landing and the privacy notice. */
 const LISTED = ["/", "/privacy"];
 
+/** Where landing.html names the centre: the build writes `VITE_ORG_NAME` there. */
+const CENTRE = "%VITE_ORG_NAME%";
+
+/**
+ * What the page says where the build names no centre: the product's name, as
+ * the site's own lines do (FALLBACK_ORG_NAME in src/features/landing/site.ts).
+ */
+const PRODUCT = "Quizzivy";
+
 function originOf(raw: string | undefined): string | null {
   let origin = raw?.trim() ?? "";
   while (origin.endsWith("/")) origin = origin.slice(0, -1);
   return origin === "" ? null : origin;
+}
+
+function nameOf(raw: string | undefined): string {
+  const name = raw?.trim() ?? "";
+  return name === "" ? PRODUCT : name;
+}
+
+function inAttribute(text: string): string {
+  return text
+    .replaceAll("&", "&amp;")
+    .replaceAll('"', "&quot;")
+    .replaceAll("<", "&lt;")
+    .replaceAll(">", "&gt;");
 }
 
 /**
@@ -32,8 +54,12 @@ function originOf(raw: string | undefined): string | null {
  * writes a robots.txt and a sitemap.xml that name it, so the same pages on
  * another host of the Pages project never stand as the site's own. Without
  * it none of the three is written.
+ *
+ * `centre` is the centre's name (`VITE_ORG_NAME`, or the product's name where
+ * the build sets none). landing.html spells no name: the page's description
+ * tags get this one, before Vite reads the page.
  */
-function landingSite(site: string | null): Plugin {
+function landingSite(site: string | null, centre: string): Plugin {
   return {
     name: "quizzivy:landing-site",
     configureServer(server) {
@@ -44,15 +70,23 @@ function landingSite(site: string | null): Plugin {
         next();
       });
     },
-    transformIndexHtml() {
-      if (site === null) return [];
-      return [
-        {
-          tag: "meta",
-          attrs: { property: "og:url", content: `${site}/` },
-          injectTo: "head",
-        },
-      ];
+    transformIndexHtml: {
+      order: "pre",
+      handler(html) {
+        return {
+          html: html.replaceAll(CENTRE, () => inAttribute(centre)),
+          tags:
+            site === null
+              ? []
+              : [
+                  {
+                    tag: "meta",
+                    attrs: { property: "og:url", content: `${site}/` },
+                    injectTo: "head",
+                  },
+                ],
+        };
+      },
     },
     generateBundle() {
       if (site === null) return;
@@ -93,21 +127,24 @@ function landingSite(site: string | null): Plugin {
  * client, no app strings. `VITE_` values are read as the app's build reads
  * them, from the repository's one .env.
  */
-export default defineConfig(({ mode }) => ({
-  plugins: [
-    react(),
-    tailwindcss(),
-    appVersion(),
-    landingSite(originOf(loadEnv(mode, ENV_DIR, "VITE_")["VITE_LANDING_URL"])),
-  ],
-  envDir: ENV_DIR,
-  envPrefix: ["VITE_"],
-  resolve: { alias: { "@": path.resolve(ROOT, "./src") } },
-  build: {
-    outDir: OUT,
-    emptyOutDir: true,
-    rollupOptions: { input: path.resolve(ROOT, PAGE) },
-  },
-  server: { port: 5176, host: "localhost" },
-  preview: { port: 4176, host: "localhost" },
-}));
+export default defineConfig(({ mode }) => {
+  const env = loadEnv(mode, ENV_DIR, "VITE_");
+  return {
+    plugins: [
+      react(),
+      tailwindcss(),
+      appVersion(),
+      landingSite(originOf(env["VITE_LANDING_URL"]), nameOf(env["VITE_ORG_NAME"])),
+    ],
+    envDir: ENV_DIR,
+    envPrefix: ["VITE_"],
+    resolve: { alias: { "@": path.resolve(ROOT, "./src") } },
+    build: {
+      outDir: OUT,
+      emptyOutDir: true,
+      rollupOptions: { input: path.resolve(ROOT, PAGE) },
+    },
+    server: { port: 5176, host: "localhost" },
+    preview: { port: 4176, host: "localhost" },
+  };
+});

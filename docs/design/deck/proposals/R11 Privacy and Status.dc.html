@@ -241,12 +241,13 @@ const PILL = { warning: ['var(--warning-soft)', 'var(--warning-ink)'], success: 
 
 // R11 · The privacy notice and the status page of quizzivy.com. A proposal page for T-R11.8 (DG-06, DG-100).
 // T, D and PILL above are the deck's, for the Landing's header and footer.
-const ORG = 'Quizzivy English Centre', PHONE = '036 321 6199', MAIL = 'hello@quizzivy.com';
+// The centre's name is the build's VITE_ORG_NAME (the owner, 2026-11-15: “Ms Giau English Centre”). No line of the copy spells a name: each says {org}.
+const ORG = 'Ms Giau English Centre', PHONE = '036 321 6199', MAIL = 'hello@quizzivy.com';
 const VERSION = '2026-11';      // the plan says 2026-10; see Q3
 // The Landing's own words for its header and footer, as "R11 Landing.dc.html" has them: [Tiếng Việt, English]
 const LAND = {
   signStudents: ['Học viên', 'Students'], signStudentsSub: ['Làm bài và xem kết quả', 'Take tests and see results'], signStaff: ['Giáo viên và quản trị', 'Teachers and admins'], signStaffSub: ['Soạn đề, chấm bài, quản lý lớp', 'Build tests, grade, run classes'],
-  menuOpen: ['Mở menu', 'Open menu'], footAbout: ['Hệ thống kiểm tra tiếng Anh trực tuyến của Quizzivy English Centre.', 'The online English testing system of Quizzivy English Centre.'], footAddr: ['TP. Hồ Chí Minh', 'Ho Chi Minh City'],
+  menuOpen: ['Mở menu', 'Open menu'], footAbout: ['Hệ thống kiểm tra tiếng Anh trực tuyến của {org}.', 'The online English testing system of {org}.'], footAddr: ['TP. Hồ Chí Minh', 'Ho Chi Minh City'],
   footStudents: ['Học viên đăng nhập', 'Student sign-in'], footStaff: ['Giáo viên đăng nhập', 'Teacher sign-in'], footJoin: ['Tham gia lớp', 'Join a class'], footPrivacy: ['Quyền riêng tư', 'Privacy']
 };
 // The words of the two pages: [key, where and what the line rests on, Tiếng Việt, English, status]
@@ -386,7 +387,7 @@ const HANDOFF = [
   ['What the notice promises', 'Each of these has to be true of what is built, or the notice changes: a request stores no IP address and nothing about the device (T-R11.6); the email to the centre has no phone number; requests are deleted after 12 months.'],
   ['The 12 months', 'The deletion runs in the nightly retention sweep (D18, O-R11.5). The sweep was written for a database it could reach from outside. Since 12 November the database is on the server’s private network, and the scheduled run has not reached it. The promise needs that put right before the Landing opens.'],
   ['The version', 'The form sends the notice’s version and the server refuses any other (T-R11.6). Whatever Q3 decides is the one value in that list.'],
-  ['The centre’s lines', '`VITE_ORG_NAME`, `VITE_ORG_ADDRESS`, `VITE_ORG_EMAIL` and `VITE_ORG_FRONT_DESK_PHONE`, as on the Landing: Quizzivy English Centre, TP. Hồ Chí Minh, hello@quizzivy.com, 036 321 6199.'],
+  ['The centre’s lines', '`VITE_ORG_NAME`, `VITE_ORG_ADDRESS`, `VITE_ORG_EMAIL` and `VITE_ORG_FRONT_DESK_PHONE`, as on the Landing: Ms Giau English Centre, TP. Hồ Chí Minh, hello@quizzivy.com, 036 321 6199.'],
   ['The header and the footer', 'The Landing’s, as drawn in “R11 Landing”: three links, “Đăng nhập” with two choices, the menu below 960. On these pages its links lead back to the Landing.'],
   ['Not on this page', 'The page for an address that does not exist (the app’s own, with its first button leading to quizzivy.com), the Admin list of requests, the email a request sends, and the picture shown when the link is shared.'],
   ['Locales', 'The copy table: ' + STR.length + ' strings, Vietnamese first. Seven are the app’s own maintenance strings.']
@@ -426,6 +427,7 @@ class Component extends DCLogic {
     const L = s.lang === 'en' ? 'en' : 'vi', vi = L === 'vi';
     const x = {}; STR.forEach(r => { x[r[0]] = r[vi ? 2 : 3]; }); Object.keys(LAND).forEach(k => { x[k] = LAND[k][vi ? 0 : 1]; });
     const t = { ...T[L], ...x };
+    t.footAbout = fmt(t.footAbout, { org: ORG });      // the footer's line names the centre
     const part = s.part, st = s.st[part], key = part + ':' + st;
     const print = key === 'privacy:print', dark = theme === 'dark' && !print;      // paper is always light
     const noteList = NOTES[key] || [];

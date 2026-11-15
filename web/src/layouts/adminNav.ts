@@ -9,7 +9,7 @@ import {
   Sparkles,
   Users,
 } from "lucide-react";
-import { ADMIN_PATHS } from "@/app/adminPaths";
+import { ADMIN_EXPORTS, ADMIN_PATHS } from "@/app/adminPaths";
 import { holds, type Requirement } from "@/features/auth/permissions";
 import type { NavDestination, NavGroup } from "@/layouts/shell/nav";
 import type { components } from "@/lib/api/schema";
@@ -170,7 +170,7 @@ export function adminNavFor(user: NavUser | null | undefined): AdminNavGroup[] {
  * owner's call of 2026-11-15).
  */
 const BELONGS_TO: readonly (readonly [prefix: string, id: string])[] = [
-  ["/admin/exports", "settings"],
+  [ADMIN_EXPORTS, "settings"],
 ];
 
 /**

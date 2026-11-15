@@ -479,6 +479,9 @@ describe("Make a variant", () => {
         http.post(`${BASE}/teacher/ai/tests/:id/variant`, () =>
           contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
             changes: [reworded],
+            questions: 3,
+            changedQuestions: 1,
+            capped: false,
             usage: { credits: 2600, left: 15000 },
           }),
         ),
@@ -598,6 +601,9 @@ describe("Make a variant", () => {
                 payload: { prompt: "What are parks good for?" },
               },
             ],
+            questions: 3,
+            changedQuestions: 1,
+            capped: false,
             usage: { credits: 2600, left: 15000 },
           }),
         ),

@@ -1,8 +1,7 @@
 import { describe, expect, it } from "vitest";
 import en from "@/features/landing/locales/en.json";
 import vi from "@/features/landing/locales/vi.json";
-import appEn from "@/lib/i18n/locales/en.json";
-import appVi from "@/lib/i18n/locales/vi.json";
+import { en as appEn, vi as appVi } from "@tests/support/locales";
 
 /** A centre's name, spelled: the site names the centre by `{{org}}` only. */
 const NAMED = /\bCent(?:re|er)\b|Trung tâm (?:Anh|Ngoại) ngữ/;

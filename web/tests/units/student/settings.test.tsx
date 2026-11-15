@@ -15,7 +15,7 @@ import StudentLayout from "@/layouts/StudentLayout";
 import StudentSettingsPage from "@/features/auth/pages/StudentSettingsPage";
 import type { User } from "@/features/auth/api";
 import i18n, { setLocale } from "@/lib/i18n";
-import en from "@/lib/i18n/locales/en.json";
+import { en } from "@tests/support/locales";
 import { readLargerTestText, writeLargerTestText } from "@/lib/testText";
 import { readThemePreference, writeThemePreference } from "@/lib/theme";
 import { notify } from "@/lib/toast";

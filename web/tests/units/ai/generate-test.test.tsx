@@ -6,7 +6,7 @@ import AiPanel from "@/features/ai/components/AiPanel";
 import type { AiGeneratedQuestion } from "@/features/ai/api";
 import { AiWriteError } from "@/features/ai/kind";
 import type { AiSection, GenerateContext } from "@/features/ai/kinds/generate";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";

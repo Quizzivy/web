@@ -4,7 +4,7 @@ import { cleanup } from "@testing-library/react";
 import { toast } from "sonner";
 import { server } from "./server";
 import i18n from "@/lib/i18n";
-import en from "@/lib/i18n/locales/en.json";
+import { en } from "@tests/support/locales";
 
 /** The app fetches the English strings on first use; tests load them up front so a switch to en stays synchronous. */
 i18n.addResourceBundle("en", "translation", en, true, true);

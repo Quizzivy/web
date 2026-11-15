@@ -1,7 +1,7 @@
 import { afterEach, describe, expect, it, vi } from "vitest";
 
 afterEach(() => {
-  vi.doUnmock("@/lib/i18n/locales/en.json");
+  vi.doUnmock("@/lib/i18n/locales/en/common.json");
   vi.resetModules();
   localStorage.clear();
   document.documentElement.lang = "vi";
@@ -9,7 +9,7 @@ afterEach(() => {
 
 async function startWithoutEnglish() {
   vi.resetModules();
-  vi.doMock("@/lib/i18n/locales/en.json", () => {
+  vi.doMock("@/lib/i18n/locales/en/common.json", () => {
     throw new Error("the English chunk is unreachable");
   });
   return import("@/lib/i18n");

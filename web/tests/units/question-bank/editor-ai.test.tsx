@@ -10,7 +10,7 @@ import { Toaster } from "@/components/ui/sonner";
 import QuestionEditorPage from "@/features/question-bank/pages/teacher/QuestionEditorPage";
 import TestBuilderPage from "@/features/tests/pages/teacher/TestBuilderPage";
 import { api } from "@/lib/api/client";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";

@@ -10,7 +10,7 @@ import {
 } from "@/features/ai/api";
 import type { GenerateContext } from "@/features/ai/kinds/generate";
 import type { CheckContext } from "@/features/ai/kinds/check";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";

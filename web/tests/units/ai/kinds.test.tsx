@@ -5,7 +5,7 @@ import { useState } from "react";
 import AiPanel, { type AiPanelRequest } from "@/features/ai/components/AiPanel";
 import type { AiCleanupResult, AiVariantChange } from "@/features/ai/api";
 import type { CleanupContext } from "@/features/ai/kinds/cleanup";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";

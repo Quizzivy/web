@@ -1,6 +1,16 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import vi from "./locales/vi.json";
+import { mergeStrings, type Strings } from "./surfaces";
+import viCommon from "./locales/vi/common.json";
+import viAuth from "./locales/vi/auth.json";
+import viStudent from "./locales/vi/student.json";
+import viTeacher from "./locales/vi/teacher.json";
+import viAdmin from "./locales/vi/admin.json";
+
+const vi = [viCommon, viAuth, viStudent, viTeacher, viAdmin].reduce<Strings>(
+  (all, strings) => mergeStrings(all, strings),
+  {},
+);
 
 /**
  * Vietnamese is the product language (§2). `vi` is the default and the
@@ -42,8 +52,18 @@ void i18n.use(initReactI18next).init({
  */
 export async function loadLocale(locale: Locale): Promise<void> {
   if (i18n.hasResourceBundle(locale, "translation")) return;
-  const strings = await import("./locales/en.json");
-  i18n.addResourceBundle(locale, "translation", strings.default, true, true);
+  const files = await Promise.all([
+    import("./locales/en/common.json"),
+    import("./locales/en/auth.json"),
+    import("./locales/en/student.json"),
+    import("./locales/en/teacher.json"),
+    import("./locales/en/admin.json"),
+  ]);
+  const strings = files.reduce<Strings>(
+    (all, file) => mergeStrings(all, file.default),
+    {},
+  );
+  i18n.addResourceBundle(locale, "translation", strings, true, true);
 }
 
 let latest = 0;

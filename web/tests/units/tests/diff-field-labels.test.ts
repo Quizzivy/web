@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import en from "@/lib/i18n/locales/en.json";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { en, vi as vi_ } from "@tests/support/locales";
 import { loadSpec } from "@tests/support/openapi";
 
 const fields: string[] = loadSpec().components.schemas.DiffField.enum;

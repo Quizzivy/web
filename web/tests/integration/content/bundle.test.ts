@@ -1,7 +1,7 @@
 import { resolve } from "node:path";
 import { gzipSync } from "node:zlib";
 import { build } from "vite";
-import en from "@/lib/i18n/locales/en.json";
+import { en } from "@tests/support/locales";
 
 type Chunk = {
   type: "chunk";
@@ -61,17 +61,20 @@ test("keeps editor modules out of the reader and pins prototype transfer budgets
   const chunks = result.output.filter((item): item is Chunk => item.type === "chunk");
   const byName = new Map(chunks.map((chunk) => [chunk.fileName, chunk]));
   const readerEntry = chunks.find((chunk) => chunk.name === "reader")!;
-  const english = chunks.find((chunk) =>
-    chunk.moduleIds.some((id) => id.endsWith("/locales/en.json")),
-  )!;
-  expect(english.moduleIds.map((id) => id.split("/").pop())).toEqual(["en.json"]);
-  expect(
-    closure(readerEntry, byName, false).map((chunk) => chunk.fileName),
-  ).not.toContain(english.fileName);
-  expect(closure(readerEntry, byName).map((chunk) => chunk.fileName)).toContain(
-    english.fileName,
+  const english = chunks.filter((chunk) =>
+    chunk.moduleIds.some((id) => id.includes("/locales/en/")),
   );
-  const lazy = new Set([english.fileName]);
+  expect(english.length).toBeGreaterThan(0);
+  for (const chunk of english) {
+    expect(chunk.moduleIds.every((id) => id.includes("/locales/en/"))).toBe(true);
+    expect(
+      closure(readerEntry, byName, false).map((item) => item.fileName),
+    ).not.toContain(chunk.fileName);
+    expect(closure(readerEntry, byName).map((item) => item.fileName)).toContain(
+      chunk.fileName,
+    );
+  }
+  const lazy = new Set(english.map((chunk) => chunk.fileName));
   const reader = closure(readerEntry, byName, true, lazy);
   expect(reader.filter((chunk) => chunk.code.includes(en.common.actionFailed))).toEqual(
     [],

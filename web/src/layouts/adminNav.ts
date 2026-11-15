@@ -164,16 +164,28 @@ export function adminNavFor(user: NavUser | null | undefined): AdminNavGroup[] {
 }
 
 /**
+ * BELONGS_TO names the destination a page outside every destination's path
+ * lights: an export is requested from System settings and its trail reads
+ * "Quản trị › Cài đặt › Xuất dữ liệu", so "Cài đặt" is lit there (SS-18, the
+ * owner's call of 2026-11-15).
+ */
+const BELONGS_TO: readonly (readonly [prefix: string, id: string])[] = [
+  ["/admin/exports", "settings"],
+];
+
+/**
  * activeAdminNavId returns the id of the destination `pathname` belongs to,
- * or null when it belongs to none, as an export page does. The bare console
- * address is the Overview; any other destination owns its own path and every path
- * beneath it.
+ * or null when it belongs to none. The bare console address is the Overview;
+ * any other destination owns its own path and every path beneath it, and an
+ * export page belongs to System settings (BELONGS_TO).
  */
 export function activeAdminNavId(pathname: string): string | null {
   let end = pathname.length;
   while (end > 1 && pathname[end - 1] === "/") end -= 1;
   const path = pathname.slice(0, end).toLowerCase();
   if (path === ADMIN_PATHS.overview) return "overview";
+  for (const [prefix, id] of BELONGS_TO)
+    if (path === prefix || path.startsWith(`${prefix}/`)) return id;
   for (const group of ADMIN_NAV) {
     for (const item of group.items) {
       if (

@@ -1,0 +1,289 @@
+{
+  "app": {
+    "name": "Quizzivy"
+  },
+  "landing": {
+    "meta": {
+      "title": "Quizzivy · Hệ thống kiểm tra tiếng Anh trực tuyến"
+    },
+    "nav": {
+      "features": "Tính năng",
+      "integrity": "Làm bài công bằng",
+      "faq": "Hỏi đáp",
+      "label": "Các phần của trang"
+    },
+    "header": {
+      "home": "Quizzivy, về đầu trang",
+      "signIn": "Đăng nhập",
+      "consult": "Đăng ký tư vấn",
+      "students": "Học viên",
+      "studentsSub": "Làm bài và xem kết quả",
+      "staff": "Giáo viên và quản trị",
+      "staffSub": "Soạn đề, chấm bài, quản lý lớp",
+      "menuOpen": "Mở menu",
+      "menuTitle": "Menu",
+      "menuClose": "Đóng menu",
+      "language": "Ngôn ngữ",
+      "darkMode": "Giao diện tối",
+      "toDark": "Chế độ tối",
+      "toLight": "Chế độ sáng"
+    },
+    "hero": {
+      "h1a": "Học tiếng Anh trên lớp,",
+      "h1b": "làm bài",
+      "h1c": "trên Quizzivy",
+      "sub": "Quizzivy là hệ thống kiểm tra trực tuyến của Quizzivy English Centre. Học viên làm bài giáo viên giao ngay trên điện thoại, rồi xem điểm, đáp án và nhận xét; giáo viên soạn đề, chấm bài và xem lại từng lượt làm.",
+      "haveCode": "Bạn có mã lớp từ giáo viên?",
+      "codeLabel": "Mã lớp",
+      "joinClass": "Tham gia lớp",
+      "joinShort": "Nhập đủ 8 ký tự.",
+      "joinExcluded": "Mã lớp không bao giờ có 0, O, 1 hoặc I.",
+      "orSignIn": "Đã có tài khoản?",
+      "signIn": "Đăng nhập",
+      "consultLink": "đăng ký tư vấn miễn phí"
+    },
+    "steps": {
+      "title": "Quizzivy hoạt động như thế nào",
+      "s1": {
+        "title": "Tham gia lớp bằng mã",
+        "body": "Giáo viên gửi bạn mã lớp gồm 8 ký tự hoặc một đường link. Nhập mã là vào đúng lớp của mình."
+      },
+      "s2": {
+        "title": "Nhận bài giáo viên giao",
+        "body": "Bài mới hiện ngay trang đầu, kèm giờ mở và giờ đóng. Sắp hết hạn, Quizzivy nhắc bạn."
+      },
+      "s3": {
+        "title": "Làm bài trên mọi thiết bị",
+        "body": "Đọc quy định của bài, rồi làm trên điện thoại hay laptop. Mỗi câu trả lời tự lưu."
+      },
+      "s4": {
+        "title": "Xem kết quả",
+        "body": "Chấm xong, bạn xem điểm, đáp án và nhận xét của giáo viên."
+      }
+    },
+    "rows": {
+      "title": "Trong Quizzivy có gì",
+      "a": {
+        "kicker": "Dạng câu hỏi",
+        "title": "Nghe, đọc, điền từ, nối và viết luận trong cùng một bài",
+        "body": "Giáo viên soạn đề từ tám dạng câu hỏi: một đáp án, nhiều đáp án, đúng/sai, đúng/sai/không có thông tin, điền từ, trả lời ngắn, nối và bài luận. Bài nghe phát ngay trong bài làm, bài đọc đi kèm các câu hỏi của nó.",
+        "p1": "Bài nghe có số lượt nghe do giáo viên đặt",
+        "p2": "Câu hỏi xếp theo phần và theo kỹ năng",
+        "p3": "Câu hỏi có thể kèm hình ảnh"
+      },
+      "b": {
+        "kicker": "Làm bài",
+        "title": "Làm bài trên máy nào cũng được, rớt mạng cũng không mất bài",
+        "body": "Trước khi bắt đầu, bạn đọc quy định của bài: thời gian làm bài, số lượt làm, khi nào có điểm. Trong lúc làm có đồng hồ tính giờ và mỗi câu trả lời được lưu ngay; mất mạng thì bài tự lưu lại khi có mạng.",
+        "p1": "Lỡ tải lại trang hay đóng trình duyệt, mở ra vẫn làm tiếp",
+        "p2": "Hết giờ, bài tự nộp với các câu bạn đã trả lời",
+        "p3": "Giáo viên có thể cho làm nhiều lượt và lấy điểm cao nhất"
+      },
+      "c": {
+        "kicker": "Kết quả",
+        "title": "Biết mình đúng sai ở đâu, và giáo viên nhận xét gì",
+        "body": "Câu chọn đáp án và điền từ được chấm tự động. Bài luận do giáo viên chấm theo band và nhận xét. Khi có kết quả, Quizzivy báo cho bạn.",
+        "p1": "Đáp án đúng và lời giải thích, khi giáo viên cho xem",
+        "p2": "Lọc nhanh những câu bạn làm sai",
+        "p3": "Bài luận có thể được chấm theo từng tiêu chí"
+      }
+    },
+    "fair": {
+      "title": "Bài kiểm tra công bằng cho cả lớp",
+      "sub": "Trước khi bắt đầu, học viên đọc quy định của bài bằng lời dễ hiểu. Trong lúc làm, Quizzivy ghi lại những gì xảy ra, còn quyết định là của giáo viên.",
+      "i1": {
+        "title": "Làm bài toàn màn hình",
+        "body": "Rời khỏi bài làm sẽ được ghi lại. Rời vài giây thì bỏ qua."
+      },
+      "i2": {
+        "title": "Không sao chép, không dán",
+        "body": "Câu hỏi không chép ra ngoài được, đáp án không dán vào được."
+      },
+      "i3": {
+        "title": "Nhắc trước, không buộc tội",
+        "body": "Giáo viên chọn cách xử lý: nhắc học viên, báo cho giáo viên hoặc tự nộp bài."
+      },
+      "i4": {
+        "title": "Xem lại được từng lượt làm",
+        "body": "Giờ bắt đầu, những lần rời bài và giờ nộp đều được ghi lại."
+      }
+    },
+    "consult": {
+      "eyebrow": "Khoá học tại Quizzivy English Centre",
+      "title": "Chưa biết chọn khoá nào?",
+      "sub": "Để lại thông tin, tư vấn viên sẽ gọi lại cho bạn và có thể xếp lịch kiểm tra trình độ miễn phí.",
+      "name": "Họ và tên",
+      "phone": "Số điện thoại",
+      "phonePlaceholder": "09xx xxx xxx",
+      "interest": "Quan tâm",
+      "who": "Khoá học dành cho",
+      "time": "Thời gian tiện gọi",
+      "interests": {
+        "ielts": "IELTS",
+        "toeic": "TOEIC",
+        "communication": "Giao tiếp",
+        "kids": "Tiếng Anh trẻ em",
+        "business": "Tiếng Anh thương mại"
+      },
+      "whoOptions": {
+        "self": "Bản thân",
+        "child": "Con tôi",
+        "company": "Công ty tôi"
+      },
+      "times": {
+        "any": "Lúc nào cũng được",
+        "morning": "Buổi sáng, 8:00–12:00",
+        "afternoon": "Buổi chiều, 13:00–17:00",
+        "evening": "Buổi tối, 18:00–20:00"
+      },
+      "consentA": "Tôi đồng ý để {{org}} dùng họ tên và số điện thoại của tôi để gọi lại tư vấn khoá học, như nêu trong ",
+      "privacyNotice": "thông báo về quyền riêng tư",
+      "consentB": ".",
+      "submit": "Gửi yêu cầu tư vấn",
+      "sending": "Đang gửi…",
+      "privacy": "Chúng tôi chỉ dùng số điện thoại để gọi lại tư vấn khoá học.",
+      "errName": "Vui lòng nhập họ tên.",
+      "errPhone": "Số điện thoại chưa đúng.",
+      "errConsent": "Vui lòng đồng ý để chúng tôi liên hệ trước khi gửi.",
+      "errLimited": "Có quá nhiều yêu cầu từ kết nối này. Hãy thử lại sau {{count}} phút.",
+      "errFailed": "Chưa gửi được yêu cầu. Vui lòng thử lại, hoặc gọi {{phone}}.",
+      "errFailedNoPhone": "Chưa gửi được yêu cầu. Vui lòng thử lại.",
+      "sentTitle": "Cảm ơn, chúng tôi đã nhận",
+      "sentBody": "Tư vấn viên sẽ gọi cho {{name}} trong vòng 1 ngày làm việc.",
+      "sendAnother": "Gửi yêu cầu khác"
+    },
+    "faq": {
+      "title": "Câu hỏi thường gặp",
+      "help": "Chưa thấy câu trả lời? Gọi {{phone}} hoặc viết cho {{mail}}.",
+      "helpPhone": "Chưa thấy câu trả lời? Gọi {{phone}}.",
+      "helpMail": "Chưa thấy câu trả lời? Viết cho {{mail}}.",
+      "q1": {
+        "q": "Học viên vào lớp bằng cách nào?",
+        "a": "Giáo viên gửi mã 8 ký tự hoặc đường link. Học viên nhập mã ở trang này hoặc trong app, rồi đăng nhập hoặc tạo tài khoản."
+      },
+      "q2": {
+        "q": "Học viên làm bài trên điện thoại được không?",
+        "a": "Được. Bài làm chạy trên điện thoại, máy tính bảng và laptop, đáp án tự lưu sau vài giây."
+      },
+      "q3": {
+        "q": "Quizzivy có ngăn gian lận không?",
+        "a": "Không trình duyệt nào ngăn hoàn toàn được. Quizzivy chặn copy/dán, ghi lại mỗi lần học viên rời bài và để giáo viên quyết định."
+      },
+      "q4": {
+        "q": "Tôi đăng nhập bằng Google được không?",
+        "a": "Được, nếu trung tâm cho phép. Bạn cũng có thể dùng email và mật khẩu giáo viên cấp."
+      },
+      "q5": {
+        "q": "Tôi quên mật khẩu thì sao?",
+        "a": "Nhờ giáo viên hoặc trung tâm đặt lại. Bạn sẽ nhận mật khẩu tạm và chọn mật khẩu mới khi đăng nhập."
+      }
+    },
+    "footer": {
+      "about": "Hệ thống kiểm tra tiếng Anh trực tuyến của Quizzivy English Centre.",
+      "product": "Sản phẩm",
+      "start": "Bắt đầu",
+      "help": "Hỗ trợ",
+      "copyright": "© {{year}} Quizzivy",
+      "students": "Học viên đăng nhập",
+      "staff": "Giáo viên đăng nhập",
+      "join": "Tham gia lớp",
+      "consult": "Đăng ký tư vấn",
+      "status": "Trạng thái hệ thống",
+      "questions": "Câu hỏi",
+      "privacy": "Quyền riêng tư"
+    }
+  },
+  "privacy": {
+    "title": "Thông báo về quyền riêng tư",
+    "lead": "Khi bạn gửi form đăng ký tư vấn trên quizzivy.com, bạn giao cho chúng tôi họ tên và số điện thoại. Trang này nói rõ chúng tôi nhận những gì, dùng để làm gì, giữ trong bao lâu và bạn có những quyền gì.",
+    "version": "Phiên bản {{v}} · có hiệu lực từ {{date}}",
+    "print": "In trang này",
+    "summary": {
+      "title": "Tóm tắt",
+      "s1": {
+        "label": "Chúng tôi nhận",
+        "text": "Họ tên, số điện thoại và ba lựa chọn bạn điền trong form."
+      },
+      "s2": {
+        "label": "Dùng để",
+        "text": "Gọi lại tư vấn khoá học và xếp lịch kiểm tra trình độ. Không dùng vào việc khác."
+      },
+      "s3": {
+        "label": "Giữ trong",
+        "text": "12 tháng, sau đó hệ thống tự xoá."
+      },
+      "s4": {
+        "label": "Bạn có thể",
+        "text": "Yêu cầu xem, sửa, xoá, hoặc rút lại sự đồng ý bất cứ lúc nào."
+      }
+    },
+    "p1t": "Ai chịu trách nhiệm",
+    "p1a": "{{org}} chịu trách nhiệm về thông tin bạn gửi qua trang này.",
+    "p2t": "Chúng tôi nhận những gì",
+    "p2a": "Chỉ những gì bạn tự điền trong form đăng ký tư vấn:",
+    "p2b1": "Họ và tên",
+    "p2b2": "Số điện thoại",
+    "p2b3": "Khoá học bạn quan tâm, khoá học dành cho ai và thời gian tiện gọi",
+    "p2b4": "Ngôn ngữ của trang lúc bạn gửi, thời điểm bạn đồng ý và phiên bản của thông báo này",
+    "p2c": "Chúng tôi không lưu địa chỉ IP hay thông tin về thiết bị của bạn cùng với yêu cầu. Máy chủ chỉ giữ địa chỉ IP tạm thời trong bộ nhớ, để chặn việc gửi form quá nhiều lần.",
+    "p3t": "Dùng để làm gì",
+    "p3a": "Để tư vấn viên của trung tâm gọi lại cho bạn về khoá học, và xếp lịch kiểm tra trình độ nếu bạn muốn. Chúng tôi chỉ dùng thông tin này cho việc đó, không dùng để quảng cáo và không bán cho ai.",
+    "p4t": "Vì sao chúng tôi được dùng",
+    "p4a": "Vì bạn đã đồng ý. Trước khi gửi form, bạn đánh dấu vào ô đồng ý; không đánh dấu thì form không gửi đi. Đây là căn cứ theo Luật Bảo vệ dữ liệu cá nhân của Việt Nam (Luật số 91/2025/QH15).",
+    "p5t": "Ai xem được, và lưu ở đâu",
+    "p5a": "Chỉ tư vấn viên và quản trị viên của trung tâm xem được yêu cầu của bạn.",
+    "p5b": "Khi có yêu cầu mới, trung tâm nhận một email báo tin. Email này chỉ có tên của bạn, khoá học bạn quan tâm, khoá học dành cho ai và thời gian tiện gọi. Email không có số điện thoại.",
+    "p5c1": "Yêu cầu được lưu trên máy chủ của Quizzivy, đặt tại TP. Hồ Chí Minh.",
+    "p5c2": "Bản sao lưu được mã hoá và giữ tại Cloudflare.",
+    "p5c3": "Email báo tin được gửi qua dịch vụ Resend.",
+    "p5d": "Cloudflare và Resend là công ty ở nước ngoài, nên bản sao lưu và email báo tin có thể được xử lý ngoài Việt Nam.",
+    "p6t": "Giữ trong bao lâu",
+    "p6a": "Chúng tôi giữ yêu cầu của bạn 12 tháng kể từ ngày gửi, sau đó hệ thống tự động xoá. Bạn có thể yêu cầu xoá sớm hơn bất cứ lúc nào.",
+    "p7t": "Quyền của bạn",
+    "p7a": "Bạn có quyền:",
+    "p7b1": "Biết chúng tôi đang giữ thông tin gì về bạn",
+    "p7b2": "Yêu cầu sửa nếu thông tin chưa đúng",
+    "p7b3": "Yêu cầu xoá",
+    "p7b4": "Rút lại sự đồng ý, và chúng tôi sẽ không gọi cho bạn nữa",
+    "p7c": "Để dùng các quyền này, viết cho {{mail}} hoặc gọi {{phone}}.",
+    "p8t": "Trẻ em",
+    "p8a": "Form chỉ hỏi thông tin của người gửi. Khi bạn đăng ký cho con, chúng tôi không hỏi tên, tuổi hay bất kỳ thông tin nào của trẻ trên trang này.",
+    "p9t": "Khi bạn chỉ xem trang",
+    "p9a": "Trang quizzivy.com không dùng cookie theo dõi và không dùng công cụ đo lường của bên thứ ba. Trình duyệt của bạn chỉ ghi nhớ ngôn ngữ và giao diện sáng hoặc tối bạn chọn, ngay trên máy của bạn.",
+    "p10t": "Thông báo này nói về gì",
+    "p10a": "Thông báo này nói về trang quizzivy.com và form đăng ký tư vấn. Dữ liệu của tài khoản học viên và giáo viên trên Quizzivy không thuộc phạm vi của thông báo này.",
+    "p11t": "Khi thông báo thay đổi",
+    "p11a": "Mỗi lần thay đổi, phiên bản và ngày ở đầu trang sẽ đổi theo. Yêu cầu của bạn luôn được ghi kèm phiên bản mà bạn đã đồng ý.",
+    "p7cMail": "Để dùng các quyền này, viết cho {{mail}}.",
+    "p7cPhone": "Để dùng các quyền này, gọi {{phone}}."
+  },
+  "statusPage": {
+    "normalT": "Mọi thứ đang hoạt động bình thường",
+    "normalB": "Không có lịch cập nhật nào sắp tới.",
+    "normalRow": "Hoạt động bình thường",
+    "checked": "kiểm tra lúc {{time}}",
+    "planT": "Quizzivy sắp được cập nhật",
+    "planB": "Từ {{from}} đến {{to}}. Bài kiểm tra đóng trong lúc cập nhật sẽ được gia hạn.",
+    "planRow1": "Bắt đầu lúc {{time}}",
+    "planRow2": "Bây giờ mọi thứ vẫn hoạt động",
+    "activeT": "Quizzivy đang được cập nhật",
+    "activeB": "Chúng tôi sẽ trở lại lúc {{time}}. Bài kiểm tra đóng trong lúc cập nhật sẽ được gia hạn.",
+    "started": "Bắt đầu lúc {{time}}",
+    "duration": "khoảng {{minutes}} phút",
+    "saved": "Bài làm và kết quả đã được lưu",
+    "activeF": "Bài làm và kết quả của bạn vẫn được giữ nguyên. Không có gì bị mất.",
+    "checkingT": "Đang kiểm tra…",
+    "errorT": "Chưa kiểm tra được trạng thái",
+    "errorB": "Có thể kết nối của bạn đang yếu, hoặc Quizzivy chưa trả lời. Hãy thử lại sau ít phút.",
+    "check": "Kiểm tra lại",
+    "home": "Về trang chủ",
+    "foot": "Cần giúp ngay? Gọi {{phone}}."
+  },
+  "notFound": {
+    "title": "Trang này không tồn tại",
+    "body": "Đường dẫn có thể đã cũ, hoặc bài kiểm tra hay lớp học mà nó trỏ tới đã bị xoá.",
+    "action": "Về trang chủ",
+    "back": "Quay lại",
+    "footnote": "Bạn đến đây từ đường dẫn của giáo viên? Hãy nhờ giáo viên gửi lại."
+  }
+}

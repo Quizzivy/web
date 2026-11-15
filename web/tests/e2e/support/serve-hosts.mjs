@@ -12,3 +12,13 @@ import { preview } from "vite";
 for (const port of [4173, 4174, 4175]) {
   await preview({ preview: { port, strictPort: true, host: "localhost" } });
 }
+
+/**
+ * The landing site is a build of its own (vite.landing.config.ts, into
+ * dist-landing), served on 4176 as it is on its own Pages project: every path
+ * it has no file for answers its index.html.
+ */
+await preview({
+  configFile: "vite.landing.config.ts",
+  preview: { port: 4176, strictPort: true, host: "localhost" },
+});

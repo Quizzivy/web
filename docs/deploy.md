@@ -32,6 +32,10 @@ gh variable set VITE_GOOGLE_CLIENT_ID --body '<client-id>.apps.googleusercontent
 gh variable set VITE_ORG_NAME --body '…'
 gh variable set VITE_ORG_FRONT_DESK_PHONE --body '…'
 gh variable set VITE_ORG_FRONT_DESK_HOURS --body '…'
+gh variable set VITE_ORG_EMAIL --body '…'           # the landing site's lines:
+gh variable set VITE_ORG_ADDRESS --body '…'         # unset, a line is hidden
+gh variable set VITE_ORG_ADDRESS_EN --body '…'
+gh variable set LANDING_PAGES_PROJECT --body '…'    # unset, the landing site is not deployed
 gh variable set WEB_DEPLOY --body pages  # set since 2026-11-12; without it nothing deploys
 ```
 
@@ -57,6 +61,49 @@ A teacher's join link and QR always name the student host. The API keeps a
 session per host and admits an account only at the host it belongs at
 (`Quizzivy/api`, `STUDENT_APP_URL` and `STAFF_APP_URL`), so the two origins
 here and there have to be the same two.
+
+## The landing site
+
+`quizzivy.com` is not a host of the app. It is a build output of its own,
+`web/dist-landing` (`pnpm build:landing`, `vite.landing.config.ts`), deployed
+to a Pages project of its own (the owner, 2026-11-15: "Project riêng"). Built
+into the app's bundle, opening the Landing took 326 KiB of JavaScript, gzip,
+against the 200 KB the plan allows; on its own it takes 146 KiB, and
+`tests/integration/landing-bundle.test.ts` holds it under the cap.
+
+- **What it serves.** The Landing at `/`, the privacy notice at `/privacy`,
+  the status page at `/status`, and a not-found page for anything else. The
+  build writes `landing.html` as `index.html` and carries the app's
+  `_redirects`, so a direct visit or a reload of any path opens that page.
+  `/version.json` names the build and the version, as the app's does.
+- **What it shares with the app.** The sources (`src/features/landing`, with
+  the app's tokens, a few primitives and its public files), and nothing of the
+  app's entry: no session, no API client, none of the app's strings. Its own
+  strings are `src/features/landing/locales/`.
+- **What it asks the API.** Nothing when it opens. Its two calls are the
+  consultation form (`POST /public/leads`) and the status page
+  (`GET /public/status`), both without credentials. The API answers them from
+  the site's origin when its `LANDING_URL` names it, and nothing else from it.
+- **Where its links lead.** Every link into the app is written with its host,
+  from the same two build inputs as the app: "Đăng nhập" offers the student
+  host and the staff host, and a class code opens `<student host>/join/<code>`.
+- **The centre's lines** come from the build, never from the API:
+  `VITE_ORG_NAME`, `VITE_ORG_FRONT_DESK_PHONE`, `VITE_ORG_EMAIL`, and
+  `VITE_ORG_ADDRESS` with its English form `VITE_ORG_ADDRESS_EN`. A line that
+  is unset is hidden.
+- **Its one address.** `LANDING_ORIGIN` at the top of `deploy.yml`
+  (`https://quizzivy.com`) reaches the build as `VITE_LANDING_URL`. The
+  Landing and the notice name themselves by it (`<link rel="canonical">`, set
+  by the page, and `og:url`), and the build writes `robots.txt` and
+  `sitemap.xml` naming it. The Pages project also answers on its `pages.dev`
+  host and on a host per deployment, with the same pages: `landing.headers`,
+  which the build appends to the app's `_headers`, sends
+  `X-Robots-Tag: noindex` on both.
+- **Deploying it.** The same `Web → Cloudflare Pages` job builds both outputs
+  from one commit and checks both before it deploys either: the app first,
+  then the landing site, to the project the repository variable
+  `LANDING_PAGES_PROJECT` names, with the same account and token. While that
+  variable is unset the site is not built or deployed, and the run says so.
 
 Adding or renaming a host is three changes that go together: the two origins in
 `deploy.yml`, the custom domain on the Pages project, and the API's settings

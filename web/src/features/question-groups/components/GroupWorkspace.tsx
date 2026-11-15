@@ -37,6 +37,7 @@ import {
   unfinishedMember,
   withGapAnswer,
   withMaterialContent,
+  withMemberAt,
   type GapPrompts,
   type GapQuestion,
   type MaterialContext,
@@ -561,6 +562,12 @@ export function GroupWorkspace({
     });
   }
 
+  function placeMember(id: string, index: number) {
+    const current = latest.current;
+    const next = withMemberAt(current, id, index);
+    if (next !== current) commit(next);
+  }
+
   function removeQuestion(id: string) {
     const current = latest.current;
     commit({
@@ -687,6 +694,7 @@ export function GroupWorkspace({
         optionOrder: fixed ? "fixed" : "shuffle",
       })),
     moveMember,
+    placeMember,
     removeGap,
     askRemoveQuestion: (id) => setAsking({ kind: "question", id }),
     addQuestion,

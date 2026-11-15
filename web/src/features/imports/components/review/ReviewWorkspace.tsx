@@ -35,7 +35,7 @@ import {
   draftPositions,
   exclude,
   onlyQuestions,
-  passageBound,
+  passageMembers,
   questionPlaces,
   setPoints,
 } from "../../draft";
@@ -384,7 +384,7 @@ export function ReviewWorkspace({
     () => new Map(places.map((place) => [place.question.id, place.question])),
     [places],
   );
-  const bound = useMemo(() => passageBound(working.sections), [working.sections]);
+  const members = useMemo(() => passageMembers(working.sections), [working.sections]);
   const chosen = useMemo(
     () =>
       readOnly
@@ -680,6 +680,7 @@ export function ReviewWorkspace({
       currentFindingId={currentFindingId}
       readOnly={readOnly}
       roleOf={roleOf}
+      passageMember={members.has(question.id)}
       onEdit={(update) => editQuestion(question.id, update)}
       onAcknowledge={handlers.onAcknowledge}
       onLocate={showInSource}
@@ -900,7 +901,7 @@ export function ReviewWorkspace({
       />
       <BulkTypeDialog
         questions={chosen}
-        bound={bound}
+        members={members}
         open={bulk === "type" && chosen.length > 0}
         onOpenChange={(next) => {
           if (!next) setBulk(null);
@@ -909,7 +910,7 @@ export function ReviewWorkspace({
           setBulk(null);
           editMany(
             new Set(changing.map((question) => question.id)),
-            (current) => applyTypeChange(current, type, bound),
+            (current) => applyTypeChange(current, type, members),
             t("imports.review.bulkTypeDone", {
               count: changing.length,
               type: t(`imports.type.${type}`),

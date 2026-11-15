@@ -58,6 +58,9 @@ const ALLOWED_LITERALS = new Set([
   "/admin/user-imports/preview",
   "/admin/user-imports/{id}",
   "/admin/user-imports/{id}/sheet",
+  "/admin/leads/*",
+  "/admin/leads",
+  "/admin/leads/{id}",
 ]);
 const LITERAL = /(["'`])(\/admin(?=[/"'`?#$]|$)[^"'`]*)/gi;
 const SETTINGS_API_CALL = /\bapi\("(?:get|put)", "\/admin\/settings"/g;

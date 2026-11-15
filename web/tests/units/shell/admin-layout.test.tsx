@@ -44,6 +44,7 @@ const LABELS = [
   "Tổng quan",
   "Người dùng",
   "Vai trò & quyền",
+  "Yêu cầu tư vấn",
   "Lớp học",
   "Tín dụng AI",
   "Nhật ký kiểm tra",
@@ -153,7 +154,7 @@ afterEach(() => {
 });
 
 describe("the Admin sidebar for each audience", () => {
-  it("lists the eight destinations under People, Teaching and System for an Admin, the current one lit", async () => {
+  it("lists the nine destinations under People, Teaching and System for an Admin, the current one lit", async () => {
     renderAdmin("/admin/users");
     await screen.findByRole("main");
 
@@ -397,7 +398,10 @@ function serveSummary(count: number | null) {
   server.use(
     http.get(`${BASE}/admin/summary`, () => {
       seen.asked += 1;
-      return contractJson("/admin/summary", "get", 200, { mustChangePassword: count });
+      return contractJson("/admin/summary", "get", 200, {
+        mustChangePassword: count,
+        newLeads: null,
+      });
     }),
   );
   return seen;

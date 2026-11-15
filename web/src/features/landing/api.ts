@@ -4,17 +4,7 @@ import type { components } from "@/lib/api/schema";
  * LeadInput is the body of `POST /public/leads` (`submitLead`): what the
  * consultation form sends. `website` is a field no person fills.
  */
-export type LeadInput = {
-  fullName: string;
-  phone: string;
-  interests: ("ielts" | "toeic" | "communication" | "kids" | "business")[];
-  courseFor: "self" | "child" | "company";
-  callTime: "any" | "morning" | "afternoon" | "evening";
-  locale: "vi" | "en";
-  consent: true;
-  privacyNoticeVersion: "2026-11";
-  website?: string;
-};
+export type LeadInput = components["schemas"]["LeadInput"];
 
 const BASE_URL: string =
   import.meta.env["VITE_API_BASE_URL"] ?? "http://localhost:8080";

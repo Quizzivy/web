@@ -440,6 +440,8 @@
       "import.source_completed": "Finished uploading a Word import's source",
       "import.source_reserved": "Reserved a Word import's source",
       "integrity.retained": "Deleted integrity events past their retention",
+      "lead.deleted": "Deleted a consultation request",
+      "lead.updated": "Updated a consultation request",
       "maintenance.cancelled": "Cancelled a maintenance window",
       "maintenance.ended": "Ended a maintenance window",
       "maintenance.scheduled": "Scheduled a maintenance window",
@@ -460,6 +462,7 @@
       "question_group.updated": "Updated a question group",
       "refresh_token.reuse_detected": "Detected a reused sign-in session",
       "retention.answers_removed": "Removed answers past their retention",
+      "retention.leads_removed": "Removed consultation requests past their retention",
       "role.created": "Created a role",
       "role.permissions_changed": "Changed a role's permissions",
       "role.updated": "Updated a role",
@@ -579,7 +582,9 @@
         "data_export": "Data export",
         "maintenance_window": "Maintenance window",
         "organization": "Organization",
-        "user_import": "User import"
+        "user_import": "User import",
+        "lead": "Consultation request",
+        "leads": "Consultation requests"
       }
     },
     "diff": {
@@ -823,6 +828,7 @@
       "overview": "Overview",
       "users": "Users",
       "roles": "Roles & permissions",
+      "leads": "Consultation requests",
       "classes": "Classes",
       "ai": "AI credits",
       "audit": "Audit log",
@@ -833,7 +839,9 @@
       "mustChangePassword_one": "{{count}} person must change their password",
       "mustChangePassword_other": "{{count}} people must change their password",
       "creditRequests_one": "{{count}} credit request waiting",
-      "creditRequests_other": "{{count}} credit requests waiting"
+      "creditRequests_other": "{{count}} credit requests waiting",
+      "newLeads_one": "{{count}} new consultation request",
+      "newLeads_other": "{{count}} new consultation requests"
     },
     "account": {
       "settings": "System settings",
@@ -1405,6 +1413,59 @@
       "adding": "Adding {{done}} of {{total}}…"
     }
   },
+  "leads": {
+    "lead": "People who asked us to call them back.",
+    "one": "Consultation request",
+    "all": "All",
+    "search": "Search name or phone",
+    "column": {
+      "name": "Name",
+      "phone": "Phone",
+      "interests": "Interested in",
+      "for": "For",
+      "time": "Best time",
+      "received": "Received"
+    },
+    "status": {
+      "new": "New",
+      "contacted": "Contacted",
+      "closed": "Closed"
+    },
+    "interest": {
+      "ielts": "IELTS",
+      "toeic": "TOEIC",
+      "communication": "Communication",
+      "kids": "Kids English",
+      "business": "Business English"
+    },
+    "for": {
+      "self": "Myself",
+      "child": "My child",
+      "company": "My company"
+    },
+    "time": {
+      "any": "Any time",
+      "morning": "Morning, 8:00–12:00",
+      "afternoon": "Afternoon, 13:00–17:00",
+      "evening": "Evening, 18:00–20:00"
+    },
+    "empty": "No consultation requests yet.",
+    "noMatch": "No requests match.",
+    "loadFailed": "Could not load the requests.",
+    "noun_one": "request",
+    "noun_other": "requests",
+    "oneFailed": "This request could not be loaded.",
+    "notFound": "This request was not found.",
+    "consent": "Consent",
+    "consented": "Notice {{version}}, agreed {{at}}",
+    "handled": "Handled",
+    "note": "Note",
+    "saved": "Request saved",
+    "delete": {
+      "title": "Delete this request?",
+      "body": "Use this when the person asks us to remove their details."
+    }
+  },
   "systemSettings": {
     "title": "System settings",
     "hint": "Applies to everyone in {{organization}}.",
@@ -1427,7 +1488,11 @@
       "contactEmail": "Contact email",
       "frontDeskPhone": "Front-desk phone",
       "frontDeskHours": "Front-desk hours",
-      "address": "Address"
+      "address": "Address",
+      "leadRecipients": "New consultation requests go to",
+      "leadRecipientsHint": "They get an email without the phone number, and a link to the request.",
+      "leadRecipientsAdd": "Add email…",
+      "leadRecipientsRemove": "Remove {{email}}"
     },
     "logo": {
       "title": "Replace logo",
@@ -1482,6 +1547,8 @@
       "addressTooLong": "The address can be at most 300 characters.",
       "domainInvalid": "Not a valid domain.",
       "domainsTooMany": "At most 50 domains.",
+      "recipientInvalid": "Not a valid email address.",
+      "recipientsTooMany": "At most 5 addresses.",
       "noMethod": "Keep at least one way to sign in on.",
       "limitPeople": "Enter a whole number from 1 to 1,000,000, or leave it empty.",
       "limitEmailsPerDay": "Enter a whole number from 1 to 100,000, or leave it empty.",
@@ -6158,6 +6225,10 @@
       "admin-settings": {
         "name": "System settings",
         "blurb": "The centre's details, the sign-in policy and retention."
+      },
+      "admin-leads": {
+        "name": "Consultation requests",
+        "blurb": "The consultation requests, how each was handled, and their removal."
       },
       "student": {
         "name": "Student app",

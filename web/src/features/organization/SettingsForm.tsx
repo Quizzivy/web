@@ -49,6 +49,12 @@ import { ApiError, failureMessage } from "@/lib/api/errors";
 const SERVER_FIELD =
   /^(organization\.(name|shortName|website|contactEmail|frontDeskPhone|frontDeskHours|address|logo\.(light|dark))|signIn\.allowedGoogleDomains|retention\.[A-Za-z]+|limits\.[A-Za-z]+)$/;
 
+const LIST_ITEM = /^(signIn\.allowedGoogleDomains|leadRecipients)\.\d+$/;
+
+function shownOnField(field: string): boolean {
+  return field === "leadRecipients" || SERVER_FIELD.test(field);
+}
+
 function firstPath(errors: object, prefix = ""): string | null {
   for (const [key, value] of Object.entries(errors)) {
     if (value === null || typeof value !== "object") continue;
@@ -160,8 +166,8 @@ export function SettingsForm({
   function refused(cause: ApiError) {
     const shown: string[] = [];
     for (const [path, message] of Object.entries(cause.details ?? {})) {
-      const field = path.replace(/^(signIn\.allowedGoogleDomains)\.\d+$/, "$1");
-      if (typeof message !== "string" || !SERVER_FIELD.test(field)) continue;
+      const field = path.replace(LIST_ITEM, "$1");
+      if (typeof message !== "string" || !shownOnField(field)) continue;
       form.setError(field as FieldPath<SettingsFormValues>, {
         type: "server",
         message,

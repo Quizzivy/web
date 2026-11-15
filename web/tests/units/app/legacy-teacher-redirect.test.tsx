@@ -189,6 +189,8 @@ describe("the old /admin addresses in the app's own route table", () => {
     "/admin",
     "/admin/users",
     "/admin/roles",
+    "/admin/leads",
+    "/admin/leads/abc?status=all",
     "/admin/classes",
     "/admin/ai",
     "/admin/audit",
@@ -216,6 +218,7 @@ describe("the old /admin addresses in the app's own route table", () => {
     ["/admin/settings/security", "/teacher/settings/security"],
     ["/admin/users/abc", "/teacher/users/abc"],
     ["/admin/exports", "/teacher/exports"],
+    ["/admin/leads/abc/note", "/teacher/leads/abc/note"],
     ["/admin/ai/credits", "/teacher/ai/credits"],
   ])("sends %s, not a console address, to %s for the Admin too", async (from, to) => {
     signIn(adminUser);
@@ -243,6 +246,8 @@ describe("the old /admin addresses in the app's own route table", () => {
   it.each([
     "/admin/users",
     "/admin/roles",
+    "/admin/leads",
+    "/admin/leads/abc",
     "/admin/ai",
     "/admin/audit",
     "/admin/api",

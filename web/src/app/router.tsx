@@ -378,6 +378,14 @@ const adminTree: RouteObject = {
               lazy: page(() => import("@/features/roles/pages/admin/RolesPage")),
             },
             {
+              path: "leads/:id?",
+              handle: {
+                crumb: [ADMIN_CRUMB, { key: "adminShell.nav.leads" }],
+                permission: "system.leads",
+              },
+              lazy: page(() => import("@/features/leads/pages/admin/LeadsPage")),
+            },
+            {
               path: "classes",
               handle: {
                 crumb: [ADMIN_CRUMB, { key: "adminShell.nav.classes" }],

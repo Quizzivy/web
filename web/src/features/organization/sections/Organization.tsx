@@ -1,9 +1,10 @@
 import { useEffect, useRef, useState } from "react";
-import { get, useFormContext, useWatch } from "react-hook-form";
+import { Controller, get, useFormContext, useWatch } from "react-hook-form";
 import { useTranslation } from "react-i18next";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { BrandMark } from "@/components/shared/Brand";
+import { ChipInput } from "@/components/shared/form/ChipInput";
 import { SettingsCard } from "@/components/shared/SettingsCard";
 import type { LogoVariant } from "@/features/organization/api";
 import {
@@ -18,7 +19,10 @@ import {
   describedBy,
 } from "@/features/organization/controls";
 import { fieldMessage } from "@/features/organization/fieldMessage";
-import type { SettingsFormValues } from "@/features/organization/settingsFormSchema";
+import {
+  recipientOf,
+  type SettingsFormValues,
+} from "@/features/organization/settingsFormSchema";
 import { storedLogoUrl } from "@/lib/organization";
 import { useResolvedTheme } from "@/lib/theme";
 import { cn } from "@/lib/utils";
@@ -130,11 +134,54 @@ function LogoRow() {
   );
 }
 
+function LeadRecipients() {
+  const { t } = useTranslation();
+  const form = useFormContext<SettingsFormValues>();
+  const id = controlId("leadRecipients");
+  const label = t("systemSettings.organization.leadRecipients");
+  const message = fieldMessage(get(form.formState.errors, "leadRecipients"), t);
+  return (
+    <SettingsField
+      id={id}
+      label={label}
+      hint={t("systemSettings.organization.leadRecipientsHint")}
+      error={message}
+    >
+      <Controller
+        control={form.control}
+        name="leadRecipients"
+        render={({ field }) => (
+          <ChipInput
+            id={id}
+            label={label}
+            values={field.value}
+            onChange={(next) => {
+              field.onChange(next);
+              void form.trigger("leadRecipients");
+            }}
+            placeholder={t("systemSettings.organization.leadRecipientsAdd")}
+            removeLabel={(email) =>
+              t("systemSettings.organization.leadRecipientsRemove", { email })
+            }
+            resolve={recipientOf}
+            spaceAdds
+            invalid={message !== undefined}
+            describedBy={describedBy(id, true, message !== undefined)}
+          />
+        )}
+      />
+    </SettingsField>
+  );
+}
+
 /**
  * OrganizationSection is the Organization card of System settings: the logo,
- * with Replace logo, and who the centre is and how it is reached, the name,
- * the short name, the website and DG-41's contact email, front-desk phone,
- * front-desk hours and address. It edits the page's one form.
+ * with Replace logo, who the centre is and how it is reached, the name, the
+ * short name, the website and DG-41's contact email, front-desk phone,
+ * front-desk hours and address, and under them the addresses told of each
+ * new consultation request, as chips: at most five, kept lower-case, added on
+ * Enter, a comma or a space, and judged as each is added. It edits the page's
+ * one form.
  */
 export function OrganizationSection() {
   const { t } = useTranslation();
@@ -181,6 +228,7 @@ export function OrganizationSection() {
             );
           })}
         </div>
+        <LeadRecipients />
       </div>
     </SettingsCard>
   );

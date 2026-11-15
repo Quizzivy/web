@@ -3,6 +3,7 @@ import {
   GraduationCap,
   KeyRound,
   LayoutDashboard,
+  PhoneIncoming,
   ScrollText,
   Settings,
   Sparkles,
@@ -31,10 +32,11 @@ export interface AdminNavGroup extends NavGroup {
 }
 
 /**
- * ADMIN_NAV is the Admin console's sidebar in the deck's order. The Users
- * badge counts the people who must change their password and the AI credits
- * badge the requests waiting for an Admin; both are hidden at zero and while
- * the sidebar is collapsed.
+ * ADMIN_NAV is the Admin console's sidebar in the deck's order, with the
+ * consultation requests under People (R11). The Users badge counts the people
+ * who must change their password, the Consultation requests badge the
+ * requests nobody has handled and the AI credits badge the requests waiting
+ * for an Admin; each is hidden at zero and while the sidebar is collapsed.
  */
 export const ADMIN_NAV: readonly AdminNavGroup[] = [
   {
@@ -74,6 +76,19 @@ export const ADMIN_NAV: readonly AdminNavGroup[] = [
         icon: KeyRound,
         operation: "listRoles",
         requires: "people.roles.manage",
+      },
+      {
+        id: "leads",
+        to: ADMIN_PATHS.leads,
+        label: "adminShell.nav.leads",
+        icon: PhoneIncoming,
+        operation: "listLeads",
+        requires: "system.leads",
+        count: {
+          figure: "newLeads",
+          tone: "warning",
+          sentence: "adminShell.count.newLeads",
+        },
       },
     ],
   },

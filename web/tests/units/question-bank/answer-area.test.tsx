@@ -359,13 +359,21 @@ describe("retype", () => {
       caseSensitive: false,
     });
     expect(
-      typeLocked({ type: "fill_blank", promptContent: null, blanks: [blank(["went"])] }),
+      typeLocked({
+        type: "fill_blank",
+        promptContent: null,
+        blanks: [blank(["went"])],
+      }),
     ).toBe(true);
     expect(
       typeLocked({ type: "fill_blank", promptContent: null, blanks: [blank([" "])] }),
     ).toBe(false);
     expect(
-      typeLocked({ type: "short_answer", promptContent: null, blanks: [blank(["went"])] }),
+      typeLocked({
+        type: "short_answer",
+        promptContent: null,
+        blanks: [blank(["went"])],
+      }),
     ).toBe(false);
   });
 });

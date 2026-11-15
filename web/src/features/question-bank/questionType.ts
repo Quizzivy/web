@@ -386,3 +386,34 @@ function blankItems(): NonNullable<QuestionValues["matchItems"]> {
     { id: null, text: "", correctOption: -1 },
   ];
 }
+
+/**
+ * dropsAnswers says whether `after`, a retyped `before`, has lost something
+ * the teacher wrote for the answers: an option's text or its tick, a blank's
+ * accepted answer, the sample answer, a matching item, a "Choose N" count, a
+ * word limit or a rubric. The type change is then followed by a notice with
+ * Undo (web#73).
+ */
+export function dropsAnswers(before: QuestionValues, after: QuestionValues): boolean {
+  const written = (text: string) => text.trim() !== "";
+  const kept = new Map(after.options.map((option) => [option.text, option]));
+  for (const option of before.options) {
+    if (!written(option.text)) continue;
+    const now = kept.get(option.text);
+    if (now === undefined || (option.isCorrect && !now.isCorrect)) return true;
+  }
+  const answers = (value: QuestionValues) =>
+    value.blanks.reduce(
+      (count, blank) => count + blank.acceptedAnswers.filter(written).length,
+      0,
+    );
+  if (answers(after) < answers(before)) return true;
+  if (written(before.sampleAnswer ?? "") && !written(after.sampleAnswer ?? ""))
+    return true;
+  const items = (value: QuestionValues) =>
+    (value.matchItems ?? []).filter((item) => written(item.text)).length;
+  if (items(after) < items(before)) return true;
+  if (before.selectCount != null && after.selectCount == null) return true;
+  if (before.maxWords != null && after.maxWords == null) return true;
+  return (before.rubric?.length ?? 0) > (after.rubric?.length ?? 0);
+}

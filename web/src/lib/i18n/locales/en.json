@@ -2646,6 +2646,7 @@
     "settings": "Question settings",
     "tags": "Tags",
     "typeLabel": "Question type",
+    "typeChangedDrops": "Changed to {{type}}. Some answers of the old type were dropped.",
     "type": {
       "essay": "Essay",
       "fill_blank": "Fill in the blank",

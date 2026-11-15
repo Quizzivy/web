@@ -249,10 +249,23 @@ export function defaultPoints(type: QuestionType): number {
 
 const WRITTEN_TYPES: ReadonlySet<QuestionType> = new Set(["short_answer", "essay"]);
 
+/** essayFields are an essay's own settings: its rubric and word limit, kept from `from` when it is the same essay. */
+function essayFields(
+  next: QuestionValues,
+  from: QuestionValues | null,
+): QuestionValues {
+  return {
+    ...next,
+    rubric: from?.rubric ?? [],
+    ...(from?.essayMaxWords != null ? { essayMaxWords: from.essayMaxWords } : {}),
+  };
+}
+
 function withTypeFields(next: QuestionValues, from: QuestionValues): QuestionValues {
   const rest = { ...next };
   delete rest.selectCount;
   delete rest.maxWords;
+  delete rest.essayMaxWords;
   delete rest.matchAllowReuse;
   delete rest.matchItems;
   delete rest.rubric;
@@ -267,7 +280,7 @@ function withTypeFields(next: QuestionValues, from: QuestionValues): QuestionVal
         ? { ...rest, maxWords: from.maxWords }
         : rest;
     case "essay":
-      return { ...rest, rubric: same ? (from.rubric ?? []) : [] };
+      return essayFields(rest, same ? from : null);
     case "matching":
       return {
         ...rest,
@@ -362,6 +375,7 @@ export function recall(
   if (!(out.sampleAnswer ?? "").trim() && held.sampleAnswer != null)
     out.sampleAnswer = held.sampleAnswer;
   if (held.maxWords != null) out.maxWords = held.maxWords;
+  if (held.essayMaxWords != null) out.essayMaxWords = held.essayMaxWords;
   if (held.rubric?.length) out.rubric = held.rubric;
   if (
     held.blanks.length > 0 &&

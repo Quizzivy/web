@@ -46,6 +46,7 @@ const question = z.object({
   sampleAnswer: z.string().nullish(),
   selectCount: z.number().int().nullable().exactOptional(),
   maxWords: z.number().int().nullable().exactOptional(),
+  essayMaxWords: z.number().int().nullable().exactOptional(),
   matchAllowReuse: z.boolean().nullable().exactOptional(),
   matchItems: z
     .array(

@@ -138,6 +138,12 @@ interface GenerateValues {
   count: string;
   level: string;
   explanations: boolean;
+  /** Write multiple choice as "Choose N" (the owner's call of 2026-11-15, docs#5). */
+  chooseN: boolean;
+  /** A short answer's word limit, "none" for none. */
+  maxWords: string;
+  /** An essay's word limit, "none" for none. */
+  essayMaxWords: string;
   plan: Readonly<Record<string, PlanEntry>>;
   retarget: string;
   retargets: Record<string, string>;
@@ -455,13 +461,81 @@ function settings(
   level: AiLevel,
   mode: PlanMode,
 ) {
+  const chosen = chosenTypes(types, mode);
+  const shortLimit = Number(values.maxWords);
+  const essayLimit = Number(values.essayMaxWords);
   return {
-    types: chosenTypes(types, mode),
+    types: chosen,
     count,
     level,
     explanations: values.explanations,
     language,
+    ...(values.chooseN && chosen.includes("multiple_choice") ? { chooseN: true } : {}),
+    ...(values.maxWords !== NO_LIMIT && chosen.includes("short_answer")
+      ? { maxWords: shortLimit }
+      : {}),
+    ...(values.essayMaxWords !== NO_LIMIT && chosen.includes("essay")
+      ? { essayMaxWords: essayLimit }
+      : {}),
   };
+}
+
+/** The word limits Generate offers, a short answer's and an essay's; NO_LIMIT is none. */
+const NO_LIMIT = "none";
+const SHORT_LIMITS = [NO_LIMIT, "1", "2", "3", "5", "10", "20"] as const;
+const ESSAY_LIMITS = [NO_LIMIT, "100", "150", "200", "250", "300", "400"] as const;
+
+/**
+ * draftRuleFields are Generate's rules for the types that carry one: "Choose
+ * N" for multiple choice, and a word limit for short answers and for essays.
+ * Each shows only while its type may be written.
+ */
+function draftRuleFields(
+  values: GenerateValues,
+  set: (patch: Partial<GenerateValues>) => void,
+  t: TFunction,
+): AiField[] {
+  const may = (type: QuestionType) =>
+    values.scope === "test" || values.types.includes(type);
+  const limit = (value: string) =>
+    value === ""
+      ? t("ai.generate.noWordLimit")
+      : t("ai.generate.wordLimitOf", { count: Number(value) });
+  return [
+    ...(may("multiple_choice")
+      ? [
+          {
+            kind: "toggle" as const,
+            text: t("ai.generate.chooseN"),
+            sub: t("ai.generate.chooseNSub"),
+            value: values.chooseN,
+            onChange: (chooseN: boolean) => set({ chooseN }),
+          },
+        ]
+      : []),
+    ...(may("short_answer")
+      ? [
+          {
+            kind: "select" as const,
+            label: t("ai.generate.shortWordLimit"),
+            options: SHORT_LIMITS.map((value) => ({ value, label: limit(value) })),
+            value: values.maxWords,
+            onChange: (maxWords: string) => set({ maxWords }),
+          },
+        ]
+      : []),
+    ...(may("essay")
+      ? [
+          {
+            kind: "select" as const,
+            label: t("ai.generate.essayWordLimit"),
+            options: ESSAY_LIMITS.map((value) => ({ value, label: limit(value) })),
+            value: values.essayMaxWords,
+            onChange: (essayMaxWords: string) => set({ essayMaxWords }),
+          },
+        ]
+      : []),
+  ];
 }
 
 function request(
@@ -1108,6 +1182,9 @@ export const generateKind: AiKind<GenerateValues, GenerateItem, GenerateContext>
       count: "5",
       level: "b2",
       explanations: true,
+      chooseN: false,
+      maxWords: NO_LIMIT,
+      essayMaxWords: NO_LIMIT,
       plan: {},
       retarget: "",
       retargets: {},
@@ -1140,6 +1217,7 @@ export const generateKind: AiKind<GenerateValues, GenerateItem, GenerateContext>
       value: values.explanations,
       onChange: (explanations) => set({ explanations }),
     },
+    ...draftRuleFields(values, set, t),
   ],
   problem: (values, context) => {
     if (values.scope === "test") {

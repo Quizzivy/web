@@ -170,6 +170,46 @@ describe("the Generate panel", () => {
     ).toBeDisabled();
   });
 
+  // docs#5, the owner's call of 2026-11-15: Generate can write "Choose N" and
+  // a word limit, and sends them only for a type it writes.
+  it("asks for Choose N and an essay's word limit when they are chosen", async () => {
+    let body: Record<string, unknown> = {};
+    server.use(
+      http.post(`${BASE}/teacher/ai/questions/generate`, async ({ request }) => {
+        body = (await request.json()) as Record<string, unknown>;
+        return contractJson("/teacher/ai/questions/generate", "post", 200, {
+          items: generated,
+          usage: { credits: 1450, left: 17350 },
+        });
+      }),
+    );
+    const { dialog, user } = await openPanel({
+      kind: "generate",
+      context: generateContext(),
+    });
+    expect(within(dialog).queryByText(ai.generate.chooseN)).toBeNull();
+    const types = within(dialog).getByRole("group", { name: ai.generate.types });
+    await user.click(within(types).getByRole("button", { name: "Nhiều đáp án" }));
+    await user.click(within(types).getByRole("button", { name: "Bài luận" }));
+    await user.click(
+      within(dialog).getByRole("switch", {
+        name: new RegExp(`^${ai.generate.chooseN}`),
+      }),
+    );
+    await user.click(
+      within(dialog).getByRole("combobox", { name: ai.generate.essayWordLimit }),
+    );
+    await user.click(await screen.findByRole("option", { name: "Tối đa 250 từ" }));
+    expect(
+      within(dialog).queryByRole("combobox", { name: ai.generate.shortWordLimit }),
+    ).toBeNull();
+    await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
+    await within(dialog).findByText("What do cities rethink?");
+    expect(body["chooseN"]).toBe(true);
+    expect(body["essayMaxWords"]).toBe(250);
+    expect(body["maxWords"]).toBeUndefined();
+  });
+
   it("asks for the passage by id, then saves only the kept questions with the AI draft tag", async () => {
     let body: unknown;
     server.use(

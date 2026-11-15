@@ -14,6 +14,7 @@ import { blankInputs } from "./blankInputs";
 import { CAPTION, FIELD, PROMPT, textSizes, type BodyProps } from "./bodyParts";
 import { WordCount } from "./WordCount";
 import { EssayBody } from "./EssayBody";
+import { numberWord, WORD_HINT, wordLimitHint } from "./wordLimitHint";
 import { MatchingBody } from "./MatchingBody";
 import { chooseOption } from "../choice";
 import { PaperSourceContext } from "../paper";
@@ -29,7 +30,7 @@ const GAP =
   "mx-[3px] inline-block max-w-full min-w-22 rounded-[7px] border-b-2 px-2.5 text-center leading-[1.6] break-words";
 const SHORT_OPTION = 16;
 const COLUMNS = ["grid-cols-1", "grid-cols-2", "grid-cols-3", "grid-cols-4"];
-const HINT = "text-muted-fg -mt-2 text-sm";
+const HINT = WORD_HINT;
 const BLANK =
   "bg-muted text-fg placeholder:text-muted-fg mx-1 inline-block h-11 max-w-full rounded-t-[6px] rounded-b-none border-0 border-b-2 px-2 text-left align-baseline font-medium disabled:opacity-60 engine-lg:h-9.5";
 
@@ -443,26 +444,4 @@ function instructionOf(
 ): string {
   if (count != null) return t("takeTest.chooseCount", { words: numberWord(count, t) });
   return t(multiple ? "takeTest.chooseMultiple" : "takeTest.chooseSingle");
-}
-
-/**
- * wordLimitHint is the deck's rule line under a word-limited prompt, "Write
- * NO MORE THAN THREE WORDS.", or "Write ONE WORD." for a limit of one.
- */
-function wordLimitHint(limit: number, t: TFunction): string {
-  if (limit === 1) return t("takeTest.wordLimitHintOne");
-  const words = limit <= NUMBER_WORDS ? numberWord(limit, t) : String(limit);
-  return t("takeTest.wordLimitHint", { words: words.toLocaleUpperCase() });
-}
-
-const NUMBER_WORDS = 11;
-
-/**
- * numberWord writes a "Choose N" count in words, "two" to "eleven", as the
- * deck's hint does ("Choose two answers."); a larger count stays a numeral.
- */
-function numberWord(count: number, t: TFunction): string {
-  return count >= 2 && count <= NUMBER_WORDS
-    ? t(`takeTest.numberWord.${count}` as "takeTest.numberWord.2")
-    : String(count);
 }

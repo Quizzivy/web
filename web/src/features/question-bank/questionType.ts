@@ -42,13 +42,21 @@ export const CHOICE_TYPES: ReadonlySet<QuestionType> = new Set([
 
 /**
  * typeLocked says whether the question must stay fill in the blank: its rich
- * prompt holds a gap, or a fill-in-the-blank rich prompt holds bound answers.
+ * prompt holds a gap, or a fill-in-the-blank rich prompt holds bound answers,
+ * or a fill in the blank written in Markdown has a blank with an answer
+ * (web#72: leaving it dropped the answers and left `{{1}}` in the prompt).
  * Leaving the type would orphan them, so the type controls disable the others.
  */
 export function typeLocked(
   value: Pick<QuestionValues, "type" | "promptContent" | "blanks">,
 ): boolean {
-  if (value.promptContent == null) return false;
+  if (value.promptContent == null)
+    return (
+      value.type === "fill_blank" &&
+      value.blanks.some((blank) =>
+        blank.acceptedAnswers.some((answer) => answer.trim() !== ""),
+      )
+    );
   if (questionGaps(value.promptContent).length > 0) return true;
   return value.type === "fill_blank" && value.blanks.length > 0;
 }

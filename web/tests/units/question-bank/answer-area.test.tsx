@@ -350,6 +350,24 @@ describe("retype", () => {
       false,
     );
   });
+
+  it("locks a Markdown fill in the blank while one of its blanks has an answer (web#72)", () => {
+    const blank = (acceptedAnswers: string[]) => ({
+      id: null,
+      ordinal: 1,
+      acceptedAnswers,
+      caseSensitive: false,
+    });
+    expect(
+      typeLocked({ type: "fill_blank", promptContent: null, blanks: [blank(["went"])] }),
+    ).toBe(true);
+    expect(
+      typeLocked({ type: "fill_blank", promptContent: null, blanks: [blank([" "])] }),
+    ).toBe(false);
+    expect(
+      typeLocked({ type: "short_answer", promptContent: null, blanks: [blank(["went"])] }),
+    ).toBe(false);
+  });
 });
 
 describe("gapProblems", () => {

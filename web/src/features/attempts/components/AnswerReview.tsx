@@ -24,6 +24,7 @@ type ReviewQuestion = Pick<
   | "blanks"
   | "selectCount"
   | "maxWords"
+  | "essayMaxWords"
   | "matchItems"
   | "rubric"
 >;
@@ -129,8 +130,13 @@ function Body({
             <p className={shortAnswerStyle.label}>
               {shortAnswerPresentation?.label ?? t("review.studentAnswer")}
             </p>
-            {text !== null && question.type === "short_answer" && (
-              <OverLimit text={text} maxWords={question.maxWords} />
+            {text !== null && (
+              <OverLimit
+                text={text}
+                maxWords={
+                  question.type === "essay" ? question.essayMaxWords : question.maxWords
+                }
+              />
             )}
           </div>
           {text === null ? (

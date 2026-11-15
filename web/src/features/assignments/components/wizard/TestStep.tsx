@@ -128,7 +128,7 @@ function TestRow({ test }: Readonly<{ test: Test }>) {
           <span className="block text-base leading-[1.3] font-medium [overflow-wrap:anywhere]">
             {test.title}
           </span>
-          <span role="alert" className="text-danger text-meta block leading-[1.3]">
+          <span role="alert" className="text-danger-ink text-meta block leading-[1.3]">
             {t("assignments.wizard.versionsFailed")}
           </span>
         </span>

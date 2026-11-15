@@ -17,7 +17,7 @@ import { server } from "@tests/support/server";
 import { contractJson } from "@tests/support/contractResponse";
 import "@/lib/i18n";
 import "@/features/attempts/gradingMessages";
-import { aiError, aiOn, month } from "../ai/support";
+import { aiError, SAYS, aiOn, month } from "../ai/support";
 import { ASSIGNMENT_ID, ATTEMPT_ID, BASE, ESSAY_ID, STUDENT_ID } from "./fixtures";
 
 vi.mock("@/lib/api/client", async (importOriginal) => {
@@ -331,9 +331,7 @@ describe("the grading card's Suggest a score", () => {
     const { user } = renderGrading();
     const box = await screen.findByRole("region", { name: "Gợi ý của AI" });
     await user.click(within(box).getByRole("button", { name: "Gợi ý điểm" }));
-    expect(
-      await within(box).findByText("AI chưa phản hồi. Hãy thử lại sau một phút."),
-    ).toBeVisible();
+    expect(await within(box).findByText(SAYS.AI_UNAVAILABLE)).toBeVisible();
     fail = false;
     await user.click(within(box).getByRole("button", { name: "Thử lại" }));
     expect(await within(box).findByText("Độ tin cậy trung bình")).toBeVisible();

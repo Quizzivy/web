@@ -123,7 +123,7 @@ function VersionList({
   }
   if (versions.isError) {
     return (
-      <p role="alert" className="text-destructive px-3 pb-3 text-xs">
+      <p role="alert" className="text-danger-ink px-3 pb-3 text-xs">
         {t("tests.loadFailed")}
       </p>
     );
@@ -180,7 +180,7 @@ function pickerNote(
     return <p className="text-muted-foreground text-sm">{t("common.loading")}</p>;
   if (tests.isError) {
     return (
-      <p role="alert" className="text-destructive text-sm">
+      <p role="alert" className="text-danger-ink text-sm">
         {t("tests.loadFailed")}
       </p>
     );

@@ -691,3 +691,31 @@ export function gapSentence(
   const after = closed ? head : `${head.trimEnd()} …`;
   return { before, after };
 }
+
+/**
+ * withMemberAt moves one member of the group to `index` of its members, as a
+ * drag of its card drops it (web#23), and keeps the questions in the members'
+ * order; the members that answer gaps then keep the order of their gaps
+ * (`orderByGaps`). An index out of range or a member the group does not hold
+ * gives the bundle back unchanged.
+ */
+export function withMemberAt(
+  bundle: GroupBundle,
+  questionId: string,
+  index: number,
+): GroupBundle {
+  const members = [...bundle.group.members];
+  const from = members.findIndex((member) => member.questionId === questionId);
+  if (from < 0 || index < 0 || index >= members.length || index === from) return bundle;
+  const [moved] = members.splice(from, 1);
+  members.splice(index, 0, moved!);
+  const byId = new Map(bundle.questions.map((question) => [question.id, question]));
+  return orderByGaps({
+    ...bundle,
+    questions: members.flatMap((member) => {
+      const question = byId.get(member.questionId);
+      return question ? [question] : [];
+    }),
+    group: { ...bundle.group, members },
+  });
+}

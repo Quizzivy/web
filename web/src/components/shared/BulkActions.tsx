@@ -215,7 +215,7 @@ export function BulkActions<T extends { id: string }>({
           </p>
         ) : null}
         {failures.length > 0 ? (
-          <ul role="alert" className="text-destructive space-y-1 text-sm">
+          <ul role="alert" className="text-danger-ink space-y-1 text-sm">
             {failures.map((item) => (
               <li key={item.id}>
                 {item.name}: {item.message}

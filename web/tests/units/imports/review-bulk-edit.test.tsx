@@ -283,7 +283,8 @@ describe("changing the type of the selected questions", () => {
     expect(state.puts).toHaveLength(0);
   });
 
-  it("keeps the gap of a question a passage is bound to, and says which", async () => {
+  // web#71: a passage's gap must keep a question to answer it.
+  function servePassage() {
     const member = blank("q8", "8", gapped("g-q8", ""));
     serve([
       section([blank("q3", "3", gapped("g-q3", "Where do you live? "))], {
@@ -304,6 +305,11 @@ describe("changing the type of the selected questions", () => {
         ],
       }),
     ]);
+    return member;
+  }
+
+  it("leaves a passage's gap question its type when the passage could not bind the new one, and says which", async () => {
+    const member = servePassage();
     render(<Toaster />);
     const { user } = await renderReview();
     await user.click(
@@ -311,13 +317,52 @@ describe("changing the type of the selected questions", () => {
     );
     const dialog = await chooseType(user, "Trả lời ngắn");
     expect(dialog).toHaveTextContent(
-      "1 câu là chỗ trống của một bài đọc nên giữ chỗ trống của mình, và chưa hợp lệ cho tới khi bạn sửa: câu 8.",
+      "1 câu là chỗ trống của đoạn văn nên giữ nguyên loại. Tách khỏi đoạn văn trước: câu 8.",
     );
-    await user.click(within(dialog).getByRole("button", { name: "Đổi 2 câu" }));
+    await user.click(within(dialog).getByRole("button", { name: "Đổi 1 câu" }));
     await settle();
     expect(contentPlainText(saved().get("q3")!.prompt)).toBe("Where do you live?");
-    expect(saved().get("q8")!.prompt).toEqual(member.prompt);
-    expect(saved().get("q8")!.type).toBe("short_answer");
+    expect(saved().get("q8")).toMatchObject({
+      type: "fill_blank",
+      prompt: member.prompt,
+    });
+  });
+
+  it("makes a passage's gap question a choice that answers the gap as a whole", async () => {
+    servePassage();
+    render(<Toaster />);
+    const { user } = await renderReview();
+    await user.click(
+      await screen.findByRole("checkbox", { name: "Chọn mọi câu của Part 1" }),
+    );
+    const dialog = await chooseType(user, "Một đáp án");
+    await user.click(within(dialog).getByRole("button", { name: "Đổi 2 câu" }));
+    await settle();
+    expect(saved().get("q8")!.type).toBe("single_choice");
+    expect(contentPlainText(saved().get("q8")!.prompt)).toBe("___");
+    expect(state.puts.at(-1)!.sections[0]!.items[1]!.group!.gaps).toEqual([
+      { gapId: "p1", questionId: "q8" },
+    ]);
+  });
+
+  it("offers a passage's gap question, in its own card, only the types the passage can bind", async () => {
+    servePassage();
+    render(<Toaster />);
+    const { user } = await renderReview();
+    await screen.findByRole("checkbox", { name: "Chọn câu 8" });
+    await user.click(card("q8").querySelector<HTMLElement>("button[aria-expanded]")!);
+    const field = await screen.findByRole("combobox", { name: "Dạng câu" });
+    expect(field).toHaveAccessibleDescription(
+      "Câu này là một chỗ trống của đoạn văn nên chỉ là Một đáp án, Nhiều đáp án hoặc Điền từ. Tách khỏi đoạn văn trước khi chọn loại khác.",
+    );
+    await user.click(field);
+    const listbox = await screen.findByRole("listbox");
+    expect(
+      within(listbox).getByRole("option", { name: "Trả lời ngắn" }),
+    ).toHaveAttribute("aria-disabled", "true");
+    expect(
+      within(listbox).getByRole("option", { name: "Một đáp án" }),
+    ).not.toHaveAttribute("aria-disabled", "true");
   });
 
   it("shows the change in the card that is open", async () => {

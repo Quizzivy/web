@@ -27,8 +27,23 @@ function bodyOf(unanswered: number, left: number, t: TFunction): string {
 }
 
 /**
+ * titleOf counts a question that is partly answered (some blanks typed, some
+ * items paired, fewer or more picks than "Choose N") apart from one not
+ * answered at all (R6TM-6, R6TT-5; the owner's call of 2026-11-15).
+ */
+function titleOf(untouched: number, partly: number, t: TFunction): string {
+  if (untouched > 0 && partly > 0)
+    return t("takeTest.submitDialog.titleBoth", { n: untouched, m: partly });
+  if (partly > 0) return t("takeTest.submitDialog.titlePartly", { n: partly });
+  if (untouched > 0)
+    return t("takeTest.submitDialog.titleUnanswered", { n: untouched });
+  return t("takeTest.submitDialog.titleAll");
+}
+
+/**
  * SubmitDialog is the deck's Submit dialog, the one place a student hands the
- * paper in. It says how many questions are unanswered, shows Answered,
+ * paper in. It says how many questions are unanswered and how many are
+ * partly answered, shows Answered,
  * Flagged and Time left, the last ticking with the header's timer, taking
  * the danger ink under five minutes and standing at 00:00 once the server has
  * said the time is up, and offers a "Go to" chip for each unanswered
@@ -61,6 +76,8 @@ export function SubmitDialog({
 
   const left = timeLeft({ deadlineAt, offsetMs, lock: over ? "deadline" : null });
   const unanswered = dots.flatMap((dot, index) => (dot.answered ? [] : [index]));
+  const partly = unanswered.filter((index) => dots[index]?.partly).length;
+  const untouched = unanswered.length - partly;
   const flagged = dots.filter((dot) => dot.flagged).length;
   const facts = [
     {
@@ -86,11 +103,7 @@ export function SubmitDialog({
       onOpenChange={(next) => {
         if (!next && !busy) onClose();
       }}
-      title={
-        unanswered.length === 0
-          ? t("takeTest.submitDialog.titleAll")
-          : t("takeTest.submitDialog.titleUnanswered", { n: unanswered.length })
-      }
+      title={titleOf(untouched, partly, t)}
       description={bodyOf(unanswered.length, left, t)}
     >
       <dl className="bg-border grid grid-cols-3 gap-px overflow-hidden rounded-lg border">
@@ -120,7 +133,12 @@ export function SubmitDialog({
               key={dots[index]?.id ?? index}
               type="button"
               disabled={busy}
-              aria-label={t("takeTest.submitDialog.question", { n: index + 1 })}
+              aria-label={[
+                t("takeTest.submitDialog.question", { n: index + 1 }),
+                dots[index]?.partly ? t("takeTest.dotPartly") : "",
+              ]
+                .filter(Boolean)
+                .join(", ")}
               className="bg-card hover:bg-muted rounded-seg h-7.5 min-w-8 border px-2 text-sm leading-none font-semibold disabled:opacity-50"
               onClick={() => onGo(index)}
             >

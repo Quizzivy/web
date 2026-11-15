@@ -280,3 +280,38 @@ describe("design tokens (spec §12)", () => {
     ).toEqual([]);
   });
 });
+
+/**
+ * Quizzivy/web#107: 4.5:1 for text below 24px, 3:1 for what shows a control
+ * and its state, worked out from these tokens.
+ */
+describe("the contrast of controls and error text (web#107)", () => {
+  it.each(THEMES)("shows a switch's thumb on its track, on and off, in %s", (theme) => {
+    expect(contrast(theme, "--switch-thumb", "--primary")).toBeGreaterThanOrEqual(3);
+    expect(contrast(theme, "--switch-thumb", "--input")).toBeGreaterThanOrEqual(3);
+    expect(contrast(theme, "--input", "--bg")).toBeGreaterThanOrEqual(3);
+  });
+
+  it.each(THEMES)(
+    "draws the ring, an empty checkbox's edge, at 3:1 on the page in %s",
+    (theme) => {
+      expect(contrast(theme, "--ring", "--bg")).toBeGreaterThanOrEqual(3);
+    },
+  );
+
+  it.each(THEMES)(
+    "sets error text in danger-ink at 4.5:1 on the page, a card and muted in %s",
+    (theme) => {
+      for (const ground of ["--bg", "--card", "--muted"])
+        expect(contrast(theme, "--danger-ink", ground), ground).toBeGreaterThanOrEqual(
+          4.5,
+        );
+    },
+  );
+
+  it.each(THEMES)("labels the destructive button at 4.5:1 in %s", (theme) => {
+    expect(
+      contrast(theme, "--danger-solid-fg", "--danger-solid"),
+    ).toBeGreaterThanOrEqual(4.5);
+  });
+});

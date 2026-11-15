@@ -249,10 +249,23 @@ export function defaultPoints(type: QuestionType): number {
 
 const WRITTEN_TYPES: ReadonlySet<QuestionType> = new Set(["short_answer", "essay"]);
 
+/** essayFields are an essay's own settings: its rubric and word limit, kept from `from` when it is the same essay. */
+function essayFields(
+  next: QuestionValues,
+  from: QuestionValues | null,
+): QuestionValues {
+  return {
+    ...next,
+    rubric: from?.rubric ?? [],
+    ...(from?.essayMaxWords != null ? { essayMaxWords: from.essayMaxWords } : {}),
+  };
+}
+
 function withTypeFields(next: QuestionValues, from: QuestionValues): QuestionValues {
   const rest = { ...next };
   delete rest.selectCount;
   delete rest.maxWords;
+  delete rest.essayMaxWords;
   delete rest.matchAllowReuse;
   delete rest.matchItems;
   delete rest.rubric;
@@ -267,7 +280,7 @@ function withTypeFields(next: QuestionValues, from: QuestionValues): QuestionVal
         ? { ...rest, maxWords: from.maxWords }
         : rest;
     case "essay":
-      return { ...rest, rubric: same ? (from.rubric ?? []) : [] };
+      return essayFields(rest, same ? from : null);
     case "matching":
       return {
         ...rest,
@@ -362,6 +375,7 @@ export function recall(
   if (!(out.sampleAnswer ?? "").trim() && held.sampleAnswer != null)
     out.sampleAnswer = held.sampleAnswer;
   if (held.maxWords != null) out.maxWords = held.maxWords;
+  if (held.essayMaxWords != null) out.essayMaxWords = held.essayMaxWords;
   if (held.rubric?.length) out.rubric = held.rubric;
   if (
     held.blanks.length > 0 &&
@@ -385,4 +399,35 @@ function blankItems(): NonNullable<QuestionValues["matchItems"]> {
     { id: null, text: "", correctOption: -1 },
     { id: null, text: "", correctOption: -1 },
   ];
+}
+
+/**
+ * dropsAnswers says whether `after`, a retyped `before`, has lost something
+ * the teacher wrote for the answers: an option's text or its tick, a blank's
+ * accepted answer, the sample answer, a matching item, a "Choose N" count, a
+ * word limit or a rubric. The type change is then followed by a notice with
+ * Undo (web#73).
+ */
+export function dropsAnswers(before: QuestionValues, after: QuestionValues): boolean {
+  const written = (text: string) => text.trim() !== "";
+  const kept = new Map(after.options.map((option) => [option.text, option]));
+  for (const option of before.options) {
+    if (!written(option.text)) continue;
+    const now = kept.get(option.text);
+    if (now === undefined || (option.isCorrect && !now.isCorrect)) return true;
+  }
+  const answers = (value: QuestionValues) =>
+    value.blanks.reduce(
+      (count, blank) => count + blank.acceptedAnswers.filter(written).length,
+      0,
+    );
+  if (answers(after) < answers(before)) return true;
+  if (written(before.sampleAnswer ?? "") && !written(after.sampleAnswer ?? ""))
+    return true;
+  const items = (value: QuestionValues) =>
+    (value.matchItems ?? []).filter((item) => written(item.text)).length;
+  if (items(after) < items(before)) return true;
+  if (before.selectCount != null && after.selectCount == null) return true;
+  if (before.maxWords != null && after.maxWords == null) return true;
+  return (before.rubric?.length ?? 0) > (after.rubric?.length ?? 0);
 }

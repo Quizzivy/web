@@ -11,9 +11,14 @@ import {
   type QuestionType,
   type QuestionValues,
 } from "@/features/question-bank/questionSchema";
-import { QUESTION_TYPES, retype } from "@/features/question-bank/questionType";
+import {
+  QUESTION_TYPES,
+  dropsAnswers,
+  retype,
+} from "@/features/question-bank/questionType";
 import { useRetype } from "@/features/question-bank/useRetype";
 import { BuilderQuestionEditor } from "@/features/tests/components/BuilderQuestionEditor";
+import { Toaster } from "@/components/ui/sonner";
 import "@/lib/i18n";
 
 /** jsdom does no layout; ProseMirror measures a range when it scrolls the selection into view. */
@@ -367,5 +372,66 @@ describe("the type controls", () => {
 
     await user.click(within(control).getByRole("button", { name: "Một đáp án" }));
     expect(latest.current).toEqual(of("single_choice"));
+  });
+});
+
+/**
+ * web#73, the owner's choice of 2026-11-15: a change of type that drops
+ * answers is taken at once and followed by a notice with Undo, which brings
+ * back the type left and its answers and keeps what was typed since.
+ */
+describe("a change of type that drops answers", () => {
+  it("is followed by a notice whose Undo brings the type and its answers back", async () => {
+    render(<Toaster />);
+    const { latest, user } = mount(of("single_choice"));
+    await liveEditor();
+
+    await choose(user, "short_answer");
+    expect(latest.current.type).toBe("short_answer");
+    const notice = await screen.findByText(
+      "Đã đổi sang Trả lời ngắn. Một số đáp án của loại cũ đã bị bỏ.",
+    );
+    act(() => {
+      editorOf(screen.getByRole("textbox", { name: "Nội dung câu hỏi" }))
+        .chain()
+        .focus("end")
+        .insertContent(" Why?")
+        .run();
+    });
+    await user.click(
+      within(notice.closest("li")!).getByRole("button", { name: "Hoàn tác" }),
+    );
+
+    expect(latest.current.type).toBe("single_choice");
+    expect(latest.current.options).toEqual(of("single_choice").options);
+    expect(latest.current.prompt).toBe(`${WORDS} Why?`);
+  });
+
+  it("says nothing when the new type keeps every answer", async () => {
+    render(<Toaster />);
+    const { latest, user } = mount(of("single_choice"));
+    await liveEditor();
+
+    await choose(user, "multiple_choice");
+    expect(latest.current.type).toBe("multiple_choice");
+    expect(screen.queryByText(/^Đã đổi sang Nhiều đáp án/)).toBeNull();
+  });
+
+  it("reads what each type loses", () => {
+    expect(
+      dropsAnswers(of("single_choice"), retype(of("single_choice"), "essay")),
+    ).toBe(true);
+    expect(
+      dropsAnswers(
+        of("multiple_choice"),
+        retype(of("multiple_choice"), "single_choice"),
+      ),
+    ).toBe(true);
+    expect(dropsAnswers(of("short_answer"), retype(of("short_answer"), "essay"))).toBe(
+      true,
+    );
+    expect(dropsAnswers(of("essay"), retype(of("essay"), "short_answer"))).toBe(true);
+    const empty = { ...of("single_choice"), options: [option(""), option("")] };
+    expect(dropsAnswers(empty, retype(empty, "short_answer"))).toBe(false);
   });
 });

@@ -16,6 +16,7 @@ import type { GroupMoves } from "@/features/question-groups/components/QuestionH
 import {
   gapQuestions,
   withMaterialContent,
+  withMemberAt,
   type GapPrompts,
 } from "@/features/question-groups/gapQuestions";
 import { startBundle, type GroupStart } from "@/features/question-groups/kinds";
@@ -469,4 +470,48 @@ test("“Remove gap” keeps to its own notice", async () => {
   );
   expect(await screen.findAllByText(/^Đã bỏ chỗ trống 9\./)).toHaveLength(1);
   expect(screen.queryByText(/^Lần sửa này bỏ/)).toBeNull();
+});
+
+// web#23, the owner's choice of 2026-11-15: a question in the pane moves by
+// dragging its card.
+function reading(count: number): GroupBundle {
+  const start = startBundle("reading", t);
+  return withMembers(
+    start,
+    Array.from({ length: count }, () => newGroupQuestion(t)),
+  );
+}
+
+test("a member moves to the index a drag drops it at, and the questions follow", () => {
+  const bundle = reading(3);
+  const ids = bundle.group.members.map((member) => member.questionId);
+  const moved = withMemberAt(bundle, ids[0]!, 2);
+  expect(moved.group.members.map((member) => member.questionId)).toEqual([
+    ids[1],
+    ids[2],
+    ids[0],
+  ]);
+  expect(moved.questions.map((question) => question.id)).toEqual([
+    ids[1],
+    ids[2],
+    ids[0],
+  ]);
+  expect(withMemberAt(bundle, ids[0]!, 0)).toBe(bundle);
+  expect(withMemberAt(bundle, ids[0]!, 3)).toBe(bundle);
+  expect(withMemberAt(bundle, "nobody", 1)).toBe(bundle);
+});
+
+test("a closed card of a passage is dragged", async () => {
+  mount(reading(2), "reading");
+  await waitFor(() =>
+    expect(document.querySelectorAll("[data-card-drag]")).toHaveLength(2),
+  );
+});
+
+test("a gap's card is not dragged: gap questions follow the gaps", async () => {
+  mount(cloze());
+  const cards = document.querySelectorAll("[data-group-card]");
+  expect(cards.length).toBeGreaterThan(0);
+  await new Promise((resolve) => setTimeout(resolve, 50));
+  expect(document.querySelectorAll("[data-card-drag]")).toHaveLength(0);
 });

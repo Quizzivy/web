@@ -14,18 +14,22 @@ export function studentAudioPolicy(policy: AudioPolicy): StudentAudioPolicy {
 
 type StudentRules = Pick<
   components["schemas"]["StudentQuestion"],
-  "selectCount" | "maxWords" | "matchAllowReuse"
+  "selectCount" | "maxWords" | "essayMaxWords" | "matchAllowReuse"
 >;
 
 /** studentRules copies the rules a student is told (choose N, the word limit, reusing a matching choice) and leaves out the ones a question does not set. */
 export function studentRules(question: {
   selectCount?: number | null;
   maxWords?: number | null;
+  essayMaxWords?: number | null;
   matchAllowReuse?: boolean | null;
 }): StudentRules {
   return {
     ...(question.selectCount != null ? { selectCount: question.selectCount } : {}),
     ...(question.maxWords != null ? { maxWords: question.maxWords } : {}),
+    ...(question.essayMaxWords != null
+      ? { essayMaxWords: question.essayMaxWords }
+      : {}),
     ...(question.matchAllowReuse != null
       ? { matchAllowReuse: question.matchAllowReuse }
       : {}),

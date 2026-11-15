@@ -73,7 +73,7 @@ export function WindowFields({ draft, onChange }: Props) {
         </div>
       </div>
       {invalid && (
-        <p id={errorId} role="alert" className="text-danger text-sm">
+        <p id={errorId} role="alert" className="text-danger-ink text-sm">
           {t("assignments.wizard.windowInvalid")}
         </p>
       )}

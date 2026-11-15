@@ -234,7 +234,7 @@ it("keeps shared material under a result filter and follows gaps to a hidden que
   await screen.findByText(group.title);
   expect(screen.queryByText("Nội dung bài nghe")).not.toBeInTheDocument();
   expect(
-    screen.getByText("Đã nghe 3 lượt · Quy định 2 lượt cho cả nhóm"),
+    screen.getByText("Đã nghe 3 lượt · Quy định 2 lượt cho cả bài nghe"),
   ).toBeVisible();
   await user.click(screen.getByRole("button", { name: "Sai" }));
   expect(screen.getByRole("button", { name: "Sai" })).toHaveAttribute(
@@ -309,7 +309,7 @@ it("keeps shared material above the first of its questions that the filter keeps
   expect(places()).toEqual(["1.", "material", "2.", "3."]);
   await userEvent.setup().click(screen.getByRole("button", { name: "Sai" }));
   expect(places()).toEqual(["1.", "material", "3."]);
-  expect(screen.getByText("Ngữ liệu dùng chung · Câu 2–3")).toBeVisible();
+  expect(screen.getByText("Bài nghe · Câu 2–3")).toBeVisible();
 });
 
 it("keeps the group's tables and images on the paper surface", async () => {
@@ -1932,6 +1932,29 @@ describe("an answer the centre's retention policy removed", () => {
     expect(within(kept).queryByText(NOTICE)).toBeNull();
     expect(within(kept).getByText("Bạn trả lời")).toBeVisible();
     expect(within(kept).getByText("was written")).toBeVisible();
+  });
+
+  // RM-1, the owner's call of 2026-11-15: a removed answer nobody marked comes
+  // with no mark, and reads as removed, not as a settled 0.
+  it("names a removed answer nobody marked as removed, with no mark and not wrong", async () => {
+    serve(
+      scored([
+        essay(1, "Bài viết không ai chấm", null, {
+          answerRemoved: true,
+          pendingManual: false,
+          earned: null,
+        }),
+        choice(2, AB, [1], { prompt: "Câu còn giữ", earned: 1 }),
+      ]),
+    );
+    renderResult();
+    const gone = (await screen.findByText("Bài viết không ai chấm")).closest(
+      "article",
+    )!;
+    expect(within(gone).getByText("Đã xoá theo chính sách lưu trữ")).toBeVisible();
+    expect(within(gone).queryByText("Sai")).toBeNull();
+    expect(within(gone).queryByText(/^0 \/ /)).toBeNull();
+    expect(gone).toHaveAttribute("data-verdict", "removed");
   });
 
   it("reads as the deck's English", async () => {

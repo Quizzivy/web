@@ -276,7 +276,7 @@ function TotalLine({
       <button
         type="button"
         onClick={() => void roster.refetch()}
-        className="text-danger flex-1 rounded-sm text-left"
+        className="text-danger-ink flex-1 rounded-sm text-left"
       >
         {t("assignments.rosterFailed")}
       </button>

@@ -21,7 +21,7 @@ import { groupIssue } from "@/features/question-groups/model";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
-import { aiError, aiOn, BASE, renderWithApp } from "../ai/support";
+import { aiError, SAYS, aiOn, BASE, renderWithApp } from "../ai/support";
 
 globalThis.ResizeObserver ??= class {
   observe() {}
@@ -166,7 +166,7 @@ test("the card says why when the assistant refuses, and adds nothing", async () 
     await screen.findByRole("button", { name: t("ai.distract.suggest") }),
   );
   const panel = await screen.findByRole("region", { name: t("ai.distract.title") });
-  expect(within(panel).getByText(t("ai.unavailable"))).toBeInTheDocument();
+  expect(within(panel).getByText(SAYS.AI_UNAVAILABLE)).toBeInTheDocument();
   expect(
     within(panel).queryByRole("button", { name: t("ai.distract.add") }),
   ).toBeNull();

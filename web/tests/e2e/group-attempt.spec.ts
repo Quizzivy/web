@@ -11,7 +11,7 @@ for (const width of [320, 768, 1440]) {
     const material = page.getByRole("heading", {
       name: previewGroup.stimuli[0]!.title,
     });
-    const handle = page.getByRole("button", { name: "Mở ngữ liệu", exact: true });
+    const handle = page.getByRole("button", { name: "Mở bài đọc", exact: true });
     const card = page.getByRole("group", { name: "Hội thoại mẫu", exact: true });
     const audio = page.locator("audio");
     if (width === 320) {

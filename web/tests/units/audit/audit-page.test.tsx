@@ -97,6 +97,27 @@ describe("the audit log's rows", () => {
     expect(screen.getByText("Lớp đã xoá")).toBeVisible();
   });
 
+  // AO-11, the owner's call of 2026-11-15: an account removed since is not the system.
+  it("names an account removed since as a deleted user, apart from the system", async () => {
+    serves(() => ({
+      items: [entry({ id: 7, actor: null, actorRemoved: true }), SYSTEM],
+    }));
+    renderAudit();
+
+    const removed = await screen.findByRole("button", {
+      name: /Đã tạo lớp, Người dùng đã xoá,/,
+    });
+    expect(
+      within(removed.closest("[role=row]") as HTMLElement).getByText(
+        "Người dùng đã xoá",
+      ),
+    ).toBeVisible();
+    const system = screen.getByRole("button", { name: /Đã xoá tệp của lần nhập Word/ });
+    expect(
+      within(system.closest("[role=row]") as HTMLElement).getByText("Hệ thống"),
+    ).toBeVisible();
+  });
+
   it.each([
     ["role", "Vai trò"],
     ["question", "Câu hỏi"],

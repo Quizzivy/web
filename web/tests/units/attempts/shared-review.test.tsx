@@ -81,7 +81,7 @@ it("shows a teacher the group's material, transcript and attempt allowance while
   const user = userEvent.setup();
   await screen.findByText(group.title);
   expect(
-    screen.getByText("Đã nghe 4 lượt · Quy định 2 lượt cho cả nhóm"),
+    screen.getByText("Đã nghe 4 lượt · Quy định 2 lượt cho cả bài nghe"),
   ).toBeVisible();
   await user.click(screen.getByText("Nội dung bài nghe"));
   expect(screen.getByText("Teacher-only shared transcript.")).toBeVisible();
@@ -107,7 +107,7 @@ it("keeps shared context in anonymous question grading without inventing a cross
   );
   renderPage(true);
   await screen.findByText(group.title);
-  expect(screen.getByText("Ngữ liệu dùng chung · Câu 1–2")).toBeVisible();
+  expect(screen.getByText("Bài nghe · Câu 1–2")).toBeVisible();
   expect(screen.queryByText(/^Đã nghe/)).not.toBeInTheDocument();
   await userEvent.setup().click(screen.getByText("Nội dung bài nghe"));
   expect(screen.getByText("Teacher-only shared transcript.")).toBeVisible();

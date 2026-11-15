@@ -231,7 +231,7 @@ describe("the Generate panel", () => {
     await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
     await user.click(
       await within(dialog).findByRole("button", {
-        name: "Thêm 2 câu vào nhóm Reading club",
+        name: "Thêm 2 câu vào “Reading club”",
       }),
     );
 
@@ -245,7 +245,7 @@ describe("the Generate panel", () => {
     );
     expect(
       await screen.findByText(
-        "Đã thêm 2 câu hỏi vào nhóm Reading club. Hãy kiểm tra từng câu trước khi xuất bản.",
+        "Đã thêm 2 câu hỏi vào “Reading club”. Hãy kiểm tra từng câu trước khi xuất bản.",
       ),
     ).toBeVisible();
   });

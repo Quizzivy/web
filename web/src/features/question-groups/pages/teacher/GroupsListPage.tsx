@@ -297,7 +297,7 @@ export default function GroupsListPage() {
         />
       </div>
       {error && !action ? (
-        <p role="alert" className="text-danger text-sm">
+        <p role="alert" className="text-danger-ink text-sm">
           {error}
         </p>
       ) : null}

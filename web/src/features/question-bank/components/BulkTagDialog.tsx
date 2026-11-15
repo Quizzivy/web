@@ -155,7 +155,7 @@ export function BulkTagDialog({
           )}
 
           {error === null ? null : (
-            <p role="alert" className="text-destructive text-sm">
+            <p role="alert" className="text-danger-ink text-sm">
               {error}
             </p>
           )}

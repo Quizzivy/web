@@ -20,8 +20,8 @@ function Switch({
       data-size={size}
       className={cn(
         "inline-flex shrink-0 items-center rounded-full transition-colors disabled:cursor-not-allowed disabled:opacity-50",
-        "data-[state=checked]:bg-primary data-[state=unchecked]:bg-border h-5.5 w-9.5",
-        "aria-disabled:data-[state=checked]:bg-primary/55 aria-disabled:data-[state=unchecked]:bg-border/50 aria-disabled:data-[state=unchecked]:[&>span]:bg-switch-thumb/50",
+        "data-[state=checked]:bg-primary data-[state=unchecked]:bg-input h-5.5 w-9.5",
+        "aria-disabled:data-[state=checked]:bg-primary/55 aria-disabled:data-[state=unchecked]:bg-input/50 aria-disabled:data-[state=unchecked]:[&>span]:bg-switch-thumb/50",
         size === "sm" && "h-5 w-9",
         size === "lg" && "h-6 w-10.5",
         className,

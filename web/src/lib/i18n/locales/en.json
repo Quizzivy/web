@@ -513,6 +513,7 @@
     "empty": "No entries in this range.",
     "noMatches": "No entries match these filters.",
     "system": "System",
+    "removedActor": "Deleted user",
     "categories": {
       "label": "Kind of change",
       "all": "All",

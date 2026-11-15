@@ -489,6 +489,7 @@
     "empty": "Không có mục nào trong khoảng này.",
     "noMatches": "Không có mục nào khớp bộ lọc này.",
     "system": "Hệ thống",
+    "removedActor": "Người dùng đã xoá",
     "categories": {
       "label": "Nhóm thay đổi",
       "all": "Tất cả",

@@ -187,6 +187,8 @@
     "submitFailed": "Could not submit. Please try again.",
     "submitDialog": {
       "titleUnanswered": "Submit with {{n}} unanswered?",
+      "titlePartly": "Submit with {{n}} not finished?",
+      "titleBoth": "Submit with {{n}} unanswered and {{m}} not finished?",
       "titleAll": "Submit your test?",
       "bodyUnanswered_one": "Unanswered gaps, matches and questions score zero. You still have {{count}} minute.",
       "bodyUnanswered_other": "Unanswered gaps, matches and questions score zero. You still have {{count}} minutes.",
@@ -321,7 +323,8 @@
       "correct": "Correct",
       "wrong": "Wrong",
       "partial": "Partly correct",
-      "banded": "Graded on a band"
+      "banded": "Graded on a band",
+      "removed": "Removed under the retention policy"
     },
     "points": "{{earned}} / {{total}}",
     "waiting": "Waiting",

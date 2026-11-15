@@ -11,6 +11,7 @@ import { AiCreditNote } from "@/features/ai/components/AiCreditNote";
 import { credits } from "@/features/ai/credits";
 import {
   aiFailureOf,
+  unavailableText,
   refreshAfterAiFailure,
   settleAiUsage,
   type AiFailure,
@@ -268,7 +269,7 @@ function ScoreSuggestion({
             </Button>
           }
         >
-          {t("ai.unavailable")}
+          {unavailableText(stage.failure, t("ai.unavailable"))}
         </Callout>
       )}
       {stage.name === "idle" && stage.failure?.kind === "error" && (

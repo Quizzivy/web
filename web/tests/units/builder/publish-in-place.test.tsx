@@ -1,12 +1,15 @@
 import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
-import { render, screen, waitFor, within } from "@testing-library/react";
+import { cleanup, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { http } from "msw";
 import { Toaster, toast } from "@/components/ui/sonner";
 import TestBuilderPage from "@/features/tests/pages/teacher/TestBuilderPage";
-import { PublishDialog } from "@/features/tests/components/PublishDialog";
+import {
+  PublishDialog,
+  type PublishGroup,
+} from "@/features/tests/components/PublishDialog";
 import { server } from "@tests/support/server";
 import { contractJson } from "@tests/support/contractResponse";
 import "@/lib/i18n";
@@ -289,7 +292,10 @@ describe("publishing from the builder", () => {
 });
 
 describe("Publish test? with shared-context groups", () => {
-  it("lists that every group has a title once the test holds a group", () => {
+  const dialogWith = (
+    groups: readonly PublishGroup[] | null,
+    onGoToGroup = vi.fn(),
+  ) => {
     render(
       <PublishDialog
         open
@@ -297,18 +303,49 @@ describe("Publish test? with shared-context groups", () => {
         error={null}
         problems={[]}
         violations={null}
-        groupCount={2}
+        groups={groups}
+        onGoToGroup={onGoToGroup}
         onOpenChange={vi.fn()}
         onGoTo={vi.fn()}
         onPublish={vi.fn()}
       />,
     );
-    const dialog = screen.getByRole("dialog", { name: "Phát hành đề thi?" });
+    return screen.getByRole("dialog", { name: "Phát hành đề thi?" });
+  };
+  const PASSED = "Mọi bài đọc, bài điền từ và bài nghe đều có tiêu đề hoặc hướng dẫn";
+
+  it("lists that every group has a title or instructions when each has", () => {
+    const dialog = dialogWith([
+      { id: "g1", name: "Bài đọc trong “Phần 1”", titled: true },
+      { id: "g2", name: "Bài nghe trong “Phần 2”", titled: true },
+    ]);
     expect(within(dialog).getByText("Mọi câu hỏi đều có đáp án đúng")).toBeVisible();
+    expect(within(dialog).getByText(PASSED)).toBeVisible();
+  });
+
+  // web#23: the row was shown as passed whenever the test held a group.
+  it("names a group with neither, and Fix it opens it", async () => {
+    const onGoToGroup = vi.fn();
+    const dialog = dialogWith(
+      [
+        { id: "g1", name: "Bài đọc trong “Phần 1”", titled: true },
+        { id: "g2", name: "Bài nghe trong “Phần 2”", titled: false },
+      ],
+      onGoToGroup,
+    );
+    expect(within(dialog).queryByText(PASSED)).toBeNull();
     expect(
       within(dialog).getByText(
-        "Mọi bài đọc, bài điền từ và bài nghe đều có tiêu đề hoặc hướng dẫn",
+        "Bài nghe trong “Phần 2”: chưa có tiêu đề hay hướng dẫn",
       ),
     ).toBeVisible();
+    await userEvent.click(within(dialog).getByRole("button", { name: "Sửa" }));
+    expect(onGoToGroup).toHaveBeenCalledWith("g2");
+  });
+
+  it("says nothing of the groups while one is still loading, or when there is none", () => {
+    expect(within(dialogWith(null)).queryByText(PASSED)).toBeNull();
+    cleanup();
+    expect(within(dialogWith([])).queryByText(PASSED)).toBeNull();
   });
 });

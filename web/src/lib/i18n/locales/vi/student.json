@@ -179,6 +179,8 @@
     "submitFailed": "Không nộp được. Hãy thử lại.",
     "submitDialog": {
       "titleUnanswered": "Nộp bài khi còn {{n}} câu chưa trả lời?",
+      "titlePartly": "Nộp bài khi còn {{n}} câu chưa làm xong?",
+      "titleBoth": "Nộp bài khi còn {{n}} câu chưa trả lời và {{m}} câu chưa làm xong?",
       "titleAll": "Nộp bài?",
       "bodyUnanswered_other": "Chỗ trống, cặp nối và câu hỏi chưa trả lời sẽ không có điểm. Bạn vẫn còn {{count}} phút.",
       "bodySoon": "Chỗ trống, cặp nối và câu hỏi chưa trả lời sẽ không có điểm. Bạn còn chưa đầy một phút.",
@@ -304,7 +306,8 @@
       "correct": "Đúng",
       "wrong": "Sai",
       "partial": "Đúng một phần",
-      "banded": "Chấm theo band"
+      "banded": "Chấm theo band",
+      "removed": "Đã xoá theo chính sách lưu trữ"
     },
     "points": "{{earned}} / {{total}}",
     "waiting": "Chờ chấm",

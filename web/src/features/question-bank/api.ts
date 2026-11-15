@@ -100,7 +100,12 @@ function typeFields(
   question: AdminQuestion,
 ): Pick<
   QuestionValues,
-  "selectCount" | "maxWords" | "matchAllowReuse" | "matchItems" | "rubric"
+  | "selectCount"
+  | "maxWords"
+  | "essayMaxWords"
+  | "matchAllowReuse"
+  | "matchItems"
+  | "rubric"
 > {
   switch (question.type) {
     case "multiple_choice":
@@ -110,6 +115,9 @@ function typeFields(
     case "essay":
       return {
         rubric: (question.rubric ?? []).map(({ id, label }) => ({ id, label })),
+        ...(question.essayMaxWords == null
+          ? {}
+          : { essayMaxWords: question.essayMaxWords }),
       };
     case "matching": {
       const ids = (question.options ?? []).map((option) => option.id);

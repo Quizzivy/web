@@ -3,12 +3,14 @@ import { useTranslation } from "react-i18next";
 import { QuestionProse } from "@/components/shared/content/QuestionProse";
 import { cn } from "@/lib/utils";
 import { CAPTION, FIELD, PROMPT, textSizes, type BodyProps } from "./bodyParts";
+import { WORD_HINT, wordLimitHint } from "./wordLimitHint";
 import { WordCount } from "./WordCount";
 import { worth } from "../worth";
 
 /**
  * EssayBody is an essay's prompt and its field: a textarea that starts at
- * twelve lines and grows with the text, the live word count under it, and
+ * twelve lines and grows with the text, the live word count under it (against
+ * the essay's word limit when it has one, `essayMaxWords`, advice only), and
  * what the essay is worth. It writes a text answer, so it autosaves and keeps
  * its local draft as a short answer does, and pasting is refused by the
  * integrity monitor whenever the policy refuses it on the rest of the paper.
@@ -32,6 +34,9 @@ export function EssayBody({
         text={question.prompt}
         content={question.promptContent}
       />
+      {question.essayMaxWords != null && (
+        <p className={WORD_HINT}>{wordLimitHint(question.essayMaxWords, t)}</p>
+      )}
       <div className="flex flex-col gap-1.5">
         <textarea
           rows={12}
@@ -51,7 +56,7 @@ export function EssayBody({
           onChange={(event) => onAnswer({ type: "text", value: event.target.value })}
         />
         <div className="flex items-baseline justify-between gap-3">
-          <WordCount id={countId} value={value} limit={undefined} />
+          <WordCount id={countId} value={value} limit={question.essayMaxWords} />
           <p className={CAPTION}>{worth(question, t)}</p>
         </div>
       </div>

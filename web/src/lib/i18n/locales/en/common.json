@@ -179,7 +179,6 @@
     "publishedBy": "{{name}}",
     "summarySoFar": "{{count}} tests loaded",
     "tagFilter": "Tags",
-    "skills": "Skills",
     "skill": {
       "grammar": "Grammar",
       "vocabulary": "Vocabulary",
@@ -190,9 +189,14 @@
     }
   },
   "preview": {
-    "materialUnavailable": "Material unavailable. Reload the preview to try again.",
-    "sharedRange": "Shared material · Questions {{from}}–{{to}}",
-    "goToQuestion": "Gap {{label}} — go to question {{n}}"
+    "materialUnavailable": "The passage or recording did not load. Reload the preview to try again.",
+    "sharedRange": "{{kind}} · Questions {{from}}–{{to}}",
+    "goToQuestion": "Gap {{label}} — go to question {{n}}",
+    "kind": {
+      "reading": "Passage",
+      "cloze": "Cloze",
+      "listening": "Recording"
+    }
   },
   "assignments": {
     "pickTest": "Choose a test and version",
@@ -266,7 +270,7 @@
   },
   "sharedReview": {
     "playbackHint": "Playback here does not add to the attempt’s play count.",
-    "count": "Played {{used}} times · Group allowance: {{limit}}",
+    "count": "Played {{used}} times · Allowed for the recording: {{limit}}",
     "unlimitedCount": "Played {{used}} times · Unlimited",
     "transcript": "Recording transcript"
   },

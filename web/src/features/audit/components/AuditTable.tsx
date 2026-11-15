@@ -9,6 +9,7 @@ import { cn } from "@/lib/utils";
 import { dotOf, humanise, isGone, sentenceOf } from "../actions";
 import type { AuditEntry } from "../api";
 import { AuditDiff } from "./AuditDiff";
+import { actorName } from "@/features/audit/actorName";
 
 type Row = Readonly<{ id: string; entry: AuditEntry }>;
 
@@ -93,7 +94,7 @@ export function AuditTable({
         track: "minmax(150px,1.2fr)",
         cell: (row, shown) => {
           const { actor } = row.entry;
-          const name = actor?.name ?? t("audit.system");
+          const name = actorName(row.entry, t);
           return (
             <span className="flex min-w-0 items-center gap-2">
               <Avatar name={name} src={actor?.avatarUrl} size="26" />
@@ -180,7 +181,7 @@ export function AuditTable({
         label: ({ entry }) =>
           t("audit.row", {
             action: sentenceOf(sentences, entry.action),
-            who: entry.actor?.name ?? t("audit.system"),
+            who: actorName(entry, t),
             when: auditMoment(entry.occurredAt, locale, zone),
           }),
       }}

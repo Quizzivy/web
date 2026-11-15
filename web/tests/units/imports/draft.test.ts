@@ -1,4 +1,5 @@
 import { describe, expect, it } from "vitest";
+import type { ImportDraftSection } from "@/features/imports/api";
 import type { ContentDocument } from "@/components/shared/content/model";
 import { contentPlainText } from "@/components/shared/content/plainText";
 import {
@@ -12,7 +13,9 @@ import {
   dropsAnswerData,
   exceedsBlankLimit,
   onlyQuestions,
-  passageBound,
+  passageMembers,
+  passageTypeChange,
+  updateQuestion,
   pickCandidate,
   planTypeChange,
   questionPlaces,
@@ -726,41 +729,114 @@ describe("editing several questions at once", () => {
     expect(onlyQuestions(sections, new Set())).toEqual([]);
   });
 
-  it("names the members a passage answers through a blank", () => {
-    expect([...passageBound(sections)]).toEqual(["q4"]);
+  it("names the members a passage's gaps are bound to", () => {
+    expect([...passageMembers(sections)]).toEqual(["q4"]);
   });
 
-  it("plans a change of type: what changes, what stays, what loses answers, whose gaps are written out or kept", () => {
+  it("plans a change of type: what changes, what stays, what loses answers, whose gaps are written out, which members keep their type", () => {
     const all = [q1, q2, q3, member];
-    const plan = planTypeChange(all, "short_answer", passageBound(sections));
-    expect(plan.changing.map((item) => item.id)).toEqual(["q1", "q2", "q4"]);
+    const plan = planTypeChange(all, "short_answer", passageMembers(sections));
+    expect(plan.changing.map((item) => item.id)).toEqual(["q1", "q2"]);
     expect(plan.unchanged.map((item) => item.id)).toEqual(["q3"]);
     expect(plan.dropping.map((item) => item.id)).toEqual(["q2"]);
     expect(plan.settling.map((item) => item.id)).toEqual(["q1", "q2"]);
-    expect(plan.keeping.map((item) => item.id)).toEqual(["q4"]);
+    expect(plan.refused.map((item) => item.id)).toEqual(["q4"]);
+
+    const toChoice = planTypeChange(all, "single_choice", passageMembers(sections));
+    expect(toChoice.changing.map((item) => item.id)).toEqual(["q1", "q2", "q3", "q4"]);
+    expect(toChoice.settling.map((item) => item.id)).toEqual(["q1", "q2", "q4"]);
+    expect(toChoice.refused).toEqual([]);
 
     const toBlank = planTypeChange(all, "fill_blank");
     expect(toBlank.changing.map((item) => item.id)).toEqual(["q3"]);
     expect(toBlank.settling).toEqual([]);
-    expect(toBlank.keeping).toEqual([]);
+    expect(toBlank.refused).toEqual([]);
   });
 
-  it("writes gaps out when many change type, and keeps them where a passage is bound to them", () => {
-    const bound = passageBound(sections);
-    const first = applyTypeChange(q1, "short_answer", bound);
+  it("writes gaps out when many change type, and leaves a member the type it may not take", () => {
+    const members = passageMembers(sections);
+    const first = applyTypeChange(q1, "short_answer", members);
     expect(contentPlainText(first.prompt)).toBe("Where do you live?");
     expect(first.blanks).toEqual([]);
     expect(first.origins.prompt).toBe("teacher_entered");
     expect(first.origins.type).toBe("teacher_entered");
 
-    expect(contentPlainText(applyTypeChange(q2, "single_choice", bound).prompt)).toBe(
+    expect(contentPlainText(applyTypeChange(q2, "single_choice", members).prompt)).toBe(
       "She ___ to school.",
     );
-    const kept = applyTypeChange(member, "short_answer", bound);
-    expect(kept.prompt).toBe(member.prompt);
-    expect(applyTypeChange(q3, "fill_blank", bound).prompt).toBe(q3.prompt);
+    expect(applyTypeChange(member, "short_answer", members)).toBe(member);
+    expect(applyTypeChange(q3, "fill_blank", members).prompt).toBe(q3.prompt);
     expect(changeTypeSettled(q3, "single_choice").origins.prompt).toBe(
       q3.origins.prompt,
     );
+  });
+
+  // web#71, the owner's decision of 2026-11-15.
+  describe("a cloze member", () => {
+    const link = (next: ImportDraftSection[]) => next[1]!.items[0]!.group!.gaps[0]!;
+    const edit = (
+      from: ImportDraftSection[],
+      update: Parameters<typeof updateQuestion>[2],
+    ) => updateQuestion(from, "q4", update);
+
+    it("refuses a type the passage cannot bind, and keeps the question as it is", () => {
+      for (const type of ["short_answer", "true_false", "tfng"] as const)
+        expect(passageTypeChange(member, type)).toBe(member);
+    });
+
+    it("becomes a choice that answers the passage's gap as a whole: its own gap is written out, the link loses the blank", () => {
+      const next = edit(sections as ImportDraftSection[], (current) =>
+        passageTypeChange(current, "single_choice"),
+      );
+      expect(link(next)).toEqual({ gapId: "p1", questionId: "q4" });
+      const changed = next[1]!.items[0]!.group!.questions[0]!;
+      expect(changed.type).toBe("single_choice");
+      expect(contentPlainText(changed.prompt)).toBe("___");
+    });
+
+    it("is bound again to a gap it gets once it is a fill in the blank again", () => {
+      const choice = edit(sections as ImportDraftSection[], (current) =>
+        passageTypeChange(current, "single_choice"),
+      );
+      const blankAgain = edit(choice, (current) =>
+        passageTypeChange(current, "fill_blank"),
+      );
+      expect(link(blankAgain).blankGapId).toBeUndefined();
+      const gapped = edit(blankAgain, (current) =>
+        setPrompt(current, {
+          format: "semantic_v1",
+          blocks: [
+            { type: "paragraph", content: [{ type: "gap", id: "fresh", label: "1" }] },
+          ],
+        }),
+      );
+      expect(link(gapped)).toEqual({
+        gapId: "p1",
+        questionId: "q4",
+        blankGapId: "fresh",
+      });
+    });
+
+    it("is bound to the new gap when its own was removed and another inserted", () => {
+      const next = edit(sections as ImportDraftSection[], (current) =>
+        setPrompt(current, {
+          format: "semantic_v1",
+          blocks: [
+            { type: "paragraph", content: [{ type: "gap", id: "other", label: "1" }] },
+          ],
+        }),
+      );
+      expect(link(next).blankGapId).toBe("other");
+    });
+
+    it("leaves the group as it was when nothing about its gaps changed", () => {
+      const next = edit(sections as ImportDraftSection[], (current) => ({
+        ...current,
+        points: "2",
+      }));
+      expect(next[1]!.items[0]!.group!.gaps).toBe(
+        (sections as ImportDraftSection[])[1]!.items[0]!.group!.gaps,
+      );
+    });
   });
 });

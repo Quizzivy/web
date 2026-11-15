@@ -18,7 +18,7 @@ import { contractJson } from "@tests/support/contractResponse";
 import { teacherUser } from "@tests/support/fixtures";
 import { bankQuestion } from "@tests/support/questionBank";
 import { server } from "@tests/support/server";
-import { aiError, aiOn, month } from "../ai/support";
+import { aiError, SAYS, aiOn, month } from "../ai/support";
 
 vi.mock("@/lib/api/client", async (importOriginal) => {
   const actual = await importOriginal<typeof import("@/lib/api/client")>();
@@ -349,10 +349,10 @@ describe("Explain results with AI", () => {
     const user = renderDetail("questions");
     await user.click(await explainButton());
     const alert = await screen.findByRole("alert");
-    expect(alert).toHaveTextContent(vi_.ai.unavailable);
+    expect(alert).toHaveTextContent(SAYS.AI_UNAVAILABLE);
     await user.click(within(alert).getByRole("button", { name: vi_.ai.tryAgain }));
     expect(await screen.findByRole("region", { name: copy.title })).toBeInTheDocument();
-    expect(screen.queryByText(vi_.ai.unavailable)).toBeNull();
+    expect(screen.queryByText(SAYS.AI_UNAVAILABLE)).toBeNull();
   });
 
   it("gives the allowance sentence on a 402", async () => {

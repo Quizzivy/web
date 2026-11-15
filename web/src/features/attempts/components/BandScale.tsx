@@ -178,7 +178,7 @@ export function EssayBands({
         </div>
       )}
       {error !== null && (
-        <p ref={alert} role="alert" className="text-destructive text-sm">
+        <p ref={alert} role="alert" className="text-danger-ink text-sm">
           {error}
         </p>
       )}

@@ -56,6 +56,15 @@ export function aiOn({
 }
 
 /** aiError answers an AI operation with the error envelope, and `Retry-After` on a 503. */
+/**
+ * SAYS holds the server's own sentence where the panels print it: the API's
+ * words for a provider that did not answer (`ai/http/errors.go`), which the
+ * web shows since AIT-5.
+ */
+export const SAYS = {
+  AI_UNAVAILABLE: "AI chưa phản hồi. Hãy thử lại sau ít phút.",
+} as const;
+
 export function aiError(
   status: number,
   code: string,
@@ -63,7 +72,12 @@ export function aiError(
 ) {
   return HttpResponse.json(
     {
-      error: { code, message: `server says ${code}`, ...(details ? { details } : {}) },
+      error: {
+        code,
+        message:
+          (SAYS as Record<string, string | undefined>)[code] ?? `server says ${code}`,
+        ...(details ? { details } : {}),
+      },
     },
     { status, headers: status === 503 ? { "Retry-After": "30" } : {} },
   );

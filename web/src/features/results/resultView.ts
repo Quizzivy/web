@@ -20,9 +20,12 @@ const FRESH_MS = 60_000;
  * the teacher has yet to grade; `unknown` is an answer whose mark the review
  * policy does not show. `partial` earned some of the points and not all.
  * `banded` is an essay marked on a band, which is neither right nor wrong.
+ * `removed` is an answer the retention policy removed before anyone marked
+ * it: it scores nothing and is not wrong (RM-1, the owner's call of
+ * 2026-11-15).
  */
 export type Verdict =
-  "correct" | "partial" | "wrong" | "banded" | "waiting" | "unknown";
+  "correct" | "partial" | "wrong" | "banded" | "waiting" | "removed" | "unknown";
 
 /**
  * verdict reads one answer's mark. It needs the policy to show scores and the
@@ -31,6 +34,7 @@ export type Verdict =
  */
 export function verdict(question: ResultQuestion, review: Review): Verdict {
   if (question.pendingManual === true) return "waiting";
+  if (question.answerRemoved === true && question.earned == null) return "removed";
   if (!review.showScore || question.earned == null) return "unknown";
   if (question.band != null) return "banded";
   if (question.earned >= question.points) return "correct";

@@ -414,7 +414,7 @@ describe("the panes from 768", () => {
     expect(within(card).getByRole("button", { name: "Phát" })).toBeVisible();
     expect(within(card).getByText("Lượt nghe 1/2")).toBeVisible();
     expect(
-      within(pane).getByText("Lượt nghe dùng chung cho các câu trong nhóm này."),
+      within(pane).getByText("Lượt nghe dùng chung cho các câu của bài nghe này."),
     ).toBeVisible();
     expect(within(sheet()).queryByRole("button", { name: "Phát" })).toBeNull();
     const audio = container.querySelector("audio");
@@ -524,7 +524,7 @@ describe("the panes below 768", () => {
   });
 
   const W = Math.round(360 * 0.88);
-  const handle = () => screen.queryByRole("button", { name: "Mở ngữ liệu" });
+  const handle = () => screen.queryByRole("button", { name: "Mở bài đọc" });
   const drawer = () => screen.getByRole("article", { hidden: true });
   const backdrop = () => document.querySelector<HTMLElement>("[data-drawer-backdrop]");
   const closer = () => screen.getByRole("button", { name: "Đóng" });
@@ -655,7 +655,7 @@ describe("the panes below 768", () => {
     const user = userEvent.setup();
     const { unmount } = await open(deckPassageSession(NOW));
     const tip = () =>
-      screen.queryByText("Ngữ liệu ở đây. Vuốt sang phải hoặc chạm để đọc.");
+      screen.queryByText("Bài đọc ở đây. Vuốt sang phải hoặc chạm để đọc.");
     expect(tip()).toHaveAttribute("role", "status");
     expect(tip()).toHaveClass(
       "bg-primary",
@@ -693,7 +693,7 @@ describe("the panes below 768", () => {
     await user.click(handle()!);
     await user.click(closer());
     expect(
-      screen.queryByText("Ngữ liệu ở đây. Vuốt sang phải hoặc chạm để đọc."),
+      screen.queryByText("Bài đọc ở đây. Vuốt sang phải hoặc chạm để đọc."),
     ).toBeNull();
   });
 

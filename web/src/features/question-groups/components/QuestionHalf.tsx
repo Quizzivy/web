@@ -1,4 +1,5 @@
-import { useId, type ReactNode } from "react";
+import { Fragment, lazy, Suspense, useId, type ReactNode } from "react";
+import type { CardItem } from "./SortableCards";
 import { useTranslation } from "react-i18next";
 import {
   ChevronDown,
@@ -70,6 +71,8 @@ export interface QuestionActions {
   changeQuestion: (questionId: string, input: QuestionValues) => void;
   keepOrder: (questionId: string, fixed: boolean) => void;
   moveMember: (questionId: string, direction: -1 | 1) => void;
+  /** Puts a member at an index of the members: the drop of its card's drag. */
+  placeMember: (questionId: string, index: number) => void;
   removeGap: (gap: GapQuestion) => void;
   askRemoveQuestion: (questionId: string) => void;
   addQuestion: (type: QuestionType) => void;
@@ -150,23 +153,37 @@ export function QuestionHalf({
           text={t(gapsOnly ? "groups.pane.gapsEmpty" : "groups.pane.questionsEmpty")}
         />
       ) : null}
-      {members.map((member, index) => {
-        const question = questions.get(member.questionId);
-        return question ? (
-          <MemberCard
-            key={member.questionId}
-            bundle={bundle}
-            kind={kind}
-            member={member}
-            question={question}
-            place={{ index, count: members.length }}
-            view={view}
-            assets={assets}
-            moves={moves}
-            actions={actions}
-          />
-        ) : null;
-      })}
+      <DraggableCards
+        items={members.flatMap((member, index) => {
+          const question = questions.get(member.questionId);
+          if (!question) return [];
+          const id = member.questionId;
+          return [
+            {
+              id,
+              movable:
+                id !== view.openId &&
+                !view.bound.has(id) &&
+                !view.gaps.has(id) &&
+                members.length > 1,
+              node: (
+                <MemberCard
+                  bundle={bundle}
+                  kind={kind}
+                  member={member}
+                  question={question}
+                  place={{ index, count: members.length }}
+                  view={view}
+                  assets={assets}
+                  moves={moves}
+                  actions={actions}
+                />
+              ),
+            },
+          ];
+        })}
+        onPlace={actions.placeMember}
+      />
       {gapsOnly ? null : (
         <AddQuestion
           label={t(`groups.kind.${kind}.addQuestion`)}
@@ -198,6 +215,31 @@ function EmptyStack({
         {text}
       </span>
     </div>
+  );
+}
+
+const SortableCards = lazy(() => import("./SortableCards"));
+
+/**
+ * DraggableCards is the stack of cards: a closed card that no gap holds moves
+ * by dragging it (web#23, as the page draws), its menu and the outline's rows
+ * moving it as before. The drag library is fetched with the first stack that
+ * shows, so it stays out of the builder's and the bank's first download; until
+ * then the cards stand still.
+ */
+function DraggableCards({
+  items,
+  onPlace,
+}: Readonly<{
+  items: readonly CardItem[];
+  onPlace: (questionId: string, index: number) => void;
+}>) {
+  const still = items.map((item) => <Fragment key={item.id}>{item.node}</Fragment>);
+  if (!items.some((item) => item.movable)) return <>{still}</>;
+  return (
+    <Suspense fallback={still}>
+      <SortableCards items={items} onPlace={onPlace} />
+    </Suspense>
   );
 }
 

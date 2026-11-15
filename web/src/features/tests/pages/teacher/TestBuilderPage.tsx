@@ -65,7 +65,10 @@ import {
   type BuilderQuestionActions,
 } from "@/features/tests/components/BuilderQuestionEditor";
 import { DraftPreviewDialog } from "@/features/tests/components/DraftPreviewDialog";
-import { PublishDialog } from "@/features/tests/components/PublishDialog";
+import {
+  PublishDialog,
+  type PublishGroup,
+} from "@/features/tests/components/PublishDialog";
 import {
   AutosaveFailureNote,
   AutosaveStatusLabel,
@@ -1356,7 +1359,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
       ) : null}
 
       {publishError === null ? null : (
-        <p role="alert" className="text-destructive border-b px-4 py-2 text-sm">
+        <p role="alert" className="text-danger-ink border-b px-4 py-2 text-sm">
           {publishError}
         </p>
       )}
@@ -1485,7 +1488,12 @@ function Builder({ test }: Readonly<{ test: Test }>) {
             : [];
         })}
         violations={violations}
-        groupCount={groupIds.length}
+        groups={publishGroups(sections, groupIds, groups, starts, t)}
+        onGoToGroup={(groupId) => {
+          setChecking(false);
+          setViolations(null);
+          void selectGroup(groupId);
+        }}
         warnings={loaded.flatMap((result) =>
           result.data && !result.data.explanation?.trim()
             ? [
@@ -1763,7 +1771,7 @@ function QuestionPane({
   }
   if (question.isError) {
     return (
-      <p role="alert" className="text-destructive p-4 text-sm">
+      <p role="alert" className="text-danger-ink p-4 text-sm">
         {t("questionEditor.loadFailed")}
       </p>
     );
@@ -2059,4 +2067,38 @@ function problemFor(
   questionId: string,
 ): string | null {
   return violations?.find((v) => v.questionId === questionId)?.message ?? null;
+}
+
+/**
+ * publishGroups is the publish check's view of the test's shared-context
+ * groups: each named by its kind and section, and whether it has a title or
+ * instructions; null while one of them is still loading.
+ */
+function publishGroups(
+  sections: readonly OutlineSection[],
+  groupIds: readonly string[],
+  groups: ReadonlyMap<string, GroupBundle>,
+  starts: ReadonlyMap<string, GroupStart>,
+  t: TFunction,
+): PublishGroup[] | null {
+  if (groupIds.some((id) => !groups.has(id))) return null;
+  return sections.flatMap((section) =>
+    unitsOf(section).flatMap((unit) => {
+      const bundle = unit.kind === "group" ? groups.get(unit.id) : undefined;
+      if (!bundle) return [];
+      const instructions = bundle.group.instructions;
+      return [
+        {
+          id: unit.id,
+          name: t("builder.groupInSection", {
+            kind: t(`groups.kind.${groupKind(bundle, starts.get(unit.id))}.name`),
+            section: section.title,
+          }),
+          titled:
+            bundle.group.title.trim() !== "" ||
+            (instructions != null && contentPlainText(instructions).trim() !== ""),
+        },
+      ];
+    }),
+  );
 }

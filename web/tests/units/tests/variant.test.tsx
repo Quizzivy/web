@@ -154,6 +154,9 @@ beforeEach(() => {
     http.post(`${BASE}/teacher/ai/tests/:id/variant`, () =>
       contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
         changes,
+        questions: 3,
+        changedQuestions: 1,
+        capped: false,
         usage: { credits: 2600, left: 15000 },
       }),
     ),
@@ -306,6 +309,9 @@ describe("Make a variant", () => {
               payload: { optionOrder: [MEMBER_OPTIONS[1]!, MEMBER_OPTIONS[0]!] },
             },
           ],
+          questions: 3,
+          changedQuestions: 1,
+          capped: false,
           usage: { credits: 2600, left: 15000 },
         }),
       ),
@@ -377,6 +383,9 @@ describe("Make a variant", () => {
       http.post(`${BASE}/teacher/ai/tests/:id/variant`, () =>
         contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
           changes: [{ ...changes[0]!, payload: { prompt: " " } }],
+          questions: 3,
+          changedQuestions: 1,
+          capped: false,
           usage: { credits: 2600, left: 15000 },
         }),
       ),
@@ -406,6 +415,9 @@ describe("Make a variant", () => {
         await gate;
         return contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
           changes,
+          questions: 3,
+          changedQuestions: 1,
+          capped: false,
           usage: { credits: 2600, left: 15000 },
         });
       }),

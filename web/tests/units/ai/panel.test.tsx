@@ -14,7 +14,7 @@ import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
-import { aiError, aiOn, BASE, month, renderWithApp } from "./support";
+import { aiError, SAYS, aiOn, BASE, month, renderWithApp } from "./support";
 
 const ai = vi_.ai;
 const TEST_ID = "018f0000-0000-7000-8000-0000000000a1";
@@ -170,6 +170,46 @@ describe("the Generate panel", () => {
     ).toBeDisabled();
   });
 
+  // docs#5, the owner's call of 2026-11-15: Generate can write "Choose N" and
+  // a word limit, and sends them only for a type it writes.
+  it("asks for Choose N and an essay's word limit when they are chosen", async () => {
+    let body: Record<string, unknown> = {};
+    server.use(
+      http.post(`${BASE}/teacher/ai/questions/generate`, async ({ request }) => {
+        body = (await request.json()) as Record<string, unknown>;
+        return contractJson("/teacher/ai/questions/generate", "post", 200, {
+          items: generated,
+          usage: { credits: 1450, left: 17350 },
+        });
+      }),
+    );
+    const { dialog, user } = await openPanel({
+      kind: "generate",
+      context: generateContext(),
+    });
+    expect(within(dialog).queryByText(ai.generate.chooseN)).toBeNull();
+    const types = within(dialog).getByRole("group", { name: ai.generate.types });
+    await user.click(within(types).getByRole("button", { name: "Nhiều đáp án" }));
+    await user.click(within(types).getByRole("button", { name: "Bài luận" }));
+    await user.click(
+      within(dialog).getByRole("switch", {
+        name: new RegExp(`^${ai.generate.chooseN}`),
+      }),
+    );
+    await user.click(
+      within(dialog).getByRole("combobox", { name: ai.generate.essayWordLimit }),
+    );
+    await user.click(await screen.findByRole("option", { name: "Tối đa 250 từ" }));
+    expect(
+      within(dialog).queryByRole("combobox", { name: ai.generate.shortWordLimit }),
+    ).toBeNull();
+    await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
+    await within(dialog).findByText("What do cities rethink?");
+    expect(body["chooseN"]).toBe(true);
+    expect(body["essayMaxWords"]).toBe(250);
+    expect(body["maxWords"]).toBeUndefined();
+  });
+
   it("asks for the passage by id, then saves only the kept questions with the AI draft tag", async () => {
     let body: unknown;
     server.use(
@@ -231,7 +271,7 @@ describe("the Generate panel", () => {
     await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
     await user.click(
       await within(dialog).findByRole("button", {
-        name: "Thêm 2 câu vào nhóm Reading club",
+        name: "Thêm 2 câu vào “Reading club”",
       }),
     );
 
@@ -245,7 +285,7 @@ describe("the Generate panel", () => {
     );
     expect(
       await screen.findByText(
-        "Đã thêm 2 câu hỏi vào nhóm Reading club. Hãy kiểm tra từng câu trước khi xuất bản.",
+        "Đã thêm 2 câu hỏi vào “Reading club”. Hãy kiểm tra từng câu trước khi xuất bản.",
       ),
     ).toBeVisible();
   });
@@ -515,7 +555,7 @@ describe("the Generate panel", () => {
     });
     await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
     const alert = await within(dialog).findByRole("alert");
-    expect(alert).toHaveTextContent(ai.unavailable);
+    expect(alert).toHaveTextContent(SAYS.AI_UNAVAILABLE);
     expect(within(dialog).getByLabelText(ai.generate.source)).toHaveValue(PASSAGE);
 
     await user.click(within(alert).getByRole("button", { name: ai.tryAgain }));
@@ -536,6 +576,30 @@ describe("the Generate panel", () => {
     });
     await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(ai.unavailable);
+  });
+
+  // AIT-5, the owner's call of 2026-11-15: the server tells an answer with
+  // nothing usable in it from a provider that did not answer.
+  it("says the server's sentence when the assistant answered nothing usable, and offers Try again", async () => {
+    const unusable =
+      "AI đã trả lời nhưng không có nội dung nào dùng được. Hãy thử lại.";
+    server.use(
+      http.post(`${BASE}/teacher/ai/questions/generate`, () =>
+        HttpResponse.json(
+          { error: { code: "AI_UNAVAILABLE", message: unusable } },
+          { status: 503, headers: { "Retry-After": "30" } },
+        ),
+      ),
+    );
+    const { dialog, user } = await openPanel({
+      kind: "generate",
+      context: generateContext(),
+    });
+    await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
+    const alert = await within(dialog).findByRole("alert");
+    expect(alert).toHaveTextContent(unusable);
+    expect(alert).not.toHaveTextContent(ai.unavailable);
+    expect(within(dialog).getByRole("button", { name: ai.tryAgain })).toBeVisible();
   });
 
   it.each([

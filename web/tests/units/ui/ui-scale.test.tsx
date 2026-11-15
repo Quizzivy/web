@@ -206,6 +206,7 @@ describe("the three controls the student screens use first", () => {
     expect(button).not.toContain("h-7.5");
   });
 
+  // Off, the track is a control's edge colour, `input`, not the hairline `border`: 3:1 against the page (web#107).
   it("draws the deck's 38x22 switch in the primary colour", () => {
     render(<Switch aria-label="Âm thanh" />);
     const root = screen.getByRole("switch", { name: "Âm thanh" });
@@ -215,7 +216,7 @@ describe("the three controls the student screens use first", () => {
         "h-5.5",
         "w-9.5",
         "data-[state=checked]:bg-primary",
-        "data-[state=unchecked]:bg-border",
+        "data-[state=unchecked]:bg-input",
       ]),
     );
     for (const c of [

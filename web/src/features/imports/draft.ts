@@ -4,6 +4,7 @@ import { contentPlainText } from "@/components/shared/content/plainText";
 import type {
   ImportDraftAnswer,
   ImportDraftBlank,
+  ImportDraftGroup,
   ImportDraftOption,
   ImportDraftQuestion,
   ImportDraftSection,
@@ -138,12 +139,12 @@ export function updateQuestion(
         changed = true;
         return {
           ...item,
-          group: {
+          group: withMemberGaps({
             ...group,
             questions: group.questions.map((question) =>
               question.id === questionId ? update(question) : question,
             ),
-          },
+          }),
         };
       }
       return item;
@@ -176,7 +177,10 @@ export function updateQuestions(
       const group = item.group;
       if (!group?.questions.some((question) => ids.has(question.id))) return item;
       changed = true;
-      return { ...item, group: { ...group, questions: group.questions.map(each) } };
+      return {
+        ...item,
+        group: withMemberGaps({ ...group, questions: group.questions.map(each) }),
+      };
     });
     return changed ? { ...section, items } : section;
   });
@@ -734,17 +738,79 @@ export function dropsAnswerData(
 }
 
 /**
- * passageBound lists the questions a shared passage's gaps answer through a
- * blank of their own (`blankGapId`): a cloze's members. The gap of such a
- * question's prompt is the one the passage is bound to, by its ID.
+ * PASSAGE_MEMBER_TYPES are the types a question a passage's gap is bound to
+ * may take (the owner, 2026-11-15, Quizzivy/web#71): a choice answers the gap
+ * as a whole, a fill in the blank through a blank of its own. Any other type
+ * leaves the gap with nobody to answer it, so the question has to be taken out
+ * of the passage first.
  */
-export function passageBound(sections: readonly ImportDraftSection[]): Set<string> {
-  const bound = new Set<string>();
+export const PASSAGE_MEMBER_TYPES: ReadonlySet<QuestionType> = new Set([
+  "single_choice",
+  "multiple_choice",
+  "fill_blank",
+]);
+
+/** passageMembers lists the questions a shared passage's gaps are bound to: a cloze's members. */
+export function passageMembers(sections: readonly ImportDraftSection[]): Set<string> {
+  const members = new Set<string>();
   for (const section of sections)
     for (const item of section.items)
-      for (const link of item.group?.gaps ?? [])
-        if (link.blankGapId !== undefined) bound.add(link.questionId);
-  return bound;
+      for (const link of item.group?.gaps ?? []) members.add(link.questionId);
+  return members;
+}
+
+/**
+ * withMemberGaps keeps a group's gap links true to its members after an edit.
+ * A member that became a choice answers its gap as a whole, so its link loses
+ * the blank (`blankGapId`). A fill-in-the-blank member whose link names no
+ * gap of its prompt, because it was a choice or its gap was removed, is bound
+ * again to the first gap of its prompt no other link holds. The group comes
+ * back as it was when nothing needs changing.
+ */
+export function withMemberGaps(group: ImportDraftGroup): ImportDraftGroup {
+  const byId = new Map(group.questions.map((question) => [question.id, question]));
+  const held = new Set(
+    group.gaps.flatMap((link) =>
+      link.blankGapId === undefined ? [] : [link.blankGapId],
+    ),
+  );
+  let changed = false;
+  const gaps = group.gaps.map((link) => {
+    const member = byId.get(link.questionId);
+    if (member === undefined) return link;
+    if (member.type === "single_choice" || member.type === "multiple_choice") {
+      if (link.blankGapId === undefined) return link;
+      changed = true;
+      const { blankGapId, ...rest } = link;
+      held.delete(blankGapId);
+      return rest;
+    }
+    if (member.type !== "fill_blank") return link;
+    const own = promptGaps(member.prompt).map((gap) => gap.id);
+    if (link.blankGapId !== undefined && own.includes(link.blankGapId)) return link;
+    const free = own.find((id) => !held.has(id));
+    if (free === undefined) return link;
+    changed = true;
+    if (link.blankGapId !== undefined) held.delete(link.blankGapId);
+    held.add(free);
+    return { ...link, blankGapId: free };
+  });
+  return changed ? { ...group, gaps } : group;
+}
+
+/**
+ * passageTypeChange is the change of a passage member's type that the editor
+ * makes: refused (the question as it is) for a type outside
+ * PASSAGE_MEMBER_TYPES, and for a choice with the gaps of its prompt written
+ * out, since only a fill in the blank holds a gap; the passage then binds the
+ * question as a whole (`withMemberGaps`).
+ */
+export function passageTypeChange(
+  question: ImportDraftQuestion,
+  type: QuestionType,
+): ImportDraftQuestion {
+  if (!PASSAGE_MEMBER_TYPES.has(type)) return question;
+  return changeTypeSettled(question, type);
 }
 
 /**
@@ -778,47 +844,51 @@ export interface TypeChangePlan {
   dropping: ImportDraftQuestion[];
   /** Those of `changing` whose prompt holds gaps the new type cannot, which are written out (`settleGaps`). */
   settling: ImportDraftQuestion[];
-  /** Those of `changing` whose gaps a passage is bound to: they keep them, and are not valid until the teacher sees to them. */
-  keeping: ImportDraftQuestion[];
+  /** Passage members the type is not one of PASSAGE_MEMBER_TYPES for: they keep their type, and are not in `changing`. */
+  refused: ImportDraftQuestion[];
 }
 
 /**
  * planTypeChange sorts questions by what a change to `type` does to each, in
- * the order given. `bound` are the questions whose gaps a passage answers
- * through (`passageBound`).
+ * the order given. `members` are the questions a passage's gaps are bound to
+ * (`passageMembers`).
  */
 export function planTypeChange(
   questions: readonly ImportDraftQuestion[],
   type: QuestionType,
-  bound: ReadonlySet<string> = new Set(),
+  members: ReadonlySet<string> = new Set(),
 ): TypeChangePlan {
-  const changing = questions.filter((question) => question.type !== type);
-  const gapped =
-    type === "fill_blank"
-      ? []
-      : changing.filter((question) => promptGaps(question.prompt).length > 0);
+  const other = questions.filter((question) => question.type !== type);
+  const refused = PASSAGE_MEMBER_TYPES.has(type)
+    ? []
+    : other.filter((question) => members.has(question.id));
+  const changing = other.filter((question) => !refused.includes(question));
   return {
     changing,
     unchanged: questions.filter((question) => question.type === type),
     dropping: changing.filter((question) =>
       dropsAnswerData(question, changeType(question, type)),
     ),
-    settling: gapped.filter((question) => !bound.has(question.id)),
-    keeping: gapped.filter((question) => bound.has(question.id)),
+    settling:
+      type === "fill_blank"
+        ? []
+        : changing.filter((question) => promptGaps(question.prompt).length > 0),
+    refused,
   };
 }
 
 /**
  * applyTypeChange is the change `planTypeChange` describes, for one question
- * of it: gaps written out, unless a passage is bound to them.
+ * of it: gaps written out, and a passage member left as it is when the type
+ * is one it may not take.
  */
 export function applyTypeChange(
   question: ImportDraftQuestion,
   type: QuestionType,
-  bound: ReadonlySet<string> = new Set(),
+  members: ReadonlySet<string> = new Set(),
 ): ImportDraftQuestion {
-  return bound.has(question.id)
-    ? changeType(question, type)
+  return members.has(question.id)
+    ? passageTypeChange(question, type)
     : changeTypeSettled(question, type);
 }
 

@@ -76,19 +76,20 @@ export function ReviewBulkBar({
  * ones lose options, answers or answer settings, by their printed labels,
  * since no dialog asks about each of them as a single change does. It also
  * says what becomes of the gaps a fill in the blank leaves in its prompt: they
- * are written out (`settleGaps`), except in the questions of `bound`, whose
- * gaps a passage answers through. The change can be made only once a type is
- * chosen that at least one question is not.
+ * are written out (`settleGaps`), and which questions keep their type because
+ * a passage's gap is bound to them (`members`) and the type is not one such a
+ * question may take. The change can be made only once a type is chosen that at
+ * least one question is not and may become.
  */
 export function BulkTypeDialog({
   questions,
-  bound,
+  members,
   open,
   onOpenChange,
   onApply,
 }: Readonly<{
   questions: readonly ImportDraftQuestion[];
-  bound: ReadonlySet<string>;
+  members: ReadonlySet<string>;
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onApply: (type: QuestionType, changing: readonly ImportDraftQuestion[]) => void;
@@ -96,7 +97,7 @@ export function BulkTypeDialog({
   const { t } = useTranslation();
   const id = useId();
   const [chosen, setChosen] = useState<EditableType | null>(null);
-  const plan = chosen === null ? null : planTypeChange(questions, chosen, bound);
+  const plan = chosen === null ? null : planTypeChange(questions, chosen, members);
   const changes = plan !== null && plan.changing.length > 0;
   const close = (next: boolean) => {
     if (!next) setChosen(null);
@@ -160,11 +161,11 @@ export function BulkTypeDialog({
               {t("imports.review.bulkTypeSettling", { count: plan.settling.length })}
             </p>
           ) : null}
-          {plan.keeping.length > 0 ? (
+          {plan.refused.length > 0 ? (
             <Callout tone="info" size="sm">
-              {t("imports.review.bulkTypeKeeping", {
-                count: plan.keeping.length,
-                labels: plan.keeping.map((question) => question.label).join(", "),
+              {t("imports.review.bulkTypeRefused", {
+                count: plan.refused.length,
+                labels: plan.refused.map((question) => question.label).join(", "),
               })}
             </Callout>
           ) : null}

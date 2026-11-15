@@ -14,7 +14,7 @@ import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
-import { aiError, aiOn, BASE, month } from "../ai/support";
+import { aiError, SAYS, aiOn, BASE, month } from "../ai/support";
 import "@/lib/i18n";
 
 vi.mock("@/lib/api/client", async (importOriginal) => {
@@ -281,7 +281,7 @@ describe("the bank's question editor", () => {
     const user = await renderBankReady();
     await user.click(await screen.findByRole("button", { name: ai.distract.suggest }));
     const panel = await screen.findByRole("region", { name: ai.distract.title });
-    expect(within(panel).getByText(ai.unavailable)).toBeInTheDocument();
+    expect(within(panel).getByText(SAYS.AI_UNAVAILABLE)).toBeInTheDocument();
     expect(within(panel).queryAllByRole("listitem")).toHaveLength(0);
   });
 

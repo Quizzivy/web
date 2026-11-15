@@ -6,7 +6,7 @@ import { ContentEditor } from "@/components/shared/content/editor/ContentEditor"
 import { ContentView } from "@/components/shared/content/ContentView";
 import type { SemanticContent } from "@/components/shared/content/model";
 import { cn } from "@/lib/utils";
-import "@/lib/i18n";
+import { loadSurface } from "@/lib/i18n";
 import "@/index.css";
 import { formattingSample, tableSample } from "./fixtures";
 
@@ -89,4 +89,8 @@ export function EditorPrototype() {
   );
 }
 
-createRoot(document.getElementById("root")!).render(<EditorPrototype />);
+// The editor is the teacher's: its strings are the teacher surface, which the
+// app's teacher tree loads before it renders.
+void loadSurface("teacher").then(() =>
+  createRoot(document.getElementById("root")!).render(<EditorPrototype />),
+);

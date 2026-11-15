@@ -1,9 +1,10 @@
 import "@testing-library/jest-dom/vitest";
-import { afterAll, afterEach, beforeAll } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { toast } from "sonner";
 import { server } from "./server";
-import { SURFACES, loadLocale, loadSurface } from "@/lib/i18n";
+import i18n, { SURFACES, loadLocale, loadSurface } from "@/lib/i18n";
+import { en, vi } from "./locales";
 
 /**
  * The app fetches a route tree's strings before the tree renders, and the
@@ -13,6 +14,32 @@ import { SURFACES, loadLocale, loadSurface } from "@/lib/i18n";
  */
 await Promise.all(SURFACES.map(loadSurface));
 await loadLocale("en");
+
+/**
+ * A test that resets modules and imports `@/lib/i18n` again runs its `init`
+ * again on the one i18next instance, which then holds the bundled strings
+ * alone. Each test after it starts with every string again.
+ */
+const PROBES = [
+  "builder.titleLabel",
+  "adminShell.nav.users",
+  "student.shell.test",
+  "forgot.title",
+];
+beforeEach(() => {
+  for (const [language, strings] of [
+    ["vi", vi],
+    ["en", en],
+  ] as const)
+    if (PROBES.some((key) => !i18n.exists(key, { lng: language, fallbackLng: [] })))
+      i18n.addResourceBundle(
+        language,
+        "translation",
+        structuredClone(strings),
+        true,
+        true,
+      );
+});
 
 /** jsdom ships no matchMedia; a desktop-width answer keeps the admin layouts in their wide form. */
 window.matchMedia ??= (query: string) =>

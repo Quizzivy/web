@@ -31,7 +31,7 @@ for (const width of [1440, 1280, 1024, 768]) {
     await openConsole(page, adminUser, "/admin");
 
     await expect(page.getByRole("heading", { level: 1 })).toBeVisible();
-    await expect(nav(page).getByRole("link")).toHaveCount(8);
+    await expect(nav(page).getByRole("link")).toHaveCount(9);
     await expect(nav(page).getByRole("link", { name: "Tổng quan" })).toHaveAttribute(
       "aria-current",
       "page",

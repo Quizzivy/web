@@ -142,6 +142,7 @@ describe("Save changes", () => {
       },
       retention: SAVED.retention,
       limits: SAVED.limits,
+      leadRecipients: SAVED.leadRecipients,
       expectedRevision: 7,
     });
   });

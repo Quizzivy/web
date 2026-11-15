@@ -27,10 +27,14 @@ const logo = z
 
 const keptMonths = z.union([z.literal(12), z.literal(24)]).nullable();
 
+/** LEAD_RECIPIENTS_MAX is the most addresses the centre can have told of a new consultation request. */
+export const LEAD_RECIPIENTS_MAX = 5;
+
 /**
  * settingsFormSchema is the System settings form: the centre's profile and
- * logos, the sign-in policy, the retention and the usage limits the document
- * carries. The four sections edit one document, so they share one schema. A logo's
+ * logos, the sign-in policy, the retention, the usage limits and the
+ * addresses told of a new consultation request, which the document carries.
+ * The four sections edit one document, so they share one schema. A logo's
  * `preview` is the address of the PNG just uploaded, for the tile, and is
  * not sent. The rules only the server can judge, a website, an email address
  * and a phone number, are left to it and shown on their field.
@@ -75,6 +79,13 @@ export const settingsFormSchema = z.object({
     anonymiseDisabledAfterMonths: keptMonths,
   }),
   limits: limitsSchema,
+  leadRecipients: z
+    .array(
+      z
+        .email("systemSettings.errors.recipientInvalid")
+        .max(254, "systemSettings.errors.recipientInvalid"),
+    )
+    .max(LEAD_RECIPIENTS_MAX, "systemSettings.errors.recipientsTooMany"),
 });
 
 /** SettingsFormValues is what the System settings form's fields hold. */
@@ -97,7 +108,8 @@ export type SettingsFormMatchesTheContract = Expect<
 
 /** formValues is the form's fields for a stored document, with an optional text shown empty. */
 export function formValues(saved: OrganizationSettings): SettingsFormValues {
-  const { organization, signIn, retention, limits, limitDefaults } = saved;
+  const { organization, signIn, retention, limits, limitDefaults, leadRecipients } =
+    saved;
   return {
     organization: {
       name: organization.name,
@@ -112,6 +124,7 @@ export function formValues(saved: OrganizationSettings): SettingsFormValues {
     signIn: { ...signIn, allowedGoogleDomains: [...signIn.allowedGoogleDomains] },
     retention: { ...retention },
     limits: limitsValues(limits, limitDefaults),
+    leadRecipients: [...leadRecipients],
   };
 }
 
@@ -121,6 +134,11 @@ export function settingsInput(
   revision: number,
 ): OrganizationSettingsInput {
   return { ...values, expectedRevision: revision };
+}
+
+/** recipientOf is an address as it is kept: lower-case, without the space around it. */
+export function recipientOf(entry: string): string {
+  return entry.trim().toLowerCase();
 }
 
 /** domainOf is a Google domain as it is kept: lower-case, without a leading `@`. */

@@ -6,3 +6,9 @@
 export const STUDENT_HOST = "http://localhost:4174";
 export const STAFF_HOST = "http://localhost:4175";
 export const ONE_HOST = "http://localhost:4173";
+
+/**
+ * LANDING_HOST is the landing site: a build of its own, with the student host
+ * and the staff host above as the two hosts its links lead to.
+ */
+export const LANDING_HOST = "http://localhost:4176";

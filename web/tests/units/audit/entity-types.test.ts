@@ -15,6 +15,8 @@ const WRITTEN = [
   "class_join_code",
   "class_member",
   "data_export",
+  "lead",
+  "leads",
   "maintenance_window",
   "media_asset",
   "organization",

@@ -1,0 +1,46 @@
+/* The landing site's own styles, beside the app's tokens and utilities
+   (src/index.css), which its entry loads first. */
+
+/* The deeper shadow of the cards that sit on the colour at the top. */
+:root {
+  --qz-landing-shadow:
+    0 24px 48px -16px rgba(20, 28, 30, 0.22), 0 2px 6px rgba(20, 28, 30, 0.06);
+}
+:root.dark {
+  --qz-landing-shadow: 0 24px 48px -16px rgba(0, 0, 0, 0.7);
+}
+.landing-shadow {
+  box-shadow: var(--qz-landing-shadow);
+}
+
+/* The illustrations have their colours drawn in, so the tile under each keeps
+   the light theme's soft grounds in the dark theme. */
+.landing-tile {
+  --accent-soft: #f1f7e0;
+  --info-soft: oklch(0.96 0.02 230);
+  --warning-soft: oklch(0.96 0.04 80);
+}
+
+/* A drawn shape, used as a mask so it takes a token's colour and follows the
+   theme. The shape is named in --landing-mask. */
+.landing-mask {
+  -webkit-mask: var(--landing-mask) center / 100% 100% no-repeat;
+  mask: var(--landing-mask) center / 100% 100% no-repeat;
+}
+.landing-mask-contain {
+  -webkit-mask: var(--landing-mask) center / contain no-repeat;
+  mask: var(--landing-mask) center / contain no-repeat;
+}
+
+@media (prefers-reduced-motion: no-preference) {
+  html {
+    scroll-behavior: smooth;
+  }
+}
+
+/* The privacy notice on paper: the notice alone. */
+@media print {
+  [data-landing-chrome] {
+    display: none;
+  }
+}

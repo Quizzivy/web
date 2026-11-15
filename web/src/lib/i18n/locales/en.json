@@ -2996,6 +2996,8 @@
     "checkAnswers": "Every question has a correct answer",
     "checkPoints": "Every question has points",
     "checkGroups": "Every passage, cloze and recording has instructions or a title",
+    "checkGroupUntitled": "{{name}}: no title or instructions",
+    "groupInSection": "{{kind}} in “{{section}}”",
     "fixIt": "Fix it",
     "fixBeforePublishing": "Fix the items above before publishing.",
     "changeNote": "Change note",

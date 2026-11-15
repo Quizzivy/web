@@ -4174,7 +4174,7 @@
       "partial": "Đúng một phần",
       "pending": "Chờ chấm",
       "unanswered": "Chưa trả lời",
-      "removed": "Đã xoá",
+      "removed": "Đã xoá theo chính sách lưu trữ",
       "banded": "Chấm theo band"
     },
     "studentAnswer": "Bài làm của học viên",
@@ -4356,7 +4356,8 @@
       "correct": "Đúng",
       "wrong": "Sai",
       "partial": "Đúng một phần",
-      "banded": "Chấm theo band"
+      "banded": "Chấm theo band",
+      "removed": "Đã xoá theo chính sách lưu trữ"
     },
     "points": "{{earned}} / {{total}}",
     "waiting": "Chờ chấm",

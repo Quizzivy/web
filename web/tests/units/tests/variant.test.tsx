@@ -99,6 +99,9 @@ function storedGroup(
   id: string,
   members: readonly string[],
   optionIds: readonly string[],
+  prompts: readonly string[] = members.map(
+    (_, index) => `What do parks do? (${index + 1})`,
+  ),
 ): StoredGroup {
   return {
     bundle: {
@@ -118,7 +121,7 @@ function storedGroup(
           type: "single_choice" as const,
           level: null,
           skill: null,
-          prompt: `What do parks do? (${index + 1})`,
+          prompt: prompts[index]!,
           points: 1,
           options: [
             { id: optionIds[0]!, text: "Cool the streets", isCorrect: true },
@@ -370,6 +373,152 @@ describe("Make a variant", () => {
       [COPY_OPTIONS[1], "Heat the streets"],
       [COPY_OPTIONS[0], "Cool the streets"],
     ]);
+  });
+
+  describe("when the test changed after the page read it (VR-2)", () => {
+    const OTHER_GROUP = "018f0000-0000-7000-8000-0000000000f2";
+    const OTHER_COPY = "018f0000-0000-7000-8000-0000000000fa";
+    const OTHER_MEMBERS = [
+      "018f0000-0000-7000-8000-0000000000c1",
+      "018f0000-0000-7000-8000-0000000000c2",
+    ];
+    const OTHER_COPY_MEMBERS = [
+      "018f0000-0000-7000-8000-0000000000c3",
+      "018f0000-0000-7000-8000-0000000000c4",
+    ];
+    const OTHER_PROMPTS = ["Where do birds go?", "Why do leaves fall?"];
+    const sections = (...groups: string[]) => [
+      {
+        id: SECTION_ID,
+        ordinal: 0,
+        title: "Đọc hiểu",
+        instructions: null,
+        questionIds: [],
+        units: groups.map((id) => ({ kind: "group" as const, id })),
+      },
+    ];
+    const reworded = {
+      questionId: MEMBERS[1]!,
+      number: 2,
+      kind: "reword" as const,
+      title: "What do parks do? (2)",
+      before: "What do parks do? (2)",
+      after: "What are parks good for?",
+      payload: { prompt: "What are parks good for?" },
+    };
+
+    function serveTwoGroups(copied: Record<string, StoredGroup>) {
+      const bodies: Record<string, StoredGroup["bundle"]> = {};
+      const stored: Record<string, StoredGroup> = {
+        [GROUP]: storedGroup(GROUP, MEMBERS, MEMBER_OPTIONS),
+        [OTHER_GROUP]: storedGroup(
+          OTHER_GROUP,
+          OTHER_MEMBERS,
+          MEMBER_OPTIONS,
+          OTHER_PROMPTS,
+        ),
+        ...copied,
+      };
+      server.use(
+        http.post(`${BASE}/teacher/ai/tests/:id/variant`, () =>
+          contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
+            changes: [reworded],
+            usage: { credits: 2600, left: 15000 },
+          }),
+        ),
+        http.get(`${BASE}/teacher/question-groups/:id`, ({ params }) =>
+          contractJson(
+            "/teacher/question-groups/{id}",
+            "get",
+            200,
+            stored[String(params["id"])]!,
+          ),
+        ),
+        http.put(`${BASE}/teacher/question-groups/:id`, async ({ params, request }) => {
+          const id = String(params["id"]);
+          writes.push(`update group ${id}`);
+          bodies[id] = (
+            (await request.json()) as { bundle: StoredGroup["bundle"] }
+          ).bundle;
+          return contractJson("/teacher/question-groups/{id}", "put", 200, stored[id]!);
+        }),
+        // The test is copied as it is now: the other group first.
+        http.post(`${BASE}/teacher/tests/:id/duplicate`, ({ params }) => {
+          writes.push(`duplicate test ${String(params["id"])}`);
+          return contractJson("/teacher/tests/{id}/duplicate", "post", 201, {
+            ...testFixture({ sections: sections(OTHER_COPY, COPY_GROUP) }),
+            id: COPY,
+            status: "draft",
+            currentVersion: 0,
+            nextVersion: 1,
+          });
+        }),
+      );
+      return bodies;
+    }
+
+    async function saveAfterAReorder() {
+      detail.test = testFixture({ sections: sections(GROUP, OTHER_GROUP) });
+      const { user } = renderDetail();
+      await user.click(await screen.findByRole("button", { name: ai.entry.variant }));
+      const dialog = await screen.findByRole("dialog");
+      await user.click(within(dialog).getByRole("button", { name: ai.variant.run }));
+      const save = await within(dialog).findByRole("button", {
+        name: "Lưu 1 thay đổi thành bản nháp",
+      });
+      // Someone moves the other group to the top before the teacher saves.
+      detail.test = testFixture({ sections: sections(OTHER_GROUP, GROUP) });
+      await user.click(save);
+      return dialog;
+    }
+
+    it("writes a member's change to the copy of its own group, wherever the group now is", async () => {
+      const bodies = serveTwoGroups({
+        [COPY_GROUP]: storedGroup(COPY_GROUP, COPY_MEMBERS, COPY_OPTIONS),
+        [OTHER_COPY]: storedGroup(
+          OTHER_COPY,
+          OTHER_COPY_MEMBERS,
+          COPY_OPTIONS,
+          OTHER_PROMPTS,
+        ),
+      });
+      await saveAfterAReorder();
+
+      expect(
+        await screen.findByText(ai.variant.saved, {}, { timeout: 3000 }),
+      ).toBeVisible();
+      expect(writes).toEqual([
+        `duplicate test ${TEST_ID}`,
+        `save outline ${COPY}`,
+        `update group ${COPY_GROUP}`,
+      ]);
+      expect(bodies[COPY_GROUP]!.questions.map((q) => q.input.prompt)).toEqual([
+        "What do parks do? (1)",
+        "What are parks good for?",
+      ]);
+    });
+
+    it("writes no change when a copied group does not hold its group's members in order", async () => {
+      serveTwoGroups({
+        // The members were swapped between the read and the copy.
+        [COPY_GROUP]: storedGroup(COPY_GROUP, COPY_MEMBERS, COPY_OPTIONS, [
+          "What do parks do? (2)",
+          "What do parks do? (1)",
+        ]),
+        [OTHER_COPY]: storedGroup(
+          OTHER_COPY,
+          OTHER_COPY_MEMBERS,
+          COPY_OPTIONS,
+          OTHER_PROMPTS,
+        ),
+      });
+      const dialog = await saveAfterAReorder();
+
+      expect(await within(dialog).findByRole("alert")).toHaveTextContent(
+        ai.variant.changed,
+      );
+      expect(writes).toEqual([`duplicate test ${TEST_ID}`]);
+    });
   });
 
   it("writes nothing when a change cannot be saved", async () => {

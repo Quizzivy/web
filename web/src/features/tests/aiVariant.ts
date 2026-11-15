@@ -15,7 +15,13 @@ import {
   type StoredGroup,
 } from "@/features/question-groups/api";
 import { memberValues } from "@/features/question-groups/model";
-import { duplicateTest, saveMixedOutline, toMixedOutline, type Test } from "./api";
+import {
+  duplicateTest,
+  getTest,
+  saveMixedOutline,
+  toMixedOutline,
+  type Test,
+} from "./api";
 
 const TITLE_MAX = 200;
 
@@ -68,6 +74,65 @@ function memberIndex(group: StoredGroup, questionId: string): number {
   );
 }
 
+/** withoutIds is a value with every `id` taken out, which a copy renews. */
+function withoutIds(value: unknown): unknown {
+  if (Array.isArray(value)) return value.map(withoutIds);
+  if (value !== null && typeof value === "object")
+    return Object.fromEntries(
+      Object.entries(value)
+        .filter(([key]) => key !== "id")
+        .map(([key, inner]) => [key, withoutIds(inner)]),
+    );
+  return value;
+}
+
+/**
+ * sameOutline says whether `copy` is laid out as `original`: the same
+ * sections with the same units in the same places, a standalone question by
+ * its id (a copy names the same bank questions) and a group by its place.
+ */
+function sameOutline(original: Test, copy: Test): boolean {
+  const from = toMixedOutline(original);
+  const to = toMixedOutline(copy);
+  return (
+    from.length === to.length &&
+    from.every((section, index) => {
+      const units = to[index]?.units ?? [];
+      return (
+        section.units.length === units.length &&
+        section.units.every((unit, at) => {
+          const other = units[at];
+          return (
+            other?.kind === unit.kind && (unit.kind === "group" || other.id === unit.id)
+          );
+        })
+      );
+    })
+  );
+}
+
+/**
+ * sameMembers says whether the copy's group holds what the original holds,
+ * member by member in order, ids aside. Only then is the member at a place in
+ * the copy the copy of the member at that place in the original (VR-2).
+ */
+function sameMembers(original: StoredGroup, copy: StoredGroup): boolean {
+  const from = original.bundle.group.members;
+  const to = copy.bundle.group.members;
+  return (
+    from.length === to.length &&
+    from.every((member, index) => {
+      const a = memberInput(original, member.questionId);
+      const b = to[index] && memberInput(copy, to[index].questionId);
+      return (
+        a !== undefined &&
+        b !== undefined &&
+        JSON.stringify(withoutIds(a)) === JSON.stringify(withoutIds(b))
+      );
+    })
+  );
+}
+
 function canSave(values: Parameters<typeof withVariant>[0], list: AiVariantChange[]) {
   return questionSchema.safeParse(withVariant(values, list)).success;
 }
@@ -92,8 +157,10 @@ async function varyCopiedGroup(
   copyId: string,
   original: StoredGroup,
   grouped: ReadonlyMap<string, AiVariantChange[]>,
+  changed: string,
 ) {
   const copy = await getGroup(copyId);
+  if (!sameMembers(original, copy)) throw new AiWriteError(changed);
   const questions = copy.bundle.questions.map((question) => {
     const index = memberIndex(copy, question.id);
     const source = original.bundle.group.members[index]?.questionId;
@@ -117,12 +184,35 @@ async function varyCopiedGroup(
 }
 
 /**
+ * copiedAsRead answers the ids of `copy`'s groups in outline order once the
+ * copy is laid out as `current` and each group that has changes holds the
+ * members of its original in order, and refuses with `changed` otherwise.
+ */
+async function copiedAsRead(
+  current: Test,
+  copy: Test,
+  groups: ReadonlyMap<number, StoredGroup>,
+  changed: string,
+): Promise<string[]> {
+  const copiedGroups = groupUnitIds(copy);
+  if (!sameOutline(current, copy)) throw new AiWriteError(changed);
+  for (const [index, original] of groups) {
+    const copyId = copiedGroups[index];
+    if (!copyId || !sameMembers(original, await getGroup(copyId)))
+      throw new AiWriteError(changed);
+  }
+  return copiedGroups;
+}
+
+/**
  * VariantNames are the words a variant's writes need: the new test's title,
  * and the refusal for a change that cannot be saved, by the question's number.
  */
 export interface VariantNames {
   title: string;
   invalid: (number: number) => string;
+  /** The refusal when the test changed under the copy while it was made. */
+  changed: string;
 }
 
 /**
@@ -137,6 +227,13 @@ export interface VariantNames {
  * own, so a changed member is written to the copy's group, found at the same
  * place in the outline and the member at the same place in the group, with
  * `updateGroup`. The test, its questions and its groups are never touched.
+ *
+ * The places are read from the test as it is now, not from the page's
+ * `test`, which may predate a reorder (VR-2). Nothing ties a copy's group or
+ * member to the one it was copied from, so before any group is written the
+ * copy must be laid out as the test was read and each of its groups must hold
+ * the same members in the same order; if the test changed between the read
+ * and the copy, it stops with `names.changed` before it writes a change.
  */
 export async function saveVariant(
   test: Test,
@@ -144,9 +241,10 @@ export async function saveVariant(
   names: VariantNames,
 ): Promise<string> {
   const grouped = byQuestion(changes);
-  const standalone = questionUnitIds(test);
+  const current = await getTest(test.id);
+  const standalone = questionUnitIds(current);
   const memberIds = [...grouped.keys()].filter((id) => !standalone.has(id));
-  const groups = await groupsHolding(test, memberIds);
+  const groups = await groupsHolding(current, memberIds);
   const sources = new Map<string, AdminQuestion>();
   for (const [questionId, list] of grouped) {
     const number = list[0]?.number ?? 0;
@@ -164,6 +262,7 @@ export async function saveVariant(
       throw new AiWriteError(names.invalid(number));
   }
   const copy = await duplicateTest(test.id);
+  const copiedGroups = await copiedAsRead(current, copy, groups, names.changed);
   const swaps = new Map<string, string>();
   for (const [questionId, source] of sources) {
     const list = grouped.get(questionId) ?? [];
@@ -188,10 +287,9 @@ export async function saveVariant(
     names.title.slice(0, TITLE_MAX),
     sections,
   );
-  const copiedGroups = groupUnitIds(copy);
   for (const [index, original] of groups) {
     const copyId = copiedGroups[index];
-    if (copyId) await varyCopiedGroup(copyId, original, grouped);
+    if (copyId) await varyCopiedGroup(copyId, original, grouped, names.changed);
   }
   return copy.id;
 }

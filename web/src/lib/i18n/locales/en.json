@@ -321,7 +321,8 @@
       "saved": "Variant saved as a draft.",
       "open": "Open the variant",
       "testTitle": "{{title}} · Variant",
-      "invalid": "The change to Q{{n}} can’t be saved as it is. Clear it and try again."
+      "invalid": "The change to Q{{n}} can’t be saved as it is. Clear it and try again.",
+      "changed": "The test changed while saving, so its copy was left unchanged. Make the variant again."
     },
     "cleanup": {
       "title": "Clean up the question bank",

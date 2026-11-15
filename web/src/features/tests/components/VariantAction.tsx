@@ -44,6 +44,7 @@ export function VariantAction({
     const id = await saveVariant(test, changes, {
       title: variantTitle(),
       invalid: (n) => t("ai.variant.invalid", { n }),
+      changed: t("ai.variant.changed"),
     });
     await client.invalidateQueries({ queryKey: ["teacher-tests"] });
     return id;

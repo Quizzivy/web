@@ -491,3 +491,38 @@ test("signing out from an unsaved group is not trapped by its leave guard", asyn
     page.getByRole("dialog", { name: "Chỉnh sửa chưa được đồng bộ", exact: true }),
   ).toHaveCount(0);
 });
+
+// web#23, the owner's choice of 2026-11-15: a question in the pane moves by
+// dragging its card; a press that does not travel still opens it.
+test("a closed question card is dragged below another, and the group keeps that order", async ({
+  page,
+}) => {
+  const state = await setup(page);
+  const add = page.getByRole("button", { name: "Đúng/Sai", exact: true });
+  await add.click();
+  await add.click();
+  await expect.poll(() => state.stored.bundle.group.members.length).toBe(2);
+  const [first, second] = state.stored.bundle.group.members.map(
+    (member) => member.questionId,
+  );
+
+  const cards = page.locator("[data-card-drag]");
+  await expect(cards).toHaveCount(1);
+  await page.setViewportSize({ width: 1440, height: 1800 });
+  await cards.first().scrollIntoViewIfNeeded();
+  const from = await cards.first().boundingBox();
+  const open = await page.locator("[data-group-card]").last().boundingBox();
+  await page.mouse.move(from!.x + from!.width / 2, from!.y + from!.height / 2);
+  await page.mouse.down();
+  await page.mouse.move(from!.x + from!.width / 2, from!.y + from!.height / 2 + 10, {
+    steps: 4,
+  });
+  await page.mouse.move(from!.x + from!.width / 2, open!.y + open!.height - 4, {
+    steps: 12,
+  });
+  await page.mouse.up();
+
+  await expect
+    .poll(() => state.stored.bundle.group.members.map((member) => member.questionId))
+    .toEqual([second, first]);
+});

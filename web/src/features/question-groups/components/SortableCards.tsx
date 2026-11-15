@@ -1,4 +1,5 @@
-import type { CSSProperties, ReactNode } from "react";
+import { useState, type CSSProperties, type ReactNode } from "react";
+import { useTranslation } from "react-i18next";
 import {
   closestCenter,
   DndContext,
@@ -41,6 +42,10 @@ export default function SortableCards({
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
   );
+  const { t } = useTranslation();
+  // The library's live region is fixed at the viewport's corner, a pixel past
+  // its edge; inside a box that contains layout it sits in the pane instead.
+  const [live, setLive] = useState<HTMLElement | null>(null);
   const ids = items.map((item) => item.id);
   function onDragEnd({ active, over }: DragEndEvent) {
     if (!over || active.id === over.id) return;
@@ -48,19 +53,32 @@ export default function SortableCards({
     if (index >= 0) onPlace(String(active.id), index);
   }
   return (
-    <DndContext
-      sensors={sensors}
-      collisionDetection={closestCenter}
-      onDragEnd={onDragEnd}
-    >
-      <SortableContext items={ids} strategy={verticalListSortingStrategy}>
-        {items.map((item) => (
-          <SortableCard key={item.id} id={item.id} movable={item.movable}>
-            {item.node}
-          </SortableCard>
-        ))}
-      </SortableContext>
-    </DndContext>
+    <>
+      <div ref={setLive} className="absolute size-0 overflow-hidden [contain:layout]" />
+      <DndContext
+        sensors={sensors}
+        collisionDetection={closestCenter}
+        onDragEnd={onDragEnd}
+        accessibility={{
+          ...(live ? { container: live } : {}),
+          screenReaderInstructions: { draggable: t("builder.dragInstructions") },
+          announcements: {
+            onDragStart: () => t("builder.dragStarted"),
+            onDragOver: () => t("builder.dragOver"),
+            onDragEnd: () => t("builder.dragDropped"),
+            onDragCancel: () => t("builder.dragCancelled"),
+          },
+        }}
+      >
+        <SortableContext items={ids} strategy={verticalListSortingStrategy}>
+          {items.map((item) => (
+            <SortableCard key={item.id} id={item.id} movable={item.movable}>
+              {item.node}
+            </SortableCard>
+          ))}
+        </SortableContext>
+      </DndContext>
+    </>
   );
 }
 

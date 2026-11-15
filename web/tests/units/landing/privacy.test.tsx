@@ -18,7 +18,7 @@ describe("the privacy notice", () => {
     setup();
     expect(PRIVACY_NOTICE.version).toBe("2026-11");
     expect(
-      screen.getByText("Phiên bản 2026-11 · có hiệu lực từ 14/11/2026"),
+      screen.getByText("Phiên bản 2026-11 · có hiệu lực từ 15/11/2026"),
     ).toBeInTheDocument();
   });
 
@@ -51,7 +51,7 @@ describe("the privacy notice", () => {
     await readIn("en");
     setup();
     expect(
-      screen.getByText("Version 2026-11 · in effect from 14 Nov 2026"),
+      screen.getByText("Version 2026-11 · in effect from 15 Nov 2026"),
     ).toBeInTheDocument();
     expect(screen.getByText(CENTRE.addressEn)).toBeInTheDocument();
   });

@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { useResolvedTheme } from "@/lib/theme";
 import { LandingFooter } from "./components/LandingFooter";
 import { useAddress, usePathname } from "./navigation";
+import { siteOrigin } from "./site";
 import LandingPage from "./pages/LandingPage";
 
 const PrivacyPage = lazy(() => import("./pages/PrivacyPage"));
@@ -18,6 +19,18 @@ function pageOf(pathname: string): "landing" | "privacy" | "status" | "notFound"
   if (path === "/status") return "status";
   return "notFound";
 }
+
+/**
+ * CANONICAL is the address a page names as its own, under the site's
+ * published address: the Landing and the notice. The status page and the
+ * not-found page name none.
+ */
+const CANONICAL = {
+  landing: "/",
+  privacy: "/privacy",
+  status: null,
+  notFound: null,
+} as const;
 
 function Framed({ children }: Readonly<{ children: ReactNode }>) {
   return (
@@ -36,7 +49,8 @@ function Framed({ children }: Readonly<{ children: ReactNode }>) {
  * notice at `/privacy` and the status page at `/status`, and the not-found
  * page for any other address. The Landing and the notice sit above the site's
  * footer; the other two fill the page. It names the page in the tab, and
- * follows a link to a part of the Landing once that part is on screen. There
+ * follows a link to a part of the Landing once that part is on screen, and
+ * names the Landing and the notice by the site's published address. There
  * is no sign-in here and no session, and nothing is asked of the API until a
  * person sends the form or opens the status page.
  */
@@ -57,6 +71,22 @@ export function LandingApp() {
   useEffect(() => {
     document.title = title;
   }, [title, i18n.language]);
+
+  const canonical = CANONICAL[page];
+  useEffect(() => {
+    const site = siteOrigin();
+    const existing = document.head.querySelector<HTMLLinkElement>(
+      'link[rel="canonical"]',
+    );
+    if (site === null || canonical === null) {
+      existing?.remove();
+      return;
+    }
+    const link = existing ?? document.createElement("link");
+    link.rel = "canonical";
+    link.href = `${site}${canonical}`;
+    if (!existing) document.head.append(link);
+  }, [canonical]);
 
   useEffect(() => {
     const hash = address.includes("#") ? address.slice(address.indexOf("#") + 1) : "";

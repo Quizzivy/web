@@ -9,6 +9,7 @@ import {
   openAt,
   readIn,
   renderLanding,
+  SITE,
   STAFF_HOST,
   STUDENT_HOST,
 } from "@tests/support/landing";
@@ -129,6 +130,38 @@ describe("the landing site's pages", () => {
       "href",
       `${STUDENT_HOST}/join`,
     );
+  });
+
+  // Fails when a page names another host as its address, or the status and not-found pages name one at all.
+  it("names the Landing and the notice by the site's published address, and no other page", async () => {
+    const canonical = () =>
+      document.head.querySelector<HTMLLinkElement>('link[rel="canonical"]')?.href ??
+      null;
+
+    openAt("/");
+    renderLanding(<LandingApp />);
+    await screen.findByRole("heading", { level: 1 });
+    expect(canonical()).toBe(`${SITE}/`);
+
+    act(() => navigate("/privacy"));
+    await screen.findByRole("heading", {
+      level: 1,
+      name: "Thông báo về quyền riêng tư",
+    });
+    expect(canonical()).toBe(`${SITE}/privacy`);
+
+    act(() => navigate("/khong-co"));
+    await screen.findByRole("heading", { name: "Trang này không tồn tại" });
+    expect(canonical()).toBeNull();
+  });
+
+  // Fails when a build that names no address invents one from the host it is opened at.
+  it("names no address where the build sets none", async () => {
+    vi.stubEnv("VITE_LANDING_URL", "");
+    openAt("/");
+    renderLanding(<LandingApp />);
+    await screen.findByRole("heading", { level: 1 });
+    expect(document.head.querySelector('link[rel="canonical"]')).toBeNull();
   });
 
   // Fails when the language switch stops loading the other language, or stops keeping the choice.

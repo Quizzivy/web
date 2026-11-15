@@ -73,6 +73,17 @@ export function contacts(locale: Locale): Contacts {
   };
 }
 
+/**
+ * siteOrigin is the address the landing site is published at
+ * (`VITE_LANDING_URL`), or null where the build names none. Each page names
+ * itself by it, so the same page on another host of the Pages project is not
+ * taken for the site's own.
+ */
+export function siteOrigin(): string | null {
+  const set = line(import.meta.env["VITE_LANDING_URL"]);
+  return set === null ? null : origin(set);
+}
+
 /** orgName is the centre's name as the build set it, or null. */
 export function orgName(): string | null {
   return line(import.meta.env["VITE_ORG_NAME"]);

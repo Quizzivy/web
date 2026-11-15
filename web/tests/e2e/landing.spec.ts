@@ -345,3 +345,28 @@ test("the landing site says which build it is, as the app does", async ({
   expect(landing.version).toBe(app.version);
   expect(landing.build).not.toBe("");
 });
+
+// The Pages project also answers on its pages.dev host. What tells a search
+// engine which address is the site's is in the files the build writes and in
+// the link the page sets once it runs.
+test("the pages and the files for search engines name the site's published address", async ({
+  page,
+  request,
+}) => {
+  const robots = await (await request.get(`${LANDING_HOST}/robots.txt`)).text();
+  expect(robots).toContain("Sitemap: https://quizzivy.com/sitemap.xml");
+  const sitemap = await (await request.get(`${LANDING_HOST}/sitemap.xml`)).text();
+  expect(sitemap).toContain("<loc>https://quizzivy.com/</loc>");
+  expect(sitemap).toContain("<loc>https://quizzivy.com/privacy</loc>");
+
+  const canonical = page.locator('link[rel="canonical"]');
+  await page.goto(`${LANDING_HOST}/`);
+  await expect(canonical).toHaveAttribute("href", "https://quizzivy.com/");
+  await page.goto(`${LANDING_HOST}/privacy`);
+  await expect(canonical).toHaveAttribute("href", "https://quizzivy.com/privacy");
+  await page.goto(`${LANDING_HOST}/khong-co`);
+  await expect(
+    page.getByRole("heading", { name: "Trang này không tồn tại" }),
+  ).toBeVisible();
+  await expect(canonical).toHaveCount(0);
+});

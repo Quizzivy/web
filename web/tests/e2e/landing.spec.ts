@@ -251,7 +251,7 @@ test("the notice opens from the footer and from the form's box, and nothing of t
     page.getByRole("heading", { level: 1, name: "Thông báo về quyền riêng tư" }),
   ).toBeVisible();
   await expect(
-    page.getByText("Phiên bản 2026-11 · có hiệu lực từ 14/11/2026"),
+    page.getByText("Phiên bản 2026-11 · có hiệu lực từ 15/11/2026"),
   ).toBeVisible();
 
   await page.getByRole("navigation").getByRole("link", { name: "Hỏi đáp" }).click();

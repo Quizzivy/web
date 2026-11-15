@@ -297,7 +297,7 @@ function Wizard({
           </div>
           <div className="border-border flex flex-col gap-2 border-t px-4.5 py-3">
             {error !== null && (
-              <p role="alert" className="text-danger text-sm">
+              <p role="alert" className="text-danger-ink text-sm">
                 {error}
               </p>
             )}

@@ -133,7 +133,7 @@ export function SourcesList({
         </p>
       ) : null}
       {error === null ? null : (
-        <p role="alert" className="text-destructive text-xs">
+        <p role="alert" className="text-danger-ink text-xs">
           {error}
         </p>
       )}

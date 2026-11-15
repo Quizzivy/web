@@ -318,7 +318,7 @@ export function GradeByQuestion({
 
               <div className="space-y-3 lg:col-span-2">
                 {failure !== null && (
-                  <p role="alert" className="text-destructive text-sm">
+                  <p role="alert" className="text-danger-ink text-sm">
                     {failure}
                   </p>
                 )}
@@ -551,7 +551,7 @@ function AnswerRow({
           </div>
         )}
         {!blank && rubric === null && error !== null && (
-          <p id={errorId} role="alert" className="text-destructive text-sm">
+          <p id={errorId} role="alert" className="text-danger-ink text-sm">
             {error}
           </p>
         )}

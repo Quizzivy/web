@@ -1356,7 +1356,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
       ) : null}
 
       {publishError === null ? null : (
-        <p role="alert" className="text-destructive border-b px-4 py-2 text-sm">
+        <p role="alert" className="text-danger-ink border-b px-4 py-2 text-sm">
           {publishError}
         </p>
       )}
@@ -1763,7 +1763,7 @@ function QuestionPane({
   }
   if (question.isError) {
     return (
-      <p role="alert" className="text-destructive p-4 text-sm">
+      <p role="alert" className="text-danger-ink p-4 text-sm">
         {t("questionEditor.loadFailed")}
       </p>
     );

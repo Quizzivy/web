@@ -65,7 +65,7 @@ export function EditStudentForm({
           {...form.register("fullName")}
         />
         {errors.fullName?.message === undefined ? null : (
-          <p className="text-destructive mt-1 text-xs">{t(errors.fullName.message)}</p>
+          <p className="text-danger-ink mt-1 text-xs">{t(errors.fullName.message)}</p>
         )}
       </div>
       <div>
@@ -84,7 +84,7 @@ export function EditStudentForm({
         </p>
       </div>
       {errors.root?.message === undefined ? null : (
-        <p role="alert" className="text-destructive text-xs">
+        <p role="alert" className="text-danger-ink text-xs">
           {errors.root.message}
         </p>
       )}

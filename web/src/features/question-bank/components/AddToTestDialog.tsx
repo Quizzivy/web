@@ -105,7 +105,7 @@ export function AddToTestDialog({
         </DialogHeader>
 
         {error === null ? null : (
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-danger-ink text-sm">
             {error}
           </p>
         )}
@@ -174,7 +174,7 @@ function SectionList({
   }
   if (test.isError) {
     return (
-      <p role="alert" className="text-destructive px-3 pb-3 text-xs">
+      <p role="alert" className="text-danger-ink px-3 pb-3 text-xs">
         {t("tests.loadFailed")}
       </p>
     );

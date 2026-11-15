@@ -127,7 +127,7 @@ export function BlanksEditor({
       </Button>
 
       {hasMismatch(mismatch) ? (
-        <div role="alert" className="text-destructive mt-2 space-y-1 text-xs">
+        <div role="alert" className="text-danger-ink mt-2 space-y-1 text-xs">
           {mismatch.missingBlanks.length > 0 ? (
             <p>
               {t("questionEditor.placeholderMissingBlank", {

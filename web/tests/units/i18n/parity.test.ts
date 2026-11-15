@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import { vi, en } from "@tests/support/locales";
-import i18n from "@/lib/i18n";
+import i18n, { SURFACES } from "@/lib/i18n";
 import { formatDateTime, countdown, APP_TIME_ZONE } from "@/lib/i18n/datetime";
 
 /** Flatten to dotted key paths so a nested drift is caught, not just a top-level one. */
@@ -11,12 +11,53 @@ function keyPaths(obj: unknown, prefix = ""): string[] {
   );
 }
 
+const files = import.meta.glob<Record<string, unknown>>(
+  "/src/lib/i18n/locales/*/*.json",
+  {
+    eager: true,
+    import: "default",
+  },
+);
+const file = (language: "vi" | "en", surface: string) =>
+  files[`/src/lib/i18n/locales/${language}/${surface}.json`];
+
+/**
+ * The strings are split by surface (T-R11.12a), and a key is in the same
+ * surface in both languages: an English screen loads the English file of the
+ * surface its Vietnamese file is in.
+ */
+describe.each(["common", ...SURFACES])("the %s surface", (surface) => {
+  it("is a file in each language and nothing else is", () => {
+    expect(file("vi", surface)).toBeDefined();
+    expect(file("en", surface)).toBeDefined();
+    expect(Object.keys(files)).toHaveLength(2 * (SURFACES.length + 1));
+  });
+
+  it("has the same keys in vi and en, but for the singular form vi never reads", () => {
+    const viKeys = keyPaths(file("vi", surface));
+    const enKeys = keyPaths(file("en", surface));
+    expect(
+      enKeys.filter(
+        (k) => !viKeys.includes(k.endsWith("_one") ? k.replace(/_one$/, "_other") : k),
+      ),
+    ).toEqual([]);
+    expect(viKeys.filter((k) => !enKeys.includes(k))).toEqual([]);
+  });
+
+  it("holds no key another surface holds", () => {
+    const others = ["common", ...SURFACES]
+      .filter((other) => other !== surface)
+      .flatMap((other) => keyPaths(file("en", other)));
+    expect(keyPaths(file("en", surface)).filter((k) => others.includes(k))).toEqual([]);
+  });
+});
+
 /**
  * Vietnamese has one plural category: `Intl.PluralRules("vi")` answers
  * "other" for every count, so i18next reads a `vi` key ending in `_other` and
- * never one ending in `_one`. `vi.json` rides in a student's first download
- * (tests/integration/content/bundle.test.ts), so it holds the form that is
- * read and no other. English keeps both.
+ * never one ending in `_one`. The Vietnamese strings ride in a student's
+ * first download (tests/integration/content/bundle.test.ts), so they hold the
+ * form that is read and no other. English keeps both.
  */
 describe("locale parity", () => {
   const viKeys = keyPaths(vi).sort((a, b) => a.localeCompare(b));

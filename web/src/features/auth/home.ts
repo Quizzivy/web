@@ -2,6 +2,7 @@ import { ADMIN_HOME } from "@/app/adminPaths";
 import { hostKind, type HostKind } from "@/app/host";
 import type { User } from "./api";
 import { hasWorkspace } from "./permissions";
+import { loadSurface } from "@/lib/i18n";
 
 /** STUDENT_HOME is the student's home, the root of the student host. */
 export const STUDENT_HOME = "/";
@@ -46,10 +47,11 @@ export function destinationAfterSignIn(
 }
 
 /**
- * Starts fetching the student home's chunks while the authorization code is
- * still out being exchanged.
+ * Starts fetching the student home's chunks and strings while the
+ * authorization code is still out being exchanged.
  */
 export function preloadStudentHome(): void {
+  void loadSurface("student").catch(() => undefined);
   void import("@/layouts/StudentLayout").catch(() => undefined);
   void import("@/features/assignments/pages/StudentHomePage").catch(() => undefined);
 }

@@ -3,11 +3,16 @@ import { afterAll, afterEach, beforeAll } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { toast } from "sonner";
 import { server } from "./server";
-import i18n from "@/lib/i18n";
-import { en } from "@tests/support/locales";
+import { SURFACES, loadLocale, loadSurface } from "@/lib/i18n";
 
-/** The app fetches the English strings on first use; tests load them up front so a switch to en stays synchronous. */
-i18n.addResourceBundle("en", "translation", en, true, true);
+/**
+ * The app fetches a route tree's strings before the tree renders, and the
+ * English strings on first use; tests load every surface in both languages up
+ * front, so a component renders its copy outside its route and a switch to en
+ * stays synchronous.
+ */
+await Promise.all(SURFACES.map(loadSurface));
+await loadLocale("en");
 
 /** jsdom ships no matchMedia; a desktop-width answer keeps the admin layouts in their wide form. */
 window.matchMedia ??= (query: string) =>

@@ -1,6 +1,7 @@
 import { createBrowserRouter, redirect, type RouteObject } from "react-router";
 import { ADMIN_PATHS } from "@/app/adminPaths";
 import { hostKind, type HostKind } from "@/app/host";
+import { loadSurface, type Surface } from "@/lib/i18n";
 import { ErrorBoundary } from "@/app/ErrorBoundary";
 import NotFoundPage from "@/app/pages/NotFoundPage";
 import ForbiddenPage from "@/app/pages/ForbiddenPage";
@@ -26,35 +27,55 @@ import {
  * rather than each page re-checking.
  */
 
-/** `lazy` for a module whose default export is the route component. */
-const page = (load: () => Promise<{ default: React.ComponentType }>) => async () => ({
-  Component: (await load()).default,
-});
+/**
+ * `lazy` for a module whose default export is the route component. A tree's
+ * first route names the surfaces whose strings it renders (T-R11.12a), and
+ * nothing in the tree renders before they are loaded; the router resolves
+ * every matched route's `lazy` before it renders any of them.
+ */
+const page =
+  (load: () => Promise<{ default: React.ComponentType }>, ...surfaces: Surface[]) =>
+  async () => {
+    const [module] = await Promise.all([
+      load(),
+      Promise.all(surfaces.map(loadSurface)),
+    ]);
+    return { Component: module.default };
+  };
 
 /**
  * The signed-out screens every host has. Each owns the whole viewport and
  * draws its own brand frame, so there is no shared layout route above them.
  */
 const authRoutes: RouteObject[] = [
-  { path: "login", lazy: page(() => import("@/features/auth/pages/LoginPage")) },
+  {
+    path: "login",
+    lazy: page(() => import("@/features/auth/pages/LoginPage"), "auth"),
+  },
   {
     path: "forgot-password",
-    lazy: page(() => import("@/features/auth/pages/ForgotPasswordPage")),
+    lazy: page(() => import("@/features/auth/pages/ForgotPasswordPage"), "auth"),
   },
   {
     path: "set-password",
-    lazy: page(() => import("@/features/auth/pages/SetPasswordPage")),
+    lazy: page(() => import("@/features/auth/pages/SetPasswordPage"), "auth"),
   },
   {
     path: "auth/google/callback",
-    lazy: page(() => import("@/features/auth/pages/GoogleCallbackPage")),
+    lazy: page(() => import("@/features/auth/pages/GoogleCallbackPage"), "auth"),
   },
 ];
 
 /** Joining a class makes a student, so these are the student host's. */
 const joinRoutes: RouteObject[] = [
-  { path: "join", lazy: page(() => import("@/features/join/pages/JoinPage")) },
-  { path: "join/:code", lazy: page(() => import("@/features/join/pages/JoinPage")) },
+  {
+    path: "join",
+    lazy: page(() => import("@/features/join/pages/JoinPage"), "student"),
+  },
+  {
+    path: "join/:code",
+    lazy: page(() => import("@/features/join/pages/JoinPage"), "student"),
+  },
   {
     path: "join/:code/confirm",
     loader: ({ params }) =>
@@ -67,7 +88,7 @@ const teacherTree: RouteObject = {
   element: <TeacherWorkspace />,
   children: [
     {
-      lazy: page(() => import("@/layouts/TeacherLayout")),
+      lazy: page(() => import("@/layouts/TeacherLayout"), "teacher"),
       children: [
         {
           index: true,
@@ -349,7 +370,7 @@ const adminTree: RouteObject = {
       element: <RequirePermission />,
       children: [
         {
-          lazy: page(() => import("@/layouts/AdminLayout")),
+          lazy: page(() => import("@/layouts/AdminLayout"), "teacher", "admin"),
           children: [
             {
               index: true,
@@ -462,7 +483,7 @@ const studentTree: RouteObject = {
   element: <StudentArea />,
   children: [
     {
-      lazy: page(() => import("@/layouts/StudentLayout")),
+      lazy: page(() => import("@/layouts/StudentLayout"), "student"),
       children: [
         {
           index: true,
@@ -499,7 +520,7 @@ const studentTree: RouteObject = {
 const takeTestTree: RouteObject = {
   path: "attempts/:attemptId",
   handle: { focus: true },
-  lazy: page(() => import("@/layouts/FocusLayout")),
+  lazy: page(() => import("@/layouts/FocusLayout"), "student"),
   children: [
     {
       index: true,
@@ -535,7 +556,10 @@ export function routesFor(kind: HostKind): RouteObject[] {
           children: [
             {
               path: "change-password",
-              lazy: page(() => import("@/features/auth/pages/ChangePasswordPage")),
+              lazy: page(
+                () => import("@/features/auth/pages/ChangePasswordPage"),
+                "auth",
+              ),
             },
             ...(staff ? [teacherTree, adminTree] : []),
             ...(student ? [studentTree, takeTestTree] : []),

@@ -624,6 +624,61 @@ To view one, start the server above and open, for example,
   gone since v0.13.5. A student's links are now on my.quizzivy.com with no `/app` in front,
   the staff's on portal.quizzivy.com, and the two example routes that did not exist are the
   product's (`/attempts/{id}/result`, `/teacher/attempts/{id}`).
+- 2026-11-14 — Twentieth proposal page: `proposals/R11 Landing.dc.html`, for DG-100, DG-101,
+  DG-02 and DG-06 (R11; T-R11.3, T-R11.4a, T-R11.4b, T-R11.7). The owner asked for the Landing
+  of quizzivy.com ahead of the rest. The first drawing set the deck's sections in a row and
+  changed some of their words. He answered with a designer's landing page for an online
+  course site and asked for that kind of work: plain words a person would read, nothing made
+  up, and pictures from free stock libraries. The page was drawn again the same day. Its top
+  is a soft block of the brand's lime with one photo of a person in an arch, a test question
+  and a marked result from the deck resting on the photo, and a strip of four short facts
+  where such a page keeps its numbers, since Quizzivy has none to show yet. Each role has a
+  photo. The words are the deck's own: only "Vào lớp" changes, to the app's "Tham gia lớp",
+  and "Five question types" loses its number. The four photos are from StockSnap under CC0,
+  cropped, and kept in `proposals/landing/` with `CREDITS.md`. It still settles what the app's
+  two sites change ("Đăng nhập" with a choice for each, the join box opening the students'
+  site) and draws what the deck leaves out (the menu below 960, the join box's refusals, the
+  form's box to tick and its states). Eighteen states at 1280 and 360 (768 for the header),
+  light and dark, Vietnamese and English. Its seven questions for Thuong are on the page.
+- 2026-11-14 — The Landing proposal, drawn a third time on the owner's notes. The small label
+  above the headline is gone. The two pieces of the product on the photo are gone: the photo
+  has three brush strokes behind it and a few drawn marks around. The words no longer come
+  from the deck's Landing, which spoke of classes in general; they say what this system is
+  and does (lessons in units, flashcards reviewed daily, tests that save every answer, essays
+  marked on a band), and the copy table names what each line rests on in the spec and the
+  plans for R6 to R10. The phone is 036 321 6199 and the address "TP. Hồ Chí Minh". The
+  sections between the top and the form were laid out for this page, after the e-learning
+  templates in Figma's community: four steps on a card over the edge of the colour, three
+  rows that change sides with an illustration each, three cards with a photo each in place
+  of the role tabs, a soft band for fair tests, one dark panel for the consultation, and the
+  questions on cards. The header, the join box, the form's fields, the five questions and
+  the footer's columns stay the deck's. Five illustrations are unDraw's, recoloured to the
+  brand's lime; the brush stroke, sparkle, squiggle and underline were drawn for the page
+  and take the theme's colours. Fifteen states now (the role tabs are gone), at 1280 and 360
+  (768 for the header), light and dark, Vietnamese and English. Eight questions for Thuong.
+  He answered the first the same evening: the page is written for learners first, with one
+  card for teachers and one for the centre. The page marks it decided; seven are open.
+- 2026-11-14 — The Landing proposal loses its part for each role, on the owner's word. He
+  read the three cards ("Quizzivy dành cho ai") and said the admin's role is not there for
+  what its card listed; the gradebook, reports and attendance it named are a teacher's. He
+  asked for the whole part to go. The page now runs from the three rows to fair tests. The
+  header keeps three of the deck's four links ("Dành cho bạn" is gone), the three role
+  photos leave `proposals/landing/`, and the copy table is 67 strings. The first question
+  stays decided as learners first, without the two cards it spoke of.
+- 2026-11-14 — The Landing opens ahead of v1.0, on the owner's word, and is to be built from
+  this page. So it now says only what the product has today (v0.13.6 on develop), which is
+  tests: the headline's two words under the line are "làm bài"; the four steps are join,
+  get the tests, take them, see the results; the three rows are the kinds of question,
+  taking a test, and results. Each line was checked against the app's own Vietnamese
+  strings (the eight question types by their names, the rules a student reads, saving when
+  the connection drops, the best score of several attempts, the result's filter). What the
+  third drawing said about lessons and vocabulary is kept as a state, "Later, with lessons
+  and vocabulary", and its strings are marked "Later" in the copy table: they take the
+  place of today's when R10 is out. Two more unDraw illustrations (seven in all). Sixteen
+  states, 94 strings. The second question is decided; six are open. The page's handoff
+  names what the Landing needs before it can open: the operation the form sends to
+  (T-R11.6), and the privacy notice and the status page it links to (T-R11.8), none of
+  which is built or drawn.
 
 ## The brand
 

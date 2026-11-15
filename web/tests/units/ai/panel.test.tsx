@@ -14,7 +14,7 @@ import vi_ from "@/lib/i18n/locales/vi.json";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
-import { aiError, aiOn, BASE, month, renderWithApp } from "./support";
+import { aiError, SAYS, aiOn, BASE, month, renderWithApp } from "./support";
 
 const ai = vi_.ai;
 const TEST_ID = "018f0000-0000-7000-8000-0000000000a1";
@@ -515,7 +515,7 @@ describe("the Generate panel", () => {
     });
     await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
     const alert = await within(dialog).findByRole("alert");
-    expect(alert).toHaveTextContent(ai.unavailable);
+    expect(alert).toHaveTextContent(SAYS.AI_UNAVAILABLE);
     expect(within(dialog).getByLabelText(ai.generate.source)).toHaveValue(PASSAGE);
 
     await user.click(within(alert).getByRole("button", { name: ai.tryAgain }));
@@ -536,6 +536,30 @@ describe("the Generate panel", () => {
     });
     await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
     expect(await within(dialog).findByRole("alert")).toHaveTextContent(ai.unavailable);
+  });
+
+  // AIT-5, the owner's call of 2026-11-15: the server tells an answer with
+  // nothing usable in it from a provider that did not answer.
+  it("says the server's sentence when the assistant answered nothing usable, and offers Try again", async () => {
+    const unusable =
+      "AI đã trả lời nhưng không có nội dung nào dùng được. Hãy thử lại.";
+    server.use(
+      http.post(`${BASE}/teacher/ai/questions/generate`, () =>
+        HttpResponse.json(
+          { error: { code: "AI_UNAVAILABLE", message: unusable } },
+          { status: 503, headers: { "Retry-After": "30" } },
+        ),
+      ),
+    );
+    const { dialog, user } = await openPanel({
+      kind: "generate",
+      context: generateContext(),
+    });
+    await user.click(within(dialog).getByRole("button", { name: ai.generate.run }));
+    const alert = await within(dialog).findByRole("alert");
+    expect(alert).toHaveTextContent(unusable);
+    expect(alert).not.toHaveTextContent(ai.unavailable);
+    expect(within(dialog).getByRole("button", { name: ai.tryAgain })).toBeVisible();
   });
 
   it.each([

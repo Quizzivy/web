@@ -140,7 +140,9 @@ describe("an answer the retention policy removed, in the teacher's review", () =
     current = removed(review(), { score: null });
     renderReview();
     expect(
-      await screen.findByRole("button", { name: "Câu 2, Đã xoá theo chính sách lưu trữ" }),
+      await screen.findByRole("button", {
+        name: "Câu 2, Đã xoá theo chính sách lưu trữ",
+      }),
     ).toBeInTheDocument();
     expect(screen.queryByText("còn 1 câu chờ chấm")).toBeNull();
     expect(screen.getByRole("button", { name: "Hoàn tất chấm" })).toBeEnabled();

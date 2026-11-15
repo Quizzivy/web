@@ -71,7 +71,19 @@ export const variantKind: AiKind<VariantValues, AiVariantChange, VariantContext>
       },
       signal,
     );
-    return { items: result.changes, usage: result.usage };
+    // VR-1 and VR-5, the owner's call of 2026-11-15: say how many questions
+    // changed and how many stayed, and that changes past 300 were left out.
+    const kept = Math.max(0, result.questions - result.changedQuestions);
+    const told = env.t("ai.variant.changedOf", {
+      changed: result.changedQuestions,
+      total: result.questions,
+      kept,
+    });
+    return {
+      items: result.changes,
+      usage: result.usage,
+      notice: result.capped ? `${told} ${env.t("ai.variant.capped")}` : told,
+    };
   },
   card: (change, { t }) => ({
     selectable: true,

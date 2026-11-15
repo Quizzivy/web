@@ -236,12 +236,25 @@ jobs:
         working-directory: web
         env:
           BUILD: ${{ needs.resolve.outputs.sha }}
+          ORG_NAME: ${{ vars.VITE_ORG_NAME }}
         run: |
           for origin in "$API_ORIGIN" "$STUDENT_ORIGIN" "$STAFF_ORIGIN"; do
             grep -rqF "$origin" dist-landing/assets/*.js || {
               echo "::error::$origin is not in the landing site -- its VITE_ variable did not reach the build"
               exit 1; }
           done
+          # The site names the centre by VITE_ORG_NAME alone: in its lines, in
+          # the consent a visitor ticks and in the notice, which says who is
+          # responsible for their data. Unset, all of them would say "Quizzivy".
+          [ -n "$ORG_NAME" ] || {
+            echo "::error::VITE_ORG_NAME is unset, so the landing site would not name the centre -- see docs/deploy.md"
+            exit 1; }
+          grep -rqF "$ORG_NAME" dist-landing/assets/*.js || {
+            echo "::error::VITE_ORG_NAME did not reach the landing site's build"; exit 1; }
+          if grep -qF '%VITE_' dist-landing/index.html; then
+            echo "::error::the landing site's index.html names the centre by a placeholder the build did not fill"
+            exit 1
+          fi
           test -f dist-landing/index.html || { echo "::error::the landing site has no index.html"; exit 1; }
           grep -qF "\"build\":\"$BUILD\"" dist-landing/version.json || {
             echo "::error::the landing site's version.json does not name $BUILD"; exit 1; }

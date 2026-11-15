@@ -14,7 +14,7 @@ const LINK = "text-muted-fg hover:text-fg text-base leading-[1.55] no-underline"
  */
 export function LandingFooter() {
   const { t } = useTranslation();
-  const { email, address } = contacts(useLocale());
+  const { name: org, email, address } = contacts(useLocale());
   const year = new Date().getFullYear();
 
   return (
@@ -23,7 +23,7 @@ export function LandingFooter() {
         <div className="flex min-w-0 flex-col gap-3">
           <BrandLockup height={28} theme="auto" className="self-start" />
           <span className="text-muted-fg max-w-[300px] text-base leading-[1.6]">
-            {t("landing.footer.about")}
+            {t("landing.footer.about", { org })}
           </span>
         </div>
         <div className="flex flex-col gap-2.5">

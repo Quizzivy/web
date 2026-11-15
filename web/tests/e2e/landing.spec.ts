@@ -1,6 +1,12 @@
 import { expect, test, type Page } from "@playwright/test";
 import { API, stubApi } from "./support/api";
-import { LANDING_HOST, ONE_HOST, STAFF_HOST, STUDENT_HOST } from "./support/hosts";
+import {
+  LANDING_CENTRE,
+  LANDING_HOST,
+  ONE_HOST,
+  STAFF_HOST,
+  STUDENT_HOST,
+} from "./support/hosts";
 
 /**
  * The landing site: a production build of its own (dist-landing), served at
@@ -369,4 +375,38 @@ test("the pages and the files for search engines name the site's published addre
     page.getByRole("heading", { name: "Trang này không tồn tại" }),
   ).toBeVisible();
   await expect(canonical).toHaveCount(0);
+});
+
+// The name reaches the site two ways, the page's tags at build time and its
+// lines in the browser: only the built site shows both print the build's own.
+test("the site names the centre by the build's name, in its tags and in both languages", async ({
+  page,
+}) => {
+  await page.goto(`${LANDING_HOST}/`);
+  for (const tag of ['meta[name="description"]', 'meta[property="og:description"]']) {
+    await expect(page.locator(tag)).toHaveAttribute(
+      "content",
+      new RegExp(`^Quizzivy là hệ thống kiểm tra trực tuyến của ${LANDING_CENTRE}\\. `),
+    );
+  }
+  const footer = page.getByRole("contentinfo");
+  const otherCentre = async () =>
+    /\bCent(?:re|er)\b/.test(
+      (await page.locator("body").innerText()).split(LANDING_CENTRE).join(""),
+    );
+  await expect(
+    page.getByText(`trực tuyến của ${LANDING_CENTRE}. Học viên`),
+  ).toBeVisible();
+  await expect(page.getByText(`Khoá học tại ${LANDING_CENTRE}`)).toBeVisible();
+  await expect(page.getByText(`đồng ý để ${LANDING_CENTRE} dùng`)).toBeVisible();
+  await expect(footer).toContainText(`trực tuyến của ${LANDING_CENTRE}.`);
+  expect(await otherCentre()).toBe(false);
+
+  await page.getByRole("button", { name: "English", exact: true }).click();
+  await expect(
+    page.getByText(`testing system of ${LANDING_CENTRE}. Students`),
+  ).toBeVisible();
+  await expect(page.getByText(`Courses at ${LANDING_CENTRE}`)).toBeVisible();
+  await expect(footer).toContainText(`testing system of ${LANDING_CENTRE}.`);
+  expect(await otherCentre()).toBe(false);
 });

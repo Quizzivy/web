@@ -26,10 +26,16 @@ const ROOT = resolve(import.meta.dirname, "../..");
 const LIMIT = 200 * 1000;
 const SITE = "https://quizzivy.com";
 
+/** The centre's name this build is given, with a character HTML has to escape. */
+const CENTRE = "Sao Mai & Em English Centre";
+const CENTRE_IN_HTML = "Sao Mai &amp; Em English Centre";
+
+/** A centre's name, spelled, once the build's own is taken out. */
+const NAMED = /\bCent(?:re|er)\b|Trung tâm (?:Anh|Ngoại) ngữ/;
+
 let output: BuildOutput["output"];
 
-beforeAll(async () => {
-  process.env["VITE_LANDING_URL"] = SITE;
+async function buildSite(): Promise<BuildOutput["output"]> {
   const result = (await build({
     root: ROOT,
     configFile: resolve(ROOT, "vite.landing.config.ts"),
@@ -38,7 +44,13 @@ beforeAll(async () => {
     resolve: { conditions: ["module", "browser", "production"] },
     build: { write: false },
   })) as unknown as BuildOutput | BuildOutput[];
-  output = (Array.isArray(result) ? result[0]! : result).output;
+  return (Array.isArray(result) ? result[0]! : result).output;
+}
+
+beforeAll(async () => {
+  process.env["VITE_LANDING_URL"] = SITE;
+  process.env["VITE_ORG_NAME"] = CENTRE;
+  output = await buildSite();
 }, 120_000);
 
 const chunks = () =>
@@ -115,8 +127,8 @@ describe("the landing site's build", () => {
     expect(files).toContain("version.json");
   });
 
-  const text = (fileName: string) => {
-    const asset = output.find(
+  const text = (fileName: string, from = output) => {
+    const asset = from.find(
       (item): item is OutputAsset =>
         item.type === "asset" && item.fileName === fileName,
     );
@@ -138,6 +150,54 @@ describe("the landing site's build", () => {
       `<meta property="og:url" content="${SITE}/">`,
     );
   });
+
+  const descriptions = (page: string) =>
+    [
+      ...page.matchAll(
+        /<meta\s+(?:name="description"|property="og:description")\s+content="([^"]*)"/g,
+      ),
+    ].map((match) => match[1]!);
+
+  // Fails when the page or a chunk spells a centre's name, or the page's tags stop taking the build's (Quizzivy/web#103).
+  it("names the centre by the build's VITE_ORG_NAME, in the page's tags and in the code", () => {
+    expect(readFileSync(resolve(ROOT, "landing.html"), "utf8")).not.toMatch(NAMED);
+
+    const page = text("landing.html");
+    const written = descriptions(page);
+    expect(written).toHaveLength(2);
+    for (const description of written) {
+      expect(description).toContain(
+        `Quizzivy là hệ thống kiểm tra trực tuyến của ${CENTRE_IN_HTML}. `,
+      );
+    }
+    expect(page.split(CENTRE_IN_HTML).join("")).not.toMatch(NAMED);
+    expect(page).not.toContain("%VITE_");
+
+    const code = chunks()
+      .map((chunk) => chunk.code)
+      .join("\n");
+    expect(code).toContain(CENTRE);
+    expect(code.split(CENTRE).join("")).not.toMatch(/English Cent(?:re|er)/);
+  });
+
+  // Fails when a build that names no centre writes anything but the product's name in the page's tags.
+  it("says Quizzivy in the page's tags where the build names no centre", async () => {
+    process.env["VITE_ORG_NAME"] = "";
+    try {
+      const page = text("landing.html", await buildSite());
+      const written = descriptions(page);
+      expect(written).toHaveLength(2);
+      for (const description of written) {
+        expect(description).toContain(
+          "Quizzivy là hệ thống kiểm tra trực tuyến của Quizzivy. ",
+        );
+      }
+      expect(page).not.toMatch(NAMED);
+      expect(page).not.toContain("%VITE_");
+    } finally {
+      process.env["VITE_ORG_NAME"] = CENTRE;
+    }
+  }, 120_000);
 
   it("keeps the Pages project's own hosts out of search results, and no other host", () => {
     const rules = readFileSync(resolve(ROOT, "landing.headers"), "utf8")

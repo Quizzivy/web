@@ -15,8 +15,9 @@ import hero from "../assets/hero.jpg";
 import sparkle from "../assets/sparkle.svg";
 import squiggle from "../assets/squiggle.svg";
 import underline from "../assets/underline.svg";
+import { useLocale } from "../i18n";
 import { Link } from "./Link";
-import { links } from "../site";
+import { contacts, links } from "../site";
 import { Dots, Shape } from "./Shape";
 
 /**
@@ -109,6 +110,7 @@ const LINK = "text-fg font-medium underline underline-offset-[3px]";
  */
 export function Hero() {
   const { t } = useTranslation();
+  const { name: org } = contacts(useLocale());
   return (
     <section className="relative z-[1] mx-auto grid max-w-[1200px] grid-cols-1 items-center gap-7 px-[18px] pt-6 pb-[100px] min-[720px]:gap-11 min-[720px]:px-7 min-[720px]:pt-10 min-[720px]:pb-[120px] min-[960px]:grid-cols-[minmax(0,1fr)_minmax(0,1.02fr)] min-[960px]:pt-11 min-[960px]:pb-32">
       <div className="flex min-w-0 flex-col gap-[18px] min-[720px]:gap-[22px]">
@@ -124,7 +126,7 @@ export function Hero() {
           {t("landing.hero.h1c")}
         </h1>
         <p className="text-muted-fg text-title max-w-[560px] leading-[1.6] text-pretty min-[720px]:text-[18px]">
-          {t("landing.hero.sub")}
+          {t("landing.hero.sub", { org })}
         </p>
         <JoinBox />
         <span className="text-muted-fg text-[13.5px] leading-[1.6]">

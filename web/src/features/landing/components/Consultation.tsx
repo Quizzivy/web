@@ -328,7 +328,7 @@ const CONTACT_ICON =
  */
 export function Consultation() {
   const { t } = useTranslation();
-  const { phone, email, address } = contacts(useLocale());
+  const { name: org, phone, email, address } = contacts(useLocale());
   return (
     <section
       id="consult"
@@ -346,7 +346,7 @@ export function Consultation() {
         />
         <div className="relative flex min-w-0 flex-col gap-3.5">
           <span className="bg-brand text-brand-fg inline-flex h-[26px] items-center self-start rounded-full px-[11px] text-[12.5px] font-semibold">
-            {t("landing.consult.eyebrow")}
+            {t("landing.consult.eyebrow", { org })}
           </span>
           <h2 className="text-[28px] leading-[1.15] font-semibold tracking-[-0.02em] text-balance min-[720px]:text-[38px]">
             {t("landing.consult.title")}

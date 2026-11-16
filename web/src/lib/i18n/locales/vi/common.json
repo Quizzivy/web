@@ -421,8 +421,10 @@
       "sharedTest": "{{sharerName}} đã chia sẻ đề thi {{name}} với bạn",
       "sharedSet": "{{sharerName}} đã chia sẻ bộ câu hỏi {{name}} với bạn",
       "coPublished": "{{editorName}} đã phát hành phiên bản {{version}} của {{title}}",
-      "message_other": "{{count}} tin nhắn mới từ {{senderName}}: “{{excerpt}}”",
-      "classMessage_other": "{{count}} tin nhắn mới trong lớp {{className}} · {{senderName}}: “{{excerpt}}”",
+      "message": "{{senderName}}: “{{excerpt}}”",
+      "messageMany": "{{count}} tin nhắn mới từ {{senderName}}: “{{excerpt}}”",
+      "classMessage": "Thông báo lớp mới ở {{className}} · {{senderName}}: “{{excerpt}}”",
+      "classMessageMany": "{{count}} thông báo lớp mới ở {{className}} · {{senderName}}: “{{excerpt}}”",
       "weekly_other": "Tuần qua: {{count}} bài nộp, {{toGrade}} bài chờ chấm, {{flagged}} lượt bị gắn cờ"
     },
     "bell": {

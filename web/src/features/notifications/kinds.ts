@@ -62,7 +62,7 @@ export const KIND_LOOK: Record<
   "content.shared": { icon: UsersRound, tone: "info" },
   "test.published_by_collaborator": { icon: FileText, tone: "info" },
   "message.received": { icon: MessageSquare, tone: "info" },
-  "message.from_teacher": { icon: MessageSquare, tone: "info" },
+  "message.from_teacher": { icon: MessageSquare, tone: "neutral" },
   "summary.weekly": { icon: LayoutDashboard, tone: "neutral" },
 };
 /**
@@ -370,24 +370,29 @@ const sentences: Record<
 };
 
 /**
- * messageSentence words a message item: how many new messages, from whom,
- * and the newest one's excerpt, which lives only in the reader's own bell;
- * a class's channel (a student's `message.from_teacher` with `className`)
- * names the class instead of the sender alone.
+ * messageSentence words a message item: the sender and the newest message's
+ * excerpt, as the Student deck's bell draws one (`Giàu Bùi: "…"`), with the
+ * count in front only when more than one is new. The excerpt lives only in
+ * the reader's own bell. A class's channel (a student's
+ * `message.from_teacher` with `className`) is a class announcement and names
+ * the class.
  */
 function messageSentence(p: NotificationParams, t: TFunction) {
   if (!hasText(p.senderName) || !hasText(p.excerpt) || !hasCount(p.count)) return null;
   if (p.count === 0) return null;
-  const values = { senderName: p.senderName, excerpt: p.excerpt, count: p.count };
-  if (p.className === undefined)
-    return literalSentence("notifications.kind.message", values, t);
-  return hasText(p.className)
-    ? literalSentence(
-        "notifications.kind.classMessage",
-        { ...values, className: p.className },
-        t,
-      )
-    : null;
+  const many = p.count > 1;
+  const values = many
+    ? { senderName: p.senderName, excerpt: p.excerpt, count: p.count }
+    : { senderName: p.senderName, excerpt: p.excerpt };
+  if (p.className === undefined) {
+    const key = many ? "notifications.kind.messageMany" : "notifications.kind.message";
+    return literalSentence(key, values, t);
+  }
+  if (!hasText(p.className)) return null;
+  const key = many
+    ? "notifications.kind.classMessageMany"
+    : "notifications.kind.classMessage";
+  return literalSentence(key, { ...values, className: p.className }, t);
 }
 
 /** known refuses a kind the contract does not list (a later release's, or `__proto__`). */

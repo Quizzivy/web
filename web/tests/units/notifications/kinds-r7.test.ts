@@ -80,19 +80,19 @@ const expected = [
   ],
   [
     fromTeacher,
-    "1 tin nhắn mới từ Giàu Bùi: “Nhớ ôn Unit 4 nhé”",
-    "New message from Giàu Bùi: “Nhớ ôn Unit 4 nhé”",
+    "Giàu Bùi: “Nhớ ôn Unit 4 nhé”",
+    "Giàu Bùi: “Nhớ ôn Unit 4 nhé”",
     MessageSquare,
-    "info",
+    "neutral",
     `/messages/teacher/${teacherId}`,
     "student",
   ],
   [
     announcement,
-    "3 tin nhắn mới trong lớp IELTS 6.5 Evening · Giàu Bùi: “Lớp tối nay nghỉ”",
-    "3 new messages in IELTS 6.5 Evening · Giàu Bùi: “Lớp tối nay nghỉ”",
+    "3 thông báo lớp mới ở IELTS 6.5 Evening · Giàu Bùi: “Lớp tối nay nghỉ”",
+    "3 new announcements in IELTS 6.5 Evening · Giàu Bùi: “Lớp tối nay nghỉ”",
     MessageSquare,
-    "info",
+    "neutral",
     `/messages/class/${classId}`,
     "student",
   ],
@@ -128,17 +128,20 @@ describe("R7's notification kinds (T-R7.23)", () => {
     },
   );
 
-  it("counts one message and many in English, and keeps one form in Vietnamese", () => {
+  it("words one message as the Student deck's bell does, and counts only many", () => {
     const one = { ...fromStudent, params: { ...fromStudent.params, count: 1 } };
     expect(words(one, "en")?.text).toBe(
-      "New message from Trần Minh Anh: “Em nộp lại bài được không ạ?”",
+      "Trần Minh Anh: “Em nộp lại bài được không ạ?”",
     );
     expect(words(one, "vi")?.text).toBe(
-      "1 tin nhắn mới từ Trần Minh Anh: “Em nộp lại bài được không ạ?”",
+      "Trần Minh Anh: “Em nộp lại bài được không ạ?”",
     );
     const single = { ...announcement, params: { ...announcement.params, count: 1 } };
     expect(words(single, "en")?.text).toBe(
-      "New message in IELTS 6.5 Evening · Giàu Bùi: “Lớp tối nay nghỉ”",
+      "New announcement in IELTS 6.5 Evening · Giàu Bùi: “Lớp tối nay nghỉ”",
+    );
+    expect(words(single, "vi")?.text).toBe(
+      "Thông báo lớp mới ở IELTS 6.5 Evening · Giàu Bùi: “Lớp tối nay nghỉ”",
     );
     const quiet = { ...weekly, params: { ...weekly.params, count: 1 } };
     expect(words(quiet, "en")?.text).toBe(

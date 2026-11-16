@@ -6,6 +6,8 @@ export type AdminQuestion = components["schemas"]["AdminQuestion"];
 export type QuestionType = components["schemas"]["QuestionType"];
 
 export interface ListQuestionsParams {
+  /** A set's questions instead of the caller's bank, in set order (DG-90). */
+  setId?: string;
   /** Repeatable. Several types widen the results; see A-06's rail. */
   type?: QuestionType[];
   tag?: string[];
@@ -20,6 +22,7 @@ export interface ListQuestionsParams {
 
 export function listQuestions(params: ListQuestionsParams = {}, signal?: AbortSignal) {
   const query: Record<string, unknown> = {};
+  if (params.setId) query["setId"] = params.setId;
   if (params.type?.length) query["type"] = params.type;
   if (params.tag?.length) query["tag"] = params.tag;
   if (params.level?.length) query["level"] = params.level;
@@ -47,11 +50,31 @@ export function createQuestion(body: QuestionValues) {
   });
 }
 
-export function updateQuestion(id: string, body: QuestionValues) {
+/**
+ * QuestionWriteContext is what an edit sends beside the question: the
+ * `updatedAt` the editor last read, which the server compares to refuse a
+ * stale write (T-R7.5), and the set it is edited in, for an edit grantee
+ * (T-R7.6). A set edit may answer with a copy, whose `id` differs.
+ */
+export type QuestionWriteContext = Readonly<{
+  expectedUpdatedAt?: string | undefined;
+  setId?: string | undefined;
+}>;
+
+export function updateQuestion(
+  id: string,
+  body: QuestionValues,
+  { expectedUpdatedAt, setId }: QuestionWriteContext = {},
+) {
   return api("patch", "/teacher/questions/{id}", {
     path: { id },
-    query: {},
-    body: { ...body, level: body.level ?? null, skill: body.skill ?? null },
+    query: setId === undefined ? {} : { setId },
+    body: {
+      ...body,
+      level: body.level ?? null,
+      skill: body.skill ?? null,
+      ...(expectedUpdatedAt === undefined ? {} : { expectedUpdatedAt }),
+    },
   });
 }
 
@@ -148,4 +171,80 @@ export function duplicateQuestion(id: string) {
 
 export function deleteQuestion(id: string) {
   return api("delete", "/teacher/questions/{id}", { path: { id } });
+}
+
+export type QuestionSet = components["schemas"]["QuestionSet"];
+export type QuestionSetSummary = components["schemas"]["QuestionSetSummary"];
+
+/** QUESTION_SETS_KEY heads the caller's own sets: the bank's Sets group and Add to set. */
+export const QUESTION_SETS_KEY = ["teacher-question-sets"] as const;
+
+/** questionSetKey is the query key of one set's header. */
+export function questionSetKey(id: string) {
+  return ["teacher-question-set", id] as const;
+}
+
+/** SET_LIMIT is how many questions a set holds at most (the contract's 500). */
+export const SET_LIMIT = 500;
+
+/** listQuestionSets reads the caller's own sets, most recently changed first. */
+export function listQuestionSets(signal?: AbortSignal) {
+  return api("get", "/teacher/question-sets", signal ? { signal } : {});
+}
+
+export function getQuestionSet(id: string, signal?: AbortSignal) {
+  return api(
+    "get",
+    "/teacher/question-sets/{id}",
+    signal ? { path: { id }, signal } : { path: { id } },
+  );
+}
+
+/** trimmedOrNull is a description as the contract stores it: trimmed, and null when empty. */
+function trimmedOrNull(text: string): string | null {
+  const value = text.trim();
+  return value === "" ? null : value;
+}
+
+/** createQuestionSet names a set made of `questionIds`, in that order. */
+export function createQuestionSet(
+  name: string,
+  description: string,
+  questionIds: readonly string[],
+) {
+  return api("post", "/teacher/question-sets", {
+    body: {
+      name: name.trim(),
+      description: trimmedOrNull(description),
+      questionIds: [...questionIds],
+    },
+  });
+}
+
+/** updateQuestionSet renames a set; an empty description removes it. */
+export function updateQuestionSet(id: string, name: string, description: string) {
+  return api("patch", "/teacher/question-sets/{id}", {
+    path: { id },
+    body: { name: name.trim(), description: trimmedOrNull(description) },
+  });
+}
+
+export function deleteQuestionSet(id: string) {
+  return api("delete", "/teacher/question-sets/{id}", { path: { id } });
+}
+
+/** addQuestionSetItems appends questions to a set; one it already holds is skipped. */
+export function addQuestionSetItems(id: string, questionIds: readonly string[]) {
+  return api("post", "/teacher/question-sets/{id}/items", {
+    path: { id },
+    body: { questionIds: [...questionIds] },
+  });
+}
+
+/** removeQuestionSetItems takes questions out of a set; they stay in the bank. */
+export function removeQuestionSetItems(id: string, questionIds: readonly string[]) {
+  return api("post", "/teacher/question-sets/{id}/items/remove", {
+    path: { id },
+    body: { questionIds: [...questionIds] },
+  });
 }

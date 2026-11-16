@@ -1174,7 +1174,19 @@
         "lexical": "Lexical resource",
         "grammar": "Grammatical range and accuracy"
       }
-    }
+    },
+    "viewTitle": "View question",
+    "access": {
+      "editRest": "If {{name}} uses this question elsewhere, your change is saved as a new copy.",
+      "useLead": "You can open this question but not change it.",
+      "useRest": "Make a copy to have your own."
+    },
+    "stale": {
+      "title": "{{name}} changed this question at {{time}}.",
+      "titleUnknown": "This question was changed somewhere else at {{time}}.",
+      "body": "Reload to see their changes. Unsaved changes here will be lost."
+    },
+    "forked": "Saved as a new copy of this question, because {{name}} uses the original elsewhere."
   },
   "builder": {
     "dragInstructions": "Press Space to pick up an item, use the arrow keys to move, then press Space to drop or Escape to cancel.",
@@ -1424,7 +1436,18 @@
     "clearFilters": "Clear filters",
     "deleteSelectedBody": "Tests that already use them keep their copy. They are removed from the bank.",
     "questionsNoun_one": "question",
-    "questionsNoun_other": "questions"
+    "questionsNoun_other": "questions",
+    "addToSet": "Add to set",
+    "bulkShare": "Share…",
+    "sets": {
+      "title": "Question sets",
+      "empty": "No sets yet. Select questions, then “Add to set” to make your first one.",
+      "showAll_one": "Show all {{count}} sets",
+      "showAll_other": "Show all {{count}} sets",
+      "sharedWith_one": "Shared with {{count}} teacher",
+      "sharedWith_other": "Shared with {{count}} teachers",
+      "loadFailed": "Could not load your sets."
+    }
   },
   "tests": {
     "new": "New test",
@@ -4056,6 +4079,72 @@
         "removed": "Removed from Shared with me",
         "gone": "This is no longer shared with you."
       }
+    }
+  },
+  "sets": {
+    "add": {
+      "title_one": "Add {{count}} question to a set",
+      "title_other": "Add {{count}} questions to a set",
+      "desc": "A question set is a named list of questions from your bank that you can reuse and share with other teachers.",
+      "existing": "Existing set",
+      "new": "New set",
+      "setLabel": "Question set",
+      "option_one": "{{name}} · {{count}} question",
+      "option_other": "{{name}} · {{count}} questions",
+      "dupNote": "Questions already in the set are skipped.",
+      "full_one": "This set has {{count}} question. A set holds up to 500.",
+      "full_other": "This set has {{count}} questions. A set holds up to 500.",
+      "submit": "Add to set",
+      "create": "Create set"
+    },
+    "nameLabel": "Set name",
+    "namePlaceholder": "For example: Collocations · B1",
+    "descLabel": "Description",
+    "descPlaceholder": "Which class or purpose is this set for?",
+    "shareSel": {
+      "title_one": "Share {{count}} selected question",
+      "title_other": "Share {{count}} selected questions",
+      "desc": "Name these questions as a set, then choose the teachers to share it with. You can add and remove its questions later.",
+      "submit": "Create set and share"
+    },
+    "count_one": "{{count}} question",
+    "count_other": "{{count}} questions",
+    "updated": "Updated {{when}}",
+    "rename": "Rename",
+    "delete": "Delete set",
+    "more": "More actions",
+    "editLead": "Changes you make are saved to {{name}}’s copy.",
+    "editRest": "You can edit the questions and remove them from the set. Only {{name}} can add questions.",
+    "useLead": "You can open this set but not change it.",
+    "useRest": "Add its questions to your tests, or make a copy to edit.",
+    "empty": "This set has no questions yet.",
+    "emptyOwnerHint": "Select questions in the bank, then “Add to set”.",
+    "openBank": "Open the question bank",
+    "loadFailed": "Could not load the question set",
+    "goneTitle": "This question set can’t be opened",
+    "goneBodyOwner": "It may have been deleted.",
+    "goneBody": "It may have been deleted, or its owner stopped sharing it with you.",
+    "backToShared": "Back to Shared with me",
+    "backToBank": "Back to the question bank",
+    "renameTitle": "Rename question set",
+    "deleteTitle": "Delete “{{name}}”?",
+    "deleteBody": "The questions stay in your bank, and tests that use these questions are not affected. Teachers you shared it with can no longer open the set.",
+    "removeFromSet": "Remove from set",
+    "removeTitle_one": "Remove {{count}} question from the set?",
+    "removeTitle_other": "Remove {{count}} questions from the set?",
+    "removeBodyOwner": "They stay in your bank. Tests that use them are not affected.",
+    "removeBody": "They stay in {{name}}’s bank. Only {{name}} can add them back.",
+    "copyBodyOwner": "The copy is a new set with its own questions. Changing either one leaves the other as it is.",
+    "toast": {
+      "added_one": "{{count}} question added to “{{name}}”",
+      "added_other": "{{count}} questions added to “{{name}}”",
+      "created_one": "Set “{{name}}” created with {{count}} question",
+      "created_other": "Set “{{name}}” created with {{count}} questions",
+      "removed_one": "{{count}} question removed from the set",
+      "removed_other": "{{count}} questions removed from the set",
+      "deleted": "Set “{{name}}” deleted",
+      "copiedToTest_one": "{{count}} question copied to your bank and added to {{test}}",
+      "copiedToTest_other": "{{count}} questions copied to your bank and added to {{test}}"
     }
   }
 }

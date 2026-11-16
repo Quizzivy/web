@@ -34,6 +34,10 @@ const TEACHER_TREE = [
     "features/question-groups/pages/teacher/GroupEditorPage",
   ],
   [
+    "/teacher/question-bank/sets/:id",
+    "features/question-bank/pages/teacher/QuestionSetPage",
+  ],
+  [
     "/teacher/question-bank/new",
     "features/question-bank/pages/teacher/QuestionEditorPage",
   ],

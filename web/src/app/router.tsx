@@ -233,6 +233,18 @@ const teacherTree: RouteObject = {
           ),
         },
         {
+          path: "question-bank/sets/:id",
+          handle: {
+            crumb: [
+              { key: "teacherShell.nav.questionBank", to: "/teacher/question-bank" },
+              { key: "bank.sets.title" },
+            ],
+          },
+          lazy: page(
+            () => import("@/features/question-bank/pages/teacher/QuestionSetPage"),
+          ),
+        },
+        {
           path: "question-bank/new",
           handle: {
             crumb: [

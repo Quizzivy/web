@@ -2,7 +2,15 @@ import { useMemo, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
-import { FilePlus, Plus, SlidersHorizontal, Tag, Trash2 } from "lucide-react";
+import {
+  FilePlus,
+  ListPlus,
+  Plus,
+  SlidersHorizontal,
+  Tag,
+  Trash2,
+  UserPlus,
+} from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { BulkActions, BulkBarButton } from "@/components/shared/BulkActions";
@@ -11,14 +19,23 @@ import { Pager } from "@/components/shared/data/Pager";
 import { LoadError } from "@/components/shared/ListState";
 import { SearchInput } from "@/components/shared/SearchInput";
 import { Sheet } from "@/components/shared/Sheet";
+import {
+  AddToSetDialog,
+  type AddToSetMode,
+} from "@/features/question-bank/components/AddToSetDialog";
 import { AddToTestDialog } from "@/features/question-bank/components/AddToTestDialog";
 import { BankAiActions } from "@/features/question-bank/components/BankAiActions";
 import { BulkTagDialog } from "@/features/question-bank/components/BulkTagDialog";
+import { SetFacet } from "@/features/question-bank/components/SetFacet";
 import {
+  QUESTION_SETS_KEY,
   deleteQuestion,
+  listQuestionSets,
   listQuestions,
   type AdminQuestion,
 } from "@/features/question-bank/api";
+import { useCan } from "@/features/auth/permissions";
+import { ShareDialog } from "@/features/sharing";
 import { BankNavigation } from "@/features/question-groups/components/BankNavigation";
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { trimmed, useDebouncedInput } from "@/hooks/useDebouncedInput";
@@ -102,6 +119,9 @@ function BankSkeleton() {
  * filters in a 220px aside from 1024px and in a sheet below it, a search by
  * prompt, the questions in a table whose columns drop as the table narrows,
  * and a bulk bar that adds the selection to a test, tags it or deletes it.
+ * The aside opens with the teacher's question sets (DG-90, interim), and the
+ * bulk bar also adds the selection to a set, or names a new set and opens
+ * the share dialog on it ("Share…").
  * The filters, the search, the page and its size live in the URL, so a
  * filtered list survives a reload and a trip to the editor and back. A row
  * opens the question's editor.
@@ -124,7 +144,17 @@ export default function QuestionBankPage() {
   const [sheetOpen, setSheetOpen] = useState(false);
   const [tagging, setTagging] = useState(false);
   const [adding, setAdding] = useState(false);
+  const [setMode, setSetMode] = useState<AddToSetMode>("add");
+  const [setOpen, setSetOpen] = useState(false);
+  const [sharing, setSharing] = useState<{ id: string; name: string } | null>(null);
+  const writes = useCan("content.questions.write");
+  const shares = useCan("content.share");
   const bulk = useBulkSelection<AdminQuestion>();
+  const sets = useQuery({
+    queryKey: QUESTION_SETS_KEY,
+    queryFn: ({ signal }) => listQuestionSets(signal),
+    enabled: writes,
+  });
   const { types, levels, skills, tags, tagMatch, audio } = filters;
   const [page] = usePage(
     JSON.stringify({ types, levels, skills, tags, tagMatch, audio, search, size }),
@@ -206,6 +236,15 @@ export default function QuestionBankPage() {
       facets={data?.facets}
       tags={data?.tags ?? []}
       onChange={change}
+      leading={
+        writes ? (
+          <SetFacet
+            sets={sets.data?.items}
+            failed={sets.isError}
+            onRetry={() => void sets.refetch()}
+          />
+        ) : undefined
+      }
     />
   );
 
@@ -282,9 +321,31 @@ export default function QuestionBankPage() {
             onClear={bulk.clear}
             onSettled={invalidate}
           >
+            {writes && shares ? (
+              <BulkBarButton
+                icon={UserPlus}
+                onClick={() => {
+                  setSetMode("share");
+                  setSetOpen(true);
+                }}
+              >
+                {t("bank.bulkShare")}
+              </BulkBarButton>
+            ) : null}
             <BulkBarButton icon={FilePlus} onClick={() => setAdding(true)}>
               {t("bank.addToTest")}
             </BulkBarButton>
+            {writes ? (
+              <BulkBarButton
+                icon={ListPlus}
+                onClick={() => {
+                  setSetMode("add");
+                  setSetOpen(true);
+                }}
+              >
+                {t("bank.addToSet")}
+              </BulkBarButton>
+            ) : null}
             <BulkBarButton icon={Tag} onClick={() => setTagging(true)}>
               {t("bank.bulkTag")}
             </BulkBarButton>
@@ -341,6 +402,32 @@ export default function QuestionBankPage() {
         onOpenChange={setAdding}
         onAdded={bulk.clear}
       />
+      <AddToSetDialog
+        open={setOpen}
+        onOpenChange={setSetOpen}
+        mode={setMode}
+        questionIds={[...bulk.selected.keys()]}
+        sets={sets.data?.items ?? []}
+        onDone={(set, created) => {
+          bulk.clear();
+          if (created && setMode === "share")
+            setSharing({ id: set.id, name: set.name });
+        }}
+      />
+      {sharing === null ? null : (
+        <ShareDialog
+          open
+          onOpenChange={(open) => {
+            if (!open) setSharing(null);
+          }}
+          kind="question_set"
+          resourceId={sharing.id}
+          name={sharing.name}
+          onSharedChange={() =>
+            void client.invalidateQueries({ queryKey: QUESTION_SETS_KEY })
+          }
+        />
+      )}
     </div>
   );
 }

@@ -20,7 +20,11 @@ import type { ReactNode, RefObject } from "react";
 /**
  * AddToTestDialog adds the questions `questionIds` to a section of a test the
  * teacher picks. When it closes, focus goes to `returnFocus` while that is in
- * the page, such as the menu that opened it.
+ * the page, such as the menu that opened it. With `copyFirst`, questions the
+ * teacher may not put in a test of their own (a shared set's) are first
+ * copied to their bank, and the copies are added; a copy made once is reused
+ * if the add is tried again while the dialog is open. `addedMessage` then
+ * words the toast, with the number added and the test's title.
  */
 export function AddToTestDialog({
   questionIds,
@@ -28,17 +32,35 @@ export function AddToTestDialog({
   onOpenChange,
   onAdded,
   returnFocus,
+  copyFirst,
+  addedMessage,
 }: Readonly<{
   questionIds: string[];
   open: boolean;
   onOpenChange: (open: boolean) => void;
   onAdded: () => void;
   returnFocus?: RefObject<HTMLElement | null> | undefined;
+  copyFirst?: ((ids: readonly string[]) => Promise<readonly string[]>) | undefined;
+  addedMessage?: ((count: number, test: string) => string) | undefined;
 }>) {
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const [error, setError] = useState<string | null>(null);
   const [expanded, setExpanded] = useState<string | null>(null);
+  const [copies, setCopies] = useState<readonly string[] | null>(null);
+  const [shown, setShown] = useState(open);
+  if (shown !== open) {
+    setShown(open);
+    if (!open) setCopies(null);
+  }
+
+  async function idsToAdd(): Promise<readonly string[]> {
+    if (copyFirst === undefined) return questionIds;
+    if (copies !== null) return copies;
+    const made = await copyFirst(questionIds);
+    setCopies(made);
+    return made;
+  }
 
   const tests = useLazyList({
     queryKey: ["teacher-tests", "picker", { status: "all" }],
@@ -54,8 +76,9 @@ export function AddToTestDialog({
       testId: string;
       sectionId: string;
     }) => {
+      const ids = await idsToAdd();
       const test = await getTest(testId);
-      return saveOutline(testId, {
+      await saveOutline(testId, {
         expectedUpdatedAt: test.updatedAt,
         title: test.title,
         description: test.description ?? null,
@@ -67,18 +90,19 @@ export function AddToTestDialog({
             section.id === sectionId
               ? // Already-present ids are dropped: adding a question a section
                 // holds twice is not something the builder can represent.
-                [...new Set([...section.questionIds, ...questionIds])]
+                [...new Set([...section.questionIds, ...ids])]
               : section.questionIds,
         })),
       });
+      return { count: ids.length, title: test.title };
     },
-    onSuccess: async () => {
+    onSuccess: async ({ count, title }) => {
       setError(null);
       await queryClient.invalidateQueries({ queryKey: ["teacher-tests"] });
       await queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
       onAdded();
       onOpenChange(false);
-      toast(t("bank.addedToTest"));
+      toast(addedMessage?.(count, title) ?? t("bank.addedToTest"));
     },
     onError: (cause) =>
       setError(cause instanceof ApiError ? cause.message : t("bank.addToTestFailed")),

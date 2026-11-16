@@ -1,8 +1,7 @@
 import type { TFunction } from "i18next";
 import { formatInTimeZone } from "date-fns-tz";
-import { Eye, FileText, Library, Pencil, type LucideIcon } from "lucide-react";
+import { FileText, Library, type LucideIcon } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
-import { Badge } from "@/components/ui/badge";
 import { IconTile } from "@/components/shared/IconTile";
 import type { DataColumn } from "@/components/shared/data/DataTable";
 import type { Locale } from "@/lib/i18n";
@@ -13,6 +12,7 @@ import {
   getDisplayTimeZone,
 } from "@/lib/i18n/datetime";
 import type { ShareKind, SharedWithMeItem } from "../../api";
+import { AccessPill } from "../../components/AccessPill";
 import { SharedRowActions } from "./SharedRowActions";
 import type { RowAct, SharedRow } from "./sharedRow";
 
@@ -90,18 +90,7 @@ export function sharedWithMeColumns(
       id: "access",
       header: t("sharing.withMe.column.access"),
       track: "112px",
-      cell: (item) =>
-        item.access === "edit" ? (
-          <Badge variant="brand">
-            <Pencil aria-hidden="true" />
-            {t("sharing.canEdit")}
-          </Badge>
-        ) : (
-          <Badge variant="secondary" className="bg-muted text-muted-fg">
-            <Eye aria-hidden="true" />
-            {t("sharing.canUse")}
-          </Badge>
-        ),
+      cell: (item) => <AccessPill access={item.access} />,
     },
     {
       id: "sharedAt",

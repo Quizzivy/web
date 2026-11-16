@@ -153,9 +153,16 @@ export function copyTest(id: string) {
   return api("post", "/teacher/tests/{id}/copy", { path: { id } });
 }
 
-/** copyQuestionSet makes the caller's own set, with their own questions, from a whole set. */
-export function copyQuestionSet(id: string) {
-  return api("post", "/teacher/question-sets/{id}/copy", { path: { id } });
+/**
+ * copyQuestionSet makes the caller's own set, with their own questions, from a
+ * whole set; with `questionIds`, members of the set, it copies just those into
+ * the caller's bank and makes no set ("Add to test" from a shared set).
+ */
+export function copyQuestionSet(id: string, questionIds?: readonly string[]) {
+  return api("post", "/teacher/question-sets/{id}/copy", {
+    path: { id },
+    ...(questionIds === undefined ? {} : { body: { questionIds: [...questionIds] } }),
+  });
 }
 
 /**

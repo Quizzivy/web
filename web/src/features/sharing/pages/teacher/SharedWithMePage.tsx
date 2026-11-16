@@ -17,6 +17,7 @@ import { DataTable } from "@/components/shared/data/DataTable";
 import { Pager } from "@/components/shared/data/Pager";
 import { templateOf } from "@/components/shared/data/tableLayout";
 import { useCan } from "@/features/auth/permissions";
+import { QUESTION_SETS_KEY } from "@/features/question-bank/api";
 import { trimmed, useDebouncedInput } from "@/hooks/useDebouncedInput";
 import { useListFilters } from "@/hooks/useListFilters";
 import { usePage, usePageSize } from "@/hooks/usePage";
@@ -43,10 +44,10 @@ const SEARCH =
 
 const SKELETON_ROWS = 5;
 
-/** The queries a copy makes stale: the list the copy lands in. */
-const COPIED_INTO: Record<ShareKind, readonly string[]> = {
-  test: ["teacher-tests"],
-  question_set: ["teacher-questions"],
+/** The queries a copy makes stale: the lists the copy lands in. */
+const COPIED_INTO: Record<ShareKind, readonly (readonly string[])[]> = {
+  test: [["teacher-tests"]],
+  question_set: [["teacher-questions"], QUESTION_SETS_KEY],
 };
 
 type Acting = Readonly<{ act: RowAct; item: SharedRow }> | null;
@@ -173,7 +174,8 @@ export default function SharedWithMePage() {
     onSuccess: (_copy, item) => {
       setActing(null);
       notify.success(t(`sharing.withMe.toast.copied.${item.kind}`));
-      void client.invalidateQueries({ queryKey: COPIED_INTO[item.kind] });
+      for (const queryKey of COPIED_INTO[item.kind])
+        void client.invalidateQueries({ queryKey });
     },
     onError: (cause) => {
       if (gone(cause)) onGone();

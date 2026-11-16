@@ -317,6 +317,8 @@ export function GroupWorkspace({
   const orders = useRef(new Map<string, OptionOrder>());
   const knownRecordings = useRef(new Map<string, GroupRecording>());
   const editor = useRef<Editor | null>(null);
+  /** The gap "Bỏ chỗ trống" is removing, whose own notice says so. */
+  const unmaking = useRef<string | null>(null);
   const faces = useRef<(gapId: string) => GapFace | undefined>(() => undefined);
   const press = useRef<(gapId: string) => void>(() => undefined);
   const drawn = useRef("");
@@ -436,6 +438,9 @@ export function GroupWorkspace({
     remember(current);
     setTextOpen(true);
     commit(withRecordings(sync.bundle, knownRecordings.current));
+    const lost = sync.removed.filter((item) => item.binding.gapId !== unmaking.current);
+    unmaking.current = null;
+    if (lost.length > 0) tellLost(lost);
     const made = sync.made[0];
     if (made === undefined) closeIfGone(sync.removed);
     else open(made);
@@ -581,10 +586,40 @@ export function GroupWorkspace({
     if (openId === id) open(null);
   }
 
+  /**
+   * tellLost says which questions an edit of the text took with its gaps, a
+   * cut of a sentence holding gaps say, with Undo, which undoes the edit and
+   * so brings the gaps and their questions back (the owner's choice of
+   * 2026-11-15, Quizzivy/web#23).
+   */
+  function tellLost(lost: readonly RemovedGap[]) {
+    const live = editor.current;
+    const list = lost
+      .map((item) => numbers.get(item.question.id))
+      .filter((number) => number !== undefined)
+      .join(", ");
+    notify.success(
+      t("groups.pane.gapsLostByEdit", { count: lost.length, numbers: list }),
+      {
+        duration: 6000,
+        action: {
+          label: t("common.undo"),
+          onClick: () => {
+            if (live && !live.isDestroyed) live.chain().focus().undo().run();
+          },
+        },
+      },
+    );
+  }
+
   function removeGap(gap: GapQuestion) {
     const live = editor.current;
     if (live === null || material?.id !== gap.materialId) return;
-    if (!unmakeGap(live, gap.gapId, gap.word)) return;
+    unmaking.current = gap.gapId;
+    if (!unmakeGap(live, gap.gapId, gap.word)) {
+      unmaking.current = null;
+      return;
+    }
     const number = numbers.get(gap.questionId) ?? "";
     notify.success(t("groups.pane.removeGapDone", { number, word: gap.word }), {
       duration: 6000,

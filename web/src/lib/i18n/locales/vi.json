@@ -312,7 +312,10 @@
       "saved": "Đã lưu biến thể thành đề nháp.",
       "open": "Mở biến thể",
       "testTitle": "{{title}} · Biến thể",
-      "invalid": "Thay đổi cho câu {{n}} chưa lưu được như hiện tại. Hãy bỏ chọn nó rồi thử lại."
+      "invalid": "Thay đổi cho câu {{n}} chưa lưu được như hiện tại. Hãy bỏ chọn nó rồi thử lại.",
+      "changed": "Đề vừa thay đổi trong lúc lưu nên chưa tạo được đề biến thể. Hãy tạo lại biến thể.",
+      "failed": "Không tạo được đề biến thể. Bản sao làm dở đã được xoá.",
+      "kept": "Không tạo được đề biến thể. Bản sao làm dở vẫn còn trong danh sách đề, bạn có thể xoá nó."
     },
     "cleanup": {
       "title": "Dọn dẹp ngân hàng câu hỏi",

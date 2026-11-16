@@ -4,6 +4,7 @@ import { afterEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { HttpResponse } from "msw";
 import { contractJson } from "@tests/support/contractResponse";
+import { notificationDefaults } from "@tests/support/fixtures";
 import type {
   Notification,
   NotificationPreference,
@@ -114,18 +115,9 @@ export const transferNotice = {
   createdAt: "2026-10-01T12:00:00Z",
   readAt: null,
 } as Notification;
-export const preferences: NotificationPreference[] = [
-  "attempt.submitted",
-  "attempt.flagged",
-  "assignment.closing",
-  "assignment.due_soon",
-  "result.ready",
-  "message.received",
-].map((event) => ({
-  event: event as NotificationPreference["event"],
-  inApp: true,
-  email: false,
-}));
+export const preferences: NotificationPreference[] = notificationDefaults.map(
+  (row) => ({ ...row }),
+);
 export const page: NotificationPage = {
   items: Array.from({ length: 20 }, (_, index) => ({
     ...notices[index % notices.length]!,

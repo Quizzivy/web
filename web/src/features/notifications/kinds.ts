@@ -44,6 +44,7 @@ export const LATER_KINDS = [
   "test.published_by_collaborator",
   "message.received",
   "message.from_teacher",
+  "summary.weekly",
 ] as const satisfies readonly NotificationKind[];
 /** ShownKind is every kind the bell draws. */
 type ShownKind = Exclude<NotificationKind, (typeof LATER_KINDS)[number]>;
@@ -85,6 +86,7 @@ export const STUDENT_EVENTS = [
  */
 export const LATER_EVENTS = [
   "message.received",
+  "summary.weekly",
 ] as const satisfies readonly NotificationEvent[];
 
 const teacherKinds = new Set<NotificationKind>([

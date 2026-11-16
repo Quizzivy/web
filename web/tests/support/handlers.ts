@@ -1,6 +1,12 @@
 import { http } from "msw";
 import { contractJson } from "./contractResponse";
-import { adminUser, myClass, sampleClass, studentUser } from "./fixtures";
+import {
+  adminUser,
+  myClass,
+  notificationDefaults,
+  sampleClass,
+  studentUser,
+} from "./fixtures";
 
 const BASE = "http://localhost:8080";
 
@@ -49,19 +55,7 @@ export const handlers = [
   ),
   http.get(`${BASE}/auth/me`, () => contractJson("/auth/me", "get", 200, studentUser)),
   http.get(`${BASE}/me/notification-preferences`, () =>
-    contractJson(
-      "/me/notification-preferences",
-      "get",
-      200,
-      [
-        "attempt.submitted",
-        "attempt.flagged",
-        "assignment.closing",
-        "assignment.due_soon",
-        "result.ready",
-        "message.received",
-      ].map((event) => ({ event, inApp: true, email: false })),
-    ),
+    contractJson("/me/notification-preferences", "get", 200, notificationDefaults),
   ),
   http.get(`${BASE}/me/summary`, () =>
     contractJson("/me/summary", "get", 200, {

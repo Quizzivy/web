@@ -28,6 +28,7 @@ import { BankAiActions } from "@/features/question-bank/components/BankAiActions
 import { BulkTagDialog } from "@/features/question-bank/components/BulkTagDialog";
 import { SetFacet } from "@/features/question-bank/components/SetFacet";
 import {
+  QUESTION_SET_PREFIX,
   QUESTION_SETS_KEY,
   deleteQuestion,
   listQuestionSets,
@@ -184,7 +185,13 @@ export default function QuestionBankPage() {
   const columns = useMemo(() => bankColumns(t, wide ? BANK_ASIDE_WIDTH : 0), [t, wide]);
   const figure = useMemo(() => new Intl.NumberFormat(locale), [locale]);
 
-  const invalidate = () => client.invalidateQueries({ queryKey: QUERY_KEY });
+  // A set counts its live questions, so a delete changes the sets' sizes too.
+  const invalidate = () =>
+    Promise.all([
+      client.invalidateQueries({ queryKey: QUERY_KEY }),
+      client.invalidateQueries({ queryKey: QUESTION_SETS_KEY }),
+      client.invalidateQueries({ queryKey: QUESTION_SET_PREFIX }),
+    ]);
   const change = (next: BankFilterChange) => {
     const [name, value] = filterParam(next);
     setFilter(name, value);

@@ -45,6 +45,7 @@ import {
   QUESTION_SETS_KEY,
   deleteQuestionSet,
   getQuestionSet,
+  listQuestionSets,
   listQuestions,
   questionSetKey,
   removeQuestionSetItems,
@@ -112,11 +113,20 @@ export default function QuestionSetPage() {
   const { t } = useTranslation();
   const { id = "" } = useParams<{ id: string }>();
   const location = useLocation();
-  const fromBank = (location.state as { from?: string } | null)?.from === "bank";
+  const client = useQueryClient();
   const set = useQuery({
     queryKey: questionSetKey(id),
     queryFn: ({ signal }) => getQuestionSet(id, signal),
   });
+  // The owner's wording when the reader came from the bank (`from`), when the
+  // set was last read as theirs, or when their own sets list it.
+  const fromBank =
+    (location.state as { from?: string } | null)?.from === "bank" ||
+    set.data?.access === "owner" ||
+    (client
+      .getQueryData<Awaited<ReturnType<typeof listQuestionSets>>>(QUESTION_SETS_KEY)
+      ?.items.some((own) => own.id === id) ??
+      false);
 
   if (set.isPending) return <SetSkeleton />;
   if (set.isError) {

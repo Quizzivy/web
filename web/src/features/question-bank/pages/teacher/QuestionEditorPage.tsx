@@ -1,4 +1,4 @@
-import { useMemo, useRef, useState, type ReactNode } from "react";
+import { useMemo, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import {
   Link,
@@ -35,12 +35,15 @@ import { QuestionEditorMenu } from "@/features/question-bank/components/Question
 import { QuestionMediaField } from "@/features/question-bank/components/QuestionMediaField";
 import { ExplanationField } from "@/features/question-bank/components/ExplanationField";
 import { QuestionPromptAnswers } from "@/features/question-bank/components/QuestionPromptAnswers";
+import {
+  QuestionReadBody,
+  QuestionReadSettings,
+} from "@/features/question-bank/components/QuestionReadView";
 import { QuestionSettingsFields } from "@/features/question-bank/components/QuestionSettingsFields";
 import { QuestionTypeControl } from "@/features/question-bank/components/QuestionTypeControl";
 import { QuestionUsageBanner } from "@/features/question-bank/components/QuestionUsageBanner";
 import { useProseMedia } from "@/features/question-bank/useProseMedia";
 import { ProseMediaContext } from "@/components/shared/content/editor/proseMedia";
-import { ContentReadOnlyContext } from "@/components/shared/content/editor/readOnly";
 import { aiReadsOf, type QuestionAi } from "@/features/question-bank/questionAi";
 import {
   blockingIssue,
@@ -77,27 +80,20 @@ function staleOf(cause: unknown): Stale | null {
   };
 }
 
-/**
- * FormArea holds the editor's two columns. For a Can-use reader it is a
- * disabled fieldset whose rich fields render read-only and whose formatting
- * toolbars are not drawn, so the question reads in full and nothing in it can
- * be changed.
- */
-function FormArea({
-  readOnly,
-  children,
-}: Readonly<{ readOnly: boolean; children: ReactNode }>) {
-  if (!readOnly) return <div className={GRID}>{children}</div>;
-  return (
-    <ContentReadOnlyContext value>
-      <fieldset
-        disabled
-        className={`${GRID} m-0 min-w-0 border-0 p-0 [&_[role=toolbar]]:hidden`}
-      >
-        {children}
-      </fieldset>
-    </ContentReadOnlyContext>
-  );
+type Access = AdminQuestion["access"];
+
+const RANK: Readonly<Record<NonNullable<Access>, number>> = {
+  use: 0,
+  edit: 1,
+  owner: 2,
+};
+
+/** lowerAccess is the narrower of two accesses; an unknown one does not narrow. */
+function lowerAccess(
+  a: NonNullable<Access>,
+  b: Access | undefined,
+): NonNullable<Access> {
+  return b == null || RANK[a] <= RANK[b] ? a : b;
 }
 
 /**
@@ -107,9 +103,11 @@ function FormArea({
  * that is not an id gets) and its load error. `?set={id}` opens a question in
  * a set's context (T-R7.19): the page leads back to that set, and an edit
  * grantee's save is made in it, where the server may answer with a copy.
- * The editor follows the caller's `access`: Can use reads the question and
- * may make a copy of it, Can edit saves to the owner's question, and the
- * owner edits as before. Every save sends the `updatedAt` it last read, and
+ * The editor follows the caller's `access`, the narrower of the question's
+ * and, under `?set=`, the set's: Can use reads the question, drawn without a
+ * control it cannot use, and may make a copy of it; Can edit saves to the
+ * owner's question in the set's context, and without one reads it as Can use
+ * does and says where it can be changed; the owner edits as before. Every save sends the `updatedAt` it last read, and
  * a refused stale save names who changed the question.
  */
 export default function QuestionEditorPage() {
@@ -188,6 +186,38 @@ function EditorSkeleton() {
   );
 }
 
+/**
+ * useEditorAccess reads what the caller may do with the question: a question
+ * carries the caller's best access across every test and set holding it, so
+ * under `?set=` the set's own access, which a save there gets, narrows it. An
+ * edit grantee's save needs a set (or a test) to be made in (422
+ * `EDIT_CONTEXT_REQUIRED`), so without one the question reads as Can use's
+ * (`outOfContext`). `back` leads to the set, telling the set page when it is
+ * the caller's own, or to the bank.
+ */
+function useEditorAccess(question: AdminQuestion | null, setId: string | null) {
+  const { t } = useTranslation();
+  const set = useQuery({
+    queryKey: questionSetKey(setId ?? ""),
+    queryFn: ({ signal }) => getQuestionSet(setId ?? "", signal),
+    enabled: setId !== null,
+  });
+  const access = lowerAccess(
+    question?.access ?? "owner",
+    setId === null ? undefined : set.data?.access,
+  );
+  const outOfContext = access === "edit" && setId === null;
+  const back =
+    setId === null
+      ? { to: BANK, label: t("teacherShell.nav.questionBank") }
+      : {
+          to: `${BANK}/sets/${setId}`,
+          label: set.data?.name ?? t("bank.sets.title"),
+          ...(set.data?.access === "owner" ? { state: { from: "bank" } } : {}),
+        };
+  return { access, outOfContext, readOnly: access === "use" || outOfContext, back };
+}
+
 function Editor({
   question,
   setId,
@@ -203,24 +233,11 @@ function Editor({
   const locale = useLocale();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
-  const access = question?.access ?? "owner";
-  const readOnly = access === "use";
+  const { access, outOfContext, readOnly, back } = useEditorAccess(question, setId);
   const owner = question?.owner;
   const ownerGiven = givenName(owner?.name ?? "");
   const [base, setBase] = useState(question?.updatedAt);
   const [stale, setStale] = useState<Stale | null>(null);
-  const set = useQuery({
-    queryKey: questionSetKey(setId ?? ""),
-    queryFn: ({ signal }) => getQuestionSet(setId ?? "", signal),
-    enabled: setId !== null,
-  });
-  const back =
-    setId === null
-      ? { to: BANK, label: t("teacherShell.nav.questionBank") }
-      : {
-          to: `${BANK}/sets/${setId}`,
-          label: set.data?.name ?? t("bank.sets.title"),
-        };
   const [values, setValues] = useState<QuestionValues>(() =>
     question === null ? emptyQuestion() : toFormValues(question),
   );
@@ -399,6 +416,12 @@ function Editor({
       );
     }
     if (question === null) return null;
+    if (outOfContext)
+      return (
+        <Callout lead={t("questionEditor.access.contextLead")}>
+          {t("questionEditor.access.useRest")}
+        </Callout>
+      );
     if (access === "edit")
       return (
         <Callout lead={t("sets.editLead", { name: ownerGiven })}>
@@ -476,17 +499,15 @@ function Editor({
 
       {notice()}
 
-      <ProseMediaContext value={media.host}>
-        <FormArea readOnly={readOnly}>
+      {readOnly ? (
+        <div className={GRID}>
           <div data-field-size="page" className={CARD}>
-            <QuestionTypeControl value={values} onChange={change} />
-            <QuestionPromptAnswers
+            <QuestionReadBody
               value={values}
+              assets={question?.contentAssets ?? []}
               promptLabel={t("questionEditor.question")}
-              ai={ai}
-              onChange={change}
+              onRefresh={refresh}
             />
-            <ExplanationField value={values} ai={ai} onChange={change} />
           </div>
           <StickyAside
             aria-label={t("questionEditor.settings")}
@@ -495,28 +516,54 @@ function Editor({
             <div className={CARD}>
               <div className="flex flex-col gap-3">
                 <p className={GROUP_LABEL}>{t("questionEditor.settingsLabel")}</p>
-                <QuestionSettingsFields value={values} onChange={change} />
+                <QuestionReadSettings
+                  value={values}
+                  asset={asset}
+                  onRefresh={refresh}
+                />
               </div>
-              {readOnly && asset === null ? null : (
-                <>
-                  <hr className="border-border" />
-                  <div className="flex flex-col gap-3">
-                    <p className={GROUP_LABEL}>{t("questionEditor.mediaLabel")}</p>
-                    <QuestionMediaField
-                      value={values}
-                      asset={asset}
-                      onChange={change}
-                      onAssetChange={setAsset}
-                      onRefresh={refresh}
-                      onMedia={media.media}
-                    />
-                  </div>
-                </>
-              )}
             </div>
           </StickyAside>
-        </FormArea>
-      </ProseMediaContext>
+        </div>
+      ) : (
+        <ProseMediaContext value={media.host}>
+          <div className={GRID}>
+            <div data-field-size="page" className={CARD}>
+              <QuestionTypeControl value={values} onChange={change} />
+              <QuestionPromptAnswers
+                value={values}
+                promptLabel={t("questionEditor.question")}
+                ai={ai}
+                onChange={change}
+              />
+              <ExplanationField value={values} ai={ai} onChange={change} />
+            </div>
+            <StickyAside
+              aria-label={t("questionEditor.settings")}
+              className="@min-[900px]/qe:sticky-column min-w-0"
+            >
+              <div className={CARD}>
+                <div className="flex flex-col gap-3">
+                  <p className={GROUP_LABEL}>{t("questionEditor.settingsLabel")}</p>
+                  <QuestionSettingsFields value={values} onChange={change} />
+                </div>
+                <hr className="border-border" />
+                <div className="flex flex-col gap-3">
+                  <p className={GROUP_LABEL}>{t("questionEditor.mediaLabel")}</p>
+                  <QuestionMediaField
+                    value={values}
+                    asset={asset}
+                    onChange={change}
+                    onAssetChange={setAsset}
+                    onRefresh={refresh}
+                    onMedia={media.media}
+                  />
+                </div>
+              </div>
+            </StickyAside>
+          </div>
+        </ProseMediaContext>
+      )}
       {media.dialogs}
 
       <ConfirmDialog

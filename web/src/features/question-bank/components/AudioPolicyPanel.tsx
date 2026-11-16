@@ -1,9 +1,8 @@
 import { useId } from "react";
 import { useTranslation } from "react-i18next";
-import type { TFunction } from "i18next";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
-import type { AudioPolicy } from "@/features/question-bank/audioPolicy";
+import { playsName, type AudioPolicy } from "@/features/question-bank/audioPolicy";
 import { cn } from "@/lib/utils";
 
 type Plays = AudioPolicy["maxPlays"];
@@ -120,11 +119,4 @@ export function AudioPolicyPanel({
       </div>
     </>
   );
-}
-
-function playsName(plays: Plays, t: TFunction): string {
-  if (plays === null) return t("questionEditor.questionMedia.unlimited");
-  if (plays === 1) return t("questionEditor.questionMedia.once");
-  if (plays === 2) return t("questionEditor.questionMedia.twice");
-  return t("questionEditor.questionMedia.playsCount", { count: plays });
 }

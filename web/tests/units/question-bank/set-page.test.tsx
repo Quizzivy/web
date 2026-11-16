@@ -3,6 +3,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import i18n from "@/lib/i18n";
 import QuestionSetPage from "@/features/question-bank/pages/teacher/QuestionSetPage";
 import { bankColumns } from "@/features/question-bank/pages/teacher/bankColumns";
+import { QUESTION_SETS_KEY } from "@/features/question-bank/api";
 import { serveSharing } from "../sharing/support";
 import {
   COPY1,
@@ -17,6 +18,7 @@ import {
   sets,
   signIn,
   signOut,
+  summary,
 } from "./sets-support";
 
 const PATH = `/teacher/question-bank/sets/${SET_ID}`;
@@ -264,6 +266,28 @@ describe("the set page for a Can use recipient", () => {
   });
 });
 
+describe("the set page's Add to test for a Can edit recipient", () => {
+  // After Can use's test, whose toast this one would repeat.
+  it("copies the selection to the teacher's bank first, as the owner's Q5 default says", async () => {
+    shared("edit");
+    const { user } = renderSet();
+    await heading("Collocations · B1");
+    await selectBoth(user);
+    await user.click(screen.getByRole("button", { name: "Thêm vào đề thi" }));
+    const dialog = await screen.findByRole("dialog", { name: "Thêm vào đề thi" });
+    await user.click(
+      await within(dialog).findByRole("button", { name: /Unit 4 · Review/ }),
+    );
+    await user.click(await within(dialog).findByRole("button", { name: /Part 1/ }));
+
+    await waitFor(() => expect(sets.outlines).toHaveLength(1));
+    expect(sets.copied).toEqual([{ id: SET_ID, body: { questionIds: [Q1, Q2] } }]);
+    expect(sets.outlines[0]).toMatchObject({
+      sections: [{ questionIds: [COPY1, COPY2] }],
+    });
+  });
+});
+
 describe("the set page's columns", () => {
   it("leaves the Used column out for a recipient: those are the owner's tests", () => {
     const ids = (used: boolean) =>
@@ -329,6 +353,19 @@ describe("the set page's states", () => {
     expect(
       screen.getByRole("link", { name: "Về Được chia sẻ với tôi" }),
     ).toHaveAttribute("href", "/teacher/shared-with-me");
+  });
+
+  it("words the gone set for its owner when their own sets list it", async () => {
+    sets.setStatus = 404;
+    const { client } = renderSet();
+    client.setQueryData(QUESTION_SETS_KEY, {
+      items: [{ ...summary(1, "Present perfect · A2", 2), id: SET_ID }],
+    });
+    expect(await screen.findByText("Bộ có thể đã bị xoá.")).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "Về ngân hàng câu hỏi" })).toHaveAttribute(
+      "href",
+      "/teacher/question-bank",
+    );
   });
 
   it("leads back to the bank when the reader came from its Sets group", async () => {

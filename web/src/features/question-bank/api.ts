@@ -179,9 +179,12 @@ export type QuestionSetSummary = components["schemas"]["QuestionSetSummary"];
 /** QUESTION_SETS_KEY heads the caller's own sets: the bank's Sets group and Add to set. */
 export const QUESTION_SETS_KEY = ["teacher-question-sets"] as const;
 
+/** QUESTION_SET_PREFIX heads every set's header query (questionSetKey). */
+export const QUESTION_SET_PREFIX = ["teacher-question-set"] as const;
+
 /** questionSetKey is the query key of one set's header. */
 export function questionSetKey(id: string) {
-  return ["teacher-question-set", id] as const;
+  return [...QUESTION_SET_PREFIX, id] as const;
 }
 
 /** SET_LIMIT is how many questions a set holds at most (the contract's 500). */

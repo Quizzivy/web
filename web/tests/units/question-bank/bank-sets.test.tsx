@@ -1,12 +1,13 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { screen, waitFor, within } from "@testing-library/react";
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 import QuestionBankPage from "@/features/question-bank/pages/teacher/QuestionBankPage";
 import { contractJson } from "@tests/support/contractResponse";
 import { bankPage, bankQuestion } from "@tests/support/questionBank";
 import { server } from "@tests/support/server";
 import { teacherUser } from "@tests/support/fixtures";
 import { useAuthStore } from "@/stores/auth";
+import { viewport } from "@tests/support/viewport";
 import { serveSharing } from "../sharing/support";
 import {
   BASE,
@@ -45,7 +46,17 @@ beforeEach(() => {
   );
 });
 
-afterEach(signOut);
+afterEach(() => {
+  signOut();
+  vi.unstubAllGlobals();
+});
+
+/** refusal is the contract's error body for a refused set write. */
+function refusal(code: string, message: string) {
+  return {
+    error: { code, message, requestId: "019535d9-3df7-79fb-b466-fa907fa17f9e" },
+  };
+}
 
 function renderBank() {
   return renderAt("/teacher/question-bank", ROUTES);
@@ -87,6 +98,9 @@ describe("the bank's Sets group", () => {
       name: /Prepositions after verbs/,
     });
     expect(within(second).queryByRole("img")).toBeNull();
+    // The deck's tip: who a shared set is shared with, else the name a narrow row cuts.
+    expect(first).toHaveAttribute("title", "Đang chia sẻ với 2 giáo viên");
+    expect(second).toHaveAttribute("title", "Prepositions after verbs");
 
     await user.click(first);
     expect(router.state.location.pathname).toBe(
@@ -114,6 +128,93 @@ describe("the bank's Sets group", () => {
         "Chưa có bộ nào. Chọn câu hỏi rồi bấm “Thêm vào bộ” để tạo bộ đầu tiên.",
       ),
     ).toBeInTheDocument();
+  });
+
+  it("draws three bars while the sets load", async () => {
+    server.use(http.get(`${BASE}/teacher/question-sets`, () => new Promise(() => {})));
+    renderBank();
+    const group = await screen.findByRole("region", { name: "Bộ câu hỏi" });
+    expect(group.querySelectorAll("[data-slot=skeleton]")).toHaveLength(3);
+    expect(within(group).queryByRole("link")).toBeNull();
+  });
+
+  it("says when the sets could not be read, and Retry reads them again", async () => {
+    let fail = true;
+    server.use(
+      http.get(`${BASE}/teacher/question-sets`, () =>
+        fail
+          ? new HttpResponse(null, { status: 500 })
+          : contractJson("/teacher/question-sets", "get", 200, {
+              items: [summary(1, "Present perfect · A2", 24)],
+            }),
+      ),
+    );
+    const { user } = renderBank();
+    const group = await screen.findByRole("region", { name: "Bộ câu hỏi" });
+    expect(
+      await within(group).findByText("Không tải được các bộ của bạn."),
+    ).toBeInTheDocument();
+
+    fail = false;
+    await user.click(within(group).getByRole("button", { name: "Thử lại" }));
+    expect(
+      await within(group).findByRole("link", { name: /Present perfect · A2/ }),
+    ).toBeInTheDocument();
+    expect(within(group).queryByText("Không tải được các bộ của bạn.")).toBeNull();
+  });
+
+  it("opens the Filters sheet below 1024px with the Sets group first", async () => {
+    viewport(900);
+    sets.list = [summary(1, "Present perfect · A2", 24)];
+    const { user } = renderBank();
+    await screen.findByRole("checkbox", { name: "Chọn Câu một" }, { timeout: 5000 });
+    expect(screen.queryByRole("complementary", { name: "Bộ lọc" })).toBeNull();
+
+    await user.click(screen.getByRole("button", { name: "Bộ lọc" }));
+    const sheet = await screen.findByRole("dialog", { name: "Bộ lọc" });
+    const group = within(sheet).getByRole("region", { name: "Bộ câu hỏi" });
+    expect(
+      within(group).getByRole("link", { name: /Present perfect · A2/ }),
+    ).toHaveAttribute(
+      "href",
+      "/teacher/question-bank/sets/018f0000-0000-7000-8000-000000000501",
+    );
+    const headings = within(sheet).getAllByText(/^(Bộ câu hỏi|Loại câu)$/);
+    expect(headings.map((node) => node.textContent)).toEqual([
+      "Bộ câu hỏi",
+      "Loại câu",
+    ]);
+  });
+
+  it("reads the sets again after a bulk delete, whose questions they count", async () => {
+    let reads = 0;
+    sets.list = [summary(1, "Present perfect · A2", 24)];
+    server.use(
+      http.get(`${BASE}/teacher/question-sets`, () => {
+        reads += 1;
+        return contractJson("/teacher/question-sets", "get", 200, {
+          items: [summary(1, "Present perfect · A2", reads === 1 ? 24 : 22)],
+        });
+      }),
+      http.delete(
+        `${BASE}/teacher/questions/:id`,
+        () => new HttpResponse(null, { status: 204 }),
+      ),
+    );
+    const { user } = renderBank();
+    const group = await screen.findByRole("region", { name: "Bộ câu hỏi" });
+    const row = await within(group).findByRole("link", {
+      name: /Present perfect · A2/,
+    });
+    expect(row).toHaveTextContent("24");
+
+    await selectBoth(user);
+    await user.click(screen.getByRole("button", { name: "Xoá" }));
+    const confirm = await screen.findByRole("dialog", { name: "Xoá" });
+    await user.click(within(confirm).getByRole("button", { name: "Xác nhận 2 mục" }));
+
+    await waitFor(() => expect(reads).toBe(2));
+    await waitFor(() => expect(row).toHaveTextContent("22"));
   });
 });
 
@@ -199,6 +300,58 @@ describe("the bulk bar's Add to set", () => {
     expect(submit).toHaveAttribute("aria-disabled", "true");
     await user.click(submit);
     expect(sets.added).toEqual([]);
+  });
+});
+
+describe("the Add to set dialog's refusals", () => {
+  it("shows a refused add's reason in the dialog and keeps it open", async () => {
+    sets.list = [summary(1, "Present perfect · A2", 24)];
+    server.use(
+      http.post(`${BASE}/teacher/question-sets/:id/items`, () =>
+        contractJson(
+          "/teacher/question-sets/{id}/items",
+          "post",
+          404,
+          refusal("NOT_FOUND", "Một câu hỏi đã chọn không còn trong ngân hàng."),
+        ),
+      ),
+    );
+    const { user } = renderBank();
+    await selectBoth(user);
+    await user.click(screen.getByRole("button", { name: "Thêm vào bộ" }));
+    const dialog = await screen.findByRole("dialog", { name: "Thêm 2 câu vào bộ" });
+    await user.click(within(dialog).getByRole("button", { name: "Thêm vào bộ" }));
+
+    expect(
+      await within(dialog).findByText("Một câu hỏi đã chọn không còn trong ngân hàng."),
+    ).toBeVisible();
+    expect(screen.getByRole("dialog", { name: "Thêm 2 câu vào bộ" })).toBeVisible();
+    expect(screen.getByText(/Đã chọn/)).toBeInTheDocument();
+  });
+
+  it("shows a refused create's reason in the dialog and keeps it open", async () => {
+    server.use(
+      http.post(`${BASE}/teacher/question-sets`, () =>
+        contractJson(
+          "/teacher/question-sets",
+          "post",
+          404,
+          refusal("NOT_FOUND", "Một câu hỏi đã chọn không còn trong ngân hàng."),
+        ),
+      ),
+    );
+    const { user } = renderBank();
+    await selectBoth(user);
+    await user.click(screen.getByRole("button", { name: "Thêm vào bộ" }));
+    const dialog = await screen.findByRole("dialog");
+    await user.type(within(dialog).getByLabelText("Tên bộ"), "Phrasal verbs · B1");
+    await user.click(within(dialog).getByRole("button", { name: "Tạo bộ" }));
+
+    expect(
+      await within(dialog).findByText("Một câu hỏi đã chọn không còn trong ngân hàng."),
+    ).toBeVisible();
+    expect(within(dialog).getByLabelText("Tên bộ")).toHaveValue("Phrasal verbs · B1");
+    expect(screen.getByText(/Đã chọn/)).toBeInTheDocument();
   });
 });
 

@@ -1131,7 +1131,8 @@
     "access": {
       "editRest": "Nếu {{name}} đang dùng câu này ở nơi khác, thay đổi của bạn được lưu thành một bản sao mới.",
       "useLead": "Bạn xem được câu hỏi này nhưng không sửa được.",
-      "useRest": "Tạo bản sao để có câu hỏi của riêng bạn."
+      "useRest": "Tạo bản sao để có câu hỏi của riêng bạn.",
+      "contextLead": "Bạn sửa được câu hỏi này khi mở nó từ bộ câu hỏi hoặc đề thi được chia sẻ với bạn."
     },
     "stale": {
       "title": "{{name}} đã thay đổi câu hỏi này lúc {{time}}.",

@@ -4,6 +4,7 @@ import { http } from "msw";
 import QuestionEditorPage from "@/features/question-bank/pages/teacher/QuestionEditorPage";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
+import { aiOn } from "../ai/support";
 import {
   BASE,
   COPY1,
@@ -32,6 +33,45 @@ type Access = "owner" | "edit" | "use";
 let access: Access = "owner";
 let patches: { id: string; setId: string | null; body: Record<string, unknown> }[] = [];
 let answer: "saved" | "fork" | "stale" | "staleUnknown" = "saved";
+/** shape is what the next read of a question holds beyond the fixture's short answer. */
+let shape: Record<string, unknown> = {};
+
+/** CHOICE is a single choice with an explanation: a type with both AI entry points. */
+const CHOICE = {
+  type: "single_choice",
+  prompt: "Choose the verb that collocates: ___ a mistake.",
+  options: [
+    {
+      id: "018f0000-0000-7000-8000-0000000000b1",
+      ordinal: 1,
+      text: "do",
+      isCorrect: false,
+    },
+    {
+      id: "018f0000-0000-7000-8000-0000000000b2",
+      ordinal: 2,
+      text: "make",
+      isCorrect: true,
+    },
+  ],
+  explanation: "Ta nói “make a mistake”.",
+};
+
+/** LISTENING is a question with its own recording and a prompt stored as Markdown. */
+const LISTENING = {
+  prompt: "Nghe đoạn hội thoại, rồi trả lời: người phụ nữ **đề nghị** gì?",
+  media: {
+    id: "018f0000-0000-7000-8000-0000000000e1",
+    kind: "audio",
+    url: "https://example.test/a.mp3?sig=1",
+    mimeType: "audio/mpeg",
+    bytes: 1024,
+    durationMs: 110_000,
+    originalFilename: "unit5-listening-2.mp3",
+    createdAt: "2026-01-01T00:00:00Z",
+  },
+  audio: { maxPlays: 2, allowSeek: false, showTranscriptAfterSubmit: true },
+};
 
 function question(id: string, overrides: Record<string, unknown> = {}) {
   return {
@@ -48,6 +88,7 @@ function question(id: string, overrides: Record<string, unknown> = {}) {
     owner: access === "owner" ? ME : DUC,
     createdAt: "2026-11-01T03:00:00Z",
     updatedAt: READ_AT,
+    ...shape,
     ...overrides,
   };
 }
@@ -58,6 +99,7 @@ beforeEach(() => {
   access = "owner";
   patches = [];
   answer = "saved";
+  shape = {};
   server.use(
     http.get(`${BASE}/teacher/questions/:id`, ({ params }) =>
       contractJson(
@@ -194,6 +236,18 @@ describe("the question editor for a Can edit recipient", () => {
     expect(screen.queryByText(/Đang dùng trong/)).toBeNull();
   });
 
+  it("offers no AI on a type the owner gets it on", async () => {
+    aiOn();
+    shape = CHOICE;
+    renderEditor();
+    await screen.findByRole("heading", { level: 1, name: "Sửa câu hỏi" });
+    expect(
+      await screen.findByRole("textbox", { name: "Lựa chọn A" }),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("button", { name: /Gợi ý lựa chọn sai/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Viết bằng AI/ })).toBeNull();
+  });
+
   it("saves in the set's context with the updatedAt it read", async () => {
     const { user } = renderEditor();
     await screen.findByRole("heading", { level: 1, name: "Sửa câu hỏi" });
@@ -237,13 +291,41 @@ describe("the question editor for a Can edit recipient", () => {
   });
 });
 
+describe("the question editor for a Can edit recipient outside a set", () => {
+  it("reads the question and says where it can be changed, offering no Save", async () => {
+    access = "edit";
+    renderEditor(`/teacher/question-bank/${Q1}`);
+    await screen.findByRole("heading", { level: 1, name: "Xem câu hỏi" });
+    expect(screen.queryByRole("button", { name: "Lưu" })).toBeNull();
+    expect(
+      screen.getByText(
+        "Bạn sửa được câu hỏi này khi mở nó từ bộ câu hỏi hoặc đề thi được chia sẻ với bạn.",
+      ),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Tạo bản sao" })).toBeInTheDocument();
+    expect(screen.queryAllByRole("spinbutton")).toEqual([]);
+  });
+});
+
+describe("the question editor's way back to an owner's set", () => {
+  it("tells the set page the set is the reader's own", async () => {
+    const { user, router } = renderEditor();
+    await screen.findByRole("heading", { level: 1, name: "Sửa câu hỏi" });
+    await user.click(await screen.findByRole("link", { name: "Present perfect · A2" }));
+    expect(router.state.location.pathname).toBe(
+      `/teacher/question-bank/sets/${SET_ID}`,
+    );
+    expect(router.state.location.state).toEqual({ from: "bank" });
+  });
+});
+
 describe("the question editor for a Can use recipient", () => {
   beforeEach(() => {
     access = "use";
     sets.set = questionSet({ name: "Collocations · B1", owner: DUC, access: "use" });
   });
 
-  it("reads the question with nothing to change and no Save", async () => {
+  it("reads the question with no control to change it and no Save", async () => {
     renderEditor();
     await screen.findByRole("heading", { level: 1, name: "Xem câu hỏi" });
     expect(screen.getByText("Có thể dùng")).toBeInTheDocument();
@@ -252,8 +334,64 @@ describe("the question editor for a Can use recipient", () => {
     ).toBeInTheDocument();
     expect(screen.queryByRole("button", { name: "Lưu" })).toBeNull();
     expect(screen.queryByRole("button", { name: "Thao tác khác" })).toBeNull();
+    // A control a role cannot use is not drawn for it (R7 Question Sets).
+    for (const role of ["textbox", "spinbutton", "combobox", "radio", "checkbox"])
+      expect(screen.queryAllByRole(role)).toEqual([]);
+    expect(screen.queryByRole("radiogroup", { name: "Loại câu hỏi" })).toBeNull();
+    expect(screen.getByText("Trả lời ngắn")).toBeInTheDocument();
+    expect(
+      screen.getByText("Give two adjectives that collocate with “rain”."),
+    ).toBeVisible();
     const settings = screen.getByRole("complementary", { name: "Cài đặt câu hỏi" });
-    expect(within(settings).getByRole("spinbutton", { name: "Điểm" })).toBeDisabled();
+    expect(within(settings).getByText("Điểm").nextElementSibling).toHaveTextContent(
+      "2",
+    );
+    expect(within(settings).getByText("collocations")).toBeInTheDocument();
+    expect(within(settings).queryByText("thêm thẻ")).toBeNull();
+  });
+
+  it("marks a choice question's correct option and draws no way to change the options", async () => {
+    aiOn();
+    shape = CHOICE;
+    renderEditor();
+    await screen.findByRole("heading", { level: 1, name: "Xem câu hỏi" });
+    const options = screen.getByRole("list", { name: "Lựa chọn" });
+    const rows = within(options).getAllByRole("listitem");
+    expect(rows.map((row) => row.textContent)).toEqual(["Ado", "BmakeĐáp án đúng"]);
+    expect(screen.getByRole("region", { name: "Giải thích" })).toHaveTextContent(
+      "Ta nói “make a mistake”.",
+    );
+    expect(screen.queryByRole("button", { name: "Thêm lựa chọn" })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Xoá lựa chọn/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Gợi ý lựa chọn sai/ })).toBeNull();
+    expect(screen.queryByRole("button", { name: /Viết bằng AI/ })).toBeNull();
+  });
+
+  it("renders a Markdown prompt as text and lets the question's audio play", async () => {
+    shape = LISTENING;
+    renderEditor();
+    await screen.findByRole("heading", { level: 1, name: "Xem câu hỏi" });
+    const prompt = screen.getByRole("region", { name: "Câu hỏi" });
+    expect(within(prompt).getByText("đề nghị").tagName).toBe("STRONG");
+    expect(prompt).not.toHaveTextContent("**");
+    expect(screen.queryByRole("button", { name: "Xem trước" })).toBeNull();
+
+    const settings = screen.getByRole("complementary", { name: "Cài đặt câu hỏi" });
+    expect(within(settings).getByText("unit5-listening-2.mp3")).toBeInTheDocument();
+    expect(within(settings).getByRole("button", { name: "Phát" })).toBeEnabled();
+    expect(within(settings).getByText("Hai lần")).toBeInTheDocument();
+  });
+
+  it("reads the question when the set is Can use, though another share lets the caller edit it", async () => {
+    access = "edit";
+    renderEditor();
+    await screen.findByRole("heading", { level: 1, name: "Xem câu hỏi" });
+    expect(screen.queryByRole("button", { name: "Lưu" })).toBeNull();
+    expect(
+      screen.getByText("Bạn xem được câu hỏi này nhưng không sửa được."),
+    ).toBeVisible();
+    expect(screen.getByRole("button", { name: "Tạo bản sao" })).toBeInTheDocument();
+    expect(screen.queryAllByRole("spinbutton")).toEqual([]);
   });
 
   it("makes a copy of this one question and opens it", async () => {

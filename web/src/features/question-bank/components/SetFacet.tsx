@@ -75,7 +75,17 @@ export function SetFacet({
           {shown.map((set) => (
             <li key={set.id}>
               {/* `from` tells the set page's not-found state that the reader came from the bank. */}
-              <Link to={setHref(set.id)} state={{ from: "bank" }} className={ROW}>
+              {/* The deck's tip: who it is shared with, else the name a narrow row cuts. */}
+              <Link
+                to={setHref(set.id)}
+                state={{ from: "bank" }}
+                title={
+                  set.sharedWith > 0
+                    ? t("bank.sets.sharedWith", { count: set.sharedWith })
+                    : set.name
+                }
+                className={ROW}
+              >
                 <Library
                   aria-hidden="true"
                   className="text-muted-fg size-3.5 flex-none"

@@ -1179,7 +1179,8 @@
     "access": {
       "editRest": "If {{name}} uses this question elsewhere, your change is saved as a new copy.",
       "useLead": "You can open this question but not change it.",
-      "useRest": "Make a copy to have your own."
+      "useRest": "Make a copy to have your own.",
+      "contextLead": "You can change this question when you open it from the set or test it was shared in."
     },
     "stale": {
       "title": "{{name}} changed this question at {{time}}.",

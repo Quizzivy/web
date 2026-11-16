@@ -60,6 +60,8 @@ export const state = {
   lookups: [] as string[],
   aborted: [] as string[],
   created: [] as ShareCreate[],
+  /** Recipients the server skips, with why. */
+  skip: {} as Record<string, "SELF" | "ALREADY_SHARED" | "NOT_A_TEACHER" | "DISABLED">,
   updated: [] as { id: string; access: string }[],
   deleted: [] as string[],
   listStatus: 200,
@@ -82,6 +84,7 @@ export function serveSharing() {
   state.lookups = [];
   state.aborted = [];
   state.created = [];
+  state.skip = {};
   state.updated = [];
   state.deleted = [];
   state.listStatus = 200;
@@ -125,7 +128,8 @@ export function serveSharing() {
     http.post(`${BASE}/teacher/shares`, async ({ request }) => {
       const body = (await request.json()) as ShareCreate;
       state.created.push(body);
-      const made = body.granteeIds.map((id, index) =>
+      const granted = body.granteeIds.filter((id) => state.skip[id] === undefined);
+      const made = granted.map((id, index) =>
         grant(
           5 + state.grants.length + index,
           DIRECTORY.find((p) => p.id === id)!,
@@ -135,7 +139,9 @@ export function serveSharing() {
       state.grants = [...state.grants, ...made];
       return contractJson("/teacher/shares", "post", 201, {
         grants: made,
-        skipped: [],
+        skipped: body.granteeIds
+          .filter((id) => state.skip[id] !== undefined)
+          .map((userId) => ({ userId, code: state.skip[userId]! })),
       });
     }),
     http.patch(`${BASE}/teacher/shares/:id`, async ({ params, request }) => {

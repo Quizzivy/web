@@ -11,6 +11,15 @@ import { DIRECTORY_KEY, useTeacherLookup, type ShareTeacher } from "../api";
 /** LOOKUP_DELAY is how long the picker waits after the last keystroke before it asks. */
 export const LOOKUP_DELAY = 200;
 
+/**
+ * cameFromWithin says focus came from another control of the same dialog (a
+ * Tab back into the picker), not from the dialog opening or from the page.
+ */
+function cameFromWithin(input: HTMLElement, from: EventTarget | null): boolean {
+  const frame = input.closest("[role='dialog']");
+  return frame !== null && from instanceof Node && frame.contains(from);
+}
+
 function lookupStatus(
   waiting: boolean,
   failed: boolean,
@@ -77,7 +86,10 @@ function Suggestion({
 /**
  * PeoplePicker is the share dialog's chip box: the teachers waiting to be
  * added as chips, then one combobox that looks colleagues up by name or email.
- * A lookup waits 200 ms after the last keystroke, and a lookup still in
+ * The list opens when the reader clicks, taps or tabs into the field, or
+ * presses ↓, and lists colleagues by name; not when the dialog puts focus
+ * there on opening, which would cover "People with access". Typing filters:
+ * a lookup waits 200 ms after the last keystroke, and a lookup still in
  * flight when the text changes is cancelled. Suggestions leave out `exclude`
  * (the owner and everyone who already has access) and the pending chips; an
  * "Account disabled" row is listed but cannot be picked, and ↑/↓ skip it.
@@ -103,14 +115,15 @@ export function PeoplePicker({
   const listId = useId();
   const listRef = useRef<HTMLUListElement>(null);
   const [text, setText] = useState("");
-  const [focused, setFocused] = useState(false);
+  const [engaged, setEngaged] = useState(false);
   const [dismissed, setDismissed] = useState(false);
   const [activeId, setActiveId] = useState<string | null>(null);
 
   const term = text.trim();
   const settled = useDebounced(term, LOOKUP_DELAY);
-  const fresh = term !== "" && settled === term;
-  const lookup = useTeacherLookup(settled, fresh);
+  const open = engaged && !dismissed;
+  const fresh = settled === term;
+  const lookup = useTeacherLookup(settled, open && fresh);
 
   const chosen = new Set(selected.map((teacher) => teacher.id));
   const found: readonly ShareTeacher[] =
@@ -124,8 +137,7 @@ export function PeoplePicker({
     pickable.findIndex((teacher) => teacher.id === activeId),
   );
   const active = pickable[activeIndex];
-  const waiting = term !== "" && (!fresh || lookup.isPending);
-  const open = focused && !dismissed && term !== "";
+  const waiting = !fresh || lookup.isPending;
   const optionId = (id: string) => `${listId}-${id}`;
 
   useEffect(() => {
@@ -142,6 +154,7 @@ export function PeoplePicker({
   function change(next: string) {
     if (next.trim() !== term) void client.cancelQueries({ queryKey: DIRECTORY_KEY });
     setText(next);
+    setEngaged(true);
     setDismissed(false);
     setActiveId(null);
   }
@@ -152,6 +165,11 @@ export function PeoplePicker({
     change("");
   }
 
+  function reopen() {
+    setEngaged(true);
+    setDismissed(false);
+  }
+
   function move(delta: 1 | -1) {
     if (pickable.length === 0) return;
     const next = (activeIndex + delta + pickable.length) % pickable.length;
@@ -160,13 +178,13 @@ export function PeoplePicker({
 
   const keys: Record<string, () => boolean> = {
     ArrowDown: () => {
-      if (!open) setDismissed(false);
-      else move(1);
+      if (open) move(1);
+      else reopen();
       return true;
     },
     ArrowUp: () => {
-      if (!open) setDismissed(false);
-      else move(-1);
+      if (open) move(-1);
+      else reopen();
       return true;
     },
     Enter: () => {
@@ -228,8 +246,11 @@ export function PeoplePicker({
           )}
           value={text}
           onChange={(event) => change(event.target.value)}
-          onFocus={() => setFocused(true)}
-          onBlur={() => setFocused(false)}
+          onPointerDown={reopen}
+          onFocus={(event) => {
+            if (cameFromWithin(event.currentTarget, event.relatedTarget)) reopen();
+          }}
+          onBlur={() => setEngaged(false)}
           onKeyDown={(event) => {
             if (keys[event.key]?.()) event.preventDefault();
           }}

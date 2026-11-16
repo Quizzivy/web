@@ -48,6 +48,7 @@ describe("the share dialog", () => {
 
     expect(dialog()).toBeVisible();
     expect(picker()).toHaveFocus();
+    expect(picker()).toHaveAttribute("aria-expanded", "false");
     expect(picker()).toHaveAttribute(
       "placeholder",
       "Thêm giáo viên theo tên hoặc email",
@@ -168,12 +169,40 @@ describe("the share dialog", () => {
     await waitFor(() => expect(opener).toHaveFocus());
   });
 
+  it("lists colleagues by name when the reader clicks into an empty picker, not when the dialog opens", async () => {
+    const { user } = await openDialog();
+    await screen.findByText("Chưa chia sẻ với ai.");
+    expect(state.lookups).toEqual([]);
+
+    await user.click(picker());
+    await waitFor(() =>
+      expect(options()).toEqual([
+        DUC.fullName,
+        TRANG.fullName,
+        YEN.fullName,
+        KHOA.fullName,
+        `${VAN.fullName} (disabled)`,
+      ]),
+    );
+    expect(state.lookups).toEqual([""]);
+    expect(picker()).toHaveAttribute("aria-expanded", "true");
+    await user.keyboard("{ArrowDown}{Enter}");
+    expect(
+      within(dialog()).getByRole("button", { name: `Bỏ ${TRANG.fullName}` }),
+    ).toBeVisible();
+  });
+
   it("waits 200 ms after the last keystroke and cancels a lookup the next keystroke overtakes", async () => {
     const { user } = await openDialog();
     await screen.findByText("Chưa chia sẻ với ai.");
+    await user.click(picker());
+    await screen.findByRole("option", { name: new RegExp(DUC.fullName) });
+    state.lookups = [];
+    state.aborted = [];
 
     await user.type(picker(), "yen");
     await screen.findByRole("option", { name: new RegExp(YEN.fullName) });
+    expect(options()).toEqual([TRANG.fullName, YEN.fullName]);
     expect(state.lookups).toEqual(["yen"]);
 
     state.lookupDelay = 400;
@@ -220,8 +249,67 @@ describe("the share dialog", () => {
     expect(dialog()).toBeVisible();
     expect(screen.queryByText("Chưa chia sẻ với ai.")).toBeNull();
     expect(within(dialog()).getByText(TRANG.fullName)).toBeVisible();
-    expect(screen.getByRole("button", { name: "Xong" })).toBeVisible();
-    expect(picker()).toHaveFocus();
+    expect(screen.getByRole("button", { name: "Xong" })).toHaveFocus();
+  });
+
+  it("toasts why when no one could be added, and keeps their chips", async () => {
+    state.skip = { [TRANG.id]: "ALREADY_SHARED", [KHOA.id]: "DISABLED" };
+    const { user } = await openDialog();
+    await screen.findByText("Chưa chia sẻ với ai.");
+
+    for (const name of ["trang", "khoa"]) {
+      await user.type(picker(), name);
+      await screen.findByRole("option", { name: new RegExp(name, "i") });
+      await user.keyboard("{Enter}");
+    }
+    await user.click(screen.getByRole("button", { name: "Chia sẻ" }));
+
+    expect(
+      await screen.findByText(`Đã có quyền truy cập: ${TRANG.fullName}`),
+    ).toBeVisible();
+    expect(
+      screen.getByText(`Tài khoản đã vô hiệu hoá: ${KHOA.fullName}`),
+    ).toBeVisible();
+    expect(screen.queryByText(/Đã chia sẻ với 0/)).toBeNull();
+    for (const teacher of [TRANG, KHOA])
+      expect(
+        within(dialog()).getByRole("button", { name: `Bỏ ${teacher.fullName}` }),
+      ).toBeVisible();
+  });
+
+  it("says how many were skipped beside the success, keeping only their chips", async () => {
+    state.skip = { [KHOA.id]: "NOT_A_TEACHER" };
+    const { user } = await openDialog();
+    await screen.findByText("Chưa chia sẻ với ai.");
+
+    for (const name of ["trang", "khoa"]) {
+      await user.type(picker(), name);
+      await screen.findByRole("option", { name: new RegExp(name, "i") });
+      await user.keyboard("{Enter}");
+    }
+    await user.click(screen.getByRole("button", { name: "Chia sẻ" }));
+
+    expect(
+      await screen.findByText("Đã chia sẻ với 1 giáo viên. Họ sẽ nhận được thông báo."),
+    ).toBeVisible();
+    expect(screen.getByText("Bỏ qua 1 người")).toBeVisible();
+    expect(
+      within(dialog()).getByRole("button", { name: `Bỏ ${KHOA.fullName}` }),
+    ).toBeVisible();
+    expect(
+      within(dialog()).queryByRole("button", { name: `Bỏ ${TRANG.fullName}` }),
+    ).toBeNull();
+  });
+
+  it("gives every access select one width, so the rows line up", async () => {
+    state.grants = [grant(1, DUC, "edit"), grant(2, TRANG, "use")];
+    await openDialog();
+    await screen.findByText(TRANG.fullName);
+
+    for (const teacher of [DUC, TRANG])
+      expect(
+        screen.getByRole("combobox", { name: `Quyền của ${teacher.fullName}` }),
+      ).toHaveClass("w-32");
   });
 
   it("sends no message and says nothing of a notification when notify is off", async () => {

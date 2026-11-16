@@ -1,5 +1,6 @@
 import { useId, useRef, useState, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
   CircleAlert,
@@ -35,6 +36,8 @@ import {
   withGrants,
   withoutGrant,
   type ShareAccess,
+  type ShareCreateResult,
+  type ShareSkipCode,
   type ShareGrant,
   type ShareKind,
   type ShareList,
@@ -139,16 +142,27 @@ export function ShareDialog({
       }),
     onSuccess: async (result) => {
       const count = result.grants.length;
+      const skipped = new Set(result.skipped.map((skip) => skip.userId));
+      const reasons = skipReasons(result.skipped, adds, t);
       patchList((list) => withGrants(list, result.grants));
-      setAdds([]);
-      setMessage("");
-      notify.success(
-        t(notifyOn ? "sharing.toast.sharedNotified" : "sharing.toast.shared", {
-          count,
-        }),
-      );
-      input.current?.focus();
-      onSharedChange?.();
+      setAdds((current) => current.filter((teacher) => skipped.has(teacher.id)));
+      if (count === 0) {
+        notify.warning(reasons[0] ?? t("sharing.toast.failed"), {
+          description:
+            reasons.length > 1 ? <Lines lines={reasons.slice(1)} /> : undefined,
+        });
+      } else {
+        setMessage("");
+        notify.success(
+          t(notifyOn ? "sharing.toast.sharedNotified" : "sharing.toast.shared", {
+            count,
+          }),
+          skipped.size > 0
+            ? { description: t("sharing.toast.someSkipped", { count: skipped.size }) }
+            : undefined,
+        );
+        onSharedChange?.();
+      }
       await client.invalidateQueries({ queryKey: key });
     },
     onError: failed,
@@ -360,6 +374,44 @@ export function ShareDialog({
         onConfirm={() => stopping && stop.mutate(stopping)}
       />
     </DialogShell>
+  );
+}
+
+const SKIP_KEY: Record<ShareSkipCode, string> = {
+  ALREADY_SHARED: "sharing.toast.skipped.alreadyShared",
+  NOT_A_TEACHER: "sharing.toast.skipped.notATeacher",
+  DISABLED: "sharing.toast.skipped.disabled",
+  SELF: "sharing.toast.skipped.self",
+};
+
+/**
+ * skipReasons says why each recipient got no grant: one line per reason, in
+ * the contract's order, naming the teachers it applies to.
+ */
+function skipReasons(
+  skipped: ShareCreateResult["skipped"],
+  asked: readonly ShareTeacher[],
+  t: TFunction,
+): string[] {
+  const nameOf = (id: string) =>
+    asked.find((teacher) => teacher.id === id)?.fullName ?? id;
+  return (Object.keys(SKIP_KEY) as ShareSkipCode[]).flatMap((code) => {
+    const names = skipped
+      .filter((skip) => skip.code === code)
+      .map((skip) => nameOf(skip.userId));
+    return names.length === 0 ? [] : [t(SKIP_KEY[code], { names: names.join(", ") })];
+  });
+}
+
+function Lines({ lines }: Readonly<{ lines: readonly string[] }>) {
+  return (
+    <>
+      {lines.map((line) => (
+        <span key={line} className="block">
+          {line}
+        </span>
+      ))}
+    </>
   );
 }
 

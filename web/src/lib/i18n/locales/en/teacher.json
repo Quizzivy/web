@@ -3998,6 +3998,14 @@
       "forbidden": {
         "test": "You can no longer share this test.",
         "question_set": "You can no longer share this set."
+      },
+      "someSkipped_one": "{{count}} skipped",
+      "someSkipped_other": "{{count}} skipped",
+      "skipped": {
+        "alreadyShared": "Already has access: {{names}}",
+        "notATeacher": "Not a teacher at this centre: {{names}}",
+        "disabled": "Account disabled: {{names}}",
+        "self": "That’s you: {{names}}"
       }
     }
   }

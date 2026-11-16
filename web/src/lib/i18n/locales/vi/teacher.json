@@ -3804,6 +3804,13 @@
       "forbidden": {
         "test": "Bạn không còn quyền chia sẻ đề này.",
         "question_set": "Bạn không còn quyền chia sẻ bộ này."
+      },
+      "someSkipped_other": "Bỏ qua {{count}} người",
+      "skipped": {
+        "alreadyShared": "Đã có quyền truy cập: {{names}}",
+        "notATeacher": "Không phải giáo viên của trung tâm: {{names}}",
+        "disabled": "Tài khoản đã vô hiệu hoá: {{names}}",
+        "self": "Đó là bạn: {{names}}"
       }
     }
   }

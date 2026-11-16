@@ -9,6 +9,7 @@ export type ShareGrant = components["schemas"]["ShareGrant"];
 export type ShareList = components["schemas"]["ShareList"];
 export type ShareCreate = components["schemas"]["ShareCreate"];
 export type ShareCreateResult = components["schemas"]["ShareCreateResult"];
+export type ShareSkipCode = components["schemas"]["ShareSkipCode"];
 
 /** sharesKey is the query key of one resource's "People with access". */
 export function sharesKey(kind: ShareKind, resourceId: string) {
@@ -18,12 +19,16 @@ export function sharesKey(kind: ShareKind, resourceId: string) {
 /** DIRECTORY_KEY heads every lookup the share dialog's picker makes. */
 export const DIRECTORY_KEY = ["teacher-directory"] as const;
 
-/** searchTeacherDirectory finds at most ten colleagues by name or email. */
+/**
+ * searchTeacherDirectory finds at most ten colleagues by name or email, or,
+ * for an empty `q`, lists them by name (the picker just opened).
+ */
 export function searchTeacherDirectory(q: string, signal?: AbortSignal) {
+  const query = q === "" ? {} : { q };
   return api(
     "get",
     "/teacher/directory/teachers",
-    signal ? { query: { q }, signal } : { query: { q } },
+    signal ? { query, signal } : { query },
   );
 }
 
@@ -92,8 +97,9 @@ export function withoutGrant(list: ShareList, id: string): ShareList {
 }
 
 /**
- * useTeacherLookup asks the directory for `term` once it is not empty and
- * `fresh` says the reader has stopped typing it. A lookup in flight when the
+ * useTeacherLookup asks the directory for `term` (everyone, by name, when it
+ * is empty) once `fresh` says the reader has stopped typing it and the list is
+ * open. A lookup in flight when the
  * term changes is cancelled by the picker (`cancelQueries` on DIRECTORY_KEY),
  * which aborts its request through the query's signal.
  */
@@ -101,7 +107,7 @@ export function useTeacherLookup(term: string, fresh: boolean) {
   return useQuery({
     queryKey: [...DIRECTORY_KEY, term],
     queryFn: ({ signal }) => searchTeacherDirectory(term, signal),
-    enabled: fresh && term !== "",
+    enabled: fresh,
     staleTime: 30_000,
     retry: false,
   });

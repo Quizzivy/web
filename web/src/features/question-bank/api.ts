@@ -42,6 +42,7 @@ export function getQuestion(id: string, signal?: AbortSignal) {
 
 export function createQuestion(body: QuestionValues) {
   return api("post", "/teacher/questions", {
+    query: {},
     body: { ...body, level: body.level ?? null, skill: body.skill ?? null },
   });
 }
@@ -49,6 +50,7 @@ export function createQuestion(body: QuestionValues) {
 export function updateQuestion(id: string, body: QuestionValues) {
   return api("patch", "/teacher/questions/{id}", {
     path: { id },
+    query: {},
     body: { ...body, level: body.level ?? null, skill: body.skill ?? null },
   });
 }
@@ -141,7 +143,7 @@ export function tagQuestions(questionIds: string[], tags: string[]) {
 }
 
 export function duplicateQuestion(id: string) {
-  return api("post", "/teacher/questions/{id}/duplicate", { path: { id } });
+  return api("post", "/teacher/questions/{id}/duplicate", { path: { id }, query: {} });
 }
 
 export function deleteQuestion(id: string) {

@@ -1354,6 +1354,10 @@
         "name": "Question bank",
         "blurb": "Questions, tags, search and the question groups."
       },
+      "teacher-sharing": {
+        "name": "Sharing",
+        "blurb": "The colleague directory, Can use and Can edit grants, and Shared with me."
+      },
       "teacher-imports": {
         "name": "Word import",
         "blurb": "Upload, processing, review and commit."

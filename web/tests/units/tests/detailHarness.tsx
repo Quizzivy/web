@@ -37,6 +37,9 @@ export function testFixture(overrides: Partial<Test> = {}): Test {
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: 0,
+    access: "owner",
+    owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
+    sharedWith: 0,
     sections: [
       {
         id: SECTION_ID,

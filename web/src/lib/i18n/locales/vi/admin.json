@@ -1290,6 +1290,10 @@
         "name": "Ngân hàng câu hỏi",
         "blurb": "Câu hỏi, thẻ, tìm kiếm và các nhóm câu hỏi."
       },
+      "teacher-sharing": {
+        "name": "Chia sẻ",
+        "blurb": "Danh bạ giáo viên, quyền Có thể dùng và Có thể sửa, và Được chia sẻ với tôi."
+      },
       "teacher-imports": {
         "name": "Nhập từ Word",
         "blurb": "Tải tệp lên, xử lý, duyệt và lưu."

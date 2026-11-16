@@ -10,7 +10,9 @@ import {
 import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
+import { QueryObserver } from "@tanstack/react-query";
 import { dashboardKeys } from "@/features/dashboard/keys";
+import { notificationKeys } from "@/features/notifications/api";
 import { useAuthStore } from "@/stores/auth";
 import { contentWidth } from "@tests/support/contentWidth";
 import { teacherUser } from "@tests/support/fixtures";
@@ -314,6 +316,27 @@ describe("a thread", () => {
     await waitFor(() => expect(state.marks).toEqual([state.messages.at(-1)!.id]), {
       timeout: 2500,
     });
+  });
+
+  it("reads the bell's count again once the read pointer moves (message.received)", async () => {
+    contentWidth(1000);
+    let reads = 0;
+    const { client } = renderPage(NAM_PATH);
+    const bell = new QueryObserver(client, {
+      queryKey: notificationKeys.summary("teacher"),
+      queryFn: () => {
+        reads += 1;
+        return { unreadNotifications: reads === 1 ? 1 : 0, unreadMessages: 0 };
+      },
+    });
+    onTestFinished(bell.subscribe(() => {}));
+    await waitFor(() => expect(reads).toBe(1));
+    await screen.findByText("Chào em.");
+    act(() => scrollAllIntoView());
+    await waitFor(() => expect(state.marks).toEqual([state.messages.at(-1)!.id]), {
+      timeout: 2500,
+    });
+    await waitFor(() => expect(reads).toBe(2));
   });
 
   it("keeps the reader's place when Load earlier adds the messages before", async () => {

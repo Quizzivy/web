@@ -4160,5 +4160,97 @@
       "copiedToTest_one": "{{count}} question copied to your bank and added to {{test}}",
       "copiedToTest_other": "{{count}} questions copied to your bank and added to {{test}}"
     }
+  },
+  "messages": {
+    "title": "Messages",
+    "lead": "Announcements to classes and direct messages with students.",
+    "newAnnouncement": "New announcement",
+    "newAnnouncementOff": "You teach no class yet.",
+    "former": "Former student",
+    "back": "Back to conversations",
+    "details": "Details",
+    "loadEarlier": "Load earlier",
+    "earlierFailed": "Earlier messages could not be loaded. Try again.",
+    "announcement": "Announcement · {{time}}",
+    "seenBy": "Seen by {{seen}} of {{of}}",
+    "attemptEvent_one": "{{title}} · left the test {{count}} time",
+    "attemptEvent_other": "{{title}} · left the test {{count}} times",
+    "openAttempt": "Open attempt",
+    "sending": "Sending…",
+    "failed": "Not sent.",
+    "placeholderDirect": "Message {{name}}…",
+    "placeholderClass": "Write an announcement to {{name}}…",
+    "attachFile": "Attach file",
+    "send": "Send",
+    "classHint_one": "Sent to {{count}} student. Replies come to you as direct messages.",
+    "classHint_other": "Sent to all {{count}} students. Replies come to you as direct messages.",
+    "accountOff": "{{name}}’s account is disabled, so no message can be sent.",
+    "archived": "This class is archived, so nothing more can be posted.",
+    "day": {
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "list": {
+      "label": "Conversations",
+      "search": "Search people and classes",
+      "tabs": "Filter conversations",
+      "tabAll": "All",
+      "tabDirect": "Direct",
+      "tabClasses": "Classes",
+      "you": "You: ",
+      "attachment": "Attachment · {{name}}",
+      "classSub_one": "{{count}} student",
+      "classSub_other": "{{count}} students",
+      "unread_one": "{{count}} unread message",
+      "unread_other": "{{count}} unread messages",
+      "empty": "No messages yet. Message a student from Students or post to a class.",
+      "error": "Messages could not be loaded.",
+      "noMatch": "No person or class matches “{{q}}”.",
+      "candidates": "Students not messaged yet"
+    },
+    "thread": {
+      "classSub_one": "{{count}} student · announcements",
+      "classSub_other": "{{count}} students · announcements",
+      "empty": "No messages yet.",
+      "channelEmpty": "No announcements yet.",
+      "error": "This conversation could not be loaded."
+    },
+    "about": {
+      "student": "Student",
+      "class": "Class",
+      "classes": "Classes with you",
+      "openStudent": "Open in Students",
+      "members": "Members",
+      "count_one": "{{count}} student",
+      "count_other": "{{count}} students",
+      "former": "No longer in any of your classes.",
+      "openClass": "Open the class"
+    },
+    "chip": {
+      "download": "Download {{name}}",
+      "remove": "Remove {{name}}",
+      "meta": "{{kind}} · {{size}}",
+      "kind": {
+        "pdf": "PDF",
+        "word": "Word",
+        "image": "Image",
+        "audio": "Audio"
+      },
+      "downloadFailed": "The file could not be downloaded. Try again."
+    },
+    "attach": {
+      "title": "Attach a file",
+      "submit": "Attach",
+      "choose": "Choose file",
+      "accept": "PDF, Word, image or audio · up to 20 MB",
+      "uploading": "Uploading… {{percent}}%",
+      "progress": "Uploading {{name}}",
+      "tooBig": "The file is larger than 20 MB. Choose a smaller one.",
+      "badType": "Only PDF, Word (DOC, DOCX), PNG, JPEG, MP3 or M4A files are accepted.",
+      "macro": "A Word file with macros cannot be sent. Save it as a DOCX without macros.",
+      "dimensions": "The image is larger than 10000 × 10000 pixels. Choose a smaller one.",
+      "limit": "Too many uploads in an hour. Try again later.",
+      "failed": "The file could not be uploaded. Try again."
+    }
   }
 }

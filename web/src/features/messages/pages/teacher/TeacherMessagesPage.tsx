@@ -1,0 +1,698 @@
+import { useEffect, useId, useMemo, useRef, useState, type ReactNode } from "react";
+import type { TFunction } from "i18next";
+import { useTranslation } from "react-i18next";
+import { useLocation, useNavigate, useParams } from "react-router";
+import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import {
+  Archive,
+  Ban,
+  GraduationCap,
+  Megaphone,
+  MessageSquare,
+  Users,
+} from "lucide-react";
+import { Avatar } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Segmented } from "@/components/ui/segmented";
+import { IconTile } from "@/components/shared/IconTile";
+import { SearchInput } from "@/components/shared/SearchInput";
+import { useCan, useWorkspace } from "@/features/auth/permissions";
+import { getTeacherSummary } from "@/features/dashboard/api";
+import { dashboardKeys } from "@/features/dashboard/keys";
+import { PageHead } from "@/layouts/shell/PageHead";
+import { useContentWidthAtLeast } from "@/layouts/shell/contentWidth";
+import { ApiError } from "@/lib/api/errors";
+import { useDisplayTimeZone } from "@/lib/i18n/datetime";
+import { useLocale } from "@/lib/i18n/useLocale";
+import { notify } from "@/lib/toast";
+import { useDebounced } from "@/lib/useDebounced";
+import {
+  STAFF_MESSAGES_KEY,
+  getStaffAttachmentUrl,
+  getStaffClassThread,
+  getStaffDirectThread,
+  listStaffThreads,
+  markStaffThreadRead,
+  postStaffMessage,
+  refOf,
+  sameRef,
+  staffThreadKey,
+  staffThreadsKey,
+  threadPath,
+  uploadMessageAttachment,
+  type MessageAttachment,
+  type StaffClassThread,
+  type StaffDirectThread,
+  type StaffMessage,
+  type StaffThread,
+  type ThreadRef,
+} from "../../api";
+import { AnnouncementCard } from "../../components/AnnouncementCard";
+import { AttemptEventCard } from "../../components/AttemptEventCard";
+import { Composer } from "../../components/Composer";
+import { DayPill } from "../../components/DayPill";
+import { MessageBubble } from "../../components/MessageBubble";
+import { ThreadDetails } from "../../components/ThreadDetails";
+import { ThreadList, type ListRow } from "../../components/ThreadList";
+import { ThreadView } from "../../components/ThreadView";
+import type { Outgoing } from "../../compose";
+import { useDraft, type Draft } from "../../drafts";
+import { buildStream, type StreamEntry } from "../../stream";
+import { clock, rowTime } from "../../time";
+import { useThread, type ThreadSource } from "../../useThread";
+
+/** SINGLE_BELOW is the content width under which one pane shows at a time (the deck's msgSingle). */
+export const SINGLE_BELOW = 760;
+const SEARCH_DELAY_MS = 300;
+
+type Tab = "all" | "direct" | "classes";
+type Head =
+  | Readonly<{ kind: "direct"; student: StaffDirectThread["student"] }>
+  | Readonly<{ kind: "class"; room: StaffClassThread["class"] }>;
+
+/** LocationState is what New announcement hands the thread it opens: focus the composer. */
+type LocationState = Readonly<{ compose?: boolean }> | null;
+
+function refFrom(
+  params: Readonly<Record<string, string | undefined>>,
+): ThreadRef | null {
+  if (params["classId"]) return { kind: "class", id: params["classId"] };
+  if (params["studentId"]) return { kind: "direct", id: params["studentId"] };
+  return null;
+}
+
+/** givenName is what a teacher calls a student, the last word of a Vietnamese name. */
+function givenName(name: string): string {
+  return name.trim().split(/\s+/).at(-1) ?? name;
+}
+
+/** previewLine words a row's last message: "You: " before the reader's own, and a file by its name. */
+function previewLine(preview: StaffThread["preview"], t: TFunction): string | null {
+  if (preview === null) return null;
+  const you = preview.mine ? t("messages.list.you") : "";
+  const said =
+    preview.text ??
+    t("messages.list.attachment", { name: preview.attachmentName ?? "" });
+  return you + said;
+}
+
+/** rowSub is a row's sub-line when it has no message to preview: its size, or the student's classes. */
+function rowSub(row: StaffThread, t: TFunction): string {
+  if (row.thread.kind === "class")
+    return t("messages.list.classSub", { count: row.studentCount ?? 0 });
+  if (row.former) return t("messages.former");
+  return row.classNames.join(", ");
+}
+
+/** stateOf is what a pane shows for a read: loading until its first answer, then the error or the content. */
+function stateOf(
+  read: Readonly<{ isPending: boolean; isError: boolean; data?: unknown }>,
+) {
+  if (read.isPending) return "loading" as const;
+  if (read.isError && read.data === undefined) return "error" as const;
+  return "ready" as const;
+}
+
+function sourceFor(ref: ThreadRef): ThreadSource<StaffMessage, Head> {
+  return {
+    key: staffThreadKey(ref),
+    read: async (cursor, signal) => {
+      if (ref.kind === "class") {
+        const read = await getStaffClassThread(ref.id, cursor, signal);
+        return { head: { kind: "class", room: read.class }, page: read };
+      }
+      const read = await getStaffDirectThread(ref.id, cursor, signal);
+      return {
+        head: { kind: "direct", student: read.student },
+        page: read,
+        events: read.contextEvents,
+      };
+    },
+    post: (message) => postStaffMessage(ref, message),
+    markRead: (messageId) => markStaffThreadRead(ref, messageId),
+  };
+}
+
+/**
+ * TeacherMessagesPage is the staff Messages (T-R7.20): the list of class
+ * channels and direct threads beside the open thread, one pane at a time under
+ * 760px of content. The address names the open thread, so a thread opened
+ * from elsewhere (T-R7.22) and the back arrow are plain navigation.
+ */
+export default function TeacherMessagesPage() {
+  const { t } = useTranslation();
+  const locale = useLocale();
+  useDisplayTimeZone();
+  const client = useQueryClient();
+  const navigate = useNavigate();
+  const params = useParams();
+  const open = refFrom(params);
+  const single = !useContentWidthAtLeast(SINGLE_BELOW);
+  const canAnnounce = useCan("teaching.classes.write");
+  const [tab, setTab] = useState<Tab>("all");
+  const reasonId = useId();
+  const [typed, setTyped] = useState("");
+  const q = useDebounced(typed.trim(), SEARCH_DELAY_MS);
+
+  const base = useQuery({
+    queryKey: staffThreadsKey(""),
+    queryFn: ({ signal }) => listStaffThreads("", signal),
+    retry: false,
+  });
+  const searched = useQuery({
+    queryKey: staffThreadsKey(q),
+    queryFn: ({ signal }) => listStaffThreads(q, signal),
+    enabled: q !== "",
+    placeholderData: keepPreviousData,
+    retry: false,
+  });
+  const list = q === "" ? base : searched;
+
+  // The list follows the unread count the shell's summary polls.
+  const workspace = useWorkspace("teacher");
+  const summary = useQuery({
+    queryKey: dashboardKeys.summary,
+    queryFn: ({ signal }) => getTeacherSummary(signal),
+    enabled: workspace,
+    staleTime: 60_000,
+  });
+  const unreadMessages = summary.data?.unreadMessages;
+  const heard = useRef(unreadMessages);
+  useEffect(() => {
+    if (unreadMessages === undefined || heard.current === unreadMessages) return;
+    const first = heard.current === undefined;
+    heard.current = unreadMessages;
+    if (!first)
+      void client.invalidateQueries({ queryKey: [...STAFF_MESSAGES_KEY, "threads"] });
+  }, [client, unreadMessages]);
+
+  const now = new Date();
+  const firstClass = base.data?.threads.find((row) => row.thread.kind === "class");
+  const classRef = firstClass === undefined ? null : refOf(firstClass);
+
+  // From 760px the deck opens the first conversation when none is named.
+  const firstRow = base.data?.threads.find((row) => !row.candidate);
+  useEffect(() => {
+    if (single || open !== null || firstRow === undefined) return;
+    const ref = refOf(firstRow);
+    if (ref !== null) void navigate(threadPath(ref), { replace: true });
+  }, [single, open, firstRow, navigate]);
+
+  const toRow = (row: StaffThread): ListRow | null => {
+    const ref = refOf(row);
+    if (ref === null) return null;
+    const said = row.candidate ? null : previewLine(row.preview, t);
+    return {
+      key: `${ref.kind}:${ref.id}`,
+      to: threadPath(ref),
+      kind: ref.kind,
+      title: row.title,
+      sub: said ?? rowSub(row, t),
+      avatarUrl: row.avatarUrl,
+      time:
+        row.lastMessageAt === null ? null : rowTime(row.lastMessageAt, now, locale, t),
+      unread: row.unread,
+      active: !single && sameRef(ref, open),
+    };
+  };
+  const shown = (list.data?.threads ?? []).filter(
+    (row) =>
+      tab === "all" ||
+      (tab === "classes" ? row.thread.kind === "class" : row.thread.kind === "direct"),
+  );
+  const rows = shown.filter((row) => !row.candidate).flatMap((row) => toRow(row) ?? []);
+  const candidates =
+    q === "" || tab === "classes"
+      ? []
+      : shown.filter((row) => row.candidate).flatMap((row) => toRow(row) ?? []);
+  const directUnread = (base.data?.threads ?? [])
+    .filter((row) => row.thread.kind === "direct")
+    .reduce((sum, row) => sum + row.unread, 0);
+  const openRow = (list.data?.threads ?? base.data?.threads ?? []).find((row) =>
+    sameRef(refOf(row), open),
+  );
+
+  const noClass = base.isSuccess && classRef === null;
+  const announceOff = noClass || !canAnnounce;
+  const newAnnouncement = () => {
+    if (announceOff || classRef === null) return;
+    setTab("classes");
+    setTyped("");
+    void navigate(threadPath(classRef), { state: { compose: true } });
+  };
+
+  const showList = !single || open === null;
+  const showThread = !single || open !== null;
+
+  return (
+    <div className="flex h-[calc(100svh-110px)] min-h-130 flex-col gap-3 min-[768px]:h-[calc(100svh-120px)] min-[768px]:gap-4">
+      <PageHead
+        title={t("messages.title")}
+        description={t("messages.lead")}
+        actions={
+          <div className="flex items-center gap-2">
+            {noClass && !single && (
+              <span id={reasonId} className="text-muted-fg text-meta whitespace-nowrap">
+                {t("messages.newAnnouncementOff")}
+              </span>
+            )}
+            <Button
+              type="button"
+              className="max-[767px]:h-11"
+              aria-disabled={announceOff || undefined}
+              aria-describedby={noClass && !single ? reasonId : undefined}
+              title={noClass ? t("messages.newAnnouncementOff") : undefined}
+              onClick={newAnnouncement}
+            >
+              <Megaphone />
+              {t("messages.newAnnouncement")}
+            </Button>
+          </div>
+        }
+      />
+      <div className="bg-card shadow-card relative flex min-h-0 flex-1 overflow-hidden rounded-xl border">
+        {showList && (
+          <ThreadList
+            label={t("messages.list.label")}
+            single={single}
+            tools={
+              <>
+                <SearchInput
+                  value={typed}
+                  onChange={setTyped}
+                  placeholder={t("messages.list.search")}
+                  className="[&_input]:bg-bg w-full [&_input]:h-8.5 [&_input]:text-sm max-[767px]:[&_input]:h-11 [&_svg]:top-1/2 [&_svg]:-translate-y-1/2"
+                />
+                <Segmented
+                  label={t("messages.list.tabs")}
+                  value={tab}
+                  fill
+                  className="max-[767px]:[&_button]:h-10"
+                  onChange={(value) => setTab(value as Tab)}
+                  options={[
+                    { value: "all", label: t("messages.list.tabAll") },
+                    {
+                      value: "direct",
+                      label: t("messages.list.tabDirect"),
+                      count: directUnread > 0 ? directUnread : undefined,
+                    },
+                    { value: "classes", label: t("messages.list.tabClasses") },
+                  ]}
+                />
+              </>
+            }
+            rows={rows}
+            candidates={candidates}
+            candidatesLabel={t("messages.list.candidates")}
+            state={stateOf(list)}
+            onRetry={() => void list.refetch()}
+            emptyText={t("messages.list.empty")}
+            noMatchText={q === "" ? null : t("messages.list.noMatch", { q })}
+          />
+        )}
+        {showThread && open !== null && (
+          <StaffThreadPane
+            key={`${open.kind}:${open.id}`}
+            open={open}
+            row={openRow}
+            single={single}
+            onBack={() => void navigate("/teacher/messages")}
+          />
+        )}
+        {showThread && open === null && (
+          <div
+            className="bg-sidebar flex min-w-0 flex-1 flex-col justify-end gap-3 p-4"
+            aria-hidden="true"
+          />
+        )}
+      </div>
+    </div>
+  );
+}
+
+/**
+ * StaffThreadPane is the open thread of the staff side: a student's direct
+ * thread with its attempt-event cards, or a class's channel of announcements.
+ */
+function StaffThreadPane({
+  open,
+  row,
+  single,
+  onBack,
+}: Readonly<{
+  open: ThreadRef;
+  row: StaffThread | undefined;
+  single: boolean;
+  onBack: () => void;
+}>) {
+  const { t } = useTranslation();
+  const locale = useLocale();
+  const client = useQueryClient();
+  const location = useLocation();
+  const source = useMemo(() => sourceFor(open), [open]);
+  const [refused, setRefused] = useState<string | null>(null);
+  const [downloading, setDownloading] = useState<string | null>(null);
+  const threadKey = `${open.kind}:${open.id}`;
+  const [draft, setDraft] = useDraft(threadKey);
+
+  const thread = useThread(source, {
+    onSent: () =>
+      void client.invalidateQueries({ queryKey: [...STAFF_MESSAGES_KEY, "threads"] }),
+    onRefused: (cause) => {
+      if (cause instanceof ApiError && cause.status === 409) {
+        setRefused(cause.code);
+        void thread.refetch();
+      }
+    },
+    onRead: () => {
+      client.setQueriesData<{ threads: StaffThread[] }>(
+        { queryKey: [...STAFF_MESSAGES_KEY, "threads"] },
+        (held) =>
+          held && {
+            threads: held.threads.map((x) =>
+              sameRef(refOf(x), open) ? { ...x, unread: 0 } : x,
+            ),
+          },
+      );
+      void client.invalidateQueries({ queryKey: dashboardKeys.summary });
+    },
+  });
+  const data = thread.data;
+
+  // New announcement opens a channel with its composer focused.
+  const compose = (location.state as LocationState)?.compose === true;
+
+  const isClass = open.kind === "class";
+  const view = paneView(open, data?.head, row, t);
+
+  const download = (attachment: MessageAttachment) => {
+    setDownloading(attachment.id);
+    getStaffAttachmentUrl(attachment.id).then(
+      (link) => {
+        setDownloading(null);
+        window.location.assign(link.url);
+      },
+      () => {
+        setDownloading(null);
+        notify.error(t("messages.chip.downloadFailed"));
+      },
+    );
+  };
+
+  const entries = data
+    ? buildStream(data.messages, data.events, thread.pending, {
+        now: new Date(),
+        locale,
+        t,
+        complete: data.nextBefore === null,
+      })
+    : [];
+
+  const avatar = <PaneAvatar view={view} />;
+  const footer = (
+    <StaffFooter
+      view={view}
+      blocked={blockedBy(view, refused)}
+      draft={draft}
+      onDraft={setDraft}
+      onSend={thread.send}
+      focusRequest={compose ? location.key : undefined}
+    />
+  );
+
+  return (
+    <ThreadView
+      threadKey={threadKey}
+      avatar={avatar}
+      title={view.title}
+      sub={view.sub}
+      onBack={single ? onBack : undefined}
+      details={view.title === "" ? null : <StaffDetails view={view} avatar={avatar} />}
+      state={stateOf(thread)}
+      onRetry={() => void thread.refetch()}
+      count={entries.length}
+      emptyIcon={isClass ? Megaphone : MessageSquare}
+      emptyText={
+        isClass ? t("messages.thread.channelEmpty") : t("messages.thread.empty")
+      }
+      canLoadEarlier={data?.nextBefore != null}
+      earlier={thread.earlier}
+      onLoadEarlier={thread.loadEarlier}
+      latestId={data?.latestId ?? null}
+      onSeen={thread.seen}
+      footer={footer}
+    >
+      {entries.map((entry) => (
+        <StaffEntry
+          key={entry.key}
+          entry={entry}
+          isClass={isClass}
+          download={download}
+          downloading={downloading}
+          retry={thread.retry}
+        />
+      ))}
+    </ThreadView>
+  );
+}
+
+/** PaneView is what the pane says of the thread, from its read or, while that loads, from its row. */
+type PaneView = Readonly<{
+  ref: ThreadRef;
+  title: string;
+  sub: string;
+  avatarUrl: string | null;
+  former: boolean;
+  count: number;
+  classes: readonly Readonly<{ id: string; name: string }>[];
+  canPost: boolean;
+  archived: boolean;
+}>;
+
+function paneView(
+  ref: ThreadRef,
+  head: Head | undefined,
+  row: StaffThread | undefined,
+  t: TFunction,
+): PaneView {
+  if (ref.kind === "class") {
+    const room = head?.kind === "class" ? head.room : null;
+    const count = room?.studentCount ?? row?.studentCount ?? 0;
+    return {
+      ref,
+      title: room?.name ?? row?.title ?? "",
+      sub: t("messages.thread.classSub", { count }),
+      avatarUrl: null,
+      former: false,
+      count,
+      classes: [],
+      canPost: true,
+      archived: room?.archived === true,
+    };
+  }
+  const student = head?.kind === "direct" ? head.student : null;
+  const former = student?.former ?? row?.former ?? false;
+  const classNames = student?.classes.map((c) => c.name) ?? row?.classNames ?? [];
+  return {
+    ref,
+    title: student?.name ?? row?.title ?? "",
+    sub: former ? t("messages.former") : classNames.join(", "),
+    avatarUrl: student?.avatarUrl ?? row?.avatarUrl ?? null,
+    former,
+    count: 0,
+    classes: student?.classes ?? [],
+    canPost: student?.canPost !== false,
+    archived: false,
+  };
+}
+
+/**
+ * blockedBy says why the composer gives its place to a sentence: the
+ * student's account is disabled (409 MESSAGING_NOT_ALLOWED), or the class is
+ * archived (409 CLASS_ARCHIVED). Leaving a class closes nothing (T-R7.10a).
+ */
+function blockedBy(
+  view: PaneView,
+  refused: string | null,
+): "account" | "archived" | null {
+  if (view.ref.kind === "class")
+    return view.archived || refused === "CLASS_ARCHIVED" ? "archived" : null;
+  return !view.canPost || refused === "MESSAGING_NOT_ALLOWED" ? "account" : null;
+}
+
+/** StaffFooter is the composer, or the sentence that stands in its place when nothing can be sent. */
+function StaffFooter({
+  view,
+  blocked,
+  draft,
+  onDraft,
+  onSend,
+  focusRequest,
+}: Readonly<{
+  view: PaneView;
+  blocked: "account" | "archived" | null;
+  draft: Draft;
+  onDraft: (draft: Draft) => void;
+  onSend: (outgoing: Outgoing) => void;
+  focusRequest: string | undefined;
+}>) {
+  const { t } = useTranslation();
+  if (blocked === "archived")
+    return <Notice icon={Archive} text={t("messages.archived")} />;
+  if (blocked === "account")
+    return <Notice icon={Ban} text={t("messages.accountOff", { name: view.title })} />;
+  const isClass = view.ref.kind === "class";
+  return (
+    <Composer
+      draft={draft}
+      onDraft={onDraft}
+      onSend={onSend}
+      focusRequest={focusRequest}
+      enterSends={!isClass}
+      upload={uploadMessageAttachment}
+      placeholder={
+        isClass
+          ? t("messages.placeholderClass", { name: view.title })
+          : t("messages.placeholderDirect", { name: givenName(view.title) })
+      }
+      hint={isClass ? t("messages.classHint", { count: view.count }) : undefined}
+    />
+  );
+}
+
+function PaneAvatar({ view }: Readonly<{ view: PaneView }>) {
+  if (view.ref.kind === "class")
+    return <IconTile icon={Megaphone} size={34} tone="accent" />;
+  return <Avatar name={view.title} src={view.avatarUrl} size="36" />;
+}
+
+/** StaffDetails is the header's Details for a student or a class (DG-91). */
+function StaffDetails({
+  view,
+  avatar,
+}: Readonly<{ view: PaneView; avatar: ReactNode }>) {
+  const { t } = useTranslation();
+  if (view.ref.kind === "class")
+    return (
+      <ThreadDetails
+        avatar={avatar}
+        title={view.title}
+        role={t("messages.about.class")}
+        label={t("messages.about.members")}
+        rows={[
+          {
+            key: "count",
+            icon: Users,
+            text: t("messages.about.count", { count: view.count }),
+          },
+        ]}
+        link={{
+          to: `/teacher/classes/${encodeURIComponent(view.ref.id)}`,
+          label: t("messages.about.openClass"),
+        }}
+      />
+    );
+  if (view.former)
+    return (
+      <ThreadDetails
+        avatar={avatar}
+        title={view.title}
+        role={t("messages.former")}
+        note={t("messages.about.former")}
+      />
+    );
+  return (
+    <ThreadDetails
+      avatar={avatar}
+      title={view.title}
+      role={t("messages.about.student")}
+      label={t("messages.about.classes")}
+      rows={view.classes.map((c) => ({ key: c.id, icon: GraduationCap, text: c.name }))}
+      link={{
+        to: `/teacher/students?${new URLSearchParams({ q: view.title }).toString()}`,
+        label: t("messages.about.openStudent"),
+      }}
+    />
+  );
+}
+
+/** StaffEntry draws one line of the staff stream: a day, an attempt event, a message or one on its way. */
+function StaffEntry({
+  entry,
+  isClass,
+  download,
+  downloading,
+  retry,
+}: Readonly<{
+  entry: StreamEntry<StaffMessage>;
+  isClass: boolean;
+  download: (attachment: MessageAttachment) => void;
+  downloading: string | null;
+  retry: (clientId: string) => void;
+}>) {
+  const locale = useLocale();
+  if (entry.kind === "day") return <DayPill label={entry.label} />;
+  if (entry.kind === "event")
+    return (
+      <AttemptEventCard event={entry.event} time={clock(entry.event.at, locale)} />
+    );
+  if (entry.kind === "pending") {
+    const p = entry.pending;
+    const again = () => retry(p.clientId);
+    if (isClass)
+      return (
+        <AnnouncementCard
+          body={p.body}
+          attachment={p.attachment}
+          time=""
+          status={p.status}
+          onRetry={again}
+        />
+      );
+    return (
+      <MessageBubble
+        mine
+        body={p.body}
+        attachment={p.attachment}
+        time=""
+        status={p.status}
+        onRetry={again}
+      />
+    );
+  }
+  const m = entry.message;
+  const held = m.attachment !== null && downloading === m.attachment.id;
+  if (isClass)
+    return (
+      <AnnouncementCard
+        body={m.body}
+        attachment={m.attachment}
+        time={clock(m.createdAt, locale)}
+        seenBy={m.seenBy}
+        onDownload={download}
+        downloading={held}
+      />
+    );
+  return (
+    <MessageBubble
+      mine={m.mine}
+      body={m.body}
+      attachment={m.attachment}
+      time={clock(m.createdAt, locale)}
+      onDownload={download}
+      downloading={held}
+    />
+  );
+}
+
+function Notice({ icon: Icon, text }: Readonly<{ icon: typeof Ban; text: string }>) {
+  return (
+    <div
+      role="status"
+      className="text-muted-fg flex flex-none items-center gap-3 border-t px-4 py-4 text-sm"
+    >
+      <Icon aria-hidden="true" className="size-4 flex-none" />
+      <span className="min-w-0 flex-1 text-pretty">{text}</span>
+    </div>
+  );
+}

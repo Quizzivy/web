@@ -3951,5 +3951,91 @@
       "deleted": "Đã xoá bộ “{{name}}”",
       "copiedToTest_other": "Đã sao chép {{count}} câu vào ngân hàng của bạn và thêm vào {{test}}"
     }
+  },
+  "messages": {
+    "title": "Tin nhắn",
+    "lead": "Thông báo tới lớp và tin nhắn riêng với học viên.",
+    "newAnnouncement": "Thông báo mới",
+    "newAnnouncementOff": "Bạn chưa dạy lớp nào.",
+    "former": "Học viên cũ",
+    "back": "Về danh sách",
+    "details": "Chi tiết",
+    "loadEarlier": "Xem tin nhắn cũ hơn",
+    "earlierFailed": "Chưa tải được tin nhắn cũ hơn. Hãy thử lại.",
+    "announcement": "Thông báo · {{time}}",
+    "seenBy": "{{seen}}/{{of}} học viên đã xem",
+    "attemptEvent_other": "{{title}} · rời khỏi bài thi {{count}} lần",
+    "openAttempt": "Mở lượt làm bài",
+    "sending": "Đang gửi…",
+    "failed": "Chưa gửi được.",
+    "placeholderDirect": "Nhắn cho {{name}}…",
+    "placeholderClass": "Viết thông báo tới lớp {{name}}…",
+    "attachFile": "Đính kèm tệp",
+    "send": "Gửi",
+    "classHint_other": "Gửi tới cả {{count}} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.",
+    "accountOff": "Tài khoản của {{name}} đã bị vô hiệu hoá nên không nhắn được.",
+    "archived": "Lớp này đã được lưu trữ nên không đăng thêm thông báo được.",
+    "day": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua"
+    },
+    "list": {
+      "label": "Cuộc trò chuyện",
+      "search": "Tìm người và lớp",
+      "tabs": "Lọc cuộc trò chuyện",
+      "tabAll": "Tất cả",
+      "tabDirect": "Riêng",
+      "tabClasses": "Lớp",
+      "you": "Bạn: ",
+      "attachment": "Tệp đính kèm · {{name}}",
+      "classSub_other": "{{count}} học viên",
+      "unread_other": "{{count}} tin nhắn chưa đọc",
+      "empty": "Chưa có tin nhắn. Nhắn cho một học viên từ trang Học viên, hoặc đăng thông báo tới một lớp.",
+      "error": "Không tải được tin nhắn.",
+      "noMatch": "Không có người hay lớp nào khớp với “{{q}}”.",
+      "candidates": "Học viên chưa nhắn tin"
+    },
+    "thread": {
+      "classSub_other": "{{count}} học viên · thông báo lớp",
+      "empty": "Chưa có tin nhắn.",
+      "channelEmpty": "Chưa có thông báo nào.",
+      "error": "Không tải được cuộc trò chuyện này."
+    },
+    "about": {
+      "student": "Học viên",
+      "class": "Lớp",
+      "classes": "Lớp đang học với bạn",
+      "openStudent": "Mở trong Học viên",
+      "members": "Thành viên",
+      "count_other": "{{count}} học viên",
+      "former": "Không còn học lớp nào của bạn.",
+      "openClass": "Mở trang lớp"
+    },
+    "chip": {
+      "download": "Tải xuống {{name}}",
+      "remove": "Bỏ tệp {{name}}",
+      "meta": "{{kind}} · {{size}}",
+      "kind": {
+        "pdf": "PDF",
+        "word": "Word",
+        "image": "Ảnh",
+        "audio": "Âm thanh"
+      },
+      "downloadFailed": "Chưa tải được tệp. Hãy thử lại."
+    },
+    "attach": {
+      "title": "Đính kèm tệp",
+      "submit": "Đính kèm",
+      "choose": "Chọn tệp",
+      "accept": "PDF, Word, ảnh hoặc âm thanh · tối đa 20 MB",
+      "uploading": "Đang tải lên… {{percent}}%",
+      "progress": "Đang tải lên {{name}}",
+      "tooBig": "Tệp lớn hơn 20 MB. Hãy chọn tệp nhỏ hơn.",
+      "badType": "Chỉ nhận tệp PDF, Word (DOC, DOCX), PNG, JPEG, MP3 hoặc M4A.",
+      "macro": "Tệp Word có macro không gửi được. Hãy lưu lại thành tệp DOCX không có macro.",
+      "dimensions": "Ảnh lớn hơn 10000 × 10000 điểm ảnh. Hãy chọn ảnh nhỏ hơn.",
+      "limit": "Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.",
+      "failed": "Chưa tải lên được tệp. Hãy thử lại."
+    }
   }
 }

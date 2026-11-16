@@ -124,6 +124,27 @@ const teacherTree: RouteObject = {
           lazy: page(() => import("@/features/tests/pages/teacher/TestBuilderPage")),
         },
         {
+          path: "messages",
+          handle: { crumb: [{ key: "messages.title" }] },
+          lazy: page(
+            () => import("@/features/messages/pages/teacher/TeacherMessagesPage"),
+          ),
+        },
+        {
+          path: "messages/class/:classId",
+          handle: { crumb: [{ key: "messages.title" }] },
+          lazy: page(
+            () => import("@/features/messages/pages/teacher/TeacherMessagesPage"),
+          ),
+        },
+        {
+          path: "messages/student/:studentId",
+          handle: { crumb: [{ key: "messages.title" }] },
+          lazy: page(
+            () => import("@/features/messages/pages/teacher/TeacherMessagesPage"),
+          ),
+        },
+        {
           path: "shared-with-me",
           handle: { crumb: [{ key: "teacherShell.nav.sharedWithMe" }] },
           lazy: page(() => import("@/features/sharing/pages/teacher/SharedWithMePage")),

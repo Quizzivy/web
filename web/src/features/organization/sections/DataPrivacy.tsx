@@ -104,6 +104,27 @@ function RetentionRow({
   );
 }
 
+/**
+ * MessagesRow is the card's fourth row, after the three selects: messages are
+ * kept, and anonymising an account deletes its direct messages (O-R7.2, the
+ * owner's Q6). It is read-only: no control, and no field of the form.
+ */
+function MessagesRow() {
+  const { t } = useTranslation();
+  return (
+    <div className="flex flex-wrap items-center gap-x-3.5 gap-y-2 px-4.5 py-3">
+      <span className="min-w-52 flex-1">
+        <span className="text-ui block leading-normal font-medium">
+          {t("systemSettings.data.messages")}
+        </span>
+        <span className="text-muted-fg text-meta block leading-normal">
+          {t("systemSettings.data.messagesHint")}
+        </span>
+      </span>
+    </div>
+  );
+}
+
 function ExportAllData() {
   const { t } = useTranslation();
   const email = useAuthStore((state) => state.user?.email ?? "");
@@ -152,7 +173,7 @@ function ExportAllData() {
  * DataPrivacySection is the Data & privacy cards of System settings: how long
  * the centre keeps attempt answers, focus-loss events and a disabled
  * account's name and email, as three selects that join the page's unsaved
- * changes, and Export all data, a danger-bordered card whose button opens the
+ * changes, then a read-only row saying messages are kept, and Export all data, a danger-bordered card whose button opens the
  * request dialog and is not part of the form. The export card shows only to a
  * role holding system.data_export. Shortening a retention is confirmed by the
  * page before it is saved.
@@ -170,6 +191,7 @@ export function DataPrivacySection({ saving }: Readonly<{ saving: boolean }>) {
           {ROWS.map((row) => (
             <RetentionRow key={row.name} row={row} saving={saving} />
           ))}
+          <MessagesRow />
         </div>
       </SettingsCard>
       {canExport ? <ExportAllData /> : null}

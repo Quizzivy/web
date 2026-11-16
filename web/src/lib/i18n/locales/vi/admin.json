@@ -1032,6 +1032,8 @@
       "keepFocusHint": "Sau thời hạn này, các sự kiện rời khỏi bài thi bị xoá hằng đêm.",
       "anonymise": "Ẩn danh tài khoản đã tắt sau",
       "anonymiseHint": "Kết quả được giữ; tên và email bị xoá.",
+      "messages": "Tin nhắn",
+      "messagesHint": "Được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.",
       "options": {
         "year1": "1 năm",
         "year2": "2 năm",

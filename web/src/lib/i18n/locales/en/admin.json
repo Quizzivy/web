@@ -1088,6 +1088,8 @@
       "keepFocusHint": "After this, focus-loss events are deleted overnight.",
       "anonymise": "Anonymise disabled accounts after",
       "anonymiseHint": "Results are kept; name and email are removed.",
+      "messages": "Messages",
+      "messagesHint": "Kept. Anonymising an account deletes its direct messages.",
       "options": {
         "year1": "1 year",
         "year2": "2 years",

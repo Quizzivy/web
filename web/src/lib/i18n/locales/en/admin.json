@@ -1197,7 +1197,7 @@
         },
         "databaseBytes": {
           "label": "Database size",
-          "hint": "Approximate: what PostgreSQL reports, not what Neon bills. Only warns, never refuses.",
+          "hint": "Approximate: what PostgreSQL reports for the database's files on the server. Only warns, never refuses.",
           "used": "About {{value}} now",
           "below": "Below the current size. The Overview will warn; nothing is refused."
         },
@@ -1222,7 +1222,7 @@
         "app": "Quizzivy's own figure",
         "deploy": "set by the deploy",
         "r2_free": "Cloudflare R2 free tier",
-        "neon_launch": "warning line for Neon Launch",
+        "vps_disk": "warning line for the server's disk",
         "resend_free": "Resend free plan"
       },
       "useDefault": "Use default",

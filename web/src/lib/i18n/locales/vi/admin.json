@@ -1136,7 +1136,7 @@
         },
         "databaseBytes": {
           "label": "Dung lượng cơ sở dữ liệu",
-          "hint": "Ước tính: số PostgreSQL báo, không phải số Neon tính phí. Chỉ cảnh báo, không từ chối.",
+          "hint": "Ước tính: số PostgreSQL báo cho các tệp của cơ sở dữ liệu trên máy chủ. Chỉ cảnh báo, không từ chối.",
           "used": "Hiện khoảng {{value}}",
           "below": "Thấp hơn dung lượng hiện tại. Trang Tổng quan sẽ cảnh báo; không gì bị từ chối."
         },
@@ -1161,7 +1161,7 @@
         "app": "mức riêng của Quizzivy",
         "deploy": "do cấu hình triển khai đặt",
         "r2_free": "gói miễn phí Cloudflare R2",
-        "neon_launch": "ngưỡng cảnh báo cho gói Neon Launch",
+        "vps_disk": "ngưỡng cảnh báo cho ổ đĩa máy chủ",
         "resend_free": "gói miễn phí Resend"
       },
       "useDefault": "Dùng mặc định",

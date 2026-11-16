@@ -829,6 +829,8 @@
     "chooseFile": "Choose a file from your device",
     "delete": "Delete",
     "deleteFailed": "Could not delete the file.",
+    "deleteInUseElsewhere_one": "It can't be deleted: {{count}} question or group of another teacher uses this file.",
+    "deleteInUseElsewhere_other": "It can't be deleted: {{count}} questions or groups of other teachers use this file.",
     "emptyAudio": "No listening files yet. Upload your first one to get started.",
     "emptyImages": "No images yet. Upload your first image to get started.",
     "loadFailed": "Could not load the media library.",

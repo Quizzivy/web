@@ -535,6 +535,39 @@ describe("a file's menu", () => {
     expect(within(notice).getByText("v4")).toBeVisible();
   });
 
+  it("says how many of another teacher's questions use the file when the delete is refused for that, naming none, with Delete off", async () => {
+    server.use(
+      http.delete(`${BASE}/teacher/media/:id`, () =>
+        contractJson("/teacher/media/{id}", "delete", 409, {
+          error: {
+            code: "MEDIA_IN_USE_ELSEWHERE",
+            message: "Media is in use elsewhere.",
+            requestId: "018f0000-0000-7000-8000-0000000000f3",
+            details: { count: 2 },
+          },
+        }),
+      ),
+    );
+    const user = renderPage();
+    await openMenu(user, "Podcast · city parks.mp3");
+    await user.click(await screen.findByRole("menuitem", { name: "Xoá" }));
+    const dialog = await screen.findByRole("dialog");
+    await user.click(within(dialog).getByRole("button", { name: "Xoá" }));
+
+    expect(
+      await within(dialog).findByText(
+        "Không xoá được: 2 câu hỏi hoặc nhóm câu hỏi của giáo viên khác đang dùng tệp này.",
+      ),
+    ).toBeVisible();
+    expect(within(dialog).getByRole("button", { name: "Xoá" })).toBeDisabled();
+    expect(
+      within(dialog)
+        .queryAllByRole("link")
+        .filter((link) => link.getAttribute("href")?.startsWith("/teacher/")),
+    ).toEqual([]);
+    expect(within(dialog).queryByText("Media is in use elsewhere.")).toBeNull();
+  });
+
   it("keeps a drop under an open dialog from opening the upload", async () => {
     const user = renderPage();
     await openMenu(user, "Podcast · city parks.mp3");

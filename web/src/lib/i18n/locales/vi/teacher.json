@@ -791,6 +791,7 @@
     "chooseFile": "Chọn tệp từ máy",
     "delete": "Xoá",
     "deleteFailed": "Không xoá được tệp.",
+    "deleteInUseElsewhere_other": "Không xoá được: {{count}} câu hỏi hoặc nhóm câu hỏi của giáo viên khác đang dùng tệp này.",
     "emptyAudio": "Chưa có tệp nghe nào. Tải lên tệp nghe đầu tiên để bắt đầu.",
     "emptyImages": "Chưa có hình ảnh nào. Tải lên hình ảnh đầu tiên để bắt đầu.",
     "loadFailed": "Không tải được thư viện tệp.",

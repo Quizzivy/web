@@ -151,7 +151,17 @@ describe("notification kinds and sentences", () => {
       "assignment.closing",
       "summary.weekly",
     ]);
-    expect(STUDENT_EVENTS).toEqual(["assignment.due_soon", "result.ready"]);
+    expect(STUDENT_EVENTS).toEqual([
+      "assignment.due_soon",
+      "result.ready",
+      "message.received",
+    ]);
+    // "New message" for a teacher is "Messages from teachers" for a student.
+    expect(
+      TEACHER_EVENTS.filter((event) =>
+        (STUDENT_EVENTS as readonly string[]).includes(event),
+      ),
+    ).toEqual(["message.received"]);
     expect(() => listResponse({ items: notices, nextBefore: null })).not.toThrow();
   });
   it.each(notices.map((notice, index) => ({ notice, index })))(

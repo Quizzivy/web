@@ -77,10 +77,16 @@ export const TEACHER_EVENTS = [
   "assignment.closing",
   "summary.weekly",
 ] as const satisfies readonly NotificationEvent[];
-/** STUDENT_EVENTS lists the student's switches in contract order. */
+/**
+ * STUDENT_EVENTS lists the student's switches in the deck's order: Test due
+ * soon, Result ready, Messages from teachers. `message.received` is both
+ * lists' (the contract's "New message" for a teacher, "Messages from
+ * teachers" for a student).
+ */
 export const STUDENT_EVENTS = [
   "assignment.due_soon",
   "result.ready",
+  "message.received",
 ] as const satisfies readonly NotificationEvent[];
 
 const teacherKinds = new Set<NotificationKind>([

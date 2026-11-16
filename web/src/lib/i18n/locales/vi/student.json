@@ -235,6 +235,9 @@
       "dueSoonHint": "Một ngày trước và 1 giờ trước khi bài đóng",
       "resultReady": "Đã có kết quả",
       "resultReadyHint": "Khi giáo viên chấm xong bài của bạn",
+      "messages": "Tin nhắn từ giáo viên",
+      "messagesHint": "Thông báo của lớp và tin nhắn riêng",
+      "bothChannels": "Mỗi mục đang bật cũng được gửi qua email đến {{email}}.",
       "loadFailed": "Không tải được cài đặt thông báo.",
       "saveFailed": "Chưa lưu được thay đổi. Hãy thử lại."
     }

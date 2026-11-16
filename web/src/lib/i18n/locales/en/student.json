@@ -248,6 +248,9 @@
       "dueSoonHint": "The day before and 1 hour before it closes",
       "resultReady": "Result ready",
       "resultReadyHint": "When your teacher finishes grading",
+      "messages": "Messages from teachers",
+      "messagesHint": "Announcements and direct messages",
+      "bothChannels": "Each update that is on also reaches you by email at {{email}}.",
       "loadFailed": "Couldn't load your notification settings.",
       "saveFailed": "Your change wasn't saved. Try again."
     }

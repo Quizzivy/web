@@ -13,7 +13,6 @@ import i18n from "@/lib/i18n";
 import { loadSpec } from "@tests/support/openapi";
 import {
   KIND_LOOK,
-  LATER_EVENTS,
   TEACHER_EVENTS,
   STUDENT_EVENTS,
   audienceOf,
@@ -141,16 +140,18 @@ describe("notification kinds and sentences", () => {
   it("matches both contract enums exhaustively and validates all nine fixtures", () => {
     const schemas = loadSpec().components.schemas;
     expect(Object.keys(KIND_LOOK)).toEqual(schemas.NotificationKind.enum);
-    expect([...TEACHER_EVENTS, ...STUDENT_EVENTS, ...LATER_EVENTS]).toEqual(
-      schemas.NotificationEvent.enum,
+    expect(new Set([...TEACHER_EVENTS, ...STUDENT_EVENTS])).toEqual(
+      new Set(schemas.NotificationEvent.enum),
     );
-    expect(TEACHER_EVENTS).toEqual(schemas.NotificationEvent.enum.slice(0, 3));
-    expect(STUDENT_EVENTS).toEqual(schemas.NotificationEvent.enum.slice(3, 5));
-    expect(
-      TEACHER_EVENTS.filter((event) =>
-        (STUDENT_EVENTS as readonly string[]).includes(event),
-      ),
-    ).toEqual([]);
+    // The deck's order, not the contract's (Settings › Notifications).
+    expect(TEACHER_EVENTS).toEqual([
+      "attempt.submitted",
+      "attempt.flagged",
+      "message.received",
+      "assignment.closing",
+      "summary.weekly",
+    ]);
+    expect(STUDENT_EVENTS).toEqual(["assignment.due_soon", "result.ready"]);
     expect(() => listResponse({ items: notices, nextBefore: null })).not.toThrow();
   });
   it.each(notices.map((notice, index) => ({ notice, index })))(

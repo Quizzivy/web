@@ -65,25 +65,22 @@ export const KIND_LOOK: Record<
   "message.from_teacher": { icon: MessageSquare, tone: "info" },
   "summary.weekly": { icon: LayoutDashboard, tone: "neutral" },
 };
-/** TEACHER_EVENTS lists the teacher's switches in contract order. */
+/**
+ * TEACHER_EVENTS lists the teacher's switches in the deck's order (Settings
+ * › Notifications): A student submits, An attempt is flagged, New message,
+ * An assignment is about to close, Weekly summary.
+ */
 export const TEACHER_EVENTS = [
   "attempt.submitted",
   "attempt.flagged",
+  "message.received",
   "assignment.closing",
+  "summary.weekly",
 ] as const satisfies readonly NotificationEvent[];
 /** STUDENT_EVENTS lists the student's switches in contract order. */
 export const STUDENT_EVENTS = [
   "assignment.due_soon",
   "result.ready",
-] as const satisfies readonly NotificationEvent[];
-/**
- * LATER_EVENTS are switches in the contract that no settings section draws
- * yet (R7's T-R7.23 adds "New message" and "Messages from teachers"). The
- * server still answers their rows, and a save sends them back unchanged.
- */
-export const LATER_EVENTS = [
-  "message.received",
-  "summary.weekly",
 ] as const satisfies readonly NotificationEvent[];
 
 const teacherKinds = new Set<NotificationKind>([

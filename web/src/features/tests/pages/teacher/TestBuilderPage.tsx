@@ -186,7 +186,8 @@ export default function TestBuilderPage() {
  * reads the test in ReadOnlyBuilder, which mounts no autosave; everyone else
  * edits it. A recipient, at either access, gets no AI entry point (R7 Access
  * Modes, Q1): the assistant spends the caller's credits and what it makes
- * would land in the owner's bank.
+ * would land in the owner's bank. An admin on someone else's test keeps it,
+ * and its writes take the non-owner paths (fixQuestion).
  */
 function BuilderFor({ test }: Readonly<{ test: Test }>) {
   const access = useTestAccess(test);
@@ -677,6 +678,12 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
     }
   }
 
+  /**
+   * fixQuestion applies an AI check's fix to a question of the draft. For a
+   * caller who is not the owner (an admin on someone else's test) it goes
+   * through the test's question path, as a manual edit does, so a question
+   * used elsewhere is forked rather than changed in every test that uses it.
+   */
   async function fixQuestion(finding: AiFinding) {
     const group = groupOf(finding.questionId);
     if (group) {
@@ -689,10 +696,14 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
     const fresh = await getQuestion(questionId);
     const values = toFormValues(fresh);
     if (!fixFits(values, finding)) throw new AiWriteError(t("ai.check.fixGone"));
-    const saved = await updateQuestion(questionId, withFix(values, finding));
-    queryClient.setQueryData(["teacher-question", questionId], saved);
+    const fixed = withFix(values, finding);
+    const saved = access.mine
+      ? await updateQuestion(questionId, fixed)
+      : (await editShared(questionId, fixed, fresh.updatedAt)).question;
+    queryClient.setQueryData(["teacher-question", saved.id], saved);
     void queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
-    if (selectedId === questionId) setEditorEpoch((epoch) => epoch + 1);
+    if (selectedId === questionId || selectedId === saved.id)
+      setEditorEpoch((epoch) => epoch + 1);
   }
 
   async function onCreateQuestion() {
@@ -959,15 +970,38 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
 
   /**
    * pickFromBank takes what "Add from question bank" picked: into the section
-   * the outline's entry names, or into the group whose pane asked.
+   * the outline's entry names, or into the group whose pane asked. For a
+   * caller who is not the owner a group's room is checked before anything is
+   * copied into the owner's bank, so a full group leaves no unused copies.
    */
   function pickFromBank(ids: string[]) {
     const into = pickingInto;
-    void ownCopies(ids).then((own) => {
+    void (async () => {
+      if (
+        into !== null &&
+        access.forTestId !== undefined &&
+        !(await hasRoom(into, ids))
+      )
+        return;
+      const own = await ownCopies(ids);
       if (own === null) return;
       if (into === null) appendQuestions(own);
       else void addFromBankToGroup(into, own);
-    });
+    })();
+  }
+
+  /** hasRoom says whether a group can take the picked questions, with the notice when not. */
+  async function hasRoom(groupId: string, ids: readonly string[]) {
+    try {
+      const stored =
+        queryClient.getQueryData<StoredGroup>(["teacher-group", groupId]) ??
+        (await getGroup(groupId));
+      if (ids.length <= groupRoom(stored.bundle.group)) return true;
+      notify.error(t("builder.moveGroupFull"));
+    } catch (cause) {
+      report(cause);
+    }
+    return false;
   }
 
   function pickWholeGroup() {
@@ -1447,7 +1481,7 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
     );
   }
 
-  if (revoked) return <AccessRemovedNotice ownerName={access.ownerGiven} />;
+  if (revoked) return <AccessRemovedNotice ownerName={access.owner.name} />;
 
   return (
     <fieldset
@@ -1461,6 +1495,7 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
           onTitle={updateTitle}
           status={test.status}
           saveStatus={saveStatus}
+          stale={stale}
         />
 
         <div className="flex min-w-0 flex-wrap items-center gap-2">
@@ -1835,12 +1870,14 @@ function BuilderHeading({
   onTitle,
   status,
   saveStatus,
+  stale,
 }: Readonly<{
   access: TestAccess;
   title: string;
   onTitle: (value: string) => void;
   status: Test["status"];
   saveStatus: AutosaveStatus;
+  stale: boolean;
 }>) {
   const { t } = useTranslation();
   const navigate = useNavigate();
@@ -1871,7 +1908,8 @@ function BuilderHeading({
             : "shrink-0"
         }
       />
-      <AutosaveStatusLabel status={saveStatus} deck />
+      {/* A refused save is the band's to say (R7 Access Modes: the save line goes). */}
+      {stale ? null : <AutosaveStatusLabel status={saveStatus} deck />}
     </div>
   );
   if (access.mine) return row;

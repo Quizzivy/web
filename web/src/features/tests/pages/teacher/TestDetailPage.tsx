@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-query";
 import {
   ClipboardList,
+  Eye,
   FileClock,
   GitCompare,
   History,
@@ -442,11 +443,7 @@ function DetailHead({
     <PageHead
       title={nfc(test.title)}
       crumb
-      back={
-        recipient
-          ? { to: "/teacher/shared-with-me", label: t("teacherShell.nav.sharedWithMe") }
-          : { to: "/teacher/tests", label: t("teacherShell.nav.tests") }
-      }
+      back={{ to: "/teacher/tests", label: t("teacherShell.nav.tests") }}
       status={
         <StatusBadge
           kind="test"
@@ -482,7 +479,12 @@ function DetailHead({
           ) : null}
           <Button asChild variant="outline" className={HEAD_BUTTON}>
             <Link to={`/teacher/tests/${test.id}/edit`}>
-              <Pencil aria-hidden="true" />
+              {/* Can use opens the builder read-only (R7 Access Modes, test detail). */}
+              {access.readOnly ? (
+                <Eye aria-hidden="true" />
+              ) : (
+                <Pencil aria-hidden="true" />
+              )}
               {t("tests.detail.openBuilder")}
             </Link>
           </Button>

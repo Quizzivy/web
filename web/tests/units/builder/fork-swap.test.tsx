@@ -9,7 +9,6 @@ import {
   READ_AT,
   SECTION_ID,
   TEST_AT,
-  TEST_ID,
   builderTest,
   choice,
   renderBuilder,
@@ -139,6 +138,5 @@ describe("a Can edit recipient's question edit that forks", () => {
     expect(outline[0]?.["expectedUpdatedAt"]).toBe(testAt);
     expect(JSON.stringify(outline[0])).toContain(FORK);
     expect(JSON.stringify(outline[0])).not.toContain(Q1);
-    expect(TEST_ID).toBeTruthy();
   }, 20_000);
 });

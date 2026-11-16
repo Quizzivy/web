@@ -242,7 +242,7 @@ describe("publishing from the builder", () => {
 
     await waitFor(() => expect(accepted).toBe(1));
     expect(staleWrites).toBe(0);
-    expect(screen.queryByText(/mở ở nơi khác/)).toBeNull();
+    expect(screen.queryByText(/Có nơi khác đã lưu thay đổi/)).toBeNull();
   });
 
   it("still shows the notice when another tab moved the version after publishing", async () => {
@@ -257,7 +257,7 @@ describe("publishing from the builder", () => {
     currentVersion = "2026-01-07T00:00:00.000000Z";
     await rename(user, " v2");
 
-    expect(await screen.findByText(/mở ở nơi khác/)).toBeInTheDocument();
+    expect(await screen.findByText(/Có nơi khác đã lưu thay đổi/)).toBeInTheDocument();
     expect(staleWrites).toBe(1);
   });
 

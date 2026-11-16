@@ -14,7 +14,7 @@ import { sectionQuestionIds, unitsOf } from "../outlineUnits";
 import type { OutlineQuestion } from "./OutlineTree";
 
 const ROW =
-  "hover:bg-hover text-fg flex min-h-8 w-full min-w-0 items-center gap-1 rounded-[7px] py-0.75 pr-1 pl-1.5 text-left text-[13px] max-[1023px]:min-h-11";
+  "hover:bg-hover text-fg flex min-h-8 w-full min-w-0 items-center gap-1 rounded-seg py-0.75 pr-1 pl-1.5 text-left text-sm max-[1023px]:min-h-11";
 
 /**
  * OutlineReadTree is the builder's outline for a Can-use recipient (R7 Access
@@ -58,7 +58,7 @@ export function OutlineReadTree({
       className="bg-card shadow-card flex h-full min-h-0 w-full flex-col overflow-hidden rounded-xl border"
     >
       <div className="flex shrink-0 items-center gap-2 border-b px-3.5 py-3">
-        <p className="text-[13px] font-semibold">{t("builder.outline")}</p>
+        <p className="text-sm font-semibold">{t("builder.outline")}</p>
         <p className="text-muted-fg ml-auto shrink-0 text-xs leading-[18px] tabular-nums">
           {settled
             ? t("builder.outlineSummary", { questions: numbers.size, points: total })
@@ -79,7 +79,7 @@ export function OutlineReadTree({
               <button
                 type="button"
                 aria-expanded={open}
-                className="hover:bg-hover flex min-h-8 w-full min-w-0 items-center gap-1.25 rounded-[7px] px-2 py-1 text-left leading-4 max-[1023px]:min-h-11"
+                className="hover:bg-hover rounded-seg flex min-h-8 w-full min-w-0 items-center gap-1.25 px-2 py-1 text-left leading-4 max-[1023px]:min-h-11"
                 onClick={() => setClosed((current) => toggle(current, key))}
               >
                 <Chevron
@@ -103,7 +103,7 @@ export function OutlineReadTree({
                 </span>
               </button>
               {open && section.instructions ? (
-                <p className="text-muted-fg mb-1 ml-6.5 flex items-center gap-1.5 px-1.5 py-1 text-xs leading-[1.45]">
+                <p className="text-muted-fg mb-1 ml-6.5 flex items-center gap-1.5 px-1.5 py-1 text-xs">
                   <ScrollText aria-hidden="true" className="size-3.25 shrink-0" />
                   <span className="min-w-0 truncate">{section.instructions}</span>
                 </p>
@@ -222,7 +222,7 @@ function GroupRow({
     <li data-outline-group={group.group.id} className="flex flex-col gap-0.5">
       <div
         className={cn(
-          "hover:bg-hover flex min-h-8 min-w-0 items-center gap-1 rounded-[7px] py-0.75 pr-1 pl-0.5 text-[13px] max-[1023px]:min-h-11",
+          "hover:bg-hover rounded-seg flex min-h-8 min-w-0 items-center gap-1 py-0.75 pr-1 pl-0.5 text-sm max-[1023px]:min-h-11",
           selected && selectedId === null && "bg-secondary font-medium",
         )}
       >

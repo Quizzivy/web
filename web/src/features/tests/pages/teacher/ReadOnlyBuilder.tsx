@@ -311,7 +311,7 @@ function QuestionReadPane({
   return (
     <div className="flex min-w-0 flex-col">
       <div className="flex min-w-0 items-center gap-2.5 border-b px-4 py-3">
-        <h2 className="shrink-0 text-[13px] font-semibold whitespace-nowrap">
+        <h2 className="shrink-0 text-sm font-semibold whitespace-nowrap">
           {number === null
             ? t("builder.editor.question")
             : t("builder.editor.questionNumber", { number })}

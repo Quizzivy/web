@@ -24,7 +24,7 @@ import { nfc } from "@/lib/nfc";
 import { cn } from "@/lib/utils";
 
 const CARD = "bg-card shadow-card flex min-w-0 flex-col gap-4 rounded-xl border p-4";
-const LABEL = "text-muted-fg text-[11.5px] font-semibold tracking-[0.06em] uppercase";
+const LABEL = "text-muted-fg text-caption font-semibold tracking-wider uppercase";
 
 /**
  * GroupReadPane is a passage, a cloze or a recording for a Can-use recipient
@@ -133,7 +133,7 @@ function GroupRead({
     >
       <div className="flex min-w-0 flex-wrap items-start justify-between gap-x-3 gap-y-2">
         <div className="flex min-w-0 flex-[1_1_260px] flex-col items-start gap-1">
-          <span className="text-muted-fg flex min-h-5 items-center gap-2 text-[12.5px]">
+          <span className="text-muted-fg text-meta flex min-h-5 items-center gap-2">
             <Icon aria-hidden="true" className="size-3.5" />
             {section ? `${name} · ${section}` : name}
           </span>
@@ -144,10 +144,10 @@ function GroupRead({
             {nfc(group.title) || t(`groups.kind.${kind}.new`)}
           </h2>
           {instructions === "" ? null : (
-            <p className="text-[13px] text-pretty">{nfc(instructions)}</p>
+            <p className="text-sm text-pretty">{nfc(instructions)}</p>
           )}
         </div>
-        <span className="text-muted-fg text-[12.5px] whitespace-nowrap">
+        <span className="text-muted-fg text-meta whitespace-nowrap">
           {t("groups.pane.summary", { count: group.members.length, points })}
         </span>
       </div>
@@ -181,7 +181,7 @@ function GroupRead({
                   selectedQuestionId === member.questionId && "border-primary",
                 )}
               >
-                <p className="text-[13px] font-semibold">
+                <p className="text-sm font-semibold">
                   {t("builder.editor.questionNumber", {
                     number: numbers.get(member.questionId) ?? 0,
                   })}

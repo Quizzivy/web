@@ -156,7 +156,7 @@ describe("the builder across several separated saves", () => {
     await vi.advanceTimersByTimeAsync(1500);
     await waitFor(() => expect(accepted).toBe(2));
 
-    expect(screen.queryByText(/mở ở nơi khác/)).toBeNull();
+    expect(screen.queryByText(/Có nơi khác đã lưu thay đổi/)).toBeNull();
     expect(screen.getByRole("button", { name: "Phát hành" })).toBeEnabled();
   });
 
@@ -173,7 +173,7 @@ describe("the builder across several separated saves", () => {
     await user.type(title, "b");
     await vi.advanceTimersByTimeAsync(1500);
 
-    expect(await screen.findByText(/mở ở nơi khác/)).toBeInTheDocument();
+    expect(await screen.findByText(/Có nơi khác đã lưu thay đổi/)).toBeInTheDocument();
     expect(staleWrites).toBe(1);
   });
 });

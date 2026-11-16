@@ -63,7 +63,8 @@ export function sameRef(a: ThreadRef | null, b: ThreadRef | null): boolean {
 /** PAGE_LIMIT is how many messages one read brings, the contract's default. */
 export const PAGE_LIMIT = 30;
 
-function cursorQuery(cursor: Cursor) {
+/** cursorQuery is the query of a thread's read from `cursor`, a page of PAGE_LIMIT. */
+export function cursorQuery(cursor: Cursor) {
   return {
     limit: PAGE_LIMIT,
     ...(cursor.before === undefined ? {} : { before: cursor.before }),

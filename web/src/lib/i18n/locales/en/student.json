@@ -343,5 +343,15 @@
       "questions": "Questions {{from}}–{{to}}"
     },
     "band": "Band {{band}}"
+  },
+  "messages": {
+    "student": {
+      "empty": "No messages yet. Your teachers’ announcements appear here.",
+      "teacherSub": "Your teacher · {{classes}}",
+      "former": "Former teacher",
+      "channelSub": "Class announcements",
+      "readOnly": "Only your teacher can post here.",
+      "reply": "Reply to {{name}} directly"
+    }
   }
 }

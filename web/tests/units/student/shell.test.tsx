@@ -642,3 +642,81 @@ describe("the bell", () => {
     expect(bell.querySelector("[data-slot='bell-dot']")).toBeNull();
   });
 });
+
+describe("the Messages button (T-R7.21)", () => {
+  afterEach(() => {
+    flags.messages = false;
+  });
+
+  function summary(unreadMessages: number) {
+    server.use(
+      http.get(`${BASE}/me/summary`, () =>
+        contractJson("/me/summary", "get", 200, {
+          unreadNotifications: 0,
+          unreadMessages,
+        }),
+      ),
+    );
+  }
+
+  it("is absent, with no count and no request for one, while the messages module is off", async () => {
+    let asked = 0;
+    serveStudent({});
+    server.use(
+      http.get(`${BASE}/me/summary`, () => {
+        asked += 1;
+        return contractJson("/me/summary", "get", 200, {
+          unreadNotifications: 0,
+          unreadMessages: 3,
+        });
+      }),
+    );
+    shell("/", <p>trang</p>);
+    await screen.findByRole("navigation", { name: NAV });
+    expect(screen.queryByRole("link", { name: /^Tin nhắn/ })).toBeNull();
+    expect(document.querySelector("[data-slot='messages-count']")).toBeNull();
+    expect(asked).toBe(0);
+  });
+
+  it("sits before the bell and the account button, with the lime count of unread messages", async () => {
+    flags.messages = true;
+    flags.notifications = true;
+    serveStudent({});
+    summary(3);
+    shell("/", <p>trang</p>);
+    const button = await screen.findByRole("link", {
+      name: "Tin nhắn, 3 chưa đọc",
+    });
+    expect(button).toHaveAttribute("href", "/messages");
+    const count = button.querySelector("[data-slot='messages-count']");
+    expect(count).toHaveTextContent("3");
+    expect(count).toHaveClass("bg-brand");
+    const bell = screen.getByRole("button", { name: "Thông báo" });
+    expect(
+      button.compareDocumentPosition(bell) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+    flags.notifications = false;
+  });
+
+  it("draws no count when nothing is unread, and keeps its place on a phone", async () => {
+    viewport("phone");
+    flags.messages = true;
+    serveStudent({});
+    summary(0);
+    shell("/", <p>trang</p>);
+    const button = await screen.findByRole("link", { name: "Tin nhắn" });
+    expect(button.closest("header")).not.toBeNull();
+    expect(button.querySelector("[data-slot='messages-count']")).toBeNull();
+  });
+
+  it("puts a message button on each class card that opens the teacher's thread", async () => {
+    flags.messages = true;
+    serveStudent({});
+    summary(0);
+    shell("/classes", <StudentClassesPage />);
+    const button = await screen.findByRole("link", {
+      name: "Nhắn riêng cho Cô Thương",
+    });
+    expect(button).toHaveAttribute("href", `/messages/teacher/${CLASS.teacherId}`);
+  });
+});

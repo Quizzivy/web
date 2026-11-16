@@ -4162,37 +4162,22 @@
     }
   },
   "messages": {
-    "title": "Messages",
     "lead": "Announcements to classes and direct messages with students.",
     "newAnnouncement": "New announcement",
     "newAnnouncementOff": "You teach no class yet.",
     "former": "Former student",
-    "back": "Back to conversations",
     "details": "Details",
-    "loadEarlier": "Load earlier",
-    "earlierFailed": "Earlier messages could not be loaded. Try again.",
-    "announcement": "Announcement · {{time}}",
     "seenBy": "Seen by {{seen}} of {{of}}",
     "attemptEvent_one": "{{title}} · left the test {{count}} time",
     "attemptEvent_other": "{{title}} · left the test {{count}} times",
     "openAttempt": "Open attempt",
-    "sending": "Sending…",
-    "failed": "Not sent.",
-    "placeholderDirect": "Message {{name}}…",
     "placeholderClass": "Write an announcement to {{name}}…",
     "attachFile": "Attach file",
-    "send": "Send",
     "classHint_one": "Sent to {{count}} student. Replies come to you as direct messages.",
     "classHint_other": "Sent to all {{count}} students. Replies come to you as direct messages.",
-    "accountOff": "{{name}}’s account is disabled, so no message can be sent.",
     "archived": "This class is archived, so nothing more can be posted.",
     "announceNotAllowed": "You don’t have permission to post announcements to classes.",
-    "day": {
-      "today": "Today",
-      "yesterday": "Yesterday"
-    },
     "list": {
-      "label": "Conversations",
       "search": "Search people and classes",
       "tabs": "Filter conversations",
       "tabAll": "All",
@@ -4202,19 +4187,13 @@
       "attachment": "Attachment · {{name}}",
       "classSub_one": "{{count}} student",
       "classSub_other": "{{count}} students",
-      "unread_one": "{{count}} unread message",
-      "unread_other": "{{count}} unread messages",
       "empty": "No messages yet. Message a student from Students or post to a class.",
-      "error": "Messages could not be loaded.",
       "noMatch": "No person or class matches “{{q}}”.",
       "candidates": "Students not messaged yet"
     },
     "thread": {
       "classSub_one": "{{count}} student · announcements",
-      "classSub_other": "{{count}} students · announcements",
-      "empty": "No messages yet.",
-      "channelEmpty": "No announcements yet.",
-      "error": "This conversation could not be loaded."
+      "classSub_other": "{{count}} students · announcements"
     },
     "about": {
       "student": "Student",
@@ -4228,16 +4207,7 @@
       "openClass": "Open the class"
     },
     "chip": {
-      "download": "Download {{name}}",
-      "remove": "Remove {{name}}",
-      "meta": "{{kind}} · {{size}}",
-      "kind": {
-        "pdf": "PDF",
-        "word": "Word",
-        "image": "Image",
-        "audio": "Audio"
-      },
-      "downloadFailed": "The file could not be downloaded. Try again."
+      "remove": "Remove {{name}}"
     },
     "attach": {
       "title": "Attach a file",

@@ -126,13 +126,17 @@ describe("the page", () => {
     );
   });
 
-  it("draws a class with its teacher, and no way to open, message or leave it", async () => {
+  it("draws a class with its teacher and a way to message them, and no way to open or leave it", async () => {
     page([A]);
     const card = cardOf((await screen.findByRole("heading", { level: 2 })).textContent);
     expect(card.getByText("Hoàng Thương")).toBeInTheDocument();
     expect(card.getByText("Giáo viên")).toBeInTheDocument();
     expect(card.getByText("TH")).toBeInTheDocument();
-    expect(card.queryAllByRole("link")).toEqual([]);
+    const links = card.queryAllByRole("link");
+    expect(links.map((link) => link.getAttribute("aria-label"))).toEqual([
+      "Nhắn riêng cho Hoàng Thương",
+    ]);
+    expect(links[0]).toHaveAttribute("href", `/messages/teacher/${A.teacherId}`);
     expect(card.queryAllByRole("button")).toEqual([]);
     expect(screen.queryByText(/Tuần này/)).toBeNull();
     expect(screen.queryByText(/tham gia 12\/07/)).toBeNull();
@@ -145,6 +149,12 @@ describe("the page", () => {
       "text-muted-fg",
     );
     expect(cardOf(B.name).queryByText(/Thứ 3/)).toBeNull();
+  });
+
+  it("offers no message button for a class with no teacher", async () => {
+    page([{ ...A, teacherId: null }]);
+    await screen.findByRole("heading", { level: 2, name: A.name });
+    expect(cardOf(A.name).queryAllByRole("link")).toEqual([]);
   });
 
   it("leaves out the teacher row for a class with no teacher name", async () => {

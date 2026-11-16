@@ -3953,35 +3953,20 @@
     }
   },
   "messages": {
-    "title": "Tin nhắn",
     "lead": "Thông báo tới lớp và tin nhắn riêng với học viên.",
     "newAnnouncement": "Thông báo mới",
     "newAnnouncementOff": "Bạn chưa dạy lớp nào.",
     "former": "Học viên cũ",
-    "back": "Về danh sách",
     "details": "Chi tiết",
-    "loadEarlier": "Xem tin nhắn cũ hơn",
-    "earlierFailed": "Chưa tải được tin nhắn cũ hơn. Hãy thử lại.",
-    "announcement": "Thông báo · {{time}}",
     "seenBy": "{{seen}}/{{of}} học viên đã xem",
     "attemptEvent_other": "{{title}} · rời khỏi bài thi {{count}} lần",
     "openAttempt": "Mở lượt làm bài",
-    "sending": "Đang gửi…",
-    "failed": "Chưa gửi được.",
-    "placeholderDirect": "Nhắn cho {{name}}…",
     "placeholderClass": "Viết thông báo tới lớp {{name}}…",
     "attachFile": "Đính kèm tệp",
-    "send": "Gửi",
     "classHint_other": "Gửi tới cả {{count}} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.",
-    "accountOff": "Tài khoản của {{name}} đã bị vô hiệu hoá nên không nhắn được.",
     "archived": "Lớp này đã được lưu trữ nên không đăng thêm thông báo được.",
     "announceNotAllowed": "Bạn chưa có quyền đăng thông báo tới lớp.",
-    "day": {
-      "today": "Hôm nay",
-      "yesterday": "Hôm qua"
-    },
     "list": {
-      "label": "Cuộc trò chuyện",
       "search": "Tìm người và lớp",
       "tabs": "Lọc cuộc trò chuyện",
       "tabAll": "Tất cả",
@@ -3990,17 +3975,12 @@
       "you": "Bạn: ",
       "attachment": "Tệp đính kèm · {{name}}",
       "classSub_other": "{{count}} học viên",
-      "unread_other": "{{count}} tin nhắn chưa đọc",
       "empty": "Chưa có tin nhắn. Nhắn cho một học viên từ trang Học viên, hoặc đăng thông báo tới một lớp.",
-      "error": "Không tải được tin nhắn.",
       "noMatch": "Không có người hay lớp nào khớp với “{{q}}”.",
       "candidates": "Học viên chưa nhắn tin"
     },
     "thread": {
-      "classSub_other": "{{count}} học viên · thông báo lớp",
-      "empty": "Chưa có tin nhắn.",
-      "channelEmpty": "Chưa có thông báo nào.",
-      "error": "Không tải được cuộc trò chuyện này."
+      "classSub_other": "{{count}} học viên · thông báo lớp"
     },
     "about": {
       "student": "Học viên",
@@ -4013,16 +3993,7 @@
       "openClass": "Mở trang lớp"
     },
     "chip": {
-      "download": "Tải xuống {{name}}",
-      "remove": "Bỏ tệp {{name}}",
-      "meta": "{{kind}} · {{size}}",
-      "kind": {
-        "pdf": "PDF",
-        "word": "Word",
-        "image": "Ảnh",
-        "audio": "Âm thanh"
-      },
-      "downloadFailed": "Chưa tải được tệp. Hãy thử lại."
+      "remove": "Bỏ tệp {{name}}"
     },
     "attach": {
       "title": "Đính kèm tệp",

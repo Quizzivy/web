@@ -17,15 +17,19 @@ import {
 } from "@/lib/api/errors";
 
 /**
- * usedElsewhere is how many of other teachers' live bank questions or draft
- * groups a 409 MEDIA_IN_USE_ELSEWHERE says use the file (through a copy or a
- * share), or null for any other failure. Nothing of theirs is named.
+ * usedElsewhere reads a 409 MEDIA_IN_USE_ELSEWHERE: `count` is how many of
+ * other teachers' live bank questions or draft groups use the file (through
+ * a copy or a share), or undefined when `details.count` is missing or not a
+ * positive whole number, so no figure is made up. It is null for any other
+ * failure. Nothing of theirs is named.
  */
-function usedElsewhere(cause: unknown): number | null {
+function usedElsewhere(cause: unknown): Readonly<{ count?: number }> | null {
   if (!(cause instanceof ApiError) || cause.code !== "MEDIA_IN_USE_ELSEWHERE")
     return null;
   const count = cause.details?.["count"];
-  return typeof count === "number" && count > 0 ? count : 1;
+  return typeof count === "number" && Number.isInteger(count) && count > 0
+    ? { count }
+    : {};
 }
 
 /**
@@ -72,7 +76,9 @@ export function DeleteMediaDialog({
   function deleteError(): string | null {
     if (!remove.isError) return null;
     if (elsewhere !== null)
-      return t("media.deleteInUseElsewhere", { count: elsewhere });
+      return elsewhere.count === undefined
+        ? t("media.deleteInUseElsewhereUncounted")
+        : t("media.deleteInUseElsewhere", { count: elsewhere.count });
     return failureMessage(remove.error, t("media.deleteFailed"));
   }
 

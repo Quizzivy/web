@@ -43,9 +43,16 @@ export function getQuestion(id: string, signal?: AbortSignal) {
   );
 }
 
-export function createQuestion(body: QuestionValues) {
+/**
+ * ForTest names the test a new question is made for when the caller is not
+ * that test's owner: the question lands in the owner's bank, so the draft can
+ * hold it (T-R7.5's copy-on-add).
+ */
+export type ForTest = Readonly<{ forTestId?: string | undefined }>;
+
+export function createQuestion(body: QuestionValues, { forTestId }: ForTest = {}) {
   return api("post", "/teacher/questions", {
-    query: {},
+    query: forTestId === undefined ? {} : { forTestId },
     body: { ...body, level: body.level ?? null, skill: body.skill ?? null },
   });
 }
@@ -165,8 +172,11 @@ export function tagQuestions(questionIds: string[], tags: string[]) {
   return api("post", "/teacher/questions/tags", { body: { questionIds, tags } });
 }
 
-export function duplicateQuestion(id: string) {
-  return api("post", "/teacher/questions/{id}/duplicate", { path: { id }, query: {} });
+export function duplicateQuestion(id: string, { forTestId }: ForTest = {}) {
+  return api("post", "/teacher/questions/{id}/duplicate", {
+    path: { id },
+    query: forTestId === undefined ? {} : { forTestId },
+  });
 }
 
 export function deleteQuestion(id: string) {

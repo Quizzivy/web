@@ -30,7 +30,7 @@ import {
   type AdminQuestion,
 } from "@/features/question-bank/api";
 import { givenName } from "@/features/assignments/studentTime";
-import { AccessPill, copyQuestionSet } from "@/features/sharing";
+import { AccessPill, copyQuestionSet, staleOf, type Stale } from "@/features/sharing";
 import { QuestionEditorMenu } from "@/features/question-bank/components/QuestionEditorMenu";
 import { QuestionMediaField } from "@/features/question-bank/components/QuestionMediaField";
 import { ExplanationField } from "@/features/question-bank/components/ExplanationField";
@@ -65,20 +65,6 @@ const CARD =
 const GROUP_LABEL =
   "text-muted-fg text-[11.5px] font-semibold tracking-[0.06em] uppercase";
 const GRID = "grid items-start gap-4.5 @min-[900px]/qe:grid-cols-[minmax(0,1fr)_300px]";
-
-/** Stale is the last change a refused save names: who made it, when. */
-type Stale = Readonly<{ name: string | null; at: string }>;
-
-/** staleOf reads a 409 `STALE_WRITE`'s details: `updatedBy` (or null) and `updatedAt`. */
-function staleOf(cause: unknown): Stale | null {
-  if (!(cause instanceof ApiError) || cause.code !== "STALE_WRITE") return null;
-  const by = cause.details?.["updatedBy"] as { name?: unknown } | null | undefined;
-  const at = cause.details?.["updatedAt"];
-  return {
-    name: typeof by?.name === "string" ? by.name : null,
-    at: typeof at === "string" ? at : new Date().toISOString(),
-  };
-}
 
 type Access = AdminQuestion["access"];
 

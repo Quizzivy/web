@@ -1303,7 +1303,19 @@
       "inTest": "Đã có trong đề"
     },
     "noCorrectAnswer": "Chưa có đáp án đúng",
-    "groupNeedsWork": "Có câu chưa xong"
+    "groupNeedsWork": "Có câu chưa xong",
+    "access": {
+      "editRest": "Câu hỏi bạn thêm vào đề cũng nằm trong ngân hàng của {{name}}.",
+      "useLead": "Bạn xem được đề này nhưng không sửa được.",
+      "useRest": "Giao đề cho lớp của bạn, hoặc tạo bản sao để sửa."
+    },
+    "staleBy": {
+      "title": "{{name}} đã thay đổi đề này lúc {{time}}."
+    },
+    "revoked": {
+      "title": "{{name}} đã dừng chia sẻ đề này với bạn",
+      "body": "Thay đổi sau lần lưu gần nhất chưa được lưu. Bài giao bạn đã tạo từ đề này vẫn hoạt động bình thường."
+    }
   },
   "bank": {
     "filters": "Bộ lọc",
@@ -1891,7 +1903,8 @@
         "body": "Những gì bạn đã chọn cho bài giao này chưa được lưu. Bấm Lưu nháp để giữ lại.",
         "confirm": "Rời trang",
         "stay": "Ở lại"
-      }
+      },
+      "sharedBy": "Được chia sẻ bởi {{name}}"
     },
     "list": {
       "description": "Các đề bạn đã giao cho lớp và học viên.",

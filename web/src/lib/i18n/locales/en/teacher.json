@@ -1357,7 +1357,19 @@
       "inTest": "In this test"
     },
     "noCorrectAnswer": "No correct answer set",
-    "groupNeedsWork": "A question is not finished"
+    "groupNeedsWork": "A question is not finished",
+    "access": {
+      "editRest": "Questions you add also go into {{name}}’s bank.",
+      "useLead": "You can open this test but not change it.",
+      "useRest": "Assign it to your classes, or make a copy to edit."
+    },
+    "staleBy": {
+      "title": "{{name}} changed this test at {{time}}."
+    },
+    "revoked": {
+      "title": "{{name}} stopped sharing this test with you",
+      "body": "Changes after the last save were not saved. Assignments you already made from this test keep working."
+    }
   },
   "bank": {
     "filters": "Filters",
@@ -1984,7 +1996,8 @@
         "body": "What you chose for this assignment is not saved. Save a draft to keep it.",
         "confirm": "Leave",
         "stay": "Stay"
-      }
+      },
+      "sharedBy": "Shared by {{name}}"
     },
     "list": {
       "description": "Tests you have sent to classes and students.",

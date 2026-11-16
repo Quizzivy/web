@@ -489,9 +489,38 @@ function MediaRead({
   asset: MediaAsset;
   onRefresh?: (() => void) | undefined;
 }>) {
+  return (
+    <AssetRead
+      asset={asset}
+      policy={value.audio ?? DEFAULT_AUDIO_POLICY}
+      transcript={value.transcript}
+      alt={value.mediaAlt}
+      onRefresh={onRefresh}
+    />
+  );
+}
+
+/**
+ * AssetRead is a media file for a reader who may not change it: its name and
+ * facts, then a recording that plays with its listening settings in words
+ * and its transcript, or an image with its alternative text. A question's
+ * media and a group's recording (T-R7.18) are both drawn with it.
+ */
+export function AssetRead({
+  asset,
+  policy,
+  transcript,
+  alt,
+  onRefresh,
+}: Readonly<{
+  asset: MediaAsset;
+  policy: NonNullable<QuestionValues["audio"]>;
+  transcript?: string | null | undefined;
+  alt?: string | null | undefined;
+  onRefresh?: (() => void) | undefined;
+}>) {
   const { t } = useTranslation();
   const retry = onRefresh ? { onRetry: onRefresh } : {};
-  const policy = value.audio ?? DEFAULT_AUDIO_POLICY;
   const rules = [
     (policy.allowPause ?? true) ? "questionEditor.questionMedia.allowPause" : null,
     policy.allowSeek ? "questionEditor.questionMedia.allowSeek" : null,
@@ -533,13 +562,13 @@ function MediaRead({
               </li>
             ))}
           </ul>
-          {value.transcript == null || value.transcript.trim() === "" ? null : (
+          {transcript == null || transcript.trim() === "" ? null : (
             <div className="flex flex-col gap-1 border-t px-3 py-2.5">
               <p className="text-[12.5px] font-medium">
                 {t("questionEditor.questionMedia.transcript")}
               </p>
               <p className="text-sm leading-normal whitespace-pre-wrap">
-                {nfc(value.transcript)}
+                {nfc(transcript)}
               </p>
             </div>
           )}
@@ -548,13 +577,13 @@ function MediaRead({
         <div className="flex flex-col gap-2 border-t p-3">
           <img
             src={asset.url}
-            alt={value.mediaAlt ?? asset.originalFilename}
+            alt={alt ?? asset.originalFilename}
             className="bg-muted h-55 w-full rounded-[8px] object-contain"
             onError={onRefresh}
           />
-          {value.mediaAlt ? (
+          {alt ? (
             <p className="text-muted-fg text-xs leading-normal">
-              {t("questionEditor.questionMedia.altLabel")}: {nfc(value.mediaAlt)}
+              {t("questionEditor.questionMedia.altLabel")}: {nfc(alt)}
             </p>
           ) : null}
         </div>

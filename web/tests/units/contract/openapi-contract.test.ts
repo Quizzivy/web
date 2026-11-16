@@ -166,10 +166,14 @@ describe("a student's Messages carry nothing of the staff side (T-R7.10b, T-R7.2
   const STAFF_SCHEMAS = [
     "StaffMessage",
     "StaffMessageSender",
+    "StaffMessagePost",
     "SeenBy",
     "ContextEvent",
     "StaffThread",
+    "StaffThreadRef",
+    "StaffDirectThread",
     "StaffDirectThreadPeer",
+    "StaffClassThread",
     "StaffClassThreadClass",
   ];
   const student = ops.filter((o) => o.path.startsWith("/app/messages/"));
@@ -222,12 +226,18 @@ describe("a student's Messages carry nothing of the staff side (T-R7.10b, T-R7.2
     expect(Object.keys(sender.properties)).not.toContain("side");
   });
 
-  it("the walk finds the staff keys where they are, so it would find a leak", () => {
+  it("the walks find the staff keys and schemas where they are, so they would find a leak", () => {
     const find = (id: string) => ops.find((o) => o.op["operationId"] === id);
     const thread = find("getStaffDirectThread");
     const post = find("postStaffDirectMessage");
     expect(thread && successNames(thread.op)).toContain("contextEvents");
     expect(thread && successNames(thread.op)).toContain("side");
     expect(post && successNames(post.op)).toContain("side");
+    const reached = new Set<string>();
+    for (const schema of thread ? successSchemas(thread.op) : []) {
+      for (const s of schemasReached(schema)) reached.add(s);
+    }
+    expect(reached).toContain("StaffMessage");
+    expect(reached).toContain("ContextEvent");
   });
 });

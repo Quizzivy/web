@@ -330,6 +330,7 @@
   "messages": {
     "student": {
       "empty": "Chưa có tin nhắn. Thông báo của giáo viên sẽ hiện ở đây.",
+      "teacher": "Giáo viên của bạn",
       "teacherSub": "Giáo viên của bạn · {{classes}}",
       "former": "Giáo viên cũ",
       "channelSub": "Thông báo lớp",

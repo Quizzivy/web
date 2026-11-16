@@ -127,7 +127,7 @@ test("the passage is a drawer from the left that the student swipes open and clo
 }) => {
   await startGroupPaper(page);
   const first = previewQuestions[1]!;
-  const handle = page.getByRole("button", { name: "Mở ngữ liệu", exact: true });
+  const handle = page.getByRole("button", { name: "Mở bài đọc", exact: true });
   const passage = page.getByRole("heading", { name: previewGroup.stimuli[0]!.title });
   const prompt = page.getByText(first.prompt, { exact: true });
   const option = page.getByRole("radio", { name: first.options![0]!.text });
@@ -181,7 +181,7 @@ test("a vertical scroll over the question never opens the drawer", async ({ page
   await touchSwipe(page, [120, height * 0.7], [130, height * 0.3]);
   await expect(passage).not.toBeInViewport();
   await expect(
-    page.getByRole("button", { name: "Mở ngữ liệu", exact: true }),
+    page.getByRole("button", { name: "Mở bài đọc", exact: true }),
   ).toBeVisible();
 });
 
@@ -215,7 +215,7 @@ test("the recording's play button and Return to fullscreen keep the 44px floor",
   page,
 }) => {
   await startGroupPaper(page);
-  await page.getByRole("button", { name: "Mở ngữ liệu", exact: true }).tap();
+  await page.getByRole("button", { name: "Mở bài đọc", exact: true }).tap();
   const play = (await page
     .getByRole("group", { name: "Hội thoại mẫu", exact: true })
     .getByRole("button", { name: "Phát", exact: true })
@@ -238,7 +238,7 @@ test("a recording played inside the drawer keeps playing once it closes, and the
 }) => {
   test.setTimeout(60_000);
   await startGroupPaper(page, { lone: true });
-  const handle = page.getByRole("button", { name: "Mở ngữ liệu", exact: true });
+  const handle = page.getByRole("button", { name: "Mở bài đọc", exact: true });
   const card = page.getByRole("group", { name: "Hội thoại mẫu", exact: true });
   const position = () =>
     page.locator("audio").evaluate((element: HTMLAudioElement) => element.currentTime);
@@ -262,7 +262,7 @@ test("a recording left mid-play resumes where it stopped, and spends no second p
   test.setTimeout(60_000);
   const plays = await startGroupPaper(page, { lone: true });
   const footerOf = footer(page);
-  const handle = page.getByRole("button", { name: "Mở ngữ liệu", exact: true });
+  const handle = page.getByRole("button", { name: "Mở bài đọc", exact: true });
   const card = page.getByRole("group", { name: "Hội thoại mẫu", exact: true });
   const position = () =>
     page.locator("audio").evaluate((element: HTMLAudioElement) => element.currentTime);
@@ -291,7 +291,7 @@ test("a play whose place cannot be put back counts as a new play", async ({ page
   test.setTimeout(60_000);
   const plays = await startGroupPaper(page, { lone: true, seekable: false });
   const footerOf = footer(page);
-  const handle = page.getByRole("button", { name: "Mở ngữ liệu", exact: true });
+  const handle = page.getByRole("button", { name: "Mở bài đọc", exact: true });
   const card = page.getByRole("group", { name: "Hội thoại mẫu", exact: true });
   const position = () =>
     page.locator("audio").evaluate((element: HTMLAudioElement) => element.currentTime);

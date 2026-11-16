@@ -2,6 +2,7 @@ import { useMemo } from "react";
 import { useTranslation } from "react-i18next";
 import { GapChip, type GapMark } from "@/components/shared/content/GapChip";
 import { GroupMaterials } from "@/components/shared/content/GroupMaterials";
+import { studentGroupKind } from "@/components/shared/content/studentGroupKind";
 import {
   Card,
   CardContent,
@@ -61,6 +62,7 @@ export function ReviewGroup({
         </CardTitle>
         <CardDescription>
           {t("preview.sharedRange", {
+            kind: t(`preview.kind.${studentGroupKind(group)}`),
             from: numbers.get(group.questionIds[0] ?? ""),
             to: numbers.get(group.questionIds.at(-1) ?? ""),
           })}

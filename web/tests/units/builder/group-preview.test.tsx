@@ -260,7 +260,9 @@ it("does not resolve an unbound material asset or recording from its ID", () => 
     />,
   );
   expect(container.querySelector("audio")).toBeNull();
-  expect(screen.getByRole("status")).toHaveTextContent("Ngữ liệu chưa tải được");
+  expect(screen.getByRole("status")).toHaveTextContent(
+    "Bài đọc hoặc bài nghe chưa tải được",
+  );
   rerender(
     <StudentPreview
       questions={previewQuestions}
@@ -307,7 +309,9 @@ it("recovers failed signed images through the preview refresh action", async () 
     />,
   );
   fireEvent.error(screen.getByAltText("Sơ đồ mẫu"));
-  expect(screen.getByRole("status")).toHaveTextContent("Ngữ liệu chưa tải được");
+  expect(screen.getByRole("status")).toHaveTextContent(
+    "Bài đọc hoặc bài nghe chưa tải được",
+  );
   await userEvent.setup().click(screen.getByRole("button", { name: "Thử lại" }));
   expect(retry).toHaveBeenCalledOnce();
   expect(screen.getByAltText("Sơ đồ mẫu")).toBeVisible();

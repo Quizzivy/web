@@ -3,7 +3,7 @@ import {
   issueKey,
   questionSchema,
 } from "@/features/question-bank/questionSchema";
-import vi from "@/lib/i18n/locales/vi.json";
+import { vi } from "@tests/support/locales";
 
 function choice(
   type: "single_choice" | "multiple_choice" | "true_false",

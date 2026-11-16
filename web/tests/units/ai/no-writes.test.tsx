@@ -5,7 +5,7 @@ import { screen, within } from "@testing-library/react";
 import { http } from "msw";
 import AiPanel from "@/features/ai/components/AiPanel";
 import { api } from "@/lib/api/client";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
@@ -70,6 +70,9 @@ beforeEach(() => {
             payload: { prompt: "What are cities rethinking?" },
           },
         ],
+        questions: 3,
+        changedQuestions: 1,
+        capped: false,
         usage: { credits: 300, left: 300 },
       }),
     ),

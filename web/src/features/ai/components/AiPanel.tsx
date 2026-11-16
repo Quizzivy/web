@@ -24,6 +24,7 @@ import { credits } from "../credits";
 import type { AiUsage } from "../api";
 import {
   aiFailureOf,
+  unavailableText,
   refreshAfterAiFailure,
   settleAiUsage,
   type AiFailure,
@@ -318,7 +319,7 @@ function SetupFailure({
           </Button>
         }
       >
-        {t("ai.unavailable")}
+        {unavailableText(failure, t("ai.unavailable"))}
       </Callout>
     );
   if (failure?.kind === "error")

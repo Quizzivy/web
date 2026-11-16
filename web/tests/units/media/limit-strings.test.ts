@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import en from "@/lib/i18n/locales/en.json";
-import vi from "@/lib/i18n/locales/vi.json";
+import { en, vi } from "@tests/support/locales";
 import { MAX_AUDIO_BYTES, MAX_IMAGE_BYTES } from "@/features/media/limits";
 
 const megabytes = (bytes: number) => `${bytes / (1024 * 1024)} MB`;

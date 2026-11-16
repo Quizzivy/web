@@ -6,10 +6,13 @@ import type { AiBlock } from "./useAiAvailable";
 /**
  * AiFailure is how a failed AI call is drawn: the provider did not answer
  * (the warning callout and "Try again"), the teacher cannot use the
- * assistant now (the block sentence), or the server's own message.
+ * assistant now (the block sentence), or the server's own message. An
+ * unavailable call carries the server's sentence when it gave one: it tells
+ * an answer with nothing usable in it from a provider that did not answer
+ * (AIT-5, the owner's call of 2026-11-15).
  */
 export type AiFailure =
-  | { kind: "unavailable" }
+  | { kind: "unavailable"; message?: string }
   | { kind: "blocked"; block: AiBlock }
   | { kind: "error"; message: string };
 
@@ -27,9 +30,20 @@ export function aiFailureOf(cause: unknown, fallback: string): AiFailure {
       block: cause.details?.["scope"] === "pool" ? "pool" : "teacher",
     };
   if (cause.code === "AI_PAUSED") return { kind: "blocked", block: "paused" };
-  if (cause.code === "AI_UNAVAILABLE" || cause.status === 0 || cause.status >= 500)
-    return { kind: "unavailable" };
+  if (cause.code === "AI_UNAVAILABLE")
+    return cause.message.trim() === ""
+      ? { kind: "unavailable" }
+      : { kind: "unavailable", message: cause.message };
+  if (cause.status === 0 || cause.status >= 500) return { kind: "unavailable" };
   return { kind: "error", message: failureMessage(cause, fallback) };
+}
+
+/** unavailableText is the sentence of an unavailable call: the server's, or the web's own. */
+export function unavailableText(
+  failure: { message?: string | undefined },
+  fallback: string,
+): string {
+  return failure.message ?? fallback;
 }
 
 /**

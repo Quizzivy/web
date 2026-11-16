@@ -17,7 +17,7 @@ import { ApiError, failureMessage } from "@/lib/api/errors";
  * nothing is handed in yet, or the server's own message.
  */
 export type InsightsFailure =
-  | { kind: "unavailable" }
+  | { kind: "unavailable"; message?: string }
   | { kind: "blocked"; block: AiBlock }
   | { kind: "readOff" }
   | { kind: "nothingHandedIn" }
@@ -48,8 +48,11 @@ function failureOf(cause: unknown, fallback: string): InsightsFailure {
   if (cause.code === "AI_PAUSED") return { kind: "blocked", block: "paused" };
   if (cause.code === "AI_READ_OFF") return { kind: "readOff" };
   if (cause.status === 422) return { kind: "nothingHandedIn" };
-  if (cause.code === "AI_UNAVAILABLE" || cause.status === 0 || cause.status >= 500)
-    return { kind: "unavailable" };
+  if (cause.code === "AI_UNAVAILABLE")
+    return cause.message.trim() === ""
+      ? { kind: "unavailable" }
+      : { kind: "unavailable", message: cause.message };
+  if (cause.status === 0 || cause.status >= 500) return { kind: "unavailable" };
   return { kind: "error", message: failureMessage(cause, fallback) };
 }
 

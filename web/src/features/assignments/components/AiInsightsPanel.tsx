@@ -217,7 +217,7 @@ function InsightsFailureNote({
             </Button>
           }
         >
-          {t("ai.unavailable")}
+          {failure.message ?? t("ai.unavailable")}
         </Callout>
       );
     case "blocked":

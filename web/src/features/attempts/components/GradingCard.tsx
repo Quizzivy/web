@@ -223,7 +223,7 @@ export function GradingCard({
           />
         </div>
         {error !== null && !essay && (
-          <p role="alert" className="text-destructive text-sm">
+          <p role="alert" className="text-danger-ink text-sm">
             {error}
           </p>
         )}

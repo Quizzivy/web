@@ -183,7 +183,7 @@ for (const width of [320, 1440]) {
       page.getByRole("button", { name: "Tạm dừng", exact: true }),
     ).toBeVisible();
     await expect(
-      page.getByText("Đã nghe 3 lượt · Quy định 2 lượt cho cả nhóm"),
+      page.getByText("Đã nghe 3 lượt · Quy định 2 lượt cho cả bài nghe"),
     ).toBeVisible();
     expect(plays()).toBe(0);
     await checkLayout(page, `group-result-${width}`);
@@ -208,7 +208,7 @@ for (const width of [768, 1440]) {
     await checkLayout(page, `group-review-${width}`);
     await page.getByRole("button", { name: "Chấm theo câu hỏi", exact: true }).click();
     await expect(page.getByRole("heading", { name: previewGroup.title })).toBeVisible();
-    await expect(page.getByText("Ngữ liệu dùng chung · Câu 1–2")).toBeVisible();
+    await expect(page.getByText("Bài nghe · Câu 1–2")).toBeVisible();
     await expect(page.getByText(/^Đã nghe/)).toHaveCount(0);
     await page.getByText("Nội dung bài nghe", { exact: true }).click();
     await expect(page.getByText(transcript, { exact: true })).toBeVisible();

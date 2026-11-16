@@ -1,6 +1,9 @@
 import i18n from "i18next";
 import { initReactI18next } from "react-i18next";
-import vi from "./locales/vi.json";
+import common from "./locales/vi/common.json";
+import type { Strings, Surface } from "./surfaces";
+
+export { SURFACES, type Surface } from "./surfaces";
 
 /**
  * Vietnamese is the product language (§2). `vi` is the default and the
@@ -25,26 +28,20 @@ function initialLocale(): Locale {
   return DEFAULT_LOCALE;
 }
 
+/**
+ * Only the Vietnamese `common` strings are bundled: what the entry chunk and
+ * every screen may show. Each other file is a chunk of its own (T-R11.12a),
+ * so a student never downloads the teacher's or the Admin's strings, and a
+ * Vietnamese reader never downloads English.
+ */
 void i18n.use(initReactI18next).init({
-  resources: { vi: { translation: vi } },
+  resources: { vi: { translation: structuredClone(common) } },
   partialBundledLanguages: true,
   lng: initialLocale(),
   fallbackLng: DEFAULT_LOCALE,
   interpolation: { escapeValue: false }, // React already escapes
   returnNull: false,
 });
-
-/**
- * loadLocale makes `locale`'s strings available. `vi` is bundled; `en` is a
- * separate chunk fetched on first use, so its strings never weigh on a
- * Vietnamese reader's download. It resolves at once when the strings are
- * already loaded and rejects when the chunk cannot be fetched.
- */
-export async function loadLocale(locale: Locale): Promise<void> {
-  if (i18n.hasResourceBundle(locale, "translation")) return;
-  const strings = await import("./locales/en.json");
-  i18n.addResourceBundle(locale, "translation", strings.default, true, true);
-}
 
 let latest = 0;
 let chosen = i18n.language as Locale;
@@ -57,6 +54,95 @@ function choose(locale: Locale) {
 }
 
 i18n.on("languageChanged", (language: string) => choose(language as Locale));
+
+type Part = "common" | Surface;
+
+const files = import.meta.glob<Strings>(
+  ["./locales/*/*.json", "!./locales/vi/common.json"],
+  { import: "default" },
+);
+
+/** `<language>/<part>` of every file whose strings i18next holds. */
+const loaded = new Set<string>(["vi/common"]);
+const loading = new Map<string, Promise<void>>();
+/** The surfaces a route tree has asked for since the page loaded. */
+const surfaces = new Set<Surface>();
+
+/** A bundle removed from i18next takes its files with it. */
+function forgetDropped(locale: Locale) {
+  if (i18n.hasResourceBundle(locale, "translation")) return;
+  for (const part of [...loaded])
+    if (part.startsWith(`${locale}/`)) loaded.delete(part);
+  for (const part of [...loading.keys()])
+    if (part.startsWith(`${locale}/`)) loading.delete(part);
+}
+
+function loadPart(locale: Locale, part: Part): Promise<void> {
+  forgetDropped(locale);
+  const name = `${locale}/${part}`;
+  if (loaded.has(name)) return Promise.resolve();
+  let load = loading.get(name);
+  if (!load) {
+    const read =
+      name === "vi/common"
+        ? () => Promise.resolve(common)
+        : files[`./locales/${name}.json`]!;
+    // i18next merges later files into the objects it is given: a copy keeps
+    // the modules' own objects as the files are.
+    load = read().then((strings) => {
+      i18n.addResourceBundle(
+        locale,
+        "translation",
+        structuredClone(strings),
+        true,
+        true,
+      );
+      loaded.add(name);
+    });
+    const current = load;
+    // A failed fetch is tried again on the next call.
+    current.catch(() => {
+      if (loading.get(name) === current) loading.delete(name);
+    });
+    loading.set(name, load);
+  }
+  return load;
+}
+
+function partsNeeded(): Part[] {
+  return ["common", ...surfaces];
+}
+
+function isLoaded(locale: Locale): boolean {
+  forgetDropped(locale);
+  return partsNeeded().every((part) => loaded.has(`${locale}/${part}`));
+}
+
+/**
+ * loadLocale makes `locale`'s strings available: its `common` file and every
+ * surface already asked for. It resolves at once when they are loaded and
+ * rejects when one of them cannot be fetched.
+ */
+export async function loadLocale(locale: Locale): Promise<void> {
+  await Promise.all(partsNeeded().map((part) => loadPart(locale, part)));
+}
+
+/**
+ * loadSurface makes one surface's strings available before its route tree
+ * renders: in Vietnamese, which is every language's fallback, and in the
+ * language on screen or being switched to. It rejects only when the
+ * Vietnamese file cannot be fetched; a missing English file leaves the
+ * fallback showing, and a later switch to English tries it again.
+ */
+export async function loadSurface(surface: Surface): Promise<void> {
+  surfaces.add(surface);
+  const others = new Set<Locale>([i18n.language as Locale, chosen]);
+  others.delete(DEFAULT_LOCALE);
+  await Promise.all([
+    loadPart(DEFAULT_LOCALE, surface),
+    ...[...others].map((locale) => loadPart(locale, surface).catch(() => undefined)),
+  ]);
+}
 
 function apply(locale: Locale): Promise<void> {
   const changed = i18n.changeLanguage(locale);
@@ -87,10 +173,7 @@ export function subscribeChosenLocale(listener: () => void): () => void {
  * strings, which settles either way. A failed fetch renders the session in
  * the default language, and keeps the stored choice for the next load.
  */
-export const localeReady: Promise<void> | null = i18n.hasResourceBundle(
-  i18n.language,
-  "translation",
-)
+export const localeReady: Promise<void> | null = isLoaded(i18n.language as Locale)
   ? null
   : loadLocale(i18n.language as Locale).then(
       () => i18n.changeLanguage(i18n.language).then(() => undefined),
@@ -112,7 +195,7 @@ export function setLocale(locale: Locale): Promise<void> {
   } catch {
     // Preference is not persisted; the app still works.
   }
-  if (i18n.hasResourceBundle(locale, "translation")) return apply(locale);
+  if (isLoaded(locale)) return apply(locale);
   return loadLocale(locale).then(
     () => (request === latest ? apply(locale) : undefined),
     () => {

@@ -10,6 +10,7 @@ import { humanise, isGone, sentenceOf } from "@/features/audit/actions";
 import type { AuditEntry } from "@/features/audit/api";
 import { formatRelativeShort } from "@/lib/i18n/datetime";
 import { useLocale } from "@/lib/i18n/useLocale";
+import { actorName } from "@/features/audit/actorName";
 
 /**
  * RecentChanges is the Overview's newest audit entries, each as the actor and
@@ -54,7 +55,7 @@ export function RecentChanges({
       ) : (
         <ul>
           {entries.map((entry) => {
-            const name = entry.actor?.name ?? t("audit.system");
+            const name = actorName(entry, t);
             return (
               <li
                 key={entry.id}

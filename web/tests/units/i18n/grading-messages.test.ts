@@ -3,8 +3,7 @@ import { afterEach, beforeAll, expect, it } from "vitest";
 import { act, render, screen } from "@testing-library/react";
 import { useTranslation } from "react-i18next";
 import i18n, { setLocale } from "@/lib/i18n";
-import vi from "@/lib/i18n/locales/vi.json";
-import en from "@/lib/i18n/locales/en.json";
+import { vi, en } from "@tests/support/locales";
 
 const expected = {
   vi: {

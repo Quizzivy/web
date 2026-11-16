@@ -13,6 +13,9 @@ async function renderForgot() {
   const { default: ForgotPasswordPage } =
     await import("@/features/auth/pages/ForgotPasswordPage");
   const { queryWrapper } = await import("@tests/support/queryWrapper");
+  // The modules are fresh, i18n's included: the route awaits its strings, so does the test.
+  const { loadSurface } = await import("@/lib/i18n");
+  await loadSurface("auth");
   const router = createMemoryRouter(
     [
       { path: "/forgot-password", element: <ForgotPasswordPage /> },

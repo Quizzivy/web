@@ -12,11 +12,11 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AiPanelStack } from "@/features/ai/components/AiPanelStack";
 import type { AiFinding, AiGeneratedQuestion } from "@/features/ai/api";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
-import { aiError, aiOn, BASE, renderWithApp } from "./support";
+import { aiError, SAYS, aiOn, BASE, renderWithApp } from "./support";
 
 configure({ asyncUtilTimeout: 5000 });
 
@@ -240,7 +240,7 @@ describe("AiPanelStack", () => {
     expect(await screen.findByText(ai.finished.failed)).toBeVisible();
     await user.click(screen.getByRole("button", { name: ai.finished.open }));
     const dialog = await screen.findByRole("dialog");
-    expect(await within(dialog).findByText(ai.unavailable)).toBeVisible();
+    expect(await within(dialog).findByText(SAYS.AI_UNAVAILABLE)).toBeVisible();
   });
 
   it("says nothing for a run the teacher stopped", async () => {

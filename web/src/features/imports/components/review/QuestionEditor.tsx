@@ -44,6 +44,8 @@ import {
   ACCEPTED_LIMITS,
   addOption,
   changeType,
+  PASSAGE_MEMBER_TYPES,
+  passageTypeChange,
   clampAccepted,
   dropsAnswerData,
   EDITABLE_TYPES,
@@ -101,6 +103,7 @@ export function QuestionEditor({
   currentFindingId,
   readOnly,
   roleOf,
+  passageMember = false,
   onEdit,
   onAcknowledge,
   onLocate,
@@ -113,6 +116,8 @@ export function QuestionEditor({
   currentFindingId: string | null;
   readOnly: boolean;
   roleOf: (sourceId: string) => ImportSourceRole | null;
+  /** A passage's gap is bound to the question: it may take PASSAGE_MEMBER_TYPES only (web#71). */
+  passageMember?: boolean;
   onEdit: Edit;
   onAcknowledge: (findingId: string, on: boolean) => void;
   onLocate: (refs: readonly ImportSourceRef[]) => void;
@@ -126,9 +131,12 @@ export function QuestionEditor({
   const excluded = question.excluded !== undefined;
   const locked = readOnly || excluded;
 
+  const retype = (current: ImportDraftQuestion, type: QuestionType) =>
+    passageMember ? passageTypeChange(current, type) : changeType(current, type);
   const requestType = (type: QuestionType) => {
-    if (dropsAnswerData(question, changeType(question, type))) setPendingType(type);
-    else onEdit((current) => changeType(current, type));
+    if (passageMember && !PASSAGE_MEMBER_TYPES.has(type)) return;
+    if (dropsAnswerData(question, retype(question, type))) setPendingType(type);
+    else onEdit((current) => retype(current, type));
   };
 
   return (
@@ -221,6 +229,7 @@ export function QuestionEditor({
         <div className="grid grid-cols-[repeat(auto-fit,minmax(min(100%,200px),1fr))] gap-2.5">
           <TypeField
             question={question}
+            passageMember={passageMember}
             triggerRef={typeTrigger}
             onChange={requestType}
           />
@@ -243,7 +252,7 @@ export function QuestionEditor({
         onConfirm={() => {
           const type = pendingType;
           setPendingType(null);
-          if (type !== null) onEdit((current) => changeType(current, type));
+          if (type !== null) onEdit((current) => retype(current, type));
         }}
       />
     </div>
@@ -495,15 +504,18 @@ function RichField({
 
 function TypeField({
   question,
+  passageMember,
   triggerRef,
   onChange,
 }: Readonly<{
   question: ImportDraftQuestion;
+  passageMember: boolean;
   triggerRef: RefObject<HTMLButtonElement | null>;
   onChange: (type: QuestionType) => void;
 }>) {
   const { t } = useTranslation();
   const id = useId();
+  const hint = useId();
   return (
     <div className="flex flex-col gap-1.5">
       <FieldLabel
@@ -515,7 +527,12 @@ function TypeField({
         value={question.type}
         onValueChange={(value) => onChange(value as QuestionType)}
       >
-        <SelectTrigger ref={triggerRef} id={id} className="w-full">
+        <SelectTrigger
+          ref={triggerRef}
+          id={id}
+          className="w-full"
+          aria-describedby={passageMember ? hint : undefined}
+        >
           <SelectValue />
         </SelectTrigger>
         <SelectContent>
@@ -526,13 +543,26 @@ function TypeField({
               </SelectItem>
             ) : null}
             {EDITABLE_TYPES.map((type) => (
-              <SelectItem key={type} value={type}>
+              <SelectItem
+                key={type}
+                value={type}
+                disabled={
+                  passageMember &&
+                  type !== question.type &&
+                  !PASSAGE_MEMBER_TYPES.has(type)
+                }
+              >
                 {t(`imports.type.${type}`)}
               </SelectItem>
             ))}
           </SelectGroup>
         </SelectContent>
       </Select>
+      {passageMember ? (
+        <p id={hint} className="text-muted-fg m-0 text-xs">
+          {t("imports.review.passageMemberType")}
+        </p>
+      ) : null}
     </div>
   );
 }

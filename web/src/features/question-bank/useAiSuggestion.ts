@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import type { AiUsage } from "@/features/ai/api";
 import {
   aiFailureOf,
+  unavailableText,
   refreshAfterAiFailure,
   settleAiUsage,
   type AiFailure,
@@ -30,7 +31,7 @@ export type AiSuggestionStage<R> =
 export function aiFailureText(failure: AiFailure, t: TFunction): string {
   switch (failure.kind) {
     case "unavailable":
-      return t("ai.unavailable");
+      return unavailableText(failure, t("ai.unavailable"));
     case "blocked":
       return t(AI_BLOCK_KEYS[failure.block]);
     case "error":

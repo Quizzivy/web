@@ -59,6 +59,11 @@ const MARK: Record<
     label: "result.verdict.banded",
   },
   waiting: { icon: Hourglass, tone: "bg-warning-soft text-warning-ink", label: null },
+  removed: {
+    icon: Minus,
+    tone: "bg-muted text-muted-fg",
+    label: "result.verdict.removed",
+  },
   unknown: { icon: Minus, tone: "bg-muted text-muted-fg", label: null },
 };
 
@@ -193,7 +198,7 @@ function points(
   t: TFunction,
 ): string | null {
   if (mark === "waiting") return t("result.waiting");
-  if (mark === "unknown") return null;
+  if (mark === "unknown" || mark === "removed") return null;
   if (question.band != null)
     return t("result.band", { band: formatBand(question.band, locale) });
   const n = new Intl.NumberFormat(locale, { maximumFractionDigits: 2 });

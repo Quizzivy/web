@@ -18,6 +18,9 @@ export const ADMIN_PATHS = {
   settings: "/admin/settings",
 } as const;
 
+/** ADMIN_EXPORTS is where an export's page lives, beneath its id; it belongs to System settings in the sidebar. */
+export const ADMIN_EXPORTS = "/admin/exports";
+
 /** SETTINGS_SECTIONS are the sections the System settings page takes after its path. */
 export const SETTINGS_SECTIONS: ReadonlySet<string> = new Set([
   "organization",

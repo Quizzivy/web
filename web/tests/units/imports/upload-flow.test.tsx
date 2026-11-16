@@ -439,7 +439,7 @@ describe("starting a Word import", () => {
     ]);
     expect(within(steps).getByLabelText("Tên đề")).toBeInTheDocument();
     expect(
-      within(steps).getByText(/^Hệ thống tự nhận diện phần, nhóm câu/),
+      within(steps).getByText(/^Hệ thống tự nhận diện phần, bài đọc, bài điền từ/),
     ).toHaveClass("text-pretty");
     expect(within(steps).getByText("Tự động nhận diện")).toBeInTheDocument();
     expect(within(steps).getByRole("button", { name: "Bắt đầu xử lý" })).toBeDisabled();

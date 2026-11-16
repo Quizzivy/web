@@ -5,7 +5,7 @@ import { useState } from "react";
 import AiPanel, { type AiPanelRequest } from "@/features/ai/components/AiPanel";
 import type { AiCleanupResult, AiVariantChange } from "@/features/ai/api";
 import type { CleanupContext } from "@/features/ai/kinds/cleanup";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
@@ -83,6 +83,36 @@ afterEach(() => {
 });
 
 describe("the Variant panel", () => {
+  // VR-5: changes past the 300th were left out, and the panel says so.
+  it("says when the pass left changes past 300 out", async () => {
+    server.use(
+      http.post(`${BASE}/teacher/ai/tests/:id/variant`, () =>
+        contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
+          changes,
+          questions: 400,
+          changedQuestions: 300,
+          capped: true,
+          usage: { credits: 2600, left: 15000 },
+        }),
+      ),
+    );
+    const { user } = renderWithApp(
+      <Closable
+        request={{
+          kind: "variant",
+          context: { testId: TEST_ID, title: "Unit 5", save: vi.fn() },
+        }}
+      />,
+    );
+    const dialog = await screen.findByRole("dialog");
+    await user.click(within(dialog).getByRole("button", { name: ai.variant.run }));
+    expect(
+      await within(dialog).findByText(
+        "Đã đổi 300/400 câu, 100 câu giữ nguyên. Chỉ 300 thay đổi đầu tiên được đưa vào; các thay đổi sau đó không được áp dụng.",
+      ),
+    ).toBeVisible();
+  });
+
   it("asks for the changes it was given, and saves the kept ones as a new draft test", async () => {
     let body: unknown;
     server.use(
@@ -90,6 +120,9 @@ describe("the Variant panel", () => {
         body = await request.json();
         return contractJson("/teacher/ai/tests/{id}/variant", "post", 200, {
           changes,
+          questions: 3,
+          changedQuestions: 2,
+          capped: false,
           usage: { credits: 2600, left: 15000 },
         });
       }),
@@ -116,6 +149,9 @@ describe("the Variant panel", () => {
     expect(before).toHaveClass("line-through");
     expect(body).toEqual({ changes: ["reword", "reorder"], difficulty: "harder" });
     expect(within(dialog).getByText(ai.variant.kinds.reorder)).toBeVisible();
+    // VR-1: how many questions changed and how many stayed.
+    expect(within(dialog).getByText("Đã đổi 2/3 câu, 1 câu giữ nguyên.")).toBeVisible();
+    expect(within(dialog).queryByText(/Chỉ 300 thay đổi đầu tiên/)).toBeNull();
     expect(within(dialog).getByText("Câu 3")).toBeVisible();
 
     await user.click(within(dialog).getAllByRole("checkbox", { name: ai.keep })[1]!);

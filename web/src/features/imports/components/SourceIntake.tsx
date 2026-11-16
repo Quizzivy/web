@@ -252,7 +252,7 @@ export function SourceIntake({
   const footer = (
     <>
       {intake.error === null ? null : (
-        <p role="alert" className="text-destructive text-sm">
+        <p role="alert" className="text-danger-ink text-sm">
           {intake.error}
         </p>
       )}

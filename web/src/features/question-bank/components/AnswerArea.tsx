@@ -89,6 +89,11 @@ function AnswerBlock({
             rubric={value.rubric ?? []}
             onChange={(rubric) => onChange({ ...value, rubric })}
           />
+          <WordLimitField
+            essay
+            value={value.essayMaxWords ?? null}
+            onChange={(essayMaxWords) => onChange({ ...value, essayMaxWords })}
+          />
         </div>
       );
     case "fill_blank":

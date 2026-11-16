@@ -1,5 +1,6 @@
 import { useMemo, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
+import { importGroupName } from "../../groupName";
 import { CircleCheck, FileCog } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -439,11 +440,7 @@ function GroupPanel({
   return (
     <div className="flex flex-col gap-2.5 rounded-xl border border-dashed p-2.5">
       <div className="flex flex-col gap-1.5 px-1">
-        <span className="text-meta font-medium">
-          {group.label
-            ? t("imports.review.groupLabel", { label: group.label })
-            : t("imports.review.group")}
-        </span>
+        <span className="text-meta font-medium">{importGroupName(group, t)}</span>
         {group.instructions ? (
           <p className="text-muted-fg m-0 text-sm whitespace-pre-wrap">
             {group.instructions}

@@ -291,7 +291,7 @@ export function GradingAnswerCard({
               </label>
             )}
             {fieldError !== null && (
-              <p role="alert" className="text-destructive text-sm">
+              <p role="alert" className="text-danger-ink text-sm">
                 {fieldError}
               </p>
             )}

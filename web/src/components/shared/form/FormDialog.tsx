@@ -297,9 +297,8 @@ export function FormDialog<V extends FormValues>({
           aria-disabled={pending || !valid || undefined}
           className={cn(
             "text-ui h-9 px-4 leading-normal shadow-none",
-            danger
-              ? "bg-danger text-primary-fg hover:bg-danger/90 aria-disabled:bg-danger/50 aria-disabled:text-danger-ink aria-disabled:hover:bg-danger/50"
-              : "aria-disabled:bg-primary/55 aria-disabled:hover:bg-primary/55",
+            // The destructive variant draws its own colours, paused ones included: its label reads 5.37:1.
+            !danger && "aria-disabled:bg-primary/55 aria-disabled:hover:bg-primary/55",
           )}
         >
           {typeof submitLabel === "function" ? submitLabel(values) : submitLabel}

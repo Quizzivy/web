@@ -98,7 +98,7 @@ for (const width of [768, 1440]) {
     const material = frame.getByRole("heading", {
       name: previewGroup.stimuli[0]!.title,
     });
-    const handle = frame.getByRole("button", { name: "Mở ngữ liệu", exact: true });
+    const handle = frame.getByRole("button", { name: "Mở bài đọc", exact: true });
     const wideFrame = (await frame.boundingBox())!.width >= 768;
     if (wideFrame) {
       await expect(material).toBeVisible();

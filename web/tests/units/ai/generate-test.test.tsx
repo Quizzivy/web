@@ -6,7 +6,7 @@ import AiPanel from "@/features/ai/components/AiPanel";
 import type { AiGeneratedQuestion } from "@/features/ai/api";
 import { AiWriteError } from "@/features/ai/kind";
 import type { AiSection, GenerateContext } from "@/features/ai/kinds/generate";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";
@@ -254,7 +254,9 @@ describe("Generate for the whole test", () => {
     await user.clear(reading);
     await user.type(reading, "2");
     expect(
-      within(rows[1]!).getByText("1 bài đọc × 2 câu = 2 câu, mỗi bài vào nhóm của nó"),
+      within(rows[1]!).getByText(
+        "1 bài đọc × 2 câu = 2 câu, mỗi câu vào bài đọc của nó",
+      ),
     ).toBeVisible();
     const grammarCount = within(rows[0]!).getByRole("textbox", {
       name: `${ai.generate.planCount} · Ngữ pháp`,

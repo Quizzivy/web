@@ -24,6 +24,8 @@ export const MAX_RUBRIC_LABEL = 80;
 export const MIN_SELECT_COUNT = 2;
 export const MAX_SELECT_COUNT = 7;
 export const MAX_WORDS_LIMIT = 100;
+/** ESSAY_MAX_WORDS_LIMIT is the contract's bound on an essay's word limit (`EssayMaxWords`). */
+export const ESSAY_MAX_WORDS_LIMIT = 1000;
 
 /** Form input validation for §7's question editor. */
 const audioPolicySchema = z.object({
@@ -148,6 +150,7 @@ export const questionSchema = z
     sampleAnswer: z.string().nullable(),
     selectCount: z.number().int().nullable().exactOptional(),
     maxWords: z.number().int().nullable().exactOptional(),
+    essayMaxWords: z.number().int().nullable().exactOptional(),
     matchAllowReuse: z.boolean().nullable().exactOptional(),
     matchItems: z.array(matchItemSchema).exactOptional(),
     rubric: z.array(rubricCriterionSchema).exactOptional(),
@@ -272,6 +275,7 @@ type StructureInput = Pick<
   | "prompt"
   | "selectCount"
   | "maxWords"
+  | "essayMaxWords"
   | "matchAllowReuse"
   | "matchItems"
   | "rubric"
@@ -308,7 +312,8 @@ function validateStructure(value: StructureInput, context: z.RefinementCtx) {
 /**
  * validateTypeFields holds each R6 setting to the one type it belongs to and
  * to the bounds the server's domain holds it to: "choose exactly N" on a
- * multiple choice, the word limit on a short answer, the reuse switch on a
+ * multiple choice, the word limit on a short answer and an essay's own on an
+ * essay (`essayMaxWords`), the reuse switch on a
  * matching question (which needs it) and the rubric on an essay.
  */
 function validateTypeFields(
@@ -320,6 +325,8 @@ function validateTypeFields(
     else validateSelectCount(value.selectCount, value.options, issue);
   }
   if (value.maxWords != null) validateMaxWords(value.type, value.maxWords, issue);
+  if (value.essayMaxWords != null)
+    validateEssayMaxWords(value.type, value.essayMaxWords, issue);
   if (value.type === "matching" && value.matchAllowReuse == null)
     issue("matchAllowReuse", "matchReuseRequired");
   if (value.type !== "matching") {
@@ -328,6 +335,16 @@ function validateTypeFields(
   }
   if (value.type === "essay") validateRubric(value.rubric ?? [], issue);
   else if (value.rubric?.length) issue("rubric", "unexpectedTypeField");
+}
+
+function validateEssayMaxWords(
+  type: QuestionType,
+  limit: number,
+  issue: (path: string, key: string) => void,
+) {
+  if (type !== "essay") issue("essayMaxWords", "unexpectedTypeField");
+  else if (!Number.isInteger(limit) || limit < 1 || limit > ESSAY_MAX_WORDS_LIMIT)
+    issue("essayMaxWords", "essayMaxWordsRange");
 }
 
 function validateMaxWords(

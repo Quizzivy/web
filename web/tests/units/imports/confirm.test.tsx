@@ -227,8 +227,10 @@ describe("the summary", () => {
       within(included).getByText("Câu 3 đã loại: Trùng câu 1"),
     ).toBeInTheDocument();
 
-    const structure = row("Phần và nhóm câu");
-    expect(within(structure).getByText("2 phần · 1 nhóm")).toBeInTheDocument();
+    const structure = row("Phần, bài đọc và bài điền từ");
+    expect(
+      within(structure).getByText("2 phần · 1 bài đọc, điền từ"),
+    ).toBeInTheDocument();
     expect(
       within(structure).getByText("Câu 4 giữ đoạn văn với 2 chỗ trống"),
     ).toBeInTheDocument();
@@ -337,7 +339,9 @@ describe("the summary", () => {
       },
     };
     await renderConfirm();
-    expect(within(row("Phần và nhóm câu")).queryByText(/giữ đoạn văn/)).toBeNull();
+    expect(
+      within(row("Phần, bài đọc và bài điền từ")).queryByText(/giữ đoạn văn/),
+    ).toBeNull();
   });
 
   it("says there is nothing to score when no question is included", async () => {

@@ -358,7 +358,7 @@ describe("the engine's preview", () => {
     const sheet = await screen.findByRole("dialog", { name: "Danh sách câu" });
     expect(container.firstElementChild).toContainElement(sheet);
     await user.click(within(sheet).getByRole("button", { name: /^Câu 3/ }));
-    expect(await screen.findByRole("button", { name: "Mở ngữ liệu" })).toBeVisible();
+    expect(await screen.findByRole("button", { name: "Mở bài đọc" })).toBeVisible();
     expectNoSideEffect();
   });
 });

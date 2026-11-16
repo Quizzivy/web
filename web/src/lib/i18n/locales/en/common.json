@@ -1,0 +1,525 @@
+{
+  "app": {
+    "name": "Quizzivy"
+  },
+  "common": {
+    "loading": "Loading…",
+    "retry": "Retry",
+    "cancel": "Cancel",
+    "close": "Close",
+    "back": "Back",
+    "signOut": "Sign out",
+    "darkMode": "Dark mode",
+    "lightMode": "Light mode",
+    "language": "Language",
+    "comingSoon": "This section is built in a later phase.",
+    "saving": "Saving…",
+    "copy": "Copy",
+    "copied": "Copied",
+    "requestId": "Request id",
+    "timeOf": "{{label}} — time",
+    "saveChanges": "Save changes",
+    "showPassword": "Show password",
+    "hidePassword": "Hide password",
+    "agoJustNow": "just now",
+    "selectedCount": "{{count}} items selected",
+    "bulkDelete": "Delete selected items",
+    "deleteAssignmentsBody": "Only draft or closed assignments without attempts can be deleted. This cannot be undone."
+  },
+  "api": {
+    "unavailable": "Can't reach the server. Try again.",
+    "failed": "Something went wrong. Try again."
+  },
+  "error": {
+    "title": "Something went wrong",
+    "body": "The problem is on our side, not something you did. If you were taking a test, your saved answers are safe.",
+    "reload": "Reload the page",
+    "home": "Go to home",
+    "errorId": "Error ID",
+    "copyFailed": "Couldn't copy. Select the ID and copy it.",
+    "footnote": "If it keeps happening, send the error ID to your teacher."
+  },
+  "notFound": {
+    "title": "This page doesn’t exist",
+    "body": "The link may be old, or the test or class it pointed to was removed.",
+    "action": "Go to home",
+    "back": "Go back",
+    "footnote": "Got here from a teacher’s link? Ask them to send it again."
+  },
+  "forbidden": {
+    "title": "You don’t have access to this page",
+    "body": "Your account can’t open this page. Nothing is wrong with your account.",
+    "signedIn": "Signed in",
+    "home": "Go to my home",
+    "switchAccount": "Sign in with another account",
+    "signIn": "Sign in",
+    "footnote": "Think you should have access? Ask the centre."
+  },
+  "nav": {
+    "tests": "Tests",
+    "assignments": "Assignments",
+    "classes": "Classes",
+    "settings": "Settings",
+    "mainNavigation": "Main navigation",
+    "account": "{{name}}'s account"
+  },
+  "role": {
+    "builtin": {
+      "admin": "Admin",
+      "teacher": "Teacher",
+      "assistant": "Assistant",
+      "student": "Student"
+    },
+    "builtinDescription": {
+      "admin": "Runs the centre. Manages people and settings.",
+      "teacher": "Builds tests, runs classes, grades.",
+      "assistant": "Helps teachers grade and take attendance.",
+      "student": "Takes tests and sees their own results."
+    }
+  },
+  "teacherShell": {
+    "workspace": "Teacher workspace"
+  },
+  "adminShell": {
+    "workspace": "Admin console",
+    "nav": {
+      "api": "API reference"
+    },
+    "account": {
+      "settings": "System settings",
+      "password": "Change password"
+    }
+  },
+  "student": {
+    "myAssignments": "My assignments",
+    "score": "{{earned}}/{{total}}"
+  },
+  "changePassword": {
+    "current": "Current password",
+    "new": "New password",
+    "submit": "Change password",
+    "errors": {
+      "tooShort": "The new password needs at least 8 characters.",
+      "numberOrSymbol": "The new password needs a number or a symbol.",
+      "unchanged": "The new password must be different from the current one."
+    }
+  },
+  "login": {
+    "googleUnavailable": "Google sign-in is not available right now.",
+    "backToSignIn": "Back to sign in"
+  },
+  "settings": {
+    "fullName": "Full name",
+    "email": "Email",
+    "password": "Password",
+    "passwordChanged": "Password changed. Other devices have been signed out.",
+    "googleOnlyPasswordsOff": "You sign in with Google only, so Google cannot be unlinked yet.",
+    "setPasswordLink": {
+      "send": "Email me a link to set a password",
+      "sendAgain": "Send the link again",
+      "sending": "Sending…",
+      "sent": "We sent a link to {{email}}. It works once and expires in 24 hours."
+    },
+    "linkGoogle": "Link Google",
+    "locale": {
+      "vi": "Tiếng Việt",
+      "en": "English"
+    },
+    "account": "Account",
+    "role": "Role",
+    "signInWith": "Sign in",
+    "signInPassword": "Password",
+    "signInGoogle": "Google",
+    "classCount": "Classes",
+    "errors": {
+      "nameRequired": "Enter your name.",
+      "nameTooLong": "A name is at most 200 characters."
+    },
+    "navigation": "Settings section",
+    "preferenceSaving": "Saving preference…",
+    "preferenceSaved": "Preference saved.",
+    "preferenceFailed": "Could not save preference.",
+    "accountZoneUnsupported": "This browser does not support your account time zone. Times are temporarily shown in Vietnam time."
+  },
+  "media": {
+    "dropHint": "mp3 and m4a only, up to 50 MB and 5 minutes",
+    "play": "Play",
+    "pause": "Pause",
+    "resume": "Resume",
+    "playAgain": "Play again",
+    "playOf": "Play {{n}} of {{limit}}",
+    "playN": "Play {{n}}",
+    "playedOf": "Played {{played}}/{{limit}} times",
+    "statusReady": "Press play when you are ready.",
+    "statusReadyNoPause": "Press play when you are ready. It can’t be paused once it starts.",
+    "statusPlaying": "Playing",
+    "statusPlayingNoPause": "Playing · this recording can’t be paused",
+    "statusPaused": "Paused",
+    "statusFinished": "Finished",
+    "statusFinishedLeft_one": "Finished · {{count}} play left",
+    "statusFinishedLeft_other": "Finished · {{count}} plays left",
+    "statusUsedAll_one": "You have used your {{count}} play.",
+    "statusUsedAll_other": "You have used all {{count}} plays.",
+    "extraPlays": "You can keep listening. Additional plays are recorded for your teacher to review.",
+    "seek": "Seek",
+    "expired": "This preview link has expired. Reload to listen.",
+    "playBlocked": "Your browser did not start the audio. Press play again; if it still does not play, check this site's sound permission."
+  },
+  "questionEditor": {
+    "acceptedAnswers": "Accepted answers",
+    "removeBlank": "Remove blank",
+    "errors": {
+      "optionContent": "Option formatting is invalid or does not match its text.",
+      "questionContent": "Rich content is invalid or does not match its text."
+    }
+  },
+  "tests": {
+    "title": "Title",
+    "edit": "Edit",
+    "publishedBy": "{{name}}",
+    "summarySoFar": "{{count}} tests loaded",
+    "tagFilter": "Tags",
+    "skill": {
+      "grammar": "Grammar",
+      "vocabulary": "Vocabulary",
+      "reading": "Reading",
+      "listening": "Listening",
+      "writing": "Writing",
+      "speaking": "Speaking"
+    }
+  },
+  "preview": {
+    "materialUnavailable": "The passage or recording did not load. Reload the preview to try again.",
+    "sharedRange": "{{kind}} · Questions {{from}}–{{to}}",
+    "goToQuestion": "Gap {{label}} — go to question {{n}}",
+    "kind": {
+      "reading": "Passage",
+      "cloze": "Cloze",
+      "listening": "Recording"
+    }
+  },
+  "assignments": {
+    "pickTest": "Choose a test and version",
+    "pickTestHint": "Only published tests can be assigned. Open one to pick a version.",
+    "versionMeta": "{{questions}} questions · {{points}} points · {{audio}} listening",
+    "use": "Use this version",
+    "noCandidates": "Nothing left to choose.",
+    "removeTarget": "Remove {{name}}",
+    "rosterNote": "A student already in one of the chosen classes is not assigned twice.",
+    "duration": "Time allowed",
+    "attemptCount": "{{count}} attempts",
+    "timesAway": "{{count}} times",
+    "upTo": "up to {{count}}",
+    "rules": {
+      "moment": "{{date}}, {{time}}",
+      "availableUntil": "Available until {{when}}.",
+      "availableUntilToday": "Available until today {{time}}.",
+      "opens": "Opens {{from}} – {{to}}.",
+      "opensSameDay": "Opens {{date}}, {{from}} – {{to}}.",
+      "opensToday": "Opens today, {{from}} – {{to}}.",
+      "timer": "The timer starts when you press Start and does not pause, even if you close the page.",
+      "timerRunning": "The timer is running and does not pause, even if you close the page.",
+      "fullscreen": "The test runs in fullscreen.",
+      "fullscreenUnsupported": "This test asks for fullscreen, but this browser has none. You can take it as normal.",
+      "noCopyPaste": "Copy and paste are turned off.",
+      "leaving": {
+        "recorded": "Leaving the test is recorded.",
+        "limit": {
+          "flag_one": "You can leave the test {{count}} time. After that, your teacher is told.",
+          "flag_other": "You can leave the test {{count}} times. After that, your teacher is told.",
+          "warn_one": "You can leave the test {{count}} time. After that, you will get a warning.",
+          "warn_other": "You can leave the test {{count}} times. After that, you will get a warning.",
+          "auto_submit_one": "You can leave the test {{count}} time. After that, your test is submitted.",
+          "auto_submit_other": "You can leave the test {{count}} times. After that, your test is submitted."
+        },
+        "none": {
+          "flag": "Leaving the test is not allowed. Your teacher will be told.",
+          "warn": "Leaving the test is not allowed. You will get a warning.",
+          "auto_submit": "Leaving the test is not allowed. Your test will be submitted."
+        }
+      },
+      "score": {
+        "only": "You will see your score after submitting.",
+        "answers": "You will see your score and the correct answers after submitting.",
+        "explanations": "You will see your score and explanations after submitting.",
+        "all": "You will see your score, the correct answers and explanations after submitting."
+      },
+      "scoreAfterClose": {
+        "only": "You will see your score after the test closes.",
+        "answers": "You will see your score and the correct answers after the test closes.",
+        "explanations": "You will see your score and explanations after the test closes.",
+        "all": "You will see your score, the correct answers and explanations after the test closes."
+      },
+      "audioLimited_one": "Each recording has its own limit, starting at {{count}} play. Additional plays are recorded.",
+      "audioLimited_other": "Each recording has its own limit, starting at {{count}} plays. Additional plays are recorded.",
+      "audioShared": "Questions sharing a recording share its allowance. Changing questions or reloading does not reset it.",
+      "audioUnlimited": "The test has listening questions; you may replay them without limit."
+    },
+    "latestVersion": "latest: v{{version}}",
+    "panel": {
+      "groups": {
+        "pending": "Awaiting grading",
+        "flagged": "Needs review",
+        "inProgress": "In progress",
+        "notStarted": "Not submitted",
+        "done": "Graded",
+        "voided": "Voided"
+      }
+    },
+    "defaultVersion": "Default version: v{{version}}"
+  },
+  "sharedReview": {
+    "playbackHint": "Playback here does not add to the attempt’s play count.",
+    "count": "Played {{used}} times · Allowed for the recording: {{limit}}",
+    "unlimitedCount": "Played {{used}} times · Unlimited",
+    "transcript": "Recording transcript"
+  },
+  "takeTest": {
+    "imageUnavailable": "This image did not load. Try again.",
+    "openPassage": "Open the passage",
+    "openRecording": "Open the audio",
+    "drawerHint": "Swipe left to go back to the question",
+    "drawerClose": "Close",
+    "tipPassage": "The passage is here. Swipe right or tap to read it.",
+    "tipRecording": "The recording is here. Swipe right or tap to open it.",
+    "sharedAudioLabel": "Recording {{n}}",
+    "sharedAudioScope": "These questions share this recording’s play allowance.",
+    "sharedAudioPending": "Listening activity is waiting to sync.",
+    "answerOptions": "Answer options",
+    "blankLabel": "Blank {{n}}",
+    "blankPlaceholder": "type here",
+    "sentenceGap": "blank",
+    "yourAnswer": "Your answer",
+    "answerPlaceholder": "Type your answer",
+    "wordCount_one": "{{count}} word",
+    "wordCount_other": "{{count}} words",
+    "wordLimit_one": "{{words}} of {{count}} word",
+    "wordLimit_other": "{{words}} of {{count}} words",
+    "wordLimitOver_one": "{{words}} of {{count}} word · too many",
+    "wordLimitOver_other": "{{words}} of {{count}} words · too many",
+    "wordLimitHintOne": "Write ONE WORD.",
+    "wordLimitHint": "Write NO MORE THAN {{words}} WORDS.",
+    "yourEssay": "Your essay",
+    "essayPlaceholder": "Write your essay",
+    "leave": "Leave test",
+    "allSaved": "All answers saved",
+    "saving": "Saving…",
+    "saveOffline": "You are offline. Saving when you reconnect.",
+    "saveFailed": "Could not save. Trying again…",
+    "timeLeft": "Time left",
+    "minutesLeft_one": "{{count}} minute left",
+    "minutesLeft_other": "{{count}} minutes left",
+    "previous": "Previous",
+    "next": "Next",
+    "previousQuestion": "Previous question",
+    "nextQuestion": "Next question",
+    "finish": "Finish",
+    "lockedSuperseded": "This attempt is open on another device. You can no longer edit it here.",
+    "lockedDeadline": "Time is up.",
+    "lockedClosed": "This attempt has ended.",
+    "manualGrading": "graded by your teacher",
+    "points_one": "{{points}} point",
+    "points_other": "{{points}} points",
+    "perBlank": "{{points}} per blank",
+    "audioLabel": "Question audio",
+    "imageLabel": "Question image",
+    "flagOff": "Flag for review",
+    "flagQuestion": "Flag question {{n}}",
+    "flaggedQuestion": "Question {{n}} flagged",
+    "flagOn": "Flagged",
+    "navTitle": "Questions",
+    "legendAnswered": "Answered",
+    "legendFlagged": "Flagged",
+    "legendOneScreen": "One screen",
+    "dotLabel": "Question {{n}}",
+    "dotAnswered": "answered",
+    "dotFlagged": "flagged",
+    "dotInRun": "cloze questions {{from}} to {{to}}",
+    "dotCurrent": "current",
+    "sectionsRail": "Sections",
+    "railDone": "{{done}} / {{total}}",
+    "legendPartly": "Partly",
+    "dotPartly": "partly answered",
+    "keysHint": "to move between questions · A–D to choose an answer",
+    "keysHintShort": "to move · A–D to choose",
+    "keysHintMove": "to move",
+    "gridLabel": "Question {{no}} · {{answered}} of {{total}} done",
+    "gridLabelShort": "{{no}} · {{answered}}/{{total}}",
+    "submit": "Submit",
+    "questionOf": "Question {{n}} of {{total}}",
+    "questionOfType": "Question {{n}} of {{total}} · {{type}}",
+    "type": {
+      "single_choice": "Single choice",
+      "multiple_choice": "Multiple choice",
+      "true_false": "True / False",
+      "fill_blank": "Fill in the blank",
+      "short_answer": "Short answer",
+      "tfng": "True / False / Not given",
+      "matching": "Matching",
+      "essay": "Essay"
+    },
+    "blankRuleInsensitive": "Capital letters do not matter. Spell it exactly.",
+    "blankRuleSensitive": "Capital letters matter. Spell it exactly.",
+    "chooseMultiple": "Select the answers you believe are correct. You can choose more than one.",
+    "chooseSingle": "Choose one answer.",
+    "chooseCount": "Choose {{words}} answers.",
+    "numberWord": {
+      "2": "two",
+      "3": "three",
+      "4": "four",
+      "5": "five",
+      "6": "six",
+      "7": "seven",
+      "8": "eight",
+      "9": "nine",
+      "10": "ten",
+      "11": "eleven"
+    },
+    "matching": {
+      "done": "{{k}} of {{n}} matched",
+      "options": "Options",
+      "usedBy": "matched to",
+      "item": "{{key}} {{text}}",
+      "chipUsed": "{{key}}, matched to {{by}}",
+      "moved": "{{key}} moved from {{from}}"
+    },
+    "unknownType": "Question {{n}} is a new kind of question that this page cannot show yet. Reload the page to answer it; your answers are kept.",
+    "reloadPage": "Reload the page",
+    "cloze": {
+      "type": "Cloze",
+      "line": "{{position}} · {{type}} · {{gaps}}",
+      "questions": "Questions {{from}}–{{to}} of {{total}}",
+      "gaps_one": "{{count}} gap",
+      "gaps_other": "{{count}} gaps",
+      "gapsOf": "{{shown}} of {{count}} gaps",
+      "hint": "The gaps are in the passage. Pick a gap here or in the passage.",
+      "elsewhereOne": "Gap {{list}} has its own screen.",
+      "elsewhereMany": "Gaps {{list}} have their own screens.",
+      "gap": "Gap {{n}}",
+      "filled": "{{filled}} of {{count}} gaps filled",
+      "chip": "Gap {{n}}, {{word}}",
+      "empty": "empty"
+    },
+    "preview": {
+      "studentView": "Student view",
+      "noTimeLimit": "The time limit is set when the test is assigned",
+      "notSaved": "Answers here are not saved."
+    }
+  },
+  "integrity": {
+    "fullscreenExited": "You left fullscreen.",
+    "fullscreenUnsupported": "This browser has no fullscreen mode. You can carry on as normal.",
+    "fullscreenReturn": "Return to fullscreen"
+  },
+  "notifications": {
+    "kind": {
+      "toGrade_one": "{{count}} paper in {{title}} needs grading",
+      "toGrade_other": "{{count}} papers in {{title}} need grading",
+      "submitted_one": "{{count}} paper handed in for {{title}}",
+      "submitted_other": "{{count}} papers handed in for {{title}}",
+      "flagged_one": "{{studentName}} left the test {{count}} time",
+      "flagged_other": "{{studentName}} left the test {{count}} times",
+      "closing_one": "{{title}} closes soon and {{count}} student has not handed in",
+      "closing_other": "{{title}} closes soon and {{count}} students have not handed in",
+      "joined": "{{studentName}} joined {{className}}",
+      "codesRotated_one": "The join code of {{count}} class was replaced: {{names}}",
+      "codesRotated_other": "The join codes of {{count}} classes were replaced: {{names}}",
+      "opened": "{{title}} is open and closes at {{when}}",
+      "dueSoon": "{{title}} closes at {{when}}",
+      "extended": "{{title}} now closes at {{when}}",
+      "resultReady": "Your result for {{title}} is ready",
+      "aiWarning": "You have used {{used}} of your {{allowance}} AI credits this month",
+      "aiRequest": "{{teacherName}} asked for {{credits}} more AI credits",
+      "aiApproved": "Your request for {{credits}} more AI credits was approved",
+      "aiDeclined": "Your request for {{credits}} more AI credits was declined",
+      "transferred_one": "{{teacherName}}'s content is now yours: {{count}} item",
+      "transferred_other": "{{teacherName}}'s content is now yours: {{count}} items",
+      "teacherReceived": "You now teach {{className}}",
+      "teacherChanged": "{{className}} is now taught by {{teacherName}}"
+    },
+    "bell": {
+      "label": "Notifications",
+      "labelUnread_one": "Notifications, {{count}} unread",
+      "labelUnread_other": "Notifications, {{count}} unread",
+      "title": "Notifications",
+      "markAllRead": "Mark all read",
+      "empty": "You're all caught up.",
+      "failed": "Couldn't load notifications.",
+      "loadMore": "Load more",
+      "unread": "Unread",
+      "justNow": "Just now",
+      "markFailed": "Couldn't mark your notifications as read. Try again."
+    }
+  },
+  "result": {
+    "noAnswer": "No answer",
+    "explanationAudio": "Explanation audio",
+    "cloze": {
+      "chip": "Question {{n}}, {{word}}"
+    }
+  },
+  "contentEditor": {
+    "gapLabel": "Gap {{label}}",
+    "table": "Content table",
+    "assetUnbound": "Asset not linked in this prototype",
+    "invalidContent": "This content has an unsupported structure. The original is unchanged."
+  },
+  "toast": {
+    "region": "Notifications",
+    "close": "Close notification"
+  },
+  "auth": {
+    "panel": {
+      "headline": "Tests, lessons and practice for your English classes.",
+      "help": "Need help signing in? Ask your teacher or the front desk."
+    },
+    "transition": {
+      "accountPending": "Your account request is still being processed.",
+      "cleanupPending": "Account data cleanup has not finished.",
+      "cleanupFailed": "Could not clear account data. Retry.",
+      "checkStatus": "Check again"
+    }
+  },
+  "maintenance": {
+    "title": "Quizzivy is being updated",
+    "body": "We’ll be back by {{time}}. Tests that close during the update are extended.",
+    "started": "Started {{time}}",
+    "duration": "about {{minutes}} min",
+    "saved": "Answers and results saved",
+    "check": "Check again",
+    "footnote": "Your answers and results are kept. Nothing is lost."
+  },
+  "splash": {
+    "steps": {
+      "session": "Checking your session…",
+      "classes": "Loading your classes…",
+      "ready": "Getting things ready…"
+    },
+    "slowTitle": "Taking longer than usual",
+    "slowBody": "Your connection may be slow. Keep this page open or reload.",
+    "reload": "Reload",
+    "offlinePill": "No connection",
+    "offlineTitle": "Can’t reach Quizzivy",
+    "offlineBody": "Check your Wi-Fi or mobile data. Answers you already saved are safe.",
+    "tryAgain": "Try again",
+    "retryIn": "Trying again in {{seconds}}s",
+    "retrying": "Trying again…",
+    "updatePill": "New version",
+    "updateTitle": "Quizzivy has been updated",
+    "updateBody": "Reload to get the latest version. It takes a few seconds.",
+    "updateNow": "Reload now",
+    "expiredTitle": "Please sign in again",
+    "expiredBody": "You were signed out for your security.",
+    "signIn": "Sign in",
+    "version": "Quizzivy · v{{version}}"
+  },
+  "copy": {
+    "copy": "Copy",
+    "copied": "Copied"
+  },
+  "trueFalse": {
+    "true": "True",
+    "false": "False",
+    "notGiven": "Not given"
+  }
+}

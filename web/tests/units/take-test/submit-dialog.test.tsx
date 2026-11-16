@@ -262,7 +262,8 @@ describe("the Submit dialog", () => {
     expect(chips().map((chip) => chip.textContent)).toEqual(["4", "6", "7", "8"]);
   });
 
-  it("gives a partly answered question a chip and leaves the counts as they are", async () => {
+  // R6TM-6, R6TT-5: the owner's call of 2026-11-15.
+  it("counts a partly answered question apart, and gives it a chip that says so", async () => {
     const paper = deckSession(NOW);
     const blanks = [
       { id: "blank-1", ordinal: 1, caseSensitive: false },
@@ -284,9 +285,55 @@ describe("the Submit dialog", () => {
     ).toBeInTheDocument();
     await ask();
 
-    expect(dialog()).toHaveAccessibleName(UNANSWERED);
+    expect(dialog()).toHaveAccessibleName(
+      "Nộp bài khi còn 4 câu chưa trả lời và 1 câu chưa làm xong?",
+    );
     expect(facts()["Đã trả lời"]).toHaveTextContent(/^3 \/ 8$/);
     expect(chips().map((chip) => chip.textContent)).toEqual(["4", "5", "6", "7", "8"]);
+    expect(chips()[1]).toHaveAccessibleName("Câu 5, trả lời một phần");
+    expect(chips()[0]).toHaveAccessibleName("Câu 4");
+  });
+
+  it("names only the partly answered ones when nothing else is left", async () => {
+    const paper = deckSession(NOW);
+    const blanks = [
+      { id: "blank-1", ordinal: 1, caseSensitive: false },
+      { id: "blank-2", ordinal: 2, caseSensitive: false },
+    ];
+    await open(DECK_LEFT_MS, {
+      questions: paper.questions.map((item) =>
+        item.id === q(5)
+          ? { ...item, type: "fill_blank", prompt: "Parks {{1}} and {{2}}.", blanks }
+          : item,
+      ),
+      answers: {
+        ...paper.answers,
+        [q(5)]: { type: "fill_blank", values: { "blank-1": "matter" } },
+      },
+    });
+    act(() => {
+      store().setAnswer(q(4), {
+        type: "choice",
+        optionIds: [
+          "018f0000-0000-7000-8000-00000000c401",
+          "018f0000-0000-7000-8000-00000000c403",
+        ],
+      });
+      store().setAnswer(q(6), {
+        type: "choice",
+        optionIds: ["018f0000-0000-7000-8000-00000000c602"],
+      });
+      store().setAnswer(q(7), text("play streets"));
+      store().setAnswer(q(8), {
+        type: "choice",
+        optionIds: ["018f0000-0000-7000-8000-00000000c801"],
+      });
+    });
+    await ask();
+
+    expect(dialog()).toHaveAccessibleName("Nộp bài khi còn 1 câu chưa làm xong?");
+    expect(facts()["Đã trả lời"]).toHaveTextContent(/^7 \/ 8$/);
+    expect(chips().map((chip) => chip.textContent)).toEqual(["5"]);
   });
 
   it("asks one plain question when every question is answered", async () => {

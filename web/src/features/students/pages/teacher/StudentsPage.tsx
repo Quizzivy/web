@@ -418,7 +418,8 @@ function RemoveStudentDialog({
  * `people.students.reset_password`, Move to class and Remove from class with
  * `teaching.classes.write`, Send message (a row's) and Message (the bulk
  * bar's, which opens the one student's thread, or Messages' Direct tab for
- * several) for a caller who reaches Messages. When a dialog closes, focus goes back to what
+ * several) for a caller who reaches Messages, on a student whose row carries
+ * `canMessage`. When a dialog closes, focus goes back to what
  * opened it: the row's menu, Add student, or the bulk bar's button while the
  * bar survives, else the table's select-all box, else the page.
  */

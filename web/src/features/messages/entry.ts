@@ -21,19 +21,15 @@ export const DIRECT_TAB: MessagesOpening = { tab: "direct" };
 export { MESSAGES_PATH };
 
 /**
- * mayMessage is the web's reading of whom a teacher may write to. The API
- * opens a direct thread with a student the caller has a thread with, has
- * taught (now or before), or created (`messaging-peer`), and only while the
- * student's account is enabled; a page knows none of the past and no
- * creator, only the classes a Students row lists, which are the caller's own
- * (every class, for `scope.all`), and whether the account is suspended. So
- * "Send message" shows for an enabled student the row places in a class, and
- * on every member of a class the caller opened (a `ClassMember` says nothing
- * of the account); the thread itself answers any refusal (404, or 409
- * MESSAGING_NOT_ALLOWED with its sentence in the composer's place).
+ * mayMessage tells whether the caller may write to a student: the API's own
+ * answer, `canMessage` on a Students row (`StudentRow`) or a class's member
+ * (`ClassMember`). The server computes it from the same rule the thread
+ * enforces (`messaging-peer`): an existing thread, or a tie (a class of the
+ * caller's, now or before, or an account the caller created), with the
+ * account enabled and still a student; `scope.all` does not widen it. The
+ * thread still answers a refusal that came after the page loaded (404, or
+ * 409 MESSAGING_NOT_ALLOWED with its sentence in the composer's place).
  */
-export function mayMessage(
-  student: Readonly<{ classes: readonly unknown[]; disabledAt: string | null }>,
-): boolean {
-  return student.disabledAt === null && student.classes.length > 0;
+export function mayMessage(person: Readonly<{ canMessage: boolean }>): boolean {
+  return person.canMessage;
 }

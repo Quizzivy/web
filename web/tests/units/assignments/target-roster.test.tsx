@@ -18,6 +18,7 @@ function member(id: string) {
     joinedVia: "admin" as const,
     joinedAt,
     stats,
+    canMessage: true,
   };
 }
 beforeEach(() => vi.clearAllMocks());
@@ -43,6 +44,7 @@ it("unions all membership pages and individual selections, excluding disabled st
     accountStatus: id === "disabled" ? "disabled" : "active",
     classes: [],
     stats,
+    canMessage: false,
   }));
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const { result } = renderHook(

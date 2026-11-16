@@ -21,6 +21,7 @@ import "@/lib/i18n";
 
 const AN = student("018f0000-0000-7000-8000-0000000000e1", "Nguyễn Văn An", {
   classes: [inClass(CLASS_A)],
+  canMessage: true,
   stats: {
     submittedCount: 3,
     flaggedCount: 0,

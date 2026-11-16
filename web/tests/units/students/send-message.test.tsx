@@ -13,20 +13,28 @@ import {
 } from "./support";
 import "@/lib/i18n";
 
+// Each row carries the API's `canMessage`; the page reads only that.
 const AN = student("018f0000-0000-7000-8000-0000000000e1", "Nguyễn Văn An", {
   classes: [inClass(CLASS_A)],
+  canMessage: true,
 });
 const CHI = student("018f0000-0000-7000-8000-0000000000e3", "Lê Minh Chi", {
   classes: [inClass(CLASS_A)],
+  canMessage: true,
 });
-// In the list without a class: assigned to one of the caller's tests, or
-// created by them, which the row does not say.
+// In none of the caller's classes, but created by them: the API says the
+// caller may write to her, though the row places her in no class.
+const EM = student("018f0000-0000-7000-8000-0000000000e5", "Đỗ Ngọc Em", {
+  canMessage: true,
+});
+// In the list without a class and without a tie (assigned to one of the
+// caller's tests, say): the API says no.
 const BINH = student("018f0000-0000-7000-8000-0000000000e2", "Trần Thị Bình");
-// In one of the caller's classes, but suspended: the API refuses a thread
-// with a student whose account is disabled.
+// In one of the caller's classes, but the API says no (suspended, or another
+// teacher's class read through scope.all).
 const DUNG = student("018f0000-0000-7000-8000-0000000000e4", "Phạm Thu Dung", {
   classes: [inClass(CLASS_A)],
-  disabledAt: "2026-10-01T00:00:00Z",
+  canMessage: false,
 });
 
 afterEach(() => {
@@ -55,7 +63,17 @@ describe("Send message on a student's row", () => {
     expect(router.state.location.pathname).toBe(`/teacher/messages/student/${AN.id}`);
   });
 
-  it("is not offered for a student the row places in no class", async () => {
+  it("is offered for a student the API allows though the row places her in no class", async () => {
+    serveStudents([EM]);
+    const { user } = renderStudents(teacherUser);
+
+    const menu = await menuOf(user, "Đỗ Ngọc Em");
+    expect(
+      within(menu).getByRole("menuitem", { name: "Gửi tin nhắn" }),
+    ).toHaveAttribute("href", `/teacher/messages/student/${EM.id}`);
+  });
+
+  it("is not offered for a student the API does not allow, in no class", async () => {
     serveStudents([BINH]);
     const { user } = renderStudents(teacherUser);
 
@@ -64,7 +82,7 @@ describe("Send message on a student's row", () => {
     expect(within(menu).getByRole("menuitem", { name: "Xem kết quả" })).toBeVisible();
   });
 
-  it("is not offered for a suspended student, though the row places them in a class", async () => {
+  it("is not offered for a student the API does not allow, though the row places them in a class", async () => {
     serveStudents([DUNG]);
     const { user } = renderStudents(teacherUser);
 
@@ -111,7 +129,7 @@ describe("the bulk bar's Message", () => {
     expect(router.state.location.state).toEqual({ tab: "direct" });
   });
 
-  it("opens the Direct tab, not a thread, for one student the row places in no class", async () => {
+  it("opens the Direct tab, not a thread, for one student the API does not allow, in no class", async () => {
     serveStudents([BINH]);
     const { user, router } = renderStudents(teacherUser);
     await choose(user, "Trần Thị Bình");
@@ -121,7 +139,7 @@ describe("the bulk bar's Message", () => {
     expect(router.state.location.state).toEqual({ tab: "direct" });
   });
 
-  it("opens the Direct tab, not a thread, for one suspended student", async () => {
+  it("opens the Direct tab, not a thread, for one student in a class the API does not allow", async () => {
     serveStudents([DUNG]);
     const { user, router } = renderStudents(teacherUser);
     await choose(user, "Phạm Thu Dung");

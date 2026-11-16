@@ -96,6 +96,7 @@ function student() {
       flaggedCount: 0,
       activity: { live: false, lastAttemptAt: null },
     },
+    canMessage: true,
   };
 }
 

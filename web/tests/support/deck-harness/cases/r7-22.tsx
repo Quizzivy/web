@@ -109,6 +109,7 @@ function studentRows(): Schemas["StudentRow"][] {
       joinedAt: "2026-08-12T00:00:00Z",
     })),
     stats: stats(submitted, earned),
+    canMessage: classes.length > 0,
   })) as Schemas["StudentRow"][];
 }
 
@@ -122,6 +123,7 @@ function members(): Schemas["ClassMember"][] {
       joinCodeHint: index % 2 === 0 ? null : "K7Q",
       joinedAt: "2026-08-12T00:00:00Z",
       stats: stats(submitted, earned),
+      canMessage: true,
     }),
   ) as Schemas["ClassMember"][];
 }

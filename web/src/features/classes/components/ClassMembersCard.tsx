@@ -32,7 +32,11 @@ import {
   type ClassMember,
 } from "@/features/classes/api";
 import { saveError } from "@/features/classes/classFields";
-import { directThreadPath, useOpensMessages } from "@/features/messages/entry";
+import {
+  directThreadPath,
+  mayMessage,
+  useOpensMessages,
+} from "@/features/messages/entry";
 import { invalidateClassMembership } from "@/features/classes/invalidate";
 import { useJoinCodesOff } from "@/features/organization/api";
 import { scorePercent } from "@/features/students/api";
@@ -75,8 +79,8 @@ type Translate = ReturnType<typeof useTranslation>["t"];
  * checkbox, the name and email, how they joined, when, what they handed in
  * and their average (in danger ink under 60%), and a menu with View results,
  * Send message and Remove from class. Send message shows to a caller who
- * reaches Messages, on every member: the class is the caller's, and the
- * thread answers any refusal (`mayMessage`). The columns follow the deck's content widths: the
+ * reaches Messages, on a member the API says they may write to (the
+ * member's `canMessage`, `mayMessage`). The columns follow the deck's content widths: the
  * card is the whole width below 1000px and two thirds of it from there, so
  * Joined via shows from 620 and again from 1000, and Joined from 720 and
  * again from 1080. A selected row is tinted, and selecting offers Remove
@@ -146,15 +150,16 @@ export function ClassMembersCard({
   };
   const menu =
     canWrite || canSeeResults || canMessage
-      ? (member: Member, { triggerRef }: DataTableMenuContext) => (
-          <MemberMenuItems
-            member={member}
-            canWrite={canWrite}
-            canSeeResults={canSeeResults}
-            canMessage={canMessage}
-            onRemove={() => askToRemove(member, triggerRef)}
-          />
-        )
+      ? (member: Member, { triggerRef }: DataTableMenuContext) =>
+          canWrite || canSeeResults || mayMessage(member) ? (
+            <MemberMenuItems
+              member={member}
+              canWrite={canWrite}
+              canSeeResults={canSeeResults}
+              canMessage={canMessage}
+              onRemove={() => askToRemove(member, triggerRef)}
+            />
+          ) : null
       : undefined;
   const selecting = canWrite
     ? { selection: bulk, rowName: (member: Member) => member.fullName }
@@ -398,7 +403,7 @@ function MemberMenuItems({
           </Link>
         </DropdownMenuItem>
       ) : null}
-      {canMessage ? (
+      {canMessage && mayMessage(member) ? (
         <DropdownMenuItem asChild>
           <Link to={directThreadPath(member.userId)}>
             <MessageSquare aria-hidden="true" />
@@ -406,7 +411,9 @@ function MemberMenuItems({
           </Link>
         </DropdownMenuItem>
       ) : null}
-      {canWrite && (canSeeResults || canMessage) ? <DropdownMenuSeparator /> : null}
+      {canWrite && (canSeeResults || (canMessage && mayMessage(member))) ? (
+        <DropdownMenuSeparator />
+      ) : null}
       {canWrite ? (
         <DropdownMenuItem variant="destructive" onSelect={onRemove}>
           <UserMinus aria-hidden="true" />

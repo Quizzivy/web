@@ -57,7 +57,7 @@ describe("the Plan & usage section", () => {
     expect(screen.getByText("Mặc định: 100 · gói miễn phí Resend")).toBeVisible();
     expect(screen.getByText("Mặc định: 3.000 · gói miễn phí Resend")).toBeVisible();
     expect(
-      screen.getByText("Mặc định: 10 GB · ngưỡng cảnh báo cho gói Neon Launch"),
+      screen.getByText("Mặc định: 10 GB · ngưỡng cảnh báo cho ổ đĩa máy chủ"),
     ).toBeVisible();
     expect(screen.getByText("Mặc định: 80% · mức riêng của Quizzivy")).toBeVisible();
     expect(screen.queryByRole("button", { name: /Dùng mặc định/ })).toBeNull();

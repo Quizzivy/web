@@ -686,8 +686,8 @@ To view one, start the server above and open, for example,
   eleven short numbered parts; a "Printed" state shows it on paper. Its words say what
   R11's plan says the form collects, why, who sees it and for how long, in plain
   Vietnamese. Three of the plan's facts had moved and are drawn as they are now, each with
-  a question: requests are kept on the server in Ho Chi Minh City (the plan lists Fly.io
-  and Neon), the law named is No. 91/2025/QH15 (the plan names Decree 13/2023, replaced on
+  a question: requests are kept on the server in Ho Chi Minh City (the plan lists the
+  previous host and database, retired on 2026-11-16), the law named is No. 91/2025/QH15 (the plan names Decree 13/2023, replaced on
   1 January 2026; read in summaries, not the texts), and the version is drawn as 2026-11
   (the plan says 2026-10). The notice has had no legal review (O-R11.1). The status page
   is on the deck's system frame with five states; "being updated" is the app's own

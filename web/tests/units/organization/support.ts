@@ -61,7 +61,7 @@ export const SAVED: Settings = {
     importPerTeacherBytes: { value: 256 * 1024 ** 2, source: "app" },
     emailsPerDay: { value: 100, source: "resend_free" },
     emailsPerMonth: { value: 3000, source: "resend_free" },
-    databaseBytes: { value: 10 * 1024 ** 3, source: "neon_launch" },
+    databaseBytes: { value: 10 * 1024 ** 3, source: "vps_disk" },
     warnAtPercent: { value: 80, source: "app" },
   },
   leadRecipients: [],

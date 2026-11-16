@@ -1,4 +1,10 @@
-import { useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useContext,
+  useEffect,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { EditorContent, useEditor, type Editor } from "@tiptap/react";
 import { useTranslation } from "react-i18next";
 import type { ProseDocument, SemanticContent } from "../model";
@@ -19,6 +25,7 @@ import { NoticeBand } from "./NoticeBand";
 import { EditorFooter, EditorPlaceholder } from "./EditorFooter";
 import { editorShortcut } from "./shortcuts";
 import { EDITOR_BOX as BOX, frameStyle } from "./frame";
+import { ContentReadOnlyContext } from "./readOnly";
 import "../content.css";
 
 type Frame = { minHeight?: number; fontSize?: number; footer: boolean };
@@ -234,12 +241,14 @@ function ProfiledEditor({
 >) {
   const { t } = useTranslation();
   const frame = FRAMES[profile];
+  const inherited = useContext(ContentReadOnlyContext);
+  const readOnly = props.readOnly ?? inherited;
   const [initial] = useState(() => validateForProfile(props.initialContent, profile));
   const style = frameStyle(
     props.minHeight ?? frame.minHeight,
     props.fontSize ?? frame.fontSize,
   );
-  if (props.readOnly)
+  if (readOnly)
     return (
       <div className={BOX} style={style}>
         <ContentView

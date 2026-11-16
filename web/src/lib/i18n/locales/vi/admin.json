@@ -514,7 +514,7 @@
       },
       "warn": {
         "label": "Cảnh báo giáo viên khi dùng đến",
-        "hint": "Họ nhận được một thông báo."
+        "hint": "Họ nhận được một thông báo và một email."
       },
       "limit": {
         "label": "Khi giáo viên dùng hết hạn mức",

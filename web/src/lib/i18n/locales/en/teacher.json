@@ -2068,7 +2068,7 @@
       "by1440": "1 day",
       "byCustom": "Pick a time…",
       "notify": "Notify students",
-      "notifySub": "They get an in-app message.",
+      "notifySub": "They get an in-app and email message.",
       "extendSubmit": "Extend",
       "extended": "Deadline extended by {{by}}.",
       "extendedMany": "{{count}} assignments extended by {{by}}.",

@@ -1968,7 +1968,7 @@
       "by1440": "1 ngày",
       "byCustom": "Chọn thời điểm…",
       "notify": "Báo cho học viên",
-      "notifySub": "Học viên nhận thông báo trong ứng dụng.",
+      "notifySub": "Học viên nhận thông báo trong ứng dụng và qua email.",
       "extendSubmit": "Gia hạn",
       "extended": "Đã gia hạn thêm {{by}}.",
       "extendedMany": "Đã gia hạn {{count}} bài giao thêm {{by}}.",

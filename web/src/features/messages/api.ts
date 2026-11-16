@@ -48,6 +48,16 @@ export function threadPath(ref: ThreadRef): string {
   return `/teacher/messages/${segment}/${encodeURIComponent(ref.id)}`;
 }
 
+/**
+ * MessagesOpening is what a link into Messages may hand the page as its
+ * location's state: `tab` is the list's tab to start on, as the Students
+ * page's bulk Message opens Direct for several students.
+ */
+export type MessagesOpening = Readonly<{ tab?: "all" | "direct" | "classes" }>;
+
+/** MESSAGES_PATH is Messages with no thread open. */
+export const MESSAGES_PATH = "/teacher/messages";
+
 /** refOf is the ref a row of the list opens. */
 export function refOf(thread: StaffThread): ThreadRef | null {
   const { kind, classId, studentId } = thread.thread;

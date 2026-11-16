@@ -201,7 +201,7 @@ describe("the Students list", () => {
     expect(screen.getByRole("button", { name: "Thử lại" })).toBeVisible();
   });
 
-  it("gives a teacher the row menu the deck draws, with no Send message", async () => {
+  it("gives a teacher the row menu the deck draws", async () => {
     serveStudents([AN]);
     const { user } = renderStudents(teacherUser);
 
@@ -210,7 +210,13 @@ describe("the Students list", () => {
       within(menu)
         .getAllByRole("menuitem")
         .map((item) => item.textContent),
-    ).toEqual(["Xem kết quả", "Chuyển lớp", "Đặt lại mật khẩu", "Xoá khỏi lớp"]);
+    ).toEqual([
+      "Xem kết quả",
+      "Gửi tin nhắn",
+      "Chuyển lớp",
+      "Đặt lại mật khẩu",
+      "Xoá khỏi lớp",
+    ]);
   });
 
   it("opens the student's record from the row and from View results", async () => {
@@ -236,7 +242,7 @@ describe("the Students list", () => {
       within(menu)
         .getAllByRole("menuitem")
         .map((item) => item.textContent),
-    ).toEqual(["Xem kết quả"]);
+    ).toEqual(["Xem kết quả", "Gửi tin nhắn"]);
     await user.keyboard("{Escape}");
 
     await user.click(within(row).getByText("Nguyễn Văn An"));

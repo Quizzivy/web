@@ -225,8 +225,10 @@ export function signIn() {
   useAuthStore.setState({ accessToken: "token", user: teacherUser });
 }
 
-/** renderPage mounts Messages at `path` with the three routes of the teacher tree. */
-export function renderPage(path: string) {
+/** renderPage mounts Messages at `path` (with a location state, if given) with the three routes of the teacher tree. */
+export function renderPage(
+  path: string | Readonly<{ pathname: string; state: unknown }>,
+) {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
   const element = <TeacherMessagesPage />;
   const router = createMemoryRouter(

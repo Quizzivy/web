@@ -236,6 +236,7 @@ function renderDetail() {
       { path: "/teacher/classes", element: <p>classes</p> },
       { path: "/teacher/students", element: <p>students</p> },
       { path: "/teacher/assignments/new", element: <p>wizard</p> },
+      { path: "/teacher/messages/*", element: <p>messages</p> },
     ],
     { initialEntries: [`/teacher/classes/${CLASS_ID}`] },
   );
@@ -496,6 +497,36 @@ describe("the members", () => {
     const dialog = await screen.findByRole("dialog");
     await user.click(within(dialog).getByRole("button", { name: "Xác nhận 1 mục" }));
     await waitFor(() => expect(removals).toEqual([HAN]));
+  });
+
+  it("offers, in the member's menu, the deck's View results, Send message and Remove from class", async () => {
+    const { user, router } = renderDetail();
+    const han = await memberRow("Phạm Gia Hân");
+    await user.click(
+      within(han).getByRole("button", { name: "Thao tác với Phạm Gia Hân" }),
+    );
+    const menu = await screen.findByRole("menu");
+    expect(
+      within(menu)
+        .getAllByRole("menuitem")
+        .map((item) => item.textContent),
+    ).toEqual(["Xem kết quả", "Gửi tin nhắn", "Xoá khỏi lớp"]);
+    const send = within(menu).getByRole("menuitem", { name: "Gửi tin nhắn" });
+    expect(send).toHaveAttribute("href", `/teacher/messages/student/${HAN}`);
+    await user.click(send);
+    expect(router.state.location.pathname).toBe(`/teacher/messages/student/${HAN}`);
+  });
+
+  it("offers Send message to no one who does not open the teacher workspace", async () => {
+    useAuthStore.setState({ user: { ...teacherUser, workspaces: ["admin"] } });
+    const { user } = renderDetail();
+    const han = await memberRow("Phạm Gia Hân");
+    await user.click(
+      within(han).getByRole("button", { name: "Thao tác với Phạm Gia Hân" }),
+    );
+    const menu = await screen.findByRole("menu");
+    expect(within(menu).queryByRole("menuitem", { name: "Gửi tin nhắn" })).toBeNull();
+    expect(within(menu).getByRole("menuitem", { name: "Xoá khỏi lớp" })).toBeVisible();
   });
 
   it("offers a reader without the right to change classes no checkboxes and no removal", async () => {

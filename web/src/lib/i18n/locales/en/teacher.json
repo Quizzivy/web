@@ -2184,6 +2184,7 @@
     "statusFacetTitle": "Filter by account",
     "menu": {
       "results": "View results",
+      "message": "Send message",
       "move": "Move to class",
       "reset": "Reset password"
     },
@@ -2193,7 +2194,8 @@
       "remove": "Remove",
       "removeBody_one": "The selected students leave every class they are in ({{count}} membership): {{classes}}. Their accounts and results stay.",
       "removeBody_other": "The selected students leave every class they are in ({{count}} memberships): {{classes}}. Their accounts and results stay.",
-      "resetTooMany": "Up to {{count}} passwords can be reset at once. Select fewer students."
+      "resetTooMany": "Up to {{count}} passwords can be reset at once. Select fewer students.",
+      "message": "Message"
     },
     "removeAll": "Remove",
     "removeAllTitle": "Remove {{name}} from their classes?",

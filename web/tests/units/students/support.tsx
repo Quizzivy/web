@@ -139,7 +139,10 @@ export function renderStudents(
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
   const router = createMemoryRouter(
-    [{ path: "/teacher/students", element: <StudentsPage /> }],
+    [
+      { path: "/teacher/students", element: <StudentsPage /> },
+      { path: "/teacher/messages/*", element: <p>messages page</p> },
+    ],
     { initialEntries: [path] },
   );
   const view = render(

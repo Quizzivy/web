@@ -2077,6 +2077,7 @@
     "statusFacetTitle": "Lọc theo tài khoản",
     "menu": {
       "results": "Xem kết quả",
+      "message": "Gửi tin nhắn",
       "move": "Chuyển lớp",
       "reset": "Đặt lại mật khẩu"
     },
@@ -2085,7 +2086,8 @@
       "reset": "Đặt lại mật khẩu",
       "remove": "Xoá khỏi lớp",
       "removeBody_other": "Các học viên đã chọn sẽ rời mọi lớp đang học ({{count}} lượt tham gia): {{classes}}. Tài khoản và kết quả vẫn được giữ.",
-      "resetTooMany": "Mỗi lần chỉ đặt lại được tối đa {{count}} mật khẩu. Hãy bỏ chọn bớt."
+      "resetTooMany": "Mỗi lần chỉ đặt lại được tối đa {{count}} mật khẩu. Hãy bỏ chọn bớt.",
+      "message": "Nhắn tin"
     },
     "removeAll": "Xoá khỏi lớp",
     "removeAllTitle": "Xoá {{name}} khỏi các lớp của học viên?",

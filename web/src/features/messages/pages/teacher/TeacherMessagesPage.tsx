@@ -28,6 +28,7 @@ import { useLocale } from "@/lib/i18n/useLocale";
 import { notify } from "@/lib/toast";
 import { useDebounced } from "@/lib/useDebounced";
 import {
+  MESSAGES_PATH,
   STAFF_MESSAGES_KEY,
   getStaffAttachmentUrl,
   getStaffClassThread,
@@ -42,6 +43,7 @@ import {
   threadPath,
   uploadMessageAttachment,
   type MessageAttachment,
+  type MessagesOpening,
   type StaffClassThread,
   type StaffDirectThread,
   type StaffMessage,
@@ -74,8 +76,26 @@ type Head =
   | Readonly<{ kind: "direct"; student: StaffDirectThread["student"] }>
   | Readonly<{ kind: "class"; room: StaffClassThread["class"] }>;
 
-/** LocationState is what New announcement hands the thread it opens: focus the composer. */
-type LocationState = Readonly<{ compose?: boolean }> | null;
+/**
+ * LocationState is what a link hands the page: New announcement asks the
+ * thread it opens to focus the composer, and a link from elsewhere may name
+ * the tab to start on.
+ */
+type LocationState = (MessagesOpening & Readonly<{ compose?: boolean }>) | null;
+
+const TABS: readonly Tab[] = ["all", "direct", "classes"];
+
+/** tabFrom is the tab a link asks for, else All. */
+function tabFrom(state: unknown): Tab {
+  const asked = (state as LocationState)?.tab;
+  return asked !== undefined && TABS.includes(asked) ? asked : "all";
+}
+
+/** inTab tells whether a row belongs to the list's tab. */
+function inTab(row: StaffThread, tab: Tab): boolean {
+  if (tab === "all") return true;
+  return tab === "classes" ? row.thread.kind === "class" : row.thread.kind === "direct";
+}
 
 function refFrom(
   params: Readonly<Record<string, string | undefined>>,
@@ -153,7 +173,8 @@ export default function TeacherMessagesPage() {
   const open = refFrom(params);
   const single = !useContentWidthAtLeast(SINGLE_BELOW);
   const canAnnounce = useCan("teaching.classes.write");
-  const [tab, setTab] = useState<Tab>("all");
+  const location = useLocation();
+  const [tab, setTab] = useState<Tab>(() => tabFrom(location.state));
   const reasonId = useId();
   const [typed, setTyped] = useState("");
   const q = useDebounced(typed.trim(), SEARCH_DELAY_MS);
@@ -194,8 +215,8 @@ export default function TeacherMessagesPage() {
   const firstClass = base.data?.threads.find((row) => row.thread.kind === "class");
   const classRef = firstClass === undefined ? null : refOf(firstClass);
 
-  // From 760px the deck opens the first conversation when none is named.
-  const firstRow = base.data?.threads.find((row) => !row.candidate);
+  // From 760px the deck opens the first conversation of the tab when none is named.
+  const firstRow = base.data?.threads.find((row) => !row.candidate && inTab(row, tab));
   useEffect(() => {
     if (single || open !== null || firstRow === undefined) return;
     const ref = refOf(firstRow);
@@ -220,11 +241,7 @@ export default function TeacherMessagesPage() {
       active: !single && sameRef(ref, open),
     };
   };
-  const shown = (list.data?.threads ?? []).filter(
-    (row) =>
-      tab === "all" ||
-      (tab === "classes" ? row.thread.kind === "class" : row.thread.kind === "direct"),
-  );
+  const shown = (list.data?.threads ?? []).filter((row) => inTab(row, tab));
   const rows = shown.filter((row) => !row.candidate).flatMap((row) => toRow(row) ?? []);
   const candidates =
     q === "" || tab === "classes"
@@ -327,7 +344,7 @@ export default function TeacherMessagesPage() {
             open={open}
             row={openRow}
             single={single}
-            onBack={() => void navigate("/teacher/messages")}
+            onBack={() => void navigate(MESSAGES_PATH)}
           />
         )}
         {showThread && open === null && (

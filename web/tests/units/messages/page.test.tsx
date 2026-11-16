@@ -210,6 +210,38 @@ describe("the list", () => {
     ).toBeInTheDocument();
   });
 
+  it("starts on the Direct tab a link asks for, opening its first conversation from 760px", async () => {
+    contentWidth(1000);
+    state.threads = [channel(C1, "IELTS 6.5 Evening"), direct(NAM, "Lê Hoàng Nam")];
+    const { router } = renderPage({
+      pathname: "/teacher/messages",
+      state: { tab: "direct" },
+    });
+    await waitFor(() => expect(router.state.location.pathname).toBe(NAM_PATH));
+    expect(screen.getByRole("button", { name: "Riêng" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    const list = screen.getByRole("complementary", { name: "Cuộc trò chuyện" });
+    expect(within(list).queryByRole("link", { name: /IELTS 6\.5 Evening/ })).toBeNull();
+  });
+
+  it("starts on All, opening the first conversation of any kind, when the link names no tab", async () => {
+    contentWidth(1000);
+    state.threads = [channel(C1, "IELTS 6.5 Evening"), direct(NAM, "Lê Hoàng Nam")];
+    const { router } = renderPage({
+      pathname: "/teacher/messages",
+      state: { tab: "x" },
+    });
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe(`/teacher/messages/class/${C1}`),
+    );
+    expect(screen.getByRole("button", { name: "Tất cả" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+  });
+
   it("reads the list again when the summary's unread count changes", async () => {
     contentWidth(1000);
     let reads = 0;

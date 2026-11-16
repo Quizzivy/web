@@ -9,7 +9,7 @@ import {
   type UseQueryResult,
 } from "@tanstack/react-query";
 import { formatInTimeZone } from "date-fns-tz";
-import { ChartColumn, UserMinus } from "lucide-react";
+import { ChartColumn, MessageSquare, UserMinus } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
 import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdown-menu";
 import { Skeleton } from "@/components/ui/skeleton";
@@ -32,6 +32,7 @@ import {
   type ClassMember,
 } from "@/features/classes/api";
 import { saveError } from "@/features/classes/classFields";
+import { directThreadPath, useOpensMessages } from "@/features/messages/entry";
 import { invalidateClassMembership } from "@/features/classes/invalidate";
 import { useJoinCodesOff } from "@/features/organization/api";
 import { scorePercent } from "@/features/students/api";
@@ -72,8 +73,10 @@ type Translate = ReturnType<typeof useTranslation>["t"];
  * ClassMembersCard is the class's members, as the deck draws them: "Members
  * · {n}" with a search, then a DataTable with one row per member: a
  * checkbox, the name and email, how they joined, when, what they handed in
- * and their average (in danger ink under 60%), and a menu with View results
- * and Remove from class. The columns follow the deck's content widths: the
+ * and their average (in danger ink under 60%), and a menu with View results,
+ * Send message and Remove from class. Send message shows to a caller who
+ * reaches Messages, on every member: the class is the caller's, and the
+ * thread answers any refusal (`mayMessage`). The columns follow the deck's content widths: the
  * card is the whole width below 1000px and two thirds of it from there, so
  * Joined via shows from 620 and again from 1000, and Joined from 720 and
  * again from 1080. A selected row is tinted, and selecting offers Remove
@@ -91,6 +94,7 @@ export function ClassMembersCard({
   const locale = useLocale();
   const queryClient = useQueryClient();
   const canSeeResults = useCan("people.students.read");
+  const canMessage = useOpensMessages();
   const bulk = useBulkSelection<Member>();
   const band = useContentBand(MEMBER_BANDS);
   const { params, setFilter } = useListFilters();
@@ -141,12 +145,13 @@ export function ClassMembersCard({
     setRemoving(member);
   };
   const menu =
-    canWrite || canSeeResults
+    canWrite || canSeeResults || canMessage
       ? (member: Member, { triggerRef }: DataTableMenuContext) => (
           <MemberMenuItems
             member={member}
             canWrite={canWrite}
             canSeeResults={canSeeResults}
+            canMessage={canMessage}
             onRemove={() => askToRemove(member, triggerRef)}
           />
         )
@@ -373,11 +378,13 @@ function MemberMenuItems({
   member,
   canWrite,
   canSeeResults,
+  canMessage,
   onRemove,
 }: Readonly<{
   member: Member;
   canWrite: boolean;
   canSeeResults: boolean;
+  canMessage: boolean;
   onRemove: () => void;
 }>) {
   const { t } = useTranslation();
@@ -391,7 +398,15 @@ function MemberMenuItems({
           </Link>
         </DropdownMenuItem>
       ) : null}
-      {canWrite && canSeeResults ? <DropdownMenuSeparator /> : null}
+      {canMessage ? (
+        <DropdownMenuItem asChild>
+          <Link to={directThreadPath(member.userId)}>
+            <MessageSquare aria-hidden="true" />
+            {t("students.menu.message")}
+          </Link>
+        </DropdownMenuItem>
+      ) : null}
+      {canWrite && (canSeeResults || canMessage) ? <DropdownMenuSeparator /> : null}
       {canWrite ? (
         <DropdownMenuItem variant="destructive" onSelect={onRemove}>
           <UserMinus aria-hidden="true" />

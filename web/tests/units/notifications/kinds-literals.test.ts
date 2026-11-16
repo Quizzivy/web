@@ -98,8 +98,8 @@ describe.each(["vi", "en"] as const)("notification literal strings in %s", (loca
   });
 });
 
-/** TEMPLATES counts each locale's notification templates: English has both forms of its six counted kinds, Vietnamese the one form it reads. */
-const TEMPLATES = { vi: 17, en: 23 } as const;
+/** TEMPLATES counts each locale's notification templates: English has both forms of its nine counted kinds, Vietnamese the one form it reads. */
+const TEMPLATES = { vi: 23, en: 32 } as const;
 
 function expectCollisionFreeTemplates(locale: "vi" | "en") {
   const templates: unknown = i18n.getResource(

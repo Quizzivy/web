@@ -14,7 +14,6 @@ import { loadSpec } from "@tests/support/openapi";
 import {
   KIND_LOOK,
   LATER_EVENTS,
-  LATER_KINDS,
   TEACHER_EVENTS,
   STUDENT_EVENTS,
   audienceOf,
@@ -141,9 +140,7 @@ const pluralCases = [
 describe("notification kinds and sentences", () => {
   it("matches both contract enums exhaustively and validates all nine fixtures", () => {
     const schemas = loadSpec().components.schemas;
-    expect([...Object.keys(KIND_LOOK), ...LATER_KINDS]).toEqual(
-      schemas.NotificationKind.enum,
-    );
+    expect(Object.keys(KIND_LOOK)).toEqual(schemas.NotificationKind.enum);
     expect([...TEACHER_EVENTS, ...STUDENT_EVENTS, ...LATER_EVENTS]).toEqual(
       schemas.NotificationEvent.enum,
     );

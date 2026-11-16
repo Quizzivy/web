@@ -50,8 +50,9 @@ export function threadPath(ref: ThreadRef): string {
 
 /**
  * MessagesOpening is what a link into Messages may hand the page as its
- * location's state: `tab` is the list's tab to start on, as the Students
- * page's bulk Message opens Direct for several students.
+ * location's state: `tab` is the list's tab to start on, with no
+ * conversation open, as the Students page's bulk Message opens Direct for
+ * several students.
  */
 export type MessagesOpening = Readonly<{ tab?: "all" | "direct" | "classes" }>;
 

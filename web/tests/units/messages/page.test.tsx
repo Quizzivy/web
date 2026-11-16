@@ -210,20 +210,23 @@ describe("the list", () => {
     ).toBeInTheDocument();
   });
 
-  it("starts on the Direct tab a link asks for, opening its first conversation from 760px", async () => {
+  it("starts on the Direct tab a link asks for and opens no conversation, even from 760px", async () => {
     contentWidth(1000);
     state.threads = [channel(C1, "IELTS 6.5 Evening"), direct(NAM, "Lê Hoàng Nam")];
     const { router } = renderPage({
       pathname: "/teacher/messages",
       state: { tab: "direct" },
     });
-    await waitFor(() => expect(router.state.location.pathname).toBe(NAM_PATH));
+    const list = await screen.findByRole("complementary", { name: "Cuộc trò chuyện" });
+    expect(
+      await within(list).findByRole("link", { name: /Lê Hoàng Nam/ }),
+    ).toBeVisible();
     expect(screen.getByRole("button", { name: "Riêng" })).toHaveAttribute(
       "aria-pressed",
       "true",
     );
-    const list = screen.getByRole("complementary", { name: "Cuộc trò chuyện" });
     expect(within(list).queryByRole("link", { name: /IELTS 6\.5 Evening/ })).toBeNull();
+    expect(router.state.location.pathname).toBe("/teacher/messages");
   });
 
   it("starts on All, opening the first conversation of any kind, when the link names no tab", async () => {

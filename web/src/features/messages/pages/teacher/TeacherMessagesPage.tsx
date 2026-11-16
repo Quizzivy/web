@@ -85,10 +85,15 @@ type LocationState = (MessagesOpening & Readonly<{ compose?: boolean }>) | null;
 
 const TABS: readonly Tab[] = ["all", "direct", "classes"];
 
+/** askedTab is the tab a link asks for, or null when it names none Messages has. */
+function askedTab(state: unknown): Tab | null {
+  const asked = (state as LocationState)?.tab;
+  return asked !== undefined && TABS.includes(asked) ? asked : null;
+}
+
 /** tabFrom is the tab a link asks for, else All. */
 function tabFrom(state: unknown): Tab {
-  const asked = (state as LocationState)?.tab;
-  return asked !== undefined && TABS.includes(asked) ? asked : "all";
+  return askedTab(state) ?? "all";
 }
 
 /** inTab tells whether a row belongs to the list's tab. */
@@ -215,13 +220,17 @@ export default function TeacherMessagesPage() {
   const firstClass = base.data?.threads.find((row) => row.thread.kind === "class");
   const classRef = firstClass === undefined ? null : refOf(firstClass);
 
-  // From 760px the deck opens the first conversation of the tab when none is named.
+  // From 760px the deck opens the first conversation of the tab when none is
+  // named. A link that asks for a tab asks for that list, not a thread: the
+  // Students page's bulk Message for several students opens Direct, and its
+  // first row (often the latest thread) may be a student no one selected.
+  const listAsked = askedTab(location.state) !== null;
   const firstRow = base.data?.threads.find((row) => !row.candidate && inTab(row, tab));
   useEffect(() => {
-    if (single || open !== null || firstRow === undefined) return;
+    if (single || listAsked || open !== null || firstRow === undefined) return;
     const ref = refOf(firstRow);
     if (ref !== null) void navigate(threadPath(ref), { replace: true });
-  }, [single, open, firstRow, navigate]);
+  }, [single, listAsked, open, firstRow, navigate]);
 
   const toRow = (row: StaffThread): ListRow | null => {
     const ref = refOf(row);

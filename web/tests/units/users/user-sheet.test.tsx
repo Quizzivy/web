@@ -314,7 +314,7 @@ describe("Users: the user sheet (T-R5.22b)", () => {
             tests: 5,
             questions: 0,
             questionGroups: 0,
-            questionSets: 0,
+            questionSets: 3,
             media: 0,
             assignments: 0,
           },
@@ -340,6 +340,19 @@ describe("Users: the user sheet (T-R5.22b)", () => {
     );
     await actor.click(submit);
     expect(await screen.findByText("Đã chuyển cho Lê Chi:")).toBeVisible();
+    expect(
+      within(screen.getByRole("list", { name: "Đã chuyển" }))
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "2 lớp",
+      "5 đề",
+      "0 câu hỏi",
+      "0 bài đọc, điền từ, bài nghe",
+      "3 bộ câu hỏi",
+      "0 tệp phương tiện",
+      "0 bài giao",
+    ]);
     expect(
       screen.getByText("1 lượt nhập Word chưa xong vẫn ở lại với tài khoản này."),
     ).toBeVisible();

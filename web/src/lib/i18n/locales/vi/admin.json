@@ -783,6 +783,7 @@
         "tests_other": "{{count}} đề",
         "questions_other": "{{count}} câu hỏi",
         "questionGroups_other": "{{count}} bài đọc, điền từ, bài nghe",
+        "questionSets_other": "{{count}} bộ câu hỏi",
         "media_other": "{{count}} tệp phương tiện",
         "assignments_other": "{{count}} bài giao"
       },

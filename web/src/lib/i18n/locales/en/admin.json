@@ -824,6 +824,8 @@
         "questions_other": "{{count}} questions",
         "questionGroups_one": "{{count}} passage, cloze or recording",
         "questionGroups_other": "{{count}} passages, clozes and recordings",
+        "questionSets_one": "{{count}} question set",
+        "questionSets_other": "{{count}} question sets",
         "media_one": "{{count}} media file",
         "media_other": "{{count}} media files",
         "assignments_one": "{{count}} assignment",

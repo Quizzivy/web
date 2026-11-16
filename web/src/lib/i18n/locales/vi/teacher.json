@@ -2707,6 +2707,7 @@
       "removeText": "Bỏ đoạn văn",
       "removeGap": "Bỏ chỗ trống",
       "removeGapDone": "Đã bỏ chỗ trống {{number}}. Từ “{{word}}” đã trở lại đoạn văn.",
+      "gapsLostByEdit_other": "Lần sửa này bỏ {{count}} chỗ trống cùng câu hỏi của chúng: câu {{numbers}}.",
       "summary_other": "{{count}} câu · {{points}}đ",
       "gapCount_other": "{{count}} chỗ trống",
       "gapChoice_other": "{{count}} chọn đáp án",

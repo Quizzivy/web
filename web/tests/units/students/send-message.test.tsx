@@ -22,6 +22,12 @@ const CHI = student("018f0000-0000-7000-8000-0000000000e3", "Lê Minh Chi", {
 // In the list without a class: assigned to one of the caller's tests, or
 // created by them, which the row does not say.
 const BINH = student("018f0000-0000-7000-8000-0000000000e2", "Trần Thị Bình");
+// In one of the caller's classes, but suspended: the API refuses a thread
+// with a student whose account is disabled.
+const DUNG = student("018f0000-0000-7000-8000-0000000000e4", "Phạm Thu Dung", {
+  classes: [inClass(CLASS_A)],
+  disabledAt: "2026-10-01T00:00:00Z",
+});
 
 afterEach(() => {
   useAuthStore.getState().clearSession();
@@ -54,6 +60,15 @@ describe("Send message on a student's row", () => {
     const { user } = renderStudents(teacherUser);
 
     const menu = await menuOf(user, "Trần Thị Bình");
+    expect(within(menu).queryByRole("menuitem", { name: "Gửi tin nhắn" })).toBeNull();
+    expect(within(menu).getByRole("menuitem", { name: "Xem kết quả" })).toBeVisible();
+  });
+
+  it("is not offered for a suspended student, though the row places them in a class", async () => {
+    serveStudents([DUNG]);
+    const { user } = renderStudents(teacherUser);
+
+    const menu = await menuOf(user, "Phạm Thu Dung");
     expect(within(menu).queryByRole("menuitem", { name: "Gửi tin nhắn" })).toBeNull();
     expect(within(menu).getByRole("menuitem", { name: "Xem kết quả" })).toBeVisible();
   });
@@ -100,6 +115,16 @@ describe("the bulk bar's Message", () => {
     serveStudents([BINH]);
     const { user, router } = renderStudents(teacherUser);
     await choose(user, "Trần Thị Bình");
+
+    await user.click(screen.getByRole("button", { name: "Nhắn tin" }));
+    expect(router.state.location.pathname).toBe("/teacher/messages");
+    expect(router.state.location.state).toEqual({ tab: "direct" });
+  });
+
+  it("opens the Direct tab, not a thread, for one suspended student", async () => {
+    serveStudents([DUNG]);
+    const { user, router } = renderStudents(teacherUser);
+    await choose(user, "Phạm Thu Dung");
 
     await user.click(screen.getByRole("button", { name: "Nhắn tin" }));
     expect(router.state.location.pathname).toBe("/teacher/messages");

@@ -23,15 +23,17 @@ export { MESSAGES_PATH };
 /**
  * mayMessage is the web's reading of whom a teacher may write to. The API
  * opens a direct thread with a student the caller has a thread with, has
- * taught (now or before), or created (`messaging-peer`); a page knows none of
- * the past and no creator, only the classes a Students row lists, which are
- * the caller's own (every class, for `scope.all`). So "Send message" shows
- * for a student the row places in a class, and on every member of a class
- * the caller opened; the thread itself answers any refusal (404, or 409
+ * taught (now or before), or created (`messaging-peer`), and only while the
+ * student's account is enabled; a page knows none of the past and no
+ * creator, only the classes a Students row lists, which are the caller's own
+ * (every class, for `scope.all`), and whether the account is suspended. So
+ * "Send message" shows for an enabled student the row places in a class, and
+ * on every member of a class the caller opened (a `ClassMember` says nothing
+ * of the account); the thread itself answers any refusal (404, or 409
  * MESSAGING_NOT_ALLOWED with its sentence in the composer's place).
  */
 export function mayMessage(
-  student: Readonly<{ classes: readonly unknown[] }>,
+  student: Readonly<{ classes: readonly unknown[]; disabledAt: string | null }>,
 ): boolean {
-  return student.classes.length > 0;
+  return student.disabledAt === null && student.classes.length > 0;
 }

@@ -3750,5 +3750,61 @@
     "enter": "Enter",
     "up": "Mũi tên lên",
     "down": "Mũi tên xuống"
+  },
+  "sharing": {
+    "title": "Chia sẻ “{{name}}”",
+    "onlyYou": "Chỉ bạn thấy cho đến khi bạn chia sẻ.",
+    "addPlaceholder": "Thêm giáo viên theo tên hoặc email",
+    "addMore": "Thêm nữa",
+    "removePending": "Bỏ {{name}}",
+    "noMatch": "Không có giáo viên nào khớp. Bạn chỉ chia sẻ được với giáo viên ở trung tâm này.",
+    "searchFailed": "Không tìm được giáo viên. Hãy thử lại.",
+    "accountDisabled": "Tài khoản đã vô hiệu hoá",
+    "permission": "Quyền",
+    "permissionFor": "Quyền của {{name}}",
+    "canUse": "Có thể dùng",
+    "canEdit": "Có thể sửa",
+    "notify": "Gửi thông báo",
+    "message": "Thêm lời nhắn (không bắt buộc)",
+    "people": "Người có quyền truy cập",
+    "you": "{{name}} (bạn)",
+    "owner": "Chủ sở hữu",
+    "nobody": "Chưa chia sẻ với ai.",
+    "loadFailed": "Không tải được danh sách người có quyền truy cập.",
+    "stop": "Dừng chia sẻ với {{name}}",
+    "stopTitle": "Dừng chia sẻ với {{name}}?",
+    "stopBody": "Họ mất quyền truy cập ngay. Các bài giao họ đã tạo từ đây vẫn hoạt động với học viên của họ.",
+    "stopConfirm": "Dừng chia sẻ",
+    "help": {
+      "test": {
+        "use": "Mở, giao cho lớp của họ và tạo bản sao riêng.",
+        "edit": "Thêm vào đó, sửa đề và phát hành phiên bản mới. Bạn thấy thay đổi của họ."
+      },
+      "question_set": {
+        "use": "Mở bộ, thêm câu vào đề thi của họ và tạo bản sao riêng.",
+        "edit": "Thêm vào đó, sửa câu hỏi và gỡ câu khỏi bộ. Bạn thấy thay đổi của họ."
+      }
+    },
+    "footnote": "Họ không chia sẻ tiếp và không xoá được. Kết quả của học viên vẫn nằm trong lớp của họ.",
+    "share": "Chia sẻ",
+    "done": "Xong",
+    "entry": {
+      "shared": "Đã chia sẻ · {{count}}",
+      "sharedWith": "Đã chia sẻ với {{count}}",
+      "shareNamed": "Chia sẻ {{name}}",
+      "manage_other": "Đã chia sẻ với {{count}} giáo viên. Quản lý chia sẻ"
+    },
+    "toast": {
+      "shared_other": "Đã chia sẻ với {{count}} giáo viên",
+      "sharedNotified_other": "Đã chia sẻ với {{count}} giáo viên. Họ sẽ nhận được thông báo.",
+      "nowEdit": "{{name}} giờ có thể sửa",
+      "nowUse": "{{name}} giờ có thể dùng",
+      "stopped": "Đã dừng chia sẻ với {{name}}",
+      "failed": "Không lưu được thay đổi. Hãy thử lại.",
+      "forbidden": {
+        "test": "Bạn không còn quyền chia sẻ đề này.",
+        "question_set": "Bạn không còn quyền chia sẻ bộ này."
+      }
+    }
   }
 }

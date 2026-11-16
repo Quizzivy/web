@@ -3941,5 +3941,64 @@
     "enter": "Enter",
     "up": "Up arrow",
     "down": "Down arrow"
+  },
+  "sharing": {
+    "title": "Share “{{name}}”",
+    "onlyYou": "Only you can see it until you share it.",
+    "addPlaceholder": "Add teachers by name or email",
+    "addMore": "Add more",
+    "removePending": "Remove {{name}}",
+    "noMatch": "No teacher matches. You can only share with teachers at this centre.",
+    "searchFailed": "Could not look up teachers. Try again.",
+    "accountDisabled": "Account disabled",
+    "permission": "Permission",
+    "permissionFor": "Permission for {{name}}",
+    "canUse": "Can use",
+    "canEdit": "Can edit",
+    "notify": "Send a notification",
+    "message": "Add a message (optional)",
+    "people": "People with access",
+    "you": "{{name}} (you)",
+    "owner": "Owner",
+    "nobody": "Not shared with anyone yet.",
+    "loadFailed": "Could not load who has access.",
+    "stop": "Stop sharing with {{name}}",
+    "stopTitle": "Stop sharing with {{name}}?",
+    "stopBody": "They lose access right away. Assignments they already made from it keep working for their students.",
+    "stopConfirm": "Stop sharing",
+    "help": {
+      "test": {
+        "use": "Open, assign to their classes and make their own copy.",
+        "edit": "Also change it and publish new versions. You see their changes."
+      },
+      "question_set": {
+        "use": "Open it, add its questions to their tests and make their own copy.",
+        "edit": "Also edit its questions and remove them from the set. You see their changes."
+      }
+    },
+    "footnote": "They can’t share it further or delete it. Their students’ results stay in their own classes.",
+    "share": "Share",
+    "done": "Done",
+    "entry": {
+      "shared": "Shared · {{count}}",
+      "sharedWith": "Shared with {{count}}",
+      "shareNamed": "Share {{name}}",
+      "manage_one": "Shared with {{count}} teacher. Manage sharing",
+      "manage_other": "Shared with {{count}} teachers. Manage sharing"
+    },
+    "toast": {
+      "shared_one": "Shared with {{count}} teacher",
+      "shared_other": "Shared with {{count}} teachers",
+      "sharedNotified_one": "Shared with {{count}} teacher. They’ll get a notification.",
+      "sharedNotified_other": "Shared with {{count}} teachers. They’ll get a notification.",
+      "nowEdit": "{{name}} can now edit it",
+      "nowUse": "{{name}} can now use it",
+      "stopped": "Stopped sharing with {{name}}",
+      "failed": "Could not save the change. Try again.",
+      "forbidden": {
+        "test": "You can no longer share this test.",
+        "question_set": "You can no longer share this set."
+      }
+    }
   }
 }

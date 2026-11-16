@@ -17,6 +17,7 @@ import {
   Pencil,
   PencilLine,
   Smartphone,
+  UserPlus,
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { LoadError } from "@/components/shared/ListState";
@@ -51,6 +52,7 @@ import {
   VersionHistory,
   type VersionAction,
 } from "@/features/tests/components/VersionHistory";
+import { ShareDialog, useCanShare } from "@/features/sharing";
 import { assignedLabel } from "@/features/tests/testFacts";
 import { diffSummary } from "@/features/tests/versionDiff";
 import { useContentWidthAtLeast } from "@/layouts/shell/contentWidth";
@@ -392,6 +394,9 @@ function DetailHead({
 }: Readonly<{ test: Test; wide: boolean; onHistory: () => void }>) {
   const { t } = useTranslation();
   const locale = useLocale();
+  const client = useQueryClient();
+  const canShare = useCanShare()(test);
+  const [sharing, setSharing] = useState(false);
   const assignLocked = assignLockedReason(test, t);
   return (
     <PageHead
@@ -415,6 +420,18 @@ function DetailHead({
             </Button>
           )}
           <VariantAction test={test} className={HEAD_BUTTON} />
+          {canShare ? (
+            <Button
+              variant="outline"
+              className={HEAD_BUTTON}
+              onClick={() => setSharing(true)}
+            >
+              <UserPlus aria-hidden="true" />
+              {test.sharedWith > 0
+                ? t("sharing.entry.sharedWith", { count: test.sharedWith })
+                : t("sharing.share")}
+            </Button>
+          ) : null}
           <Button asChild variant="outline" className={HEAD_BUTTON}>
             <Link to={`/teacher/tests/${test.id}/edit`}>
               <Pencil aria-hidden="true" />
@@ -451,6 +468,21 @@ function DetailHead({
           assigned: assignedLabel(test, t),
         })}
       </p>
+      {sharing ? (
+        <ShareDialog
+          open
+          onOpenChange={setSharing}
+          kind="test"
+          resourceId={test.id}
+          name={test.title}
+          onSharedChange={() =>
+            void Promise.all([
+              client.invalidateQueries({ queryKey: ["teacher-test", test.id] }),
+              client.invalidateQueries({ queryKey: ["teacher-tests"] }),
+            ])
+          }
+        />
+      ) : null}
     </PageHead>
   );
 }

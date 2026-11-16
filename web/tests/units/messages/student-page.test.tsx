@@ -71,6 +71,23 @@ describe("the list (T-R7.21)", () => {
     );
   });
 
+  it("reads plainly “Giáo viên của bạn” for a staff member who never taught the student", async () => {
+    // The one who created the account and wrote first: no class, not former
+    // (the owner, 2026-11-17). No " · " and nothing after it.
+    state.threads = [teacherRow({ former: false, classNames: [] })];
+    state.teacher = { ...state.teacher, former: false, classNames: [] };
+    renderStudentPage(TEACHER_PATH);
+    const list = await screen.findByRole("complementary", { name: LIST });
+    const row = await within(list).findByRole("link", { name: /Giàu Bùi/ });
+    // getByText matches an element's whole text: "Giáo viên của bạn · "
+    // would not match.
+    expect(within(row).getByText("Giáo viên của bạn")).toBeInTheDocument();
+    expect(row).not.toHaveTextContent("·");
+    expect(row).not.toHaveTextContent("Giáo viên cũ");
+    const header = await screen.findByRole("region", { name: "Giàu Bùi" });
+    expect(await within(header).findByText("Giáo viên của bạn")).toBeInTheDocument();
+  });
+
   it("says where announcements will appear when there is nothing yet", async () => {
     state.threads = [];
     renderStudentPage("/messages");

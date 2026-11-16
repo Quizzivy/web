@@ -350,6 +350,7 @@
   "messages": {
     "student": {
       "empty": "No messages yet. Your teachers’ announcements appear here.",
+      "teacher": "Your teacher",
       "teacherSub": "Your teacher · {{classes}}",
       "former": "Former teacher",
       "channelSub": "Class announcements",

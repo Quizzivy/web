@@ -70,12 +70,17 @@ function sameRef(a: StudentRef | null, b: StudentRef | null): boolean {
   return a !== null && b !== null && a.kind === b.kind && a.id === b.id;
 }
 
-/** teacherLine is a teacher's sub-line: the classes they teach the student, or "Former teacher". */
+/**
+ * teacherLine is a teacher's sub-line: the classes they teach the student, or "Former teacher".
+ * A staff member who never taught the student (no class, not former: the one who created the
+ * account and wrote first) reads "Your teacher" alone (the owner, 2026-11-17).
+ */
 function teacherLine(
   teacher: Readonly<{ classNames: readonly string[]; former: boolean }>,
   t: TFunction,
 ): string {
   if (teacher.former) return t("messages.student.former");
+  if (teacher.classNames.length === 0) return t("messages.student.teacher");
   return t("messages.student.teacherSub", { classes: teacher.classNames.join(", ") });
 }
 

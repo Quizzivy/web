@@ -13,6 +13,7 @@ import i18n from "@/lib/i18n";
 import { loadSpec } from "@tests/support/openapi";
 import {
   KIND_LOOK,
+  LATER_EVENTS,
   LATER_KINDS,
   TEACHER_EVENTS,
   STUDENT_EVENTS,
@@ -143,11 +144,11 @@ describe("notification kinds and sentences", () => {
     expect([...Object.keys(KIND_LOOK), ...LATER_KINDS]).toEqual(
       schemas.NotificationKind.enum,
     );
-    expect([...TEACHER_EVENTS, ...STUDENT_EVENTS]).toEqual(
+    expect([...TEACHER_EVENTS, ...STUDENT_EVENTS, ...LATER_EVENTS]).toEqual(
       schemas.NotificationEvent.enum,
     );
     expect(TEACHER_EVENTS).toEqual(schemas.NotificationEvent.enum.slice(0, 3));
-    expect(STUDENT_EVENTS).toEqual(schemas.NotificationEvent.enum.slice(3));
+    expect(STUDENT_EVENTS).toEqual(schemas.NotificationEvent.enum.slice(3, 5));
     expect(
       TEACHER_EVENTS.filter((event) =>
         (STUDENT_EVENTS as readonly string[]).includes(event),

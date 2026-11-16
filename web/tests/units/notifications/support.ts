@@ -120,6 +120,7 @@ export const preferences: NotificationPreference[] = [
   "assignment.closing",
   "assignment.due_soon",
   "result.ready",
+  "message.received",
 ].map((event) => ({
   event: event as NotificationPreference["event"],
   inApp: true,
@@ -136,7 +137,10 @@ export function listResponse(value: NotificationPage = page) {
   return contractJson("/me/notifications", "get", 200, value);
 }
 export function summaryResponse(unreadNotifications = 3) {
-  return contractJson("/me/summary", "get", 200, { unreadNotifications });
+  return contractJson("/me/summary", "get", 200, {
+    unreadNotifications,
+    unreadMessages: 0,
+  });
 }
 export function preferenceResponse(method: "get" | "put", rows = preferences) {
   return contractJson("/me/notification-preferences", method, 200, rows);

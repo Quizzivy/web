@@ -1358,6 +1358,14 @@
         "name": "Sharing",
         "blurb": "The colleague directory, Can use and Can edit grants, and Shared with me."
       },
+      "teacher-messages": {
+        "name": "Messages",
+        "blurb": "Class announcement channels and direct messages with students. A direct thread is readable by its two participants only."
+      },
+      "student-messages": {
+        "name": "Student messages",
+        "blurb": "Direct threads with teachers and the classes' announcements, read-only."
+      },
       "teacher-imports": {
         "name": "Word import",
         "blurb": "Upload, processing, review and commit."

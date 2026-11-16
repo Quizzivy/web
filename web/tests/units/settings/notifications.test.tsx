@@ -18,6 +18,7 @@ const STORED = [
   { event: "assignment.closing", inApp: false, email: false },
   { event: "assignment.due_soon", inApp: false, email: false },
   { event: "result.ready", inApp: true, email: false },
+  { event: "message.received", inApp: true, email: false },
 ] as const;
 
 let saved: unknown[] = [];
@@ -85,6 +86,7 @@ describe("the Notifications card", () => {
           { event: "assignment.closing", inApp: false, email: false },
           { event: "assignment.due_soon", inApp: false, email: false },
           { event: "result.ready", inApp: true, email: false },
+          { event: "message.received", inApp: true, email: false },
         ],
       ]),
     );

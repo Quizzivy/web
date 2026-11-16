@@ -35,6 +35,7 @@ const CLASS = {
   id: "018f0000-0000-7000-8000-0000000000c1",
   name: "IELTS Foundation",
   description: "Thứ 3 và thứ 5, 19:30–21:00.",
+  teacherId: "0190a000-0000-7000-8000-00000000a101",
   teacherName: "Cô Thương",
   teacherAvatarUrl: null,
   scheduleLabel: null,
@@ -615,7 +616,10 @@ describe("the bell", () => {
     server.use(
       http.get(`${BASE}/me/summary`, ({ request }) => {
         audiences.push(new URL(request.url).searchParams.get("audience"));
-        return contractJson("/me/summary", "get", 200, { unreadNotifications: 2 });
+        return contractJson("/me/summary", "get", 200, {
+          unreadNotifications: 2,
+          unreadMessages: 0,
+        });
       }),
     );
     shell("/", <p>trang</p>);

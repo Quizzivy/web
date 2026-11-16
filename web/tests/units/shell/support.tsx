@@ -114,6 +114,7 @@ export const summaryBody: TeacherSummary = {
   answersToGrade: 6,
   unreadNotifications: 0,
   sharedWithMe: 0,
+  unreadMessages: 0,
 };
 
 /**

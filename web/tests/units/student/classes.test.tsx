@@ -17,6 +17,7 @@ const A = {
   id: "018f0000-0000-7000-8000-0000000000c1",
   name: "IELTS Foundation A",
   description: null,
+  teacherId: "0190a000-0000-7000-8000-00000000a102",
   teacherName: "Hoàng Thương",
   teacherAvatarUrl: null,
   scheduleLabel: null,

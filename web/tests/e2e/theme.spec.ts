@@ -90,7 +90,7 @@ test("keeps the dark preference through SPA links from the dashboard to Settings
       });
     },
     "GET /teacher/summary": { body: dashboard23Summary() },
-    "GET /me/summary": { body: { unreadNotifications: 0 } },
+    "GET /me/summary": { body: { unreadNotifications: 0, unreadMessages: 0 } },
     "GET /teacher/assignments": { body: dashboard23Assignments() },
     "GET /auth/sessions": { body: { items: [] } },
     "GET /teacher/students": noStudents,

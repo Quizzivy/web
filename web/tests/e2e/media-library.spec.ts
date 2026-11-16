@@ -69,6 +69,7 @@ async function prepare(
         answersToGrade: 0,
         unreadNotifications: 0,
         sharedWithMe: 0,
+        unreadMessages: 0,
       },
     },
     "GET /teacher/media": {

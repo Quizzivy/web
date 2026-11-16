@@ -56,7 +56,7 @@ async function prepare(
       });
     },
     "GET /teacher/summary": { body: dashboard23Summary() },
-    "GET /me/summary": { body: { unreadNotifications: 0 } },
+    "GET /me/summary": { body: { unreadNotifications: 0, unreadMessages: 0 } },
     "GET /teacher/assignments": { body: dashboard23Assignments() },
   });
 }

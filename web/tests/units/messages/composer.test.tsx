@@ -6,6 +6,7 @@ import { Composer } from "@/features/messages/components/Composer";
 import { sendsOnEnter, type Outgoing } from "@/features/messages/compose";
 import type { Draft } from "@/features/messages/drafts";
 import type { Upload } from "@/features/messages/components/AttachDialog";
+import { staffAttach } from "@/features/messages/components/StaffAttach";
 import { GUIDE } from "./support";
 
 function Harness({
@@ -27,7 +28,7 @@ function Harness({
       onSend={onSend}
       enterSends={enterSends}
       placeholder="Nhắn cho Nam…"
-      upload={upload}
+      attach={upload && staffAttach(upload)}
     />
   );
 }
@@ -153,8 +154,14 @@ describe("a file in the composer (Q3)", () => {
 
   it("sends a waiting file alone, and its × takes it out without sending", async () => {
     const onSend = vi.fn();
+    const upload = vi.fn<Upload>();
     const { unmount } = render(
-      <Harness enterSends onSend={onSend} initial={{ text: "", attachment: GUIDE }} />,
+      <Harness
+        enterSends
+        onSend={onSend}
+        upload={upload}
+        initial={{ text: "", attachment: GUIDE }}
+      />,
     );
     await userEvent.click(screen.getByRole("button", { name: "Gửi" }));
     expect(onSend).toHaveBeenCalledWith({ body: null, attachment: GUIDE });
@@ -162,7 +169,12 @@ describe("a file in the composer (Q3)", () => {
 
     const quiet = vi.fn();
     render(
-      <Harness enterSends onSend={quiet} initial={{ text: "", attachment: GUIDE }} />,
+      <Harness
+        enterSends
+        onSend={quiet}
+        upload={upload}
+        initial={{ text: "", attachment: GUIDE }}
+      />,
     );
     await userEvent.click(
       screen.getByRole("button", { name: "Bỏ tệp Hướng dẫn thi thử.pdf" }),

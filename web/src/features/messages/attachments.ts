@@ -1,6 +1,5 @@
 import { useTranslation } from "react-i18next";
-import { formatBytes } from "@/features/media/format";
-import { ApiError } from "@/lib/api/errors";
+import { formatBytes } from "@/lib/bytes";
 import type { MessageAttachment } from "./api";
 
 export type Kind = "pdf" | "word" | "image" | "audio";
@@ -36,16 +35,4 @@ export function useAttachmentMeta() {
       size,
     });
   };
-}
-
-/** refusalKey names the sentence for an upload the server refused (T-R7.11). */
-export function refusalKey(cause: unknown): string {
-  if (!(cause instanceof ApiError)) return "messages.attach.failed";
-  if (cause.status === 413 || cause.code === "MEDIA_TOO_LARGE")
-    return "messages.attach.tooBig";
-  if (cause.code === "ATTACHMENT_HAS_MACROS") return "messages.attach.macro";
-  if (cause.code === "IMAGE_DIMENSIONS") return "messages.attach.dimensions";
-  if (cause.status === 415) return "messages.attach.badType";
-  if (cause.status === 429) return "messages.attach.limit";
-  return "messages.attach.failed";
 }

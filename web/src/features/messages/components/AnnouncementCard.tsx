@@ -1,7 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { Eye, Megaphone } from "lucide-react";
 import { cn } from "@/lib/utils";
-import type { MessageAttachment, SeenBy } from "../api";
+import type { MessageAttachment } from "../api";
 import { Linkified } from "../linkify";
 import { AttachmentChip } from "./AttachmentChip";
 import { SendLine, type SendStatus } from "./MessageBubble";
@@ -9,15 +9,16 @@ import { SendLine, type SendStatus } from "./MessageBubble";
 /**
  * AnnouncementCard is a post of a class channel, centred in the stream:
  * "Announcement · {time}", the text, a file it carries, and for staff the eye
- * with "Seen by {seen} of {of}". A student's channel passes no `seenBy`
- * (DG-91: read receipts are the teacher's). An announcement of the reader's
- * own that is on its way, or failed, says so under the card.
+ * with `seen`, "Seen by {seen} of {of}", which the staff page words. A
+ * student's channel passes none (DG-91: read receipts are the teacher's, and
+ * so is the sentence). An announcement of the reader's own that is on its
+ * way, or failed, says so under the card.
  */
 export function AnnouncementCard({
   body,
   attachment,
   time,
-  seenBy,
+  seen,
   status = "sent",
   onRetry,
   onDownload,
@@ -26,7 +27,7 @@ export function AnnouncementCard({
   body: string | null;
   attachment: MessageAttachment | null;
   time: string;
-  seenBy?: SeenBy | undefined;
+  seen?: string | undefined;
   status?: SendStatus;
   onRetry?: () => void;
   onDownload?: ((attachment: MessageAttachment) => void) | undefined;
@@ -68,10 +69,10 @@ export function AnnouncementCard({
             }
           />
         )}
-        {seenBy !== undefined && status === "sent" && (
+        {seen !== undefined && status === "sent" && (
           <p className="text-muted-fg flex items-center gap-2 border-t pt-2 text-xs">
             <Eye aria-hidden="true" className="size-3.5 flex-none" />
-            {t("messages.seenBy", { seen: seenBy.seen, of: seenBy.of })}
+            {seen}
           </p>
         )}
       </article>

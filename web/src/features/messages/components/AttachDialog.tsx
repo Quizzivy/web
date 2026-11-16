@@ -9,7 +9,7 @@ import {
   ATTACHMENT_MAX_BYTES,
   type MessageAttachment,
 } from "../api";
-import { refusalKey } from "../attachments";
+import { ApiError } from "@/lib/api/errors";
 import { AttachmentChip } from "./AttachmentChip";
 
 /** Upload stores one file for a message and answers what was stored. */
@@ -21,6 +21,18 @@ type Phase =
   | Readonly<{ kind: "ready"; attachment: MessageAttachment }>;
 
 const PICK: Phase = { kind: "pick", error: null };
+
+/** refusalKey names the sentence for an upload the server refused (T-R7.11). */
+export function refusalKey(cause: unknown): string {
+  if (!(cause instanceof ApiError)) return "messages.attach.failed";
+  if (cause.status === 413 || cause.code === "MEDIA_TOO_LARGE")
+    return "messages.attach.tooBig";
+  if (cause.code === "ATTACHMENT_HAS_MACROS") return "messages.attach.macro";
+  if (cause.code === "IMAGE_DIMENSIONS") return "messages.attach.dimensions";
+  if (cause.status === 415) return "messages.attach.badType";
+  if (cause.status === 429) return "messages.attach.limit";
+  return "messages.attach.failed";
+}
 
 /**
  * AttachDialog chooses one file and uploads it, and Attach hands what was
@@ -143,7 +155,11 @@ export function AttachDialog({
         <AttachmentChip
           file={{ filename: phase.file.name, bytes: phase.file.size }}
           meta={t("messages.attach.uploading", { percent })}
-          action={{ kind: "remove", onClick: () => choose(null) }}
+          action={{
+            kind: "remove",
+            onClick: () => choose(null),
+            label: t("messages.chip.remove", { name: phase.file.name }),
+          }}
         >
           <div
             role="progressbar"
@@ -163,7 +179,11 @@ export function AttachDialog({
       {phase.kind === "ready" && (
         <AttachmentChip
           file={phase.attachment}
-          action={{ kind: "remove", onClick: () => choose(null) }}
+          action={{
+            kind: "remove",
+            onClick: () => choose(null),
+            label: t("messages.chip.remove", { name: phase.attachment.filename }),
+          }}
         />
       )}
     </FormDialog>

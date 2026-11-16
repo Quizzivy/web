@@ -53,8 +53,10 @@ import { AttemptEventCard } from "../../components/AttemptEventCard";
 import { Composer } from "../../components/Composer";
 import { DayPill } from "../../components/DayPill";
 import { MessageBubble } from "../../components/MessageBubble";
+import { staffAttach } from "../../components/StaffAttach";
 import { ThreadDetails } from "../../components/ThreadDetails";
 import { ThreadList, type ListRow } from "../../components/ThreadList";
+import { ThreadNotice } from "../../components/ThreadNotice";
 import { ThreadView } from "../../components/ThreadView";
 import type { Outgoing } from "../../compose";
 import { useDraft, type Draft } from "../../drafts";
@@ -65,6 +67,7 @@ import { useThread, type ThreadSource } from "../../useThread";
 /** SINGLE_BELOW is the content width under which one pane shows at a time (the deck's msgSingle). */
 export const SINGLE_BELOW = 760;
 const SEARCH_DELAY_MS = 300;
+const STAFF_ATTACH = staffAttach(uploadMessageAttachment);
 
 type Tab = "all" | "direct" | "classes";
 type Head =
@@ -556,11 +559,13 @@ function StaffFooter({
 }>) {
   const { t } = useTranslation();
   if (blocked === "archived")
-    return <Notice icon={Archive} text={t("messages.archived")} />;
+    return <ThreadNotice icon={Archive} text={t("messages.archived")} />;
   if (blocked === "account")
-    return <Notice icon={Ban} text={t("messages.accountOff", { name: view.title })} />;
+    return (
+      <ThreadNotice icon={Ban} text={t("messages.accountOff", { name: view.title })} />
+    );
   if (blocked === "notAllowed")
-    return <Notice icon={Lock} text={t("messages.announceNotAllowed")} />;
+    return <ThreadNotice icon={Lock} text={t("messages.announceNotAllowed")} />;
   const isClass = view.ref.kind === "class";
   return (
     <Composer
@@ -569,7 +574,7 @@ function StaffFooter({
       onSend={onSend}
       focusRequest={focusRequest}
       enterSends={!isClass}
-      upload={uploadMessageAttachment}
+      attach={STAFF_ATTACH}
       placeholder={
         isClass
           ? t("messages.placeholderClass", { name: view.title })
@@ -650,6 +655,7 @@ function StaffEntry({
   downloading: string | null;
   retry: (clientId: string) => void;
 }>) {
+  const { t } = useTranslation();
   const locale = useLocale();
   if (entry.kind === "day") return <DayPill label={entry.label} />;
   if (entry.kind === "event")
@@ -688,7 +694,11 @@ function StaffEntry({
         body={m.body}
         attachment={m.attachment}
         time={clock(m.createdAt, locale)}
-        seenBy={m.seenBy}
+        seen={
+          m.seenBy === undefined
+            ? undefined
+            : t("messages.seenBy", { seen: m.seenBy.seen, of: m.seenBy.of })
+        }
         onDownload={download}
         downloading={held}
       />
@@ -702,17 +712,5 @@ function StaffEntry({
       onDownload={download}
       downloading={held}
     />
-  );
-}
-
-function Notice({ icon: Icon, text }: Readonly<{ icon: typeof Ban; text: string }>) {
-  return (
-    <div
-      role="status"
-      className="text-muted-fg flex flex-none items-center gap-3 border-t px-4 py-4 text-sm"
-    >
-      <Icon aria-hidden="true" className="size-4 flex-none" />
-      <span className="min-w-0 flex-1 text-pretty">{text}</span>
-    </div>
   );
 }

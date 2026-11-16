@@ -37,13 +37,22 @@ export type ListRow = Readonly<{
 /** ListState is what the list pane shows: its rows, or the first read loading or failed. */
 export type ListState = "loading" | "error" | "ready";
 
-const SKELETON = [
-  ["direct", "w-1/2", "w-4/5"],
-  ["class", "w-2/3", "w-3/4"],
-  ["direct", "w-2/5", "w-5/6"],
-  ["class", "w-3/5", "w-3/5"],
-  ["direct", "w-1/2", "w-3/4"],
-  ["class", "w-3/5", "w-4/5"],
+/** The staff list's six skeleton rows; a caller may name other kinds, row by row. */
+const SKELETON_KINDS: readonly ListRow["kind"][] = [
+  "direct",
+  "class",
+  "direct",
+  "class",
+  "direct",
+  "class",
+];
+const SKELETON_WIDTHS = [
+  ["w-1/2", "w-4/5"],
+  ["w-2/3", "w-3/4"],
+  ["w-2/5", "w-5/6"],
+  ["w-3/5", "w-3/5"],
+  ["w-1/2", "w-3/4"],
+  ["w-3/5", "w-4/5"],
 ] as const;
 
 function RowAvatar({
@@ -127,7 +136,8 @@ function Message({
  * and tabs), then the rows, then, while a search is typed, `candidates` under
  * their own label ("Students not messaged yet"), whose rows open a thread
  * that exists from its first message. Its other states are the proposal's:
- * six skeleton rows of its own shape, one sentence with Retry, the empty
+ * skeleton rows of its own shape (six, or the kinds `skeleton` names: the
+ * student's three), one sentence with Retry, the empty
  * sentence, and the no-match sentence. It fills the pane below 760px of
  * content (`single`), and is 320px (`width`) beside the thread above it.
  */
@@ -143,6 +153,7 @@ export function ThreadList({
   noMatchText,
   single,
   width = "w-80",
+  skeleton = SKELETON_KINDS,
 }: Readonly<{
   label: string;
   tools?: ReactNode;
@@ -155,6 +166,7 @@ export function ThreadList({
   noMatchText?: string | null | undefined;
   single: boolean;
   width?: string;
+  skeleton?: readonly ListRow["kind"][];
 }>) {
   const { t } = useTranslation();
   const candidatesId = useId();
@@ -173,20 +185,23 @@ export function ThreadList({
       <div className="flex min-h-0 flex-1 flex-col overflow-y-auto">
         {state === "loading" && (
           <div role="status" aria-label={t("common.loading")}>
-            {SKELETON.map(([kind, first, second], index) => (
-              <div key={index} className="flex gap-3 border-b p-3">
-                <Skeleton
-                  className={cn(
-                    "size-9 flex-none",
-                    kind === "class" ? "rounded-ctl" : "rounded-full",
-                  )}
-                />
-                <span className="flex min-w-0 flex-1 flex-col gap-2 pt-1">
-                  <Skeleton className={cn("h-3", first)} />
-                  <Skeleton className={cn("h-2.5", second)} />
-                </span>
-              </div>
-            ))}
+            {skeleton.slice(0, SKELETON_WIDTHS.length).map((kind, index) => {
+              const [first, second] = SKELETON_WIDTHS[index]!;
+              return (
+                <div key={index} className="flex gap-3 border-b p-3">
+                  <Skeleton
+                    className={cn(
+                      "size-9 flex-none",
+                      kind === "class" ? "rounded-ctl" : "rounded-full",
+                    )}
+                  />
+                  <span className="flex min-w-0 flex-1 flex-col gap-2 pt-1">
+                    <Skeleton className={cn("h-3", first)} />
+                    <Skeleton className={cn("h-2.5", second)} />
+                  </span>
+                </div>
+              );
+            })}
           </div>
         )}
         {state === "error" && (

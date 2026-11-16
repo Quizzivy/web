@@ -24,7 +24,8 @@ const ICON: Record<Kind, LucideIcon> = {
 /**
  * AttachmentChip is a file in a message (the R7 Messages proposal): a tile of
  * its kind, its name, its kind and size, and one action, Download for a file
- * that was sent or the × that takes a waiting file out of the composer. In a
+ * that was sent or the × that takes a waiting file out of the composer, which
+ * the staff side words (its name is not a student's string, T-R7.21). In a
  * bubble of the reader's own (`inverse`) it takes the bubble's colours; in a
  * card or the composer it is bordered on the page's ground. `meta` replaces
  * the second line, and `children` go under the row (an upload's progress).
@@ -41,7 +42,7 @@ export function AttachmentChip({
   inverse?: boolean;
   action:
     | Readonly<{ kind: "download"; onClick: () => void; pending?: boolean }>
-    | Readonly<{ kind: "remove"; onClick: () => void }>
+    | Readonly<{ kind: "remove"; onClick: () => void; label: string }>
     | null;
   meta?: string | undefined;
   className?: string | undefined;
@@ -97,7 +98,7 @@ export function AttachmentChip({
             variant="ghost"
             size="icon-sm"
             className="text-muted-fg max-[767px]:size-10"
-            aria-label={t("messages.chip.remove", { name: file.filename })}
+            aria-label={action.label}
             onClick={action.onClick}
           >
             <X className="size-4" />

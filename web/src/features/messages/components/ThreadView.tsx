@@ -1,6 +1,7 @@
 import {
   useEffect,
   useEffectEvent,
+  useId,
   useLayoutEffect,
   useRef,
   useState,
@@ -75,6 +76,7 @@ export function ThreadView({
   const anchor = useRef<{ key: string; fromBottom: number } | null>(null);
   const placed = useRef<string | null>(null);
   const [endInView, setEndInView] = useState(false);
+  const titleId = useId();
 
   const onScroll = () => {
     const node = stream.current;
@@ -152,7 +154,9 @@ export function ThreadView({
         )}
         {avatar}
         <span className="min-w-0 flex-1">
-          <span className="block truncate text-base font-semibold">{title}</span>
+          <span id={titleId} className="block truncate text-base font-semibold">
+            {title}
+          </span>
           <span className="text-muted-fg text-meta block truncate">{sub}</span>
         </span>
         {details}
@@ -160,8 +164,12 @@ export function ThreadView({
       <div
         ref={stream}
         onScroll={onScroll}
+        role="log"
+        aria-labelledby={titleId}
+        // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Scroll regions need keyboard access independently of their content.
+        tabIndex={0}
         data-slot="message-stream"
-        className="bg-sidebar flex min-h-0 flex-1 flex-col overflow-y-auto p-4"
+        className="bg-sidebar flex min-h-0 flex-1 flex-col overflow-y-auto p-4 -outline-offset-2!"
       >
         {state === "loading" && (
           <div

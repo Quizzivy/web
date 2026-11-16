@@ -63,7 +63,7 @@ function Row({ row }: Readonly<{ row: ListRow }>) {
         to={row.to}
         aria-current={row.active ? "page" : undefined}
         className={cn(
-          "hover:bg-muted flex w-full gap-3 border-b p-3 text-left -outline-offset-2",
+          "hover:bg-muted flex w-full gap-3 border-b p-3 text-left -outline-offset-2!",
           row.active && "bg-muted",
         )}
       >

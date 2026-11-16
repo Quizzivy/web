@@ -134,7 +134,7 @@ describe("the page", () => {
     expect(card.getByText("TH")).toBeInTheDocument();
     const links = card.queryAllByRole("link");
     expect(links.map((link) => link.getAttribute("aria-label"))).toEqual([
-      "Nhắn riêng cho Hoàng Thương",
+      "Nhắn cho Hoàng Thương",
     ]);
     expect(links[0]).toHaveAttribute("href", `/messages/teacher/${A.teacherId}`);
     expect(card.queryAllByRole("button")).toEqual([]);

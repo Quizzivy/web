@@ -96,6 +96,32 @@ describe("the list (T-R7.21)", () => {
     ).toBeInTheDocument();
   });
 
+  it("draws the thread's three bubble skeletons beside the list while it first loads", async () => {
+    state.listStatus = 500;
+    const { container } = renderStudentPage("/messages");
+    const pane = container.querySelector<HTMLElement>(
+      "div.bg-sidebar[aria-hidden=true]",
+    )!;
+    const bubbles = pane.querySelectorAll("[data-slot=skeleton]");
+    expect([...bubbles].map((bubble) => bubble.classList.contains("self-end"))).toEqual(
+      [false, false, true],
+    );
+    await screen.findByText("Không tải được tin nhắn.");
+    expect(pane.querySelectorAll("[data-slot=skeleton]")).toHaveLength(0);
+  });
+
+  it("names a thread with no row yet for Messages until its read names the teacher", async () => {
+    state.threads = [];
+    renderStudentPage(TEACHER_PATH);
+    const pane = screen.getByRole("region", { name: "Tin nhắn" });
+    expect(within(pane).getByRole("log", { name: "Tin nhắn" })).toBeInTheDocument();
+    expect(pane.querySelector("header [data-slot=skeleton]")).not.toBeNull();
+    expect(await screen.findByRole("region", { name: "Giàu Bùi" })).toHaveTextContent(
+      "Giáo viên của bạn · IELTS 6.5 Evening, IELTS Foundation A",
+    );
+    expect(screen.getByRole("log", { name: "Giàu Bùi" })).toBeInTheDocument();
+  });
+
   it("reads the list again when the summary's unread count changes", async () => {
     let reads = 0;
     const { client } = renderStudentPage(TEACHER_PATH);

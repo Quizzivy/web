@@ -351,7 +351,8 @@
       "former": "Former teacher",
       "channelSub": "Class announcements",
       "readOnly": "Only your teacher can post here.",
-      "reply": "Reply to {{name}} directly"
+      "reply": "Reply to {{name}} directly",
+      "messageTeacher": "Message {{name}}"
     }
   }
 }

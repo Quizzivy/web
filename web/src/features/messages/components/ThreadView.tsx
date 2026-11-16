@@ -30,6 +30,8 @@ export type ThreadState = "loading" | "error" | "ready";
  * is at the end, and tells `onSeen` the newest message while the end
  * is in view and the tab is visible. Its other states are the proposal's:
  * three bubble skeletons, one sentence with Retry, and the empty sentence.
+ * Until `title` is known, the header draws two skeleton lines and the pane
+ * is named "Messages".
  */
 export function ThreadView({
   threadKey,
@@ -83,6 +85,9 @@ export function ThreadView({
   const placed = useRef<string | null>(null);
   const [endInView, setEndInView] = useState(false);
   const titleId = useId();
+  // A thread with neither its read nor a list row yet (one opened from a
+  // Classes card before anything is said) is named for Messages meanwhile.
+  const name = title === "" ? t("messages.title") : title;
 
   const onScroll = () => {
     const node = stream.current;
@@ -148,7 +153,7 @@ export function ThreadView({
   };
 
   return (
-    <section aria-label={title} className="flex min-h-0 min-w-0 flex-1 flex-col">
+    <section aria-label={name} className="flex min-h-0 min-w-0 flex-1 flex-col">
       <header className="flex min-h-15 flex-none items-center gap-3 border-b px-4 py-2">
         {onBack !== undefined && (
           <Button
@@ -163,19 +168,27 @@ export function ThreadView({
           </Button>
         )}
         {avatar}
-        <span className="min-w-0 flex-1">
-          <span id={titleId} className="block truncate text-base font-semibold">
-            {title}
+        {title === "" && state === "loading" ? (
+          <span className="flex min-w-0 flex-1 flex-col gap-1.5" aria-hidden="true">
+            <Skeleton className="h-4 w-32 rounded-sm" />
+            <Skeleton className="h-3 w-24 rounded-sm" />
           </span>
-          <span className="text-muted-fg text-meta block truncate">{sub}</span>
-        </span>
+        ) : (
+          <span className="min-w-0 flex-1">
+            <span id={titleId} className="block truncate text-base font-semibold">
+              {title}
+            </span>
+            <span className="text-muted-fg text-meta block truncate">{sub}</span>
+          </span>
+        )}
         {details}
       </header>
       <div
         ref={stream}
         onScroll={onScroll}
         role="log"
-        aria-labelledby={titleId}
+        aria-labelledby={title === "" ? undefined : titleId}
+        aria-label={title === "" ? name : undefined}
         // eslint-disable-next-line jsx-a11y/no-noninteractive-tabindex -- Scroll regions need keyboard access independently of their content.
         tabIndex={0}
         data-slot="message-stream"

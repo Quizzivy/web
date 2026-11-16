@@ -334,7 +334,8 @@
       "former": "Giáo viên cũ",
       "channelSub": "Thông báo lớp",
       "readOnly": "Chỉ giáo viên đăng được ở đây.",
-      "reply": "Nhắn riêng cho {{name}}"
+      "reply": "Nhắn riêng cho {{name}}",
+      "messageTeacher": "Nhắn cho {{name}}"
     }
   }
 }

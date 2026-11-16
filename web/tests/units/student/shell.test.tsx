@@ -567,7 +567,7 @@ describe("the intro", () => {
 });
 
 describe("classes", () => {
-  it("draws each class with what comes next and one join action", async () => {
+  it("draws each class with what comes next and one join action, and no message button while Messages is off", async () => {
     serveStudent({ dueNow: [card({ classId: CLASS.id, className: CLASS.name })] });
     shell("/classes", <StudentClassesPage />);
     expect(
@@ -715,7 +715,7 @@ describe("the Messages button (T-R7.21)", () => {
     summary(0);
     shell("/classes", <StudentClassesPage />);
     const button = await screen.findByRole("link", {
-      name: "Nhắn riêng cho Cô Thương",
+      name: "Nhắn cho Cô Thương",
     });
     expect(button).toHaveAttribute("href", `/messages/teacher/${CLASS.teacherId}`);
   });

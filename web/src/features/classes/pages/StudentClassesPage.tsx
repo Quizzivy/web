@@ -177,7 +177,9 @@ function ClassCard({ klass: c, next }: Readonly<{ klass: MyClass; next: Next }>)
               >
                 <Link
                   to={studentThreadPath({ kind: "direct", id: c.teacherId })}
-                  aria-label={t("messages.student.reply", { name: c.teacherName })}
+                  aria-label={t("messages.student.messageTeacher", {
+                    name: c.teacherName,
+                  })}
                 >
                   <MessageSquare aria-hidden="true" className="size-4" />
                 </Link>

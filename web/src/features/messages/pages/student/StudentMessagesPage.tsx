@@ -4,6 +4,7 @@ import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router";
 import { useQuery, useQueryClient } from "@tanstack/react-query";
 import { Ban, Megaphone, MessageSquare } from "lucide-react";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getMySummary, notificationKeys } from "@/features/notifications/api";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { ApiError } from "@/lib/api/errors";
@@ -218,7 +219,20 @@ export default function StudentMessagesPage() {
           />
         )}
         {showThread && open === null && (
-          <div className="bg-sidebar min-w-0 flex-1" aria-hidden="true" />
+          // While the list's first read loads, the pane draws the thread's
+          // three bubble skeletons, as the proposal's list `loading` frame.
+          <div
+            className="bg-sidebar flex min-w-0 flex-1 flex-col justify-end gap-3 p-4"
+            aria-hidden="true"
+          >
+            {list.isPending && (
+              <>
+                <Skeleton className="h-10 w-1/2 self-start rounded-2xl" />
+                <Skeleton className="h-10 w-1/3 self-start rounded-2xl" />
+                <Skeleton className="h-10 w-2/5 self-end rounded-2xl" />
+              </>
+            )}
+          </div>
         )}
       </div>
     </div>

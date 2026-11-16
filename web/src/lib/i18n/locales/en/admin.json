@@ -534,7 +534,7 @@
       },
       "warn": {
         "label": "Warn the teacher at",
-        "hint": "They get a notification and an email."
+        "hint": "They get a notification."
       },
       "limit": {
         "label": "When a teacher runs out",

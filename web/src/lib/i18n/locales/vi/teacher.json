@@ -372,7 +372,9 @@
     },
     "count": {
       "live_other": "{{count}} bài giao đang mở",
-      "toGrade_other": "{{count}} câu trả lời chờ chấm"
+      "toGrade_other": "{{count}} câu trả lời chờ chấm",
+      "unreadMessages_other": "{{count}} tin nhắn chưa đọc",
+      "shared_other": "{{count}} mục được chia sẻ với bạn"
     },
     "sidebar": {
       "collapse": "Thu gọn thanh bên",

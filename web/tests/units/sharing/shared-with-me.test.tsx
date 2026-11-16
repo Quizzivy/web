@@ -4,6 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { createMemoryRouter, RouterProvider } from "react-router";
 import { http, HttpResponse } from "msw";
+import { dashboardKeys } from "@/features/dashboard/keys";
 import SharedWithMePage from "@/features/sharing/pages/teacher/SharedWithMePage";
 import { Toaster, toast } from "@/components/ui/sonner";
 import type { components } from "@/lib/api/schema";
@@ -380,6 +381,23 @@ describe("Shared with me", () => {
       expect(screen.queryByRole("row", { name: /IELTS Writing/ })).toBeNull(),
     );
     expect(tab("Tất cả")).toHaveTextContent("Tất cả 2");
+  });
+
+  it("has the sidebar's count read again once an item leaves the list", async () => {
+    const { user, client } = renderPage();
+    await screen.findByRole("row", { name: /IELTS Writing/ });
+    client.setQueryData(dashboardKeys.summary, { sharedWithMe: 3 });
+
+    await user.click(
+      within(row("IELTS Writing")).getByRole("button", {
+        name: "Gỡ khỏi danh sách của tôi",
+      }),
+    );
+    const dialog = await screen.findByRole("dialog");
+    await user.click(within(dialog).getByRole("button", { name: "Gỡ" }));
+    await waitFor(() =>
+      expect(client.getQueryState(dashboardKeys.summary)?.isInvalidated).toBe(true),
+    );
   });
 
   it("says nobody can share it again when the owner's account is disabled (Q3)", async () => {

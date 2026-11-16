@@ -398,7 +398,11 @@
       "live_one": "{{count}} live assignment",
       "live_other": "{{count}} live assignments",
       "toGrade_one": "{{count}} answer to grade",
-      "toGrade_other": "{{count}} answers to grade"
+      "toGrade_other": "{{count}} answers to grade",
+      "unreadMessages_one": "{{count}} unread message",
+      "unreadMessages_other": "{{count}} unread messages",
+      "shared_one": "{{count}} item shared with you",
+      "shared_other": "{{count}} items shared with you"
     },
     "sidebar": {
       "collapse": "Collapse sidebar",

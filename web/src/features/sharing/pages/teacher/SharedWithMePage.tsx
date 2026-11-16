@@ -17,6 +17,7 @@ import { DataTable } from "@/components/shared/data/DataTable";
 import { Pager } from "@/components/shared/data/Pager";
 import { templateOf } from "@/components/shared/data/tableLayout";
 import { useCan } from "@/features/auth/permissions";
+import { dashboardKeys } from "@/features/dashboard/keys";
 import { QUESTION_SETS_KEY } from "@/features/question-bank/api";
 import { trimmed, useDebouncedInput } from "@/hooks/useDebouncedInput";
 import { useListFilters } from "@/hooks/useListFilters";
@@ -158,7 +159,13 @@ export default function SharedWithMePage() {
       listSharedWithMe({ kind, q: search, page, limit: size }, signal),
     placeholderData: keepPreviousData,
   });
-  const refresh = () => client.invalidateQueries({ queryKey: SHARED_WITH_ME_KEY });
+  // The sidebar's muted count is the summary's `sharedWithMe`: a grant that
+  // leaves the list leaves the count too.
+  const refresh = () =>
+    Promise.all([
+      client.invalidateQueries({ queryKey: SHARED_WITH_ME_KEY }),
+      client.invalidateQueries({ queryKey: dashboardKeys.summary }),
+    ]);
   const settle = () => {
     setToSearch(true);
     setActing(null);

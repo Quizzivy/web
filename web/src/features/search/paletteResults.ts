@@ -57,6 +57,10 @@ export interface PalettePage {
   to: string;
 }
 
+/**
+ * PAGE_ORDER is the deck's Pages group. Shared with me is in the sidebar and
+ * not here, as the deck has it.
+ */
 const PAGE_ORDER = [
   "dashboard",
   "assignments",
@@ -65,6 +69,7 @@ const PAGE_ORDER = [
   "bank",
   "students",
   "classes",
+  "messages",
   "media",
 ] as const;
 

@@ -366,6 +366,7 @@
       "classes": "Lớp học",
       "students": "Học viên",
       "tests": "Đề thi",
+      "sharedWithMe": "Được chia sẻ với tôi",
       "questionBank": "Ngân hàng câu hỏi",
       "media": "Thư viện media"
     },
@@ -3811,6 +3812,52 @@
         "notATeacher": "Không phải giáo viên của trung tâm: {{names}}",
         "disabled": "Tài khoản đã vô hiệu hoá: {{names}}",
         "self": "Đó là bạn: {{names}}"
+      }
+    },
+    "withMe": {
+      "lead": "Đề thi và câu hỏi mà giáo viên khác chia sẻ với bạn. Chúng vẫn thuộc về giáo viên đã chia sẻ.",
+      "callout": {
+        "use": "cho phép bạn mở, giao cho lớp của mình và tạo bản sao riêng.",
+        "edit": "còn cho phép bạn thay đổi nội dung, và chủ sở hữu thấy đúng những thay đổi đó."
+      },
+      "kinds": "Loại nội dung",
+      "tab": {
+        "all": "Tất cả",
+        "test": "Đề thi",
+        "question_set": "Câu hỏi"
+      },
+      "search": "Tìm theo tên hoặc giáo viên",
+      "column": {
+        "name": "Tên",
+        "owner": "Người chia sẻ",
+        "access": "Quyền",
+        "sharedAt": "Ngày chia sẻ"
+      },
+      "kind": {
+        "test": "Đề thi",
+        "question_set_other": "Bộ câu hỏi · {{count}} câu"
+      },
+      "open": "Mở",
+      "copy": "Tạo bản sao",
+      "remove": "Gỡ khỏi danh sách của tôi",
+      "empty": "Chưa có gì được chia sẻ với bạn. Khi một giáo viên chia sẻ đề thi hoặc bộ câu hỏi, nó sẽ hiện ở đây.",
+      "noMatch": "Không có mục nào khớp.",
+      "clearFilters": "Xoá bộ lọc",
+      "loadFailed": "Không tải được danh sách được chia sẻ với bạn.",
+      "noun_other": "mục",
+      "copyTitle": "Tạo bản sao của “{{name}}”?",
+      "copyBody": "Bản sao là của bạn: chỉ bạn thấy, và bạn sửa tuỳ ý. Bản gốc của {{owner}} không thay đổi.",
+      "removeTitle": "Gỡ “{{name}}” khỏi danh sách của bạn?",
+      "removeBody": "Bạn sẽ không mở được mục này nữa. Bài giao bạn đã tạo từ nó vẫn chạy bình thường. {{owner}} có thể chia sẻ lại với bạn.",
+      "removeBodyDisabled": "Bạn sẽ không mở được mục này nữa. Bài giao bạn đã tạo từ nó vẫn chạy bình thường. Tài khoản của {{owner}} đã bị vô hiệu hoá, nên hiện không ai chia sẻ lại được.",
+      "removeConfirm": "Gỡ",
+      "toast": {
+        "copied": {
+          "test": "Đã sao chép vào Đề thi của bạn",
+          "question_set": "Đã sao chép vào Ngân hàng câu hỏi của bạn"
+        },
+        "removed": "Đã gỡ khỏi Được chia sẻ với tôi",
+        "gone": "Mục này không còn được chia sẻ với bạn."
       }
     }
   }

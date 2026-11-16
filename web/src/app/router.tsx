@@ -124,6 +124,11 @@ const teacherTree: RouteObject = {
           lazy: page(() => import("@/features/tests/pages/teacher/TestBuilderPage")),
         },
         {
+          path: "shared-with-me",
+          handle: { crumb: [{ key: "teacherShell.nav.sharedWithMe" }] },
+          lazy: page(() => import("@/features/sharing/pages/teacher/SharedWithMePage")),
+        },
+        {
           path: "imports",
           lazy: page(() => import("@/features/imports/pages/teacher/ImportsGate")),
           children: [

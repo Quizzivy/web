@@ -112,3 +112,59 @@ export function useTeacherLookup(term: string, fresh: boolean) {
     retry: false,
   });
 }
+
+export type SharedWithMeItem = components["schemas"]["SharedWithMeItem"];
+export type SharedWithMeCounts = components["schemas"]["SharedWithMeCounts"];
+export type SharedWithMeQuery = Readonly<{
+  kind?: ShareKind | undefined;
+  q?: string | undefined;
+  page: number;
+  limit: number;
+}>;
+
+/** SHARED_WITH_ME_KEY heads every read of Shared with me, whatever its tab, search or page. */
+export const SHARED_WITH_ME_KEY = ["shared-with-me"] as const;
+
+/**
+ * listSharedWithMe reads one page of what other teachers shared with the
+ * caller, newest grant first, with the tabs' counts (before `kind`, after
+ * `q`). An empty `q` and no `kind` are left out of the query.
+ */
+export function listSharedWithMe(
+  { kind, q, page, limit }: SharedWithMeQuery,
+  signal?: AbortSignal,
+) {
+  const query = {
+    page,
+    limit,
+    ...(kind === undefined ? {} : { kind }),
+    ...(q === undefined || q === "" ? {} : { q }),
+  };
+  return api("get", "/teacher/shared-with-me", signal ? { query, signal } : { query });
+}
+
+/** removeSharedWithMe takes a grant made to the caller off their list ("Remove from my list"). */
+export function removeSharedWithMe(shareId: string) {
+  return api("delete", "/teacher/shared-with-me/{shareId}", { path: { shareId } });
+}
+
+/** copyTest makes the caller's own draft from a test's current draft ("Make a copy"). */
+export function copyTest(id: string) {
+  return api("post", "/teacher/tests/{id}/copy", { path: { id } });
+}
+
+/** copyQuestionSet makes the caller's own set, with their own questions, from a whole set. */
+export function copyQuestionSet(id: string) {
+  return api("post", "/teacher/question-sets/{id}/copy", { path: { id } });
+}
+
+/**
+ * copyShared makes the caller's own copy of what a grant shares: a test's
+ * current draft, or a whole question set.
+ */
+export async function copyShared(
+  item: Pick<SharedWithMeItem, "kind" | "resourceId">,
+): Promise<void> {
+  if (item.kind === "test") await copyTest(item.resourceId);
+  else await copyQuestionSet(item.resourceId);
+}

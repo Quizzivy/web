@@ -390,6 +390,7 @@
       "classes": "Classes",
       "students": "Students",
       "tests": "Tests",
+      "sharedWithMe": "Shared with me",
       "questionBank": "Question bank",
       "media": "Media"
     },
@@ -4006,6 +4007,54 @@
         "notATeacher": "Not a teacher at this centre: {{names}}",
         "disabled": "Account disabled: {{names}}",
         "self": "That’s you: {{names}}"
+      }
+    },
+    "withMe": {
+      "lead": "Tests and questions other teachers shared with you. They still belong to the teacher who shared them.",
+      "callout": {
+        "use": "lets you open it, assign it to your classes and make your own copy.",
+        "edit": "also lets you change it, and your changes are what the owner sees."
+      },
+      "kinds": "Kind of content",
+      "tab": {
+        "all": "All",
+        "test": "Tests",
+        "question_set": "Questions"
+      },
+      "search": "Search name or teacher",
+      "column": {
+        "name": "Name",
+        "owner": "Shared by",
+        "access": "Access",
+        "sharedAt": "Shared"
+      },
+      "kind": {
+        "test": "Test",
+        "question_set_one": "Question set · {{count}} question",
+        "question_set_other": "Question set · {{count}} questions"
+      },
+      "open": "Open",
+      "copy": "Make a copy",
+      "remove": "Remove from my list",
+      "empty": "Nothing is shared with you yet. When a teacher shares a test or a question set, it appears here.",
+      "noMatch": "Nothing matches.",
+      "clearFilters": "Clear filters",
+      "loadFailed": "Could not load what is shared with you.",
+      "noun_one": "item",
+      "noun_other": "items",
+      "copyTitle": "Make a copy of “{{name}}”?",
+      "copyBody": "The copy is yours: only you can see it, and you can change it freely. {{owner}}’s original does not change.",
+      "removeTitle": "Remove “{{name}}” from your list?",
+      "removeBody": "You lose access to it. Assignments you already made from it keep working. {{owner}} can share it with you again.",
+      "removeBodyDisabled": "You lose access to it. Assignments you already made from it keep working. {{owner}}’s account is disabled, so nobody can share it again for now.",
+      "removeConfirm": "Remove",
+      "toast": {
+        "copied": {
+          "test": "Copied to your Tests",
+          "question_set": "Copied to your Question bank"
+        },
+        "removed": "Removed from Shared with me",
+        "gone": "This is no longer shared with you."
       }
     }
   }

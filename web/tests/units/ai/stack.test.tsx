@@ -12,7 +12,7 @@ import { useState } from "react";
 import { toast } from "sonner";
 import { AiPanelStack } from "@/features/ai/components/AiPanelStack";
 import type { AiFinding, AiGeneratedQuestion } from "@/features/ai/api";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { server } from "@tests/support/server";

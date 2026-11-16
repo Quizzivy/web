@@ -11,7 +11,7 @@ import type {
   GroupUpdateInput,
   StoredGroup,
 } from "@/features/question-groups/api";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
 import { assistantUser } from "@tests/support/fixtures";

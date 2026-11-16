@@ -110,12 +110,16 @@ describe("every UI character renders in Be Vietnam Pro (spec §12)", () => {
   });
 
   it("has no locale string outside the loaded fonts", () => {
-    const offenders = readdirSync(LOCALES).flatMap((name) => {
-      const json: unknown = JSON.parse(readFileSync(join(LOCALES, name), "utf8"));
-      return localeStrings(json).flatMap(({ key, text }) =>
-        uncovered(text, covered).map((c) => `${name} ${key}: ${codePoint(c)}`),
-      );
-    });
+    const offenders = readdirSync(LOCALES)
+      .flatMap((language) =>
+        readdirSync(join(LOCALES, language)).map((file) => `${language}/${file}`),
+      )
+      .flatMap((name) => {
+        const json: unknown = JSON.parse(readFileSync(join(LOCALES, name), "utf8"));
+        return localeStrings(json).flatMap(({ key, text }) =>
+          uncovered(text, covered).map((c) => `${name} ${key}: ${codePoint(c)}`),
+        );
+      });
     expect(offenders).toEqual([]);
   });
 });

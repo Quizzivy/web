@@ -1,7 +1,6 @@
 import { describe, expect, it } from "vitest";
 import i18n from "@/lib/i18n";
-import en from "@/lib/i18n/locales/en.json";
-import vi from "@/lib/i18n/locales/vi.json";
+import { en, vi } from "@tests/support/locales";
 import { copyOf, PERMISSION_COPY } from "@/features/roles/permissionLabels";
 import { loadSpec } from "@tests/support/openapi";
 import { CATALOGUE } from "@tests/support/roles";

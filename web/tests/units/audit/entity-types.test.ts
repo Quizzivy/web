@@ -1,6 +1,5 @@
 import { describe, expect, it } from "vitest";
-import en from "@/lib/i18n/locales/en.json";
-import vi from "@/lib/i18n/locales/vi.json";
+import { en, vi } from "@tests/support/locales";
 
 const WRITTEN = [
   "ai_credit_periods",

@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
 import i18n, { chosenLocale, setLocale } from "@/lib/i18n";
-import en from "@/lib/i18n/locales/en.json";
+import { en } from "@tests/support/locales";
 
 beforeEach(async () => {
   await i18n.changeLanguage("vi");

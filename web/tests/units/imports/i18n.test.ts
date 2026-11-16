@@ -1,8 +1,7 @@
 import { readFileSync, readdirSync, statSync } from "node:fs";
 import { join, resolve } from "node:path";
 import { describe, expect, it } from "vitest";
-import vi from "@/lib/i18n/locales/vi.json";
-import en from "@/lib/i18n/locales/en.json";
+import { vi, en } from "@tests/support/locales";
 import { EDITABLE_TYPES } from "@/features/imports/draft";
 import {
   FINDING_CODES,

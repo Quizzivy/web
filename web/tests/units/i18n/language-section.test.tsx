@@ -4,7 +4,7 @@ import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { ProfileSection } from "@/features/settings/sections/Profile";
 import i18n, { setLocale } from "@/lib/i18n";
-import en from "@/lib/i18n/locales/en.json";
+import { en } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import { teacherUser } from "@tests/support/fixtures";
 import { server } from "@tests/support/server";

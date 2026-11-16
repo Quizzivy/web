@@ -3,7 +3,7 @@ import { screen, waitFor, within } from "@testing-library/react";
 import { http, HttpResponse } from "msw";
 import type { components } from "@/lib/api/schema";
 import { api } from "@/lib/api/client";
-import vi_ from "@/lib/i18n/locales/vi.json";
+import { vi as vi_ } from "@tests/support/locales";
 import { useAuthStore } from "@/stores/auth";
 import {
   DETAIL_API,

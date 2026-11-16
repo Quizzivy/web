@@ -1,13 +1,45 @@
 import "@testing-library/jest-dom/vitest";
-import { afterAll, afterEach, beforeAll } from "vitest";
+import { afterAll, afterEach, beforeAll, beforeEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { toast } from "sonner";
 import { server } from "./server";
-import i18n from "@/lib/i18n";
-import en from "@/lib/i18n/locales/en.json";
+import i18n, { SURFACES, loadLocale, loadSurface } from "@/lib/i18n";
+import { en, vi } from "./locales";
 
-/** The app fetches the English strings on first use; tests load them up front so a switch to en stays synchronous. */
-i18n.addResourceBundle("en", "translation", en, true, true);
+/**
+ * The app fetches a route tree's strings before the tree renders, and the
+ * English strings on first use; tests load every surface in both languages up
+ * front, so a component renders its copy outside its route and a switch to en
+ * stays synchronous.
+ */
+await Promise.all(SURFACES.map(loadSurface));
+await loadLocale("en");
+
+/**
+ * A test that resets modules and imports `@/lib/i18n` again runs its `init`
+ * again on the one i18next instance, which then holds the bundled strings
+ * alone. Each test after it starts with every string again.
+ */
+const PROBES = [
+  "builder.titleLabel",
+  "adminShell.nav.users",
+  "student.shell.test",
+  "forgot.title",
+];
+beforeEach(() => {
+  for (const [language, strings] of [
+    ["vi", vi],
+    ["en", en],
+  ] as const)
+    if (PROBES.some((key) => !i18n.exists(key, { lng: language, fallbackLng: [] })))
+      i18n.addResourceBundle(
+        language,
+        "translation",
+        structuredClone(strings),
+        true,
+        true,
+      );
+});
 
 /** jsdom ships no matchMedia; a desktop-width answer keeps the admin layouts in their wide form. */
 window.matchMedia ??= (query: string) =>

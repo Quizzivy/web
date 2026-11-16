@@ -3975,6 +3975,7 @@
     "classHint_other": "Gửi tới cả {{count}} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.",
     "accountOff": "Tài khoản của {{name}} đã bị vô hiệu hoá nên không nhắn được.",
     "archived": "Lớp này đã được lưu trữ nên không đăng thêm thông báo được.",
+    "announceNotAllowed": "Bạn chưa có quyền đăng thông báo tới lớp.",
     "day": {
       "today": "Hôm nay",
       "yesterday": "Hôm qua"

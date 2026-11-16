@@ -1,10 +1,20 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi,
+} from "vitest";
 import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 import { dashboardKeys } from "@/features/dashboard/keys";
 import { useAuthStore } from "@/stores/auth";
 import { contentWidth } from "@tests/support/contentWidth";
+import { teacherUser } from "@tests/support/fixtures";
+import { viewport } from "@tests/support/viewport";
 import {
   installIntersectionObserver,
   scrollAllIntoView,
@@ -23,6 +33,7 @@ import {
   renderPage,
   serve,
   signIn,
+  uid,
   type State,
 } from "./support";
 
@@ -106,6 +117,60 @@ describe("the list", () => {
       within(candidates).getByRole("link", { name: /Trần Minh Thư/ }),
     ).toHaveTextContent("Học viên cũ");
     expect(label).toBeInTheDocument();
+  });
+
+  it("shows a skeleton while the list loads, and an error with Retry that reads it again", async () => {
+    contentWidth(1000);
+    let fail = true;
+    let release = () => {};
+    const gate = new Promise<void>((resolve) => {
+      release = resolve;
+    });
+    server.use(
+      http.get(`${BASE}/teacher/messages/threads`, async () => {
+        await gate;
+        if (fail)
+          return HttpResponse.json(
+            { error: { code: "INTERNAL", message: "Down.", requestId: uid(997) } },
+            { status: 500 },
+          );
+        const { contractJson } = await import("@tests/support/contractResponse");
+        return contractJson("/teacher/messages/threads", "get", 200, {
+          threads: state.threads,
+        });
+      }),
+    );
+    renderPage("/teacher/messages");
+    const list = await screen.findByRole("complementary", { name: "Cuộc trò chuyện" });
+    expect(within(list).getByRole("status", { name: "Đang tải…" })).toBeInTheDocument();
+
+    release();
+    expect(
+      await within(list).findByText("Không tải được tin nhắn."),
+    ).toBeInTheDocument();
+    fail = false;
+    await userEvent.click(within(list).getByRole("button", { name: "Thử lại" }));
+    expect(
+      await within(list).findByRole("link", { name: /Lê Hoàng Nam/ }),
+    ).toBeInTheDocument();
+    expect(within(list).queryByText("Không tải được tin nhắn.")).toBeNull();
+  });
+
+  it("marks a former student's row Former student, in place of the last message", async () => {
+    contentWidth(1000);
+    state.threads = [
+      direct(NAM, "Lê Hoàng Nam"),
+      direct(HA, "Phạm Thu Hà", { former: true, classNames: [] }),
+    ];
+    renderPage(NAM_PATH);
+    await screen.findByText("Chào em.");
+    const list = screen.getByRole("complementary", { name: "Cuộc trò chuyện" });
+    const former = within(list).getByRole("link", { name: /Phạm Thu Hà/ });
+    expect(former).toHaveTextContent("Học viên cũ");
+    expect(former).not.toHaveTextContent("Em cảm ơn ạ!");
+    expect(within(list).getByRole("link", { name: /Lê Hoàng Nam/ })).toHaveTextContent(
+      "Em cảm ơn ạ!",
+    );
   });
 
   it("says how to start when there is nothing, with New announcement off and its reason", async () => {
@@ -243,7 +308,133 @@ describe("a thread", () => {
   });
 });
 
+describe("a thread's cards, Details and place", () => {
+  it("sets a flagged attempt at its moment, with Open attempt to the attempt sheet", async () => {
+    contentWidth(1000);
+    const attemptId = uid(700);
+    const assignmentId = uid(701);
+    state.events = [
+      {
+        attemptId,
+        assignmentId,
+        title: "IELTS Mock 3",
+        focusLost: 3,
+        at: state.messages[0]!.createdAt,
+      },
+    ];
+    renderPage(NAM_PATH);
+    await screen.findByText("Chào em.");
+    const card = document.querySelector<HTMLElement>("[data-slot=attempt-event]")!;
+    expect(card).toHaveTextContent("IELTS Mock 3 · rời khỏi bài thi 3 lần");
+    expect(within(card).getByRole("link", { name: "Mở lượt làm bài" })).toHaveAttribute(
+      "href",
+      `/teacher/assignments/${assignmentId}?attempt=${attemptId}`,
+    );
+  });
+
+  it("gives a class's Details its member count and a link to the class", async () => {
+    contentWidth(1000);
+    renderPage(`/teacher/messages/class/${C1}`);
+    await screen.findByText("Chưa có thông báo nào.");
+    await userEvent.click(screen.getByRole("button", { name: "Chi tiết" }));
+    const details = await screen.findByRole("dialog", { name: "Chi tiết" });
+    expect(within(details).getByText("24 học viên")).toBeInTheDocument();
+    expect(within(details).getByRole("link", { name: "Mở trang lớp" })).toHaveAttribute(
+      "href",
+      `/teacher/classes/${C1}`,
+    );
+  });
+
+  it("opens Details as a sheet from the bottom on a phone", async () => {
+    viewport("phone");
+    onTestFinished(() => {
+      vi.unstubAllGlobals();
+    });
+    contentWidth(360);
+    renderPage(NAM_PATH);
+    await screen.findByText("Chào em.");
+    await userEvent.click(screen.getByRole("button", { name: "Chi tiết" }));
+    const sheet = await screen.findByRole("dialog", { name: "Chi tiết" });
+    expect(sheet).toHaveAttribute("data-slot", "dialog-content");
+    expect(within(sheet).getByText("IELTS 6.5 Evening")).toBeInTheDocument();
+    expect(
+      within(sheet).getByRole("link", { name: "Mở trong Học viên" }),
+    ).toBeInTheDocument();
+  });
+
+  it("follows the end after a Load earlier that failed, when the reader comes back down and sends", async () => {
+    contentWidth(1000);
+    state.nextBefore = state.messages[0]!.id;
+    server.use(
+      http.get(`${BASE}/teacher/messages/students/:id`, ({ request }) => {
+        if (new URL(request.url).searchParams.has("before"))
+          return HttpResponse.json(
+            { error: { code: "INTERNAL", message: "Down.", requestId: uid(996) } },
+            { status: 500 },
+          );
+        return undefined;
+      }),
+    );
+    renderPage(NAM_PATH);
+    await screen.findByText("Chào em.");
+    const stream = document.querySelector<HTMLElement>("[data-slot=message-stream]")!;
+    Object.defineProperty(stream, "scrollHeight", {
+      configurable: true,
+      get: () => stream.querySelectorAll("[data-slot=message-bubble]").length * 200,
+    });
+    Object.defineProperty(stream, "clientHeight", {
+      configurable: true,
+      get: () => 300,
+    });
+    stream.scrollTop = 0;
+    fireEvent.scroll(stream);
+
+    await userEvent.click(screen.getByRole("button", { name: "Xem tin nhắn cũ hơn" }));
+    expect(
+      await screen.findByText("Chưa tải được tin nhắn cũ hơn. Hãy thử lại."),
+    ).toBeInTheDocument();
+
+    stream.scrollTop = 100;
+    fireEvent.scroll(stream);
+    await userEvent.type(
+      screen.getByRole("textbox", { name: "Nhắn cho Nam…" }),
+      "Em ơi{Enter}",
+    );
+    await screen.findByText("Em ơi");
+    expect(stream.scrollTop).toBe(stream.scrollHeight);
+  });
+});
+
 describe("a class channel", () => {
+  it("puts a notice in the composer's place, and says why New announcement is off, without the right to announce", async () => {
+    contentWidth(1000);
+    useAuthStore.setState({
+      user: {
+        ...teacherUser,
+        permissions: teacherUser.permissions.filter(
+          (key) => key !== "teaching.classes.write",
+        ),
+      },
+    });
+    renderPage(`/teacher/messages/class/${C1}`);
+    await screen.findByText("Chưa có thông báo nào.");
+    const notice = screen
+      .getAllByText("Bạn chưa có quyền đăng thông báo tới lớp.")
+      .map((node) => node.closest("[role=status]"))
+      .find((node) => node !== null);
+    expect(notice).toBeDefined();
+    expect(screen.queryByRole("textbox")).toBeNull();
+    const button = screen.getByRole("button", { name: "Thông báo mới" });
+    expect(button).toHaveAttribute("aria-disabled", "true");
+    expect(button).toHaveAccessibleDescription(
+      "Bạn chưa có quyền đăng thông báo tới lớp.",
+    );
+    expect(button).toHaveAttribute(
+      "title",
+      "Bạn chưa có quyền đăng thông báo tới lớp.",
+    );
+  });
+
   it("draws announcements with Seen by and never sends on Enter", async () => {
     contentWidth(1000);
     state.threads = [channel(C1, "IELTS 6.5 Evening")];

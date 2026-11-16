@@ -7,6 +7,7 @@ import {
   Archive,
   Ban,
   GraduationCap,
+  Lock,
   Megaphone,
   MessageSquare,
   Users,
@@ -96,7 +97,7 @@ function previewLine(preview: StaffThread["preview"], t: TFunction): string | nu
   return you + said;
 }
 
-/** rowSub is a row's sub-line when it has no message to preview: its size, or the student's classes. */
+/** rowSub is a row's sub-line when it shows no message: its size, "Former student", or the student's classes. */
 function rowSub(row: StaffThread, t: TFunction): string {
   if (row.thread.kind === "class")
     return t("messages.list.classSub", { count: row.studentCount ?? 0 });
@@ -201,7 +202,8 @@ export default function TeacherMessagesPage() {
   const toRow = (row: StaffThread): ListRow | null => {
     const ref = refOf(row);
     if (ref === null) return null;
-    const said = row.candidate ? null : previewLine(row.preview, t);
+    // A former student's row says so in place of its last message (Q5).
+    const said = row.candidate || row.former ? null : previewLine(row.preview, t);
     return {
       key: `${ref.kind}:${ref.id}`,
       to: threadPath(ref),
@@ -234,6 +236,10 @@ export default function TeacherMessagesPage() {
 
   const noClass = base.isSuccess && classRef === null;
   const announceOff = noClass || !canAnnounce;
+  // Why New announcement is off: no right to post, or no class to post to.
+  let offReason: string | undefined;
+  if (!canAnnounce) offReason = t("messages.announceNotAllowed");
+  else if (noClass) offReason = t("messages.newAnnouncementOff");
   const newAnnouncement = () => {
     if (announceOff || classRef === null) return;
     setTab("classes");
@@ -251,17 +257,19 @@ export default function TeacherMessagesPage() {
         description={t("messages.lead")}
         actions={
           <div className="flex items-center gap-2">
-            {noClass && !single && (
+            {offReason !== undefined && !single && (
               <span id={reasonId} className="text-muted-fg text-meta whitespace-nowrap">
-                {t("messages.newAnnouncementOff")}
+                {offReason}
               </span>
             )}
             <Button
               type="button"
               className="max-[767px]:h-11"
               aria-disabled={announceOff || undefined}
-              aria-describedby={noClass && !single ? reasonId : undefined}
-              title={noClass ? t("messages.newAnnouncementOff") : undefined}
+              aria-describedby={
+                offReason !== undefined && !single ? reasonId : undefined
+              }
+              title={offReason}
               onClick={newAnnouncement}
             >
               <Megaphone />
@@ -354,6 +362,7 @@ function StaffThreadPane({
   const [downloading, setDownloading] = useState<string | null>(null);
   const threadKey = `${open.kind}:${open.id}`;
   const [draft, setDraft] = useDraft(threadKey);
+  const canAnnounce = useCan("teaching.classes.write");
 
   const thread = useThread(source, {
     onSent: () =>
@@ -412,7 +421,7 @@ function StaffThreadPane({
   const footer = (
     <StaffFooter
       view={view}
-      blocked={blockedBy(view, refused)}
+      blocked={blockedBy(view, refused, canAnnounce)}
       draft={draft}
       onDraft={setDraft}
       onSend={thread.send}
@@ -431,6 +440,7 @@ function StaffThreadPane({
       state={stateOf(thread)}
       onRetry={() => void thread.refetch()}
       count={entries.length}
+      oldestKey={entries.find((entry) => entry.kind !== "day")?.key ?? null}
       emptyIcon={isClass ? Megaphone : MessageSquare}
       emptyText={
         isClass ? t("messages.thread.channelEmpty") : t("messages.thread.empty")
@@ -506,17 +516,25 @@ function paneView(
   };
 }
 
+/** Blocked is why nothing can be sent from the open thread, or null when something can. */
+type Blocked = "account" | "archived" | "notAllowed" | null;
+
 /**
  * blockedBy says why the composer gives its place to a sentence: the
- * student's account is disabled (409 MESSAGING_NOT_ALLOWED), or the class is
- * archived (409 CLASS_ARCHIVED). Leaving a class closes nothing (T-R7.10a).
+ * student's account is disabled (409 MESSAGING_NOT_ALLOWED), the class is
+ * archived (409 CLASS_ARCHIVED), or the caller may read the class but not
+ * announce to it (`postClassAnnouncement` needs `teaching.classes.write`).
+ * Leaving a class closes nothing (T-R7.10a).
  */
 function blockedBy(
   view: PaneView,
   refused: string | null,
-): "account" | "archived" | null {
-  if (view.ref.kind === "class")
-    return view.archived || refused === "CLASS_ARCHIVED" ? "archived" : null;
+  canAnnounce: boolean,
+): Blocked {
+  if (view.ref.kind === "class") {
+    if (view.archived || refused === "CLASS_ARCHIVED") return "archived";
+    return canAnnounce ? null : "notAllowed";
+  }
   return !view.canPost || refused === "MESSAGING_NOT_ALLOWED" ? "account" : null;
 }
 
@@ -530,7 +548,7 @@ function StaffFooter({
   focusRequest,
 }: Readonly<{
   view: PaneView;
-  blocked: "account" | "archived" | null;
+  blocked: Blocked;
   draft: Draft;
   onDraft: (draft: Draft) => void;
   onSend: (outgoing: Outgoing) => void;
@@ -541,6 +559,8 @@ function StaffFooter({
     return <Notice icon={Archive} text={t("messages.archived")} />;
   if (blocked === "account")
     return <Notice icon={Ban} text={t("messages.accountOff", { name: view.title })} />;
+  if (blocked === "notAllowed")
+    return <Notice icon={Lock} text={t("messages.announceNotAllowed")} />;
   const isClass = view.ref.kind === "class";
   return (
     <Composer

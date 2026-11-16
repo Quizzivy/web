@@ -25,8 +25,9 @@ export type ThreadState = "loading" | "error" | "ready";
  * one pane shows at a time, the avatar, the name, the sub-line, `details`),
  * the stream on `--sidebar`, and `footer`, the composer or the sentence that
  * stands in its place. The stream starts at its end, keeps the reader's place
- * when Load earlier adds older messages above, follows new messages while the
- * reader is at the end, and tells `onSeen` the newest message while the end
+ * when Load earlier adds older messages above (seen by `oldestKey`, the key of
+ * the stream's first line, changing), follows new messages while the reader
+ * is at the end, and tells `onSeen` the newest message while the end
  * is in view and the tab is visible. Its other states are the proposal's:
  * three bubble skeletons, one sentence with Retry, and the empty sentence.
  */
@@ -41,6 +42,7 @@ export function ThreadView({
   onRetry,
   children,
   count,
+  oldestKey,
   emptyIcon,
   emptyText,
   canLoadEarlier,
@@ -60,6 +62,7 @@ export function ThreadView({
   onRetry: () => void;
   children: ReactNode;
   count: number;
+  oldestKey: string | null;
   emptyIcon: LucideIcon;
   emptyText: string;
   canLoadEarlier: boolean;
@@ -73,7 +76,10 @@ export function ThreadView({
   const stream = useRef<HTMLDivElement>(null);
   const end = useRef<HTMLDivElement>(null);
   const atEnd = useRef(true);
-  const anchor = useRef<{ key: string; fromBottom: number } | null>(null);
+  // fromBottom is the reader's distance from the end as of the last scroll or
+  // render; anchor is the Load earlier waiting for its older lines.
+  const fromBottom = useRef(0);
+  const anchor = useRef<{ key: string; oldest: string | null } | null>(null);
   const placed = useRef<string | null>(null);
   const [endInView, setEndInView] = useState(false);
   const titleId = useId();
@@ -81,27 +87,34 @@ export function ThreadView({
   const onScroll = () => {
     const node = stream.current;
     if (node === null) return;
-    atEnd.current =
-      node.scrollHeight - node.scrollTop - node.clientHeight <= NEAR_BOTTOM_PX;
+    fromBottom.current = node.scrollHeight - node.scrollTop;
+    atEnd.current = fromBottom.current - node.clientHeight <= NEAR_BOTTOM_PX;
   };
 
-  // A new thread starts at its end; Load earlier keeps the reader's place; a
-  // new message is followed while the reader is at the end.
+  // A new thread starts at its end; older lines put above by Load earlier
+  // keep the reader's place; a new message is followed while the reader is at
+  // the end. Load earlier's anchor is spent only when the first line changes,
+  // so a poll's message that lands while it loads, or a load that fails or
+  // brings nothing, is followed as any other.
   useLayoutEffect(() => {
     const node = stream.current;
     if (node === null || state !== "ready") return;
     const held = anchor.current;
-    if (held !== null && held.key === threadKey) {
-      node.scrollTop = node.scrollHeight - held.fromBottom;
+    if (held !== null && held.key !== threadKey) anchor.current = null;
+    if (held !== null && held.key === threadKey && held.oldest !== oldestKey) {
+      node.scrollTop = node.scrollHeight - fromBottom.current;
       anchor.current = null;
-      return;
-    }
-    if (placed.current !== threadKey || atEnd.current) {
+    } else if (placed.current !== threadKey || atEnd.current) {
       node.scrollTop = node.scrollHeight;
       placed.current = threadKey;
       atEnd.current = true;
     }
-  }, [threadKey, state, count]);
+    fromBottom.current = node.scrollHeight - node.scrollTop;
+  }, [threadKey, state, count, oldestKey]);
+
+  useEffect(() => {
+    if (earlier === "failed") anchor.current = null;
+  }, [earlier]);
 
   useEffect(() => {
     const node = end.current;
@@ -129,11 +142,8 @@ export function ThreadView({
 
   const loadEarlier = () => {
     const node = stream.current;
-    if (node !== null)
-      anchor.current = {
-        key: threadKey,
-        fromBottom: node.scrollHeight - node.scrollTop,
-      };
+    if (node !== null) fromBottom.current = node.scrollHeight - node.scrollTop;
+    anchor.current = { key: threadKey, oldest: oldestKey };
     onLoadEarlier();
   };
 

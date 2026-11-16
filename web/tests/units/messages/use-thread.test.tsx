@@ -143,6 +143,36 @@ describe("an open thread (T-R7.20)", () => {
     );
   });
 
+  it("still brings a message the student wrote just before the reader's own send", async () => {
+    vi.useFakeTimers({ shouldAdvanceTime: true });
+    const end = server();
+    const { result } = mount(end.source);
+    await waitFor(() => expect(result.current.data?.messages).toHaveLength(2));
+    const lastSeen = end.held[1]!.id;
+
+    // The student writes 12 after the last poll; the reader posts 51 before the next.
+    end.held.push(message(12, false, "Em gửi bài rồi ạ."));
+    act(() => result.current.send({ body: "Thầy nhận rồi.", attachment: null }));
+    await waitFor(() => expect(result.current.pending).toEqual([]));
+    expect(result.current.data?.messages.map((m) => m.body)).toEqual([
+      "Em chào thầy cô.",
+      "Chào em.",
+      "Thầy nhận rồi.",
+    ]);
+
+    await advance(POLL_MS + 100);
+    await waitFor(() =>
+      expect(result.current.data?.messages.map((m) => m.body)).toEqual([
+        "Em chào thầy cô.",
+        "Chào em.",
+        "Em gửi bài rồi ạ.",
+        "Thầy nhận rồi.",
+      ]),
+    );
+    expect(end.reads.at(-1)).toEqual({ after: lastSeen });
+    expect(result.current.data?.latestId).toBe(end.held.at(-1)!.id);
+  });
+
   it("moves the read pointer once the newest message has stayed in view for a second, never back", async () => {
     vi.useFakeTimers({ shouldAdvanceTime: true });
     const end = server();

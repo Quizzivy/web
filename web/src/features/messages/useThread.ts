@@ -3,7 +3,7 @@ import { useQuery, useQueryClient, type QueryKey } from "@tanstack/react-query";
 import { useIdlePolling, useRefetchOnResume } from "@/hooks/useIdlePolling";
 import type { ContextEvent, Cursor, ThreadPage } from "./api";
 import type { Outgoing } from "./compose";
-import { merged, type Dated, type PendingMessage } from "./stream";
+import { merged, newestId, type Dated, type PendingMessage } from "./stream";
 
 /** POLL_MS is how often an open thread asks for what is new (DG-91: polling, not push). */
 export const POLL_MS = 10_000;
@@ -36,13 +36,21 @@ export type ThreadSource<M extends Dated, H> = Readonly<{
   markRead: (messageId: string) => Promise<unknown>;
 }>;
 
-/** ThreadData is what the cache holds of an open thread. */
+/**
+ * ThreadData is what the cache holds of an open thread. `latestId` is the
+ * newest message held, the reader's own sends included, which is what the
+ * read pointer moves to. `after` is where the next poll starts: the newest
+ * message a read returned. A send never moves it, so a message the other
+ * side wrote just before the reader's own post still comes with the next
+ * poll.
+ */
 export type ThreadData<M, H> = Readonly<{
   head: H;
   messages: readonly M[];
   events: readonly ContextEvent[];
   nextBefore: string | null;
   latestId: string | null;
+  after: string | null;
 }>;
 
 function withEvents(
@@ -57,8 +65,9 @@ function withEvents(
 
 /**
  * folded puts a read into what is held: its messages once each, the header
- * it brought, and `latestId`, the newest message held, from which the next
- * poll asks (`after`). A newest page sets `nextBefore`; a poll keeps it.
+ * it brought, `latestId`, the newest message held, and `after`, the newest
+ * message this read or an earlier one returned, from which the next poll
+ * asks. A newest page sets `nextBefore`; a poll keeps it.
  */
 export function folded<M extends Dated, H>(
   held: ThreadData<M, H> | undefined,
@@ -72,6 +81,10 @@ export function folded<M extends Dated, H>(
     events: withEvents(held?.events ?? [], read.events),
     nextBefore: newest || held === undefined ? read.page.nextBefore : held.nextBefore,
     latestId: messages.at(-1)?.id ?? null,
+    after: newestId(
+      newest ? null : (held?.after ?? null),
+      read.page.messages.at(-1)?.id ?? null,
+    ),
   };
 }
 
@@ -80,7 +93,7 @@ type Outbox = readonly PendingMessage[];
 /**
  * useThread reads one thread and keeps it current while somebody is there:
  * the newest page first, then every POLL_MS a read `after` the newest
- * message held, through useIdlePolling, so the poll stops after ten idle
+ * message a read returned, through useIdlePolling, so the poll stops after ten idle
  * minutes and a hidden tab, and starts again when the reader comes back.
  *
  * `send` is optimistic: the message stands in the stream at once, "Sending…",
@@ -90,7 +103,8 @@ type Outbox = readonly PendingMessage[];
  * message on the reader's screen and moves the read pointer once it has
  * stayed there READ_DEBOUNCE_MS, never backwards. A write into the cache
  * first cancels a poll in flight, which would otherwise put back what it read
- * before the write.
+ * before the write; a poll it cancels is asked again at once, from the
+ * same `after`.
  */
 export function useThread<M extends Dated, H>(
   source: ThreadSource<M, H>,
@@ -112,7 +126,7 @@ export function useThread<M extends Dated, H>(
     queryKey: key,
     queryFn: async ({ signal }): Promise<ThreadData<M, H>> => {
       const held = client.getQueryData<ThreadData<M, H>>(key);
-      const after = held?.latestId ?? null;
+      const after = held?.after ?? null;
       const read = await source.read(after === null ? {} : { after }, signal);
       return folded(client.getQueryData<ThreadData<M, H>>(key), read, after === null);
     },
@@ -147,12 +161,14 @@ export function useThread<M extends Dated, H>(
         body: item.body,
         attachmentId: item.attachment?.id ?? null,
       });
+      const polling = client.isFetching({ queryKey: key, exact: true }) > 0;
       await client.cancelQueries({ queryKey: key, exact: true });
       client.setQueryData<ThreadData<M, H>>(key, (held) => {
         if (held === undefined) return held;
         const messages = merged(held.messages, [message]);
         return { ...held, messages, latestId: messages.at(-1)?.id ?? null };
       });
+      if (polling) void client.refetchQueries({ queryKey: key, exact: true });
       setOutbox((held) => held.filter((x) => x.clientId !== item.clientId));
       options.onSent?.(message);
     } catch (cause) {

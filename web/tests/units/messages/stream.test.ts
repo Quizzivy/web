@@ -125,6 +125,22 @@ describe("the stream of a thread", () => {
       head: "h2",
       nextBefore: uid(0),
       latestId: three.id,
+      after: three.id,
     });
+
+    // A send joins the stream without moving the poll's cursor; an empty
+    // poll keeps the cursor where the last read left it.
+    const own = message(9, true, "own");
+    const sent = {
+      ...polled,
+      messages: merged(polled.messages, [own]),
+      latestId: own.id,
+    };
+    const quiet = folded(
+      sent,
+      { head: "h3", page: { messages: [], nextBefore: null, latestId: own.id } },
+      false,
+    );
+    expect(quiet).toMatchObject({ latestId: own.id, after: three.id });
   });
 });

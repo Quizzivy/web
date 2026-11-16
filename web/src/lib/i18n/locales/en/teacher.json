@@ -4186,6 +4186,7 @@
     "classHint_other": "Sent to all {{count}} students. Replies come to you as direct messages.",
     "accountOff": "{{name}}’s account is disabled, so no message can be sent.",
     "archived": "This class is archived, so nothing more can be posted.",
+    "announceNotAllowed": "You don’t have permission to post announcements to classes.",
     "day": {
       "today": "Today",
       "yesterday": "Yesterday"

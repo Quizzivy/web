@@ -120,6 +120,7 @@ export type State = {
   postCode: string;
   marks: string[];
   older: Message[];
+  events: Schemas["ContextEvent"][];
 };
 
 export function freshState(): State {
@@ -134,6 +135,7 @@ export function freshState(): State {
     postCode: "MESSAGING_NOT_ALLOWED",
     marks: [],
     older: [],
+    events: [],
   };
 }
 
@@ -164,7 +166,7 @@ export function serve(state: State) {
       return contractJson("/teacher/messages/students/{studentId}", "get", 200, {
         student: state.peer,
         messages,
-        contextEvents: [],
+        contextEvents: state.events,
         nextBefore: before !== null ? null : state.nextBefore,
         latestId: state.messages.at(-1)?.id ?? null,
       });

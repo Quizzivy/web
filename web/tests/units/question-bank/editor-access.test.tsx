@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { screen, waitFor, within } from "@testing-library/react";
 import { http } from "msw";
 import QuestionEditorPage from "@/features/question-bank/pages/teacher/QuestionEditorPage";
@@ -93,7 +93,16 @@ function question(id: string, overrides: Record<string, unknown> = {}) {
   };
 }
 
+/**
+ * The stale-write notices say "at HH:mm" for a write made today and add the
+ * date for any other day, so the fixtures' 2026-11-16 times need a clock on
+ * that day. Only Date is faked; timers stay real and the clock moves with them.
+ */
+const TODAY = new Date("2026-11-16T05:00:00Z");
+
 beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+  vi.setSystemTime(TODAY);
   signIn();
   serveSets();
   access = "owner";
@@ -138,7 +147,10 @@ beforeEach(() => {
   );
 });
 
-afterEach(signOut);
+afterEach(() => {
+  signOut();
+  vi.useRealTimers();
+});
 
 function renderEditor(path = `/teacher/question-bank/${Q1}?set=${SET_ID}`) {
   return renderAt(path, ROUTES);

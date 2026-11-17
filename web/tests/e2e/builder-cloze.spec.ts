@@ -1,6 +1,6 @@
 import { storedGroupBundle } from "@tests/support/storedGroupBundle";
 import { expect, test } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, ownedByAdmin, sessionAs, stubApi } from "./support/api";
 import { paneText, paneTitle, startGroup } from "./support/groupPane";
 import type { components } from "../../src/lib/api/schema";
 
@@ -17,9 +17,7 @@ test("a cloze started from the outline is built by selecting words, and each gap
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: null,
-    access: "owner",
-    owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
-    sharedWith: 0,
+    ...ownedByAdmin,
     id: testId,
     title: "Đề điền từ",
     description: null,

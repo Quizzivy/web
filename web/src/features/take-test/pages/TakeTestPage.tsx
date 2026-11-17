@@ -21,6 +21,7 @@ import { SubmittedScreen } from "../components/SubmittedScreen";
 import { releaseSession } from "@/features/integrity/release";
 import { forgetAllPlaces } from "@/features/media/playback";
 import { exitFullscreen } from "@/features/integrity/fullscreen";
+import { useFullscreenReleased } from "@/features/integrity/useFullscreenReleased";
 import { StrikeDialog } from "@/features/integrity/components/StrikeDialog";
 import { StrikeIndicator } from "@/features/integrity/components/StrikeIndicator";
 import { strikeState } from "@/features/integrity/strikes";
@@ -122,6 +123,7 @@ export default function TakeTestPage() {
   useEffect(() => {
     if (ended && asksFullscreen) void exitFullscreen();
   }, [ended, asksFullscreen]);
+  useFullscreenReleased(asksFullscreen);
 
   const restoredFor = useRef<string | null>(null);
   useEffect(() => {

@@ -782,6 +782,8 @@ describe("Check in a test with a shared-context group", () => {
     return dialog;
   }
 
+  // This walk opens the group, runs a check and reloads the group: about 5 s on
+  // CI's runners, so it gets the local timeout rather than Vitest's 5 s default.
   it("writes a member's fix through its group, changing only that member, and reloads the open group", async ({
     signal,
   }) => {
@@ -830,7 +832,7 @@ describe("Check in a test with a shared-context group", () => {
     expect(puts[1]!.bundle.questions[1]!.input.options?.[1]?.text).toBe(
       "Warm the streets",
     );
-  });
+  }, 15_000);
 
   it("opens a member inside its group", async ({ signal }) => {
     aiOn();

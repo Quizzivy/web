@@ -93,7 +93,9 @@ function Row({ row }: Readonly<{ row: ListRow }>) {
               </span>
             )}
           </span>
-          <span className="flex items-center gap-2">
+          {/* min-h-5 holds the line at the count's 20px, so a row keeps its
+              height when its thread is read and the count goes. */}
+          <span className="flex min-h-5 items-center gap-2">
             <span
               className={cn(
                 "text-meta min-w-0 flex-1 truncate",

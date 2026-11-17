@@ -72,6 +72,22 @@ describe("one pane at a time under 760px of content (the deck's msgSingle)", () 
     ).toBeInTheDocument();
   });
 
+  it("holds every row's second line at the count's height, read or unread", async () => {
+    contentWidth(700);
+    state.threads = [
+      direct(NAM, "Lê Hoàng Nam", { unread: 2 }),
+      channel(C1, "IELTS 6.5 Evening"),
+    ];
+    renderPage("/teacher/messages");
+    const list = await screen.findByRole("complementary", { name: "Cuộc trò chuyện" });
+    // The count is 20px and the text-meta line 18px: without the floor a row
+    // loses 2px when its thread is read and every row below it moves up.
+    for (const name of [/Lê Hoàng Nam/, /IELTS 6.5 Evening/]) {
+      const row = within(list).getByRole("link", { name });
+      expect(row.querySelector(".text-meta")?.parentElement).toHaveClass("min-h-5");
+    }
+  });
+
   it("sets the list and the thread side by side from 760px, opening the first conversation", async () => {
     contentWidth(1000);
     const { router } = renderPage("/teacher/messages");

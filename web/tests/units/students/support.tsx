@@ -44,6 +44,7 @@ export function student(
     disabledAt: null,
     lastActiveAt: null,
     classes: [],
+    canMessage: false,
     stats: {
       submittedCount: 0,
       flaggedCount: 0,

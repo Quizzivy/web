@@ -47,6 +47,7 @@ describe("bank metadata preservation", () => {
     updateQuestion(question.id, parsed);
     expect(api).toHaveBeenLastCalledWith("patch", "/teacher/questions/{id}", {
       path: { id: question.id },
+      query: {},
       body: parsed,
     });
   });
@@ -72,6 +73,7 @@ describe("bank metadata preservation", () => {
     updateQuestion(image.id, parsed);
     expect(api).toHaveBeenLastCalledWith("patch", "/teacher/questions/{id}", {
       path: { id: image.id },
+      query: {},
       body: expect.objectContaining({ mediaAlt }),
     });
   });
@@ -89,6 +91,7 @@ describe("bank metadata preservation", () => {
     updateQuestion(question.id, unset);
     expect(api).toHaveBeenLastCalledWith("patch", "/teacher/questions/{id}", {
       path: { id: question.id },
+      query: {},
       body: { ...unset, level: null, skill: null },
     });
     for (const field of ["level", "skill"])

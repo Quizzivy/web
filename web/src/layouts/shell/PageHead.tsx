@@ -8,7 +8,8 @@ import { cn } from "@/lib/utils";
  * PageHead is the header of a page in the teacher shell: the one h1, with
  * `description` under it and `actions` at the end of the row, which wraps
  * beneath the title when the two do not fit. `back` and `status` make the
- * deck's detail form: a link back above the title and a pill beside it.
+ * deck's detail form: a link back above the title, carrying `back.state` to
+ * the page it opens, and a pill beside it.
  * `children` follow the title in the same column, for a detail page's meta
  * line. `crumb` puts the title in the shell's breadcrumb trail and document
  * title as the page's own name; a page that calls useCrumbs itself leaves it
@@ -30,7 +31,7 @@ export function PageHead({
   title: string;
   description?: ReactNode;
   actions?: ReactNode;
-  back?: { to: string; label: string };
+  back?: { to: string; label: string; state?: unknown };
   status?: ReactNode;
   crumb?: boolean;
   className?: string;
@@ -57,6 +58,7 @@ export function PageHead({
         {back && (
           <Link
             to={back.to}
+            state={back.state}
             className="text-muted-fg hover:text-fg inline-flex items-center gap-1.5 self-start text-sm leading-4 whitespace-nowrap"
           >
             <ArrowLeft className="size-3.5 flex-none" aria-hidden="true" />

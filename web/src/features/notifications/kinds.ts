@@ -34,9 +34,20 @@ export type NotificationView = Readonly<{
   text: string;
   to: string | null;
 }>;
-/** KIND_LOOK is the exhaustive shared look per kind, with submitted papers awaiting grading as its default. */
+/**
+ * LATER_KINDS are in the contract before the bell has their rows (R7's
+ * T-R7.23 writes them); until then the bell skips them as it skips any
+ * unknown kind.
+ */
+export const LATER_KINDS = [
+  "content.shared",
+  "test.published_by_collaborator",
+] as const satisfies readonly NotificationKind[];
+/** ShownKind is every kind the bell draws. */
+type ShownKind = Exclude<NotificationKind, (typeof LATER_KINDS)[number]>;
+/** KIND_LOOK is the exhaustive shared look per shown kind, with submitted papers awaiting grading as its default. */
 export const KIND_LOOK: Record<
-  NotificationKind,
+  ShownKind,
   Readonly<{ icon: LucideIcon; tone: NotificationTone }>
 > = {
   "attempt.submitted": { icon: SquarePen, tone: "warning" },
@@ -156,7 +167,7 @@ function credits(value: number, locale: Locale) {
   return new Intl.NumberFormat(locale).format(value);
 }
 const sentences: Record<
-  NotificationKind,
+  ShownKind,
   (params: NotificationParams, t: TFunction, locale: Locale) => string | null
 > = {
   "attempt.submitted": (p, t) => {
@@ -283,6 +294,10 @@ const sentences: Record<
   },
 };
 
+function shown(kind: NotificationKind): kind is ShownKind {
+  return Object.hasOwn(KIND_LOOK, kind);
+}
+
 /** describeNotification returns a complete localised row or null for an unknown kind or missing sentence input, preserving grading fallback for readers who cannot grade. */
 export function describeNotification(
   notification: Notification,
@@ -290,15 +305,16 @@ export function describeNotification(
   locale: Locale,
   options?: Readonly<{ canGrade?: boolean }>,
 ): NotificationView | null {
-  if (!Object.hasOwn(KIND_LOOK, notification.kind)) return null;
-  const text = sentences[notification.kind](notification.params, t, locale);
+  const kind = notification.kind;
+  if (!shown(kind)) return null;
+  const text = sentences[kind](notification.params, t, locale);
   if (text === null) return null;
   const submitted = notification.kind === "attempt.submitted";
   const waiting = submitted && (notification.params.toGrade ?? 0) > 0;
   const look =
     submitted && !waiting
       ? { icon: FileCheck, tone: "neutral" as const }
-      : KIND_LOOK[notification.kind];
+      : KIND_LOOK[kind];
   const to =
     waiting && options?.canGrade !== false
       ? "/teacher/grading"

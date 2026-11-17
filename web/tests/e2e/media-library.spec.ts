@@ -64,7 +64,12 @@ async function prepare(
   await stubApi(page, {
     ...sessionAs({ ...adminUser, preferences: { theme } } as typeof adminUser),
     "GET /teacher/summary": {
-      body: { liveAssignments: 0, answersToGrade: 0, unreadNotifications: 0 },
+      body: {
+        liveAssignments: 0,
+        answersToGrade: 0,
+        unreadNotifications: 0,
+        sharedWithMe: 0,
+      },
     },
     "GET /teacher/media": {
       body: {

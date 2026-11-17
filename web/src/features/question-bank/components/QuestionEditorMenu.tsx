@@ -14,6 +14,8 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { toast } from "@/components/ui/sonner";
 import {
+  QUESTION_SET_PREFIX,
+  QUESTION_SETS_KEY,
   deleteQuestion,
   duplicateQuestion,
   type AdminQuestion,
@@ -74,6 +76,9 @@ export function QuestionEditorMenu({
     onSuccess: async () => {
       setConfirming(false);
       await queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
+      // A set counts its live questions, so its size changes with the delete.
+      void queryClient.invalidateQueries({ queryKey: QUESTION_SETS_KEY });
+      void queryClient.invalidateQueries({ queryKey: QUESTION_SET_PREFIX });
       toast(t("bank.deleted"));
       onDeleted();
     },

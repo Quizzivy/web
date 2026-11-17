@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, questionOwnedByAdmin, sessionAs, stubApi } from "./support/api";
 import type { components } from "../../src/lib/api/schema";
 
 const ID = "018f0000-0000-7000-8000-0000000000b1";
@@ -36,6 +36,7 @@ test("rich blanks retain answers through conversion, table editing, undo, save a
       acceptedAnswers: [ordinal === 1 ? "one" : "two"],
       caseSensitive: false,
     })),
+    ...questionOwnedByAdmin,
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",
   };

@@ -366,6 +366,7 @@
       "classes": "Lớp học",
       "students": "Học viên",
       "tests": "Đề thi",
+      "sharedWithMe": "Được chia sẻ với tôi",
       "questionBank": "Ngân hàng câu hỏi",
       "media": "Thư viện media"
     },
@@ -1125,7 +1126,20 @@
         "lexical": "Vốn từ vựng",
         "grammar": "Độ đa dạng và chính xác ngữ pháp"
       }
-    }
+    },
+    "viewTitle": "Xem câu hỏi",
+    "access": {
+      "editRest": "Nếu {{name}} đang dùng câu này ở nơi khác, thay đổi của bạn được lưu thành một bản sao mới.",
+      "useLead": "Bạn xem được câu hỏi này nhưng không sửa được.",
+      "useRest": "Tạo bản sao để có câu hỏi của riêng bạn.",
+      "contextLead": "Bạn sửa được câu hỏi này khi mở nó từ bộ câu hỏi hoặc đề thi được chia sẻ với bạn."
+    },
+    "stale": {
+      "title": "{{name}} đã thay đổi câu hỏi này lúc {{time}}.",
+      "titleUnknown": "Câu hỏi này đã được thay đổi ở nơi khác lúc {{time}}.",
+      "body": "Tải lại để xem thay đổi của họ. Thay đổi chưa lưu ở đây sẽ mất."
+    },
+    "forked": "Đã lưu thành một bản sao mới của câu hỏi này, vì {{name}} đang dùng câu gốc ở nơi khác."
   },
   "builder": {
     "dragInstructions": "Bấm phím cách để nhấc mục, dùng phím mũi tên để chuyển, rồi bấm phím cách để thả hoặc Esc để huỷ.",
@@ -1289,7 +1303,19 @@
       "inTest": "Đã có trong đề"
     },
     "noCorrectAnswer": "Chưa có đáp án đúng",
-    "groupNeedsWork": "Có câu chưa xong"
+    "groupNeedsWork": "Có câu chưa xong",
+    "access": {
+      "editRest": "Câu hỏi bạn thêm vào đề cũng nằm trong ngân hàng của {{name}}.",
+      "useLead": "Bạn xem được đề này nhưng không sửa được.",
+      "useRest": "Giao đề cho lớp của bạn, hoặc tạo bản sao để sửa."
+    },
+    "staleBy": {
+      "title": "{{name}} đã thay đổi đề này lúc {{time}}."
+    },
+    "revoked": {
+      "title": "{{name}} đã dừng chia sẻ đề này với bạn",
+      "body": "Thay đổi sau lần lưu gần nhất chưa được lưu. Bài giao bạn đã tạo từ đề này vẫn hoạt động bình thường."
+    }
   },
   "bank": {
     "filters": "Bộ lọc",
@@ -1363,7 +1389,16 @@
     "clearTags": "Bỏ chọn thẻ",
     "clearFilters": "Xoá bộ lọc",
     "deleteSelectedBody": "Các đề đã dùng những câu này vẫn giữ bản sao của chúng. Câu hỏi sẽ bị gỡ khỏi ngân hàng.",
-    "questionsNoun_other": "câu hỏi"
+    "questionsNoun_other": "câu hỏi",
+    "addToSet": "Thêm vào bộ",
+    "bulkShare": "Chia sẻ…",
+    "sets": {
+      "title": "Bộ câu hỏi",
+      "empty": "Chưa có bộ nào. Chọn câu hỏi rồi bấm “Thêm vào bộ” để tạo bộ đầu tiên.",
+      "showAll_other": "Xem tất cả {{count}} bộ",
+      "sharedWith_other": "Đang chia sẻ với {{count}} giáo viên",
+      "loadFailed": "Không tải được các bộ của bạn."
+    }
   },
   "tests": {
     "new": "Đề thi mới",
@@ -1868,7 +1903,8 @@
         "body": "Những gì bạn đã chọn cho bài giao này chưa được lưu. Bấm Lưu nháp để giữ lại.",
         "confirm": "Rời trang",
         "stay": "Ở lại"
-      }
+      },
+      "sharedBy": "Được chia sẻ bởi {{name}}"
     },
     "list": {
       "description": "Các đề bạn đã giao cho lớp và học viên.",
@@ -3750,5 +3786,170 @@
     "enter": "Enter",
     "up": "Mũi tên lên",
     "down": "Mũi tên xuống"
+  },
+  "sharing": {
+    "title": "Chia sẻ “{{name}}”",
+    "onlyYou": "Chỉ bạn thấy cho đến khi bạn chia sẻ.",
+    "addPlaceholder": "Thêm giáo viên theo tên hoặc email",
+    "addMore": "Thêm nữa",
+    "removePending": "Bỏ {{name}}",
+    "noMatch": "Không có giáo viên nào khớp. Bạn chỉ chia sẻ được với giáo viên ở trung tâm này.",
+    "searchFailed": "Không tìm được giáo viên. Hãy thử lại.",
+    "accountDisabled": "Tài khoản đã vô hiệu hoá",
+    "permission": "Quyền",
+    "permissionFor": "Quyền của {{name}}",
+    "canUse": "Có thể dùng",
+    "canEdit": "Có thể sửa",
+    "notify": "Gửi thông báo",
+    "message": "Thêm lời nhắn (không bắt buộc)",
+    "people": "Người có quyền truy cập",
+    "you": "{{name}} (bạn)",
+    "owner": "Chủ sở hữu",
+    "nobody": "Chưa chia sẻ với ai.",
+    "loadFailed": "Không tải được danh sách người có quyền truy cập.",
+    "stop": "Dừng chia sẻ với {{name}}",
+    "stopTitle": "Dừng chia sẻ với {{name}}?",
+    "stopBody": "Họ mất quyền truy cập ngay. Các bài giao họ đã tạo từ đây vẫn hoạt động với học viên của họ.",
+    "stopConfirm": "Dừng chia sẻ",
+    "help": {
+      "test": {
+        "use": "Mở, giao cho lớp của họ và tạo bản sao riêng.",
+        "edit": "Thêm vào đó, sửa đề và phát hành phiên bản mới. Bạn thấy thay đổi của họ."
+      },
+      "question_set": {
+        "use": "Mở bộ, thêm câu vào đề thi của họ và tạo bản sao riêng.",
+        "edit": "Thêm vào đó, sửa câu hỏi và gỡ câu khỏi bộ. Bạn thấy thay đổi của họ."
+      }
+    },
+    "footnote": "Họ không chia sẻ tiếp và không xoá được. Kết quả của học viên vẫn nằm trong lớp của họ.",
+    "share": "Chia sẻ",
+    "done": "Xong",
+    "entry": {
+      "shared": "Đã chia sẻ · {{count}}",
+      "sharedWith": "Đã chia sẻ với {{count}}",
+      "shareNamed": "Chia sẻ {{name}}",
+      "manage_other": "Đã chia sẻ với {{count}} giáo viên. Quản lý chia sẻ"
+    },
+    "toast": {
+      "shared_other": "Đã chia sẻ với {{count}} giáo viên",
+      "sharedNotified_other": "Đã chia sẻ với {{count}} giáo viên. Họ sẽ nhận được thông báo.",
+      "nowEdit": "{{name}} giờ có thể sửa",
+      "nowUse": "{{name}} giờ có thể dùng",
+      "stopped": "Đã dừng chia sẻ với {{name}}",
+      "failed": "Không lưu được thay đổi. Hãy thử lại.",
+      "forbidden": {
+        "test": "Bạn không còn quyền chia sẻ đề này.",
+        "question_set": "Bạn không còn quyền chia sẻ bộ này."
+      },
+      "someSkipped_other": "Bỏ qua {{count}} người",
+      "skipped": {
+        "alreadyShared": "Đã có quyền truy cập: {{names}}",
+        "notATeacher": "Không phải giáo viên của trung tâm: {{names}}",
+        "disabled": "Tài khoản đã vô hiệu hoá: {{names}}",
+        "self": "Đó là bạn: {{names}}"
+      }
+    },
+    "withMe": {
+      "lead": "Đề thi và câu hỏi mà giáo viên khác chia sẻ với bạn. Chúng vẫn thuộc về giáo viên đã chia sẻ.",
+      "callout": {
+        "use": "cho phép bạn mở, giao cho lớp của mình và tạo bản sao riêng.",
+        "edit": "còn cho phép bạn thay đổi nội dung, và chủ sở hữu thấy đúng những thay đổi đó."
+      },
+      "kinds": "Loại nội dung",
+      "tab": {
+        "all": "Tất cả",
+        "test": "Đề thi",
+        "question_set": "Câu hỏi"
+      },
+      "search": "Tìm theo tên hoặc giáo viên",
+      "column": {
+        "name": "Tên",
+        "owner": "Người chia sẻ",
+        "access": "Quyền",
+        "sharedAt": "Ngày chia sẻ"
+      },
+      "kind": {
+        "test": "Đề thi",
+        "question_set_other": "Bộ câu hỏi · {{count}} câu"
+      },
+      "open": "Mở",
+      "copy": "Tạo bản sao",
+      "remove": "Gỡ khỏi danh sách của tôi",
+      "empty": "Chưa có gì được chia sẻ với bạn. Khi một giáo viên chia sẻ đề thi hoặc bộ câu hỏi, nó sẽ hiện ở đây.",
+      "noMatch": "Không có mục nào khớp.",
+      "clearFilters": "Xoá bộ lọc",
+      "loadFailed": "Không tải được danh sách được chia sẻ với bạn.",
+      "noun_other": "mục",
+      "copyTitle": "Tạo bản sao của “{{name}}”?",
+      "copyBody": "Bản sao là của bạn: chỉ bạn thấy, và bạn sửa tuỳ ý. Bản gốc của {{owner}} không thay đổi.",
+      "removeTitle": "Gỡ “{{name}}” khỏi danh sách của bạn?",
+      "removeBody": "Bạn sẽ không mở được mục này nữa. Bài giao bạn đã tạo từ nó vẫn chạy bình thường. {{owner}} có thể chia sẻ lại với bạn.",
+      "removeBodyDisabled": "Bạn sẽ không mở được mục này nữa. Bài giao bạn đã tạo từ nó vẫn chạy bình thường. Tài khoản của {{owner}} đã bị vô hiệu hoá, nên hiện không ai chia sẻ lại được.",
+      "removeConfirm": "Gỡ",
+      "toast": {
+        "copied": {
+          "test": "Đã sao chép vào Đề thi của bạn",
+          "question_set": "Đã sao chép vào Ngân hàng câu hỏi của bạn"
+        },
+        "removed": "Đã gỡ khỏi Được chia sẻ với tôi",
+        "gone": "Mục này không còn được chia sẻ với bạn."
+      }
+    }
+  },
+  "sets": {
+    "add": {
+      "title_other": "Thêm {{count}} câu vào bộ",
+      "desc": "Bộ câu hỏi là một danh sách câu trong ngân hàng mà bạn đặt tên, để dùng lại và chia sẻ với giáo viên khác.",
+      "existing": "Bộ đã có",
+      "new": "Bộ mới",
+      "setLabel": "Bộ câu hỏi",
+      "option_other": "{{name}} · {{count}} câu",
+      "dupNote": "Câu đã có trong bộ sẽ được bỏ qua.",
+      "full_other": "Bộ này đang có {{count}} câu. Một bộ chứa tối đa 500 câu hỏi.",
+      "submit": "Thêm vào bộ",
+      "create": "Tạo bộ"
+    },
+    "nameLabel": "Tên bộ",
+    "namePlaceholder": "Ví dụ: Collocations · B1",
+    "descLabel": "Mô tả",
+    "descPlaceholder": "Bộ này dùng cho lớp hoặc mục đích nào?",
+    "shareSel": {
+      "title_other": "Chia sẻ {{count}} câu đã chọn",
+      "desc": "Đặt tên cho các câu này thành một bộ, rồi chọn giáo viên để chia sẻ. Sau đó bạn vẫn thêm bớt câu trong bộ được.",
+      "submit": "Tạo bộ và chia sẻ"
+    },
+    "count_other": "{{count}} câu hỏi",
+    "updated": "Cập nhật {{when}}",
+    "rename": "Đổi tên",
+    "delete": "Xoá bộ",
+    "more": "Thao tác khác",
+    "editLead": "Thay đổi của bạn được lưu vào bản của {{name}}.",
+    "editRest": "Bạn sửa được câu hỏi và gỡ câu khỏi bộ. Chỉ {{name}} thêm được câu mới.",
+    "useLead": "Bạn xem được bộ này nhưng không sửa được.",
+    "useRest": "Thêm câu vào đề thi của bạn, hoặc tạo bản sao để sửa.",
+    "empty": "Bộ này chưa có câu hỏi nào.",
+    "emptyOwnerHint": "Chọn câu trong ngân hàng rồi bấm “Thêm vào bộ”.",
+    "openBank": "Mở ngân hàng câu hỏi",
+    "loadFailed": "Không tải được bộ câu hỏi",
+    "goneTitle": "Không mở được bộ câu hỏi này",
+    "goneBodyOwner": "Bộ có thể đã bị xoá.",
+    "goneBody": "Bộ có thể đã bị xoá, hoặc chủ sở hữu đã dừng chia sẻ với bạn.",
+    "backToShared": "Về Được chia sẻ với tôi",
+    "backToBank": "Về ngân hàng câu hỏi",
+    "renameTitle": "Đổi tên bộ câu hỏi",
+    "deleteTitle": "Xoá bộ “{{name}}”?",
+    "deleteBody": "Các câu hỏi vẫn ở trong ngân hàng của bạn, và đề thi đang dùng những câu này không bị ảnh hưởng. Giáo viên được chia sẻ sẽ không mở được bộ này nữa.",
+    "removeFromSet": "Gỡ khỏi bộ",
+    "removeTitle_other": "Gỡ {{count}} câu khỏi bộ?",
+    "removeBodyOwner": "Các câu này vẫn ở trong ngân hàng của bạn. Đề thi đang dùng chúng không bị ảnh hưởng.",
+    "removeBody": "Các câu này vẫn ở trong ngân hàng của {{name}}. Chỉ {{name}} thêm lại được.",
+    "copyBodyOwner": "Bản sao là một bộ mới với các câu hỏi riêng của nó. Sửa bên nào cũng không ảnh hưởng bên kia.",
+    "toast": {
+      "added_other": "Đã thêm {{count}} câu vào “{{name}}”",
+      "created_other": "Đã tạo bộ “{{name}}” với {{count}} câu",
+      "removed_other": "Đã gỡ {{count}} câu khỏi bộ",
+      "deleted": "Đã xoá bộ “{{name}}”",
+      "copiedToTest_other": "Đã sao chép {{count}} câu vào ngân hàng của bạn và thêm vào {{test}}"
+    }
   }
 }

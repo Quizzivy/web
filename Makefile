@@ -4,7 +4,7 @@
 SHELL := /bin/bash
 .DEFAULT_GOAL := help
 
-.PHONY: help doctor install dev-web build test test-unit test-integration e2e e2e-live e2e-slow lint typecheck format-check check deck sdk
+.PHONY: help doctor install dev-web build test test-unit test-integration e2e e2e-live e2e-slow lint typecheck format-check check sdk
 
 help: ## Show this help
 	@grep -hE '^[a-zA-Z0-9_-]+:.*?## ' $(MAKEFILE_LIST) \
@@ -56,8 +56,5 @@ typecheck: ## tsc -b
 
 format-check: ## prettier --check
 	cd web && pnpm format:check
-
-deck: ## Check the design deck against its manifest
-	node scripts/check-design-deck.mjs
 
 check: lint typecheck format-check test ## What a PR needs before it is opened

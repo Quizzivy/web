@@ -61,6 +61,7 @@
       "organization.updated": "Đã cập nhật thông tin trung tâm",
       "question.created": "Đã tạo câu hỏi",
       "question.deleted": "Đã xoá câu hỏi",
+      "question.forked": "Đã tách bản sao câu hỏi khi sửa",
       "question.updated": "Đã cập nhật câu hỏi",
       "question_group.archived": "Đã lưu trữ bài đọc, điền từ hoặc bài nghe",
       "question_group.created": "Đã tạo bài đọc, điền từ hoặc bài nghe",
@@ -68,6 +69,9 @@
       "question_group.removed": "Đã gỡ bài đọc, điền từ hoặc bài nghe khỏi bài kiểm tra",
       "question_group.restored": "Đã khôi phục bài đọc, điền từ hoặc bài nghe",
       "question_group.updated": "Đã cập nhật bài đọc, điền từ hoặc bài nghe",
+      "question_set.created": "Đã tạo bộ câu hỏi",
+      "question_set.deleted": "Đã xoá bộ câu hỏi",
+      "question_set.updated": "Đã cập nhật bộ câu hỏi",
       "refresh_token.reuse_detected": "Phát hiện một phiên đăng nhập bị dùng lại",
       "retention.answers_removed": "Đã xoá câu trả lời quá hạn lưu",
       "retention.leads_removed": "Đã xoá yêu cầu tư vấn quá hạn lưu",
@@ -76,6 +80,11 @@
       "role.updated": "Đã cập nhật vai trò",
       "session.revoked": "Đã thu hồi một phiên đăng nhập",
       "session.revoked_others": "Đã thu hồi các phiên đăng nhập khác",
+      "share.changed": "Đã đổi quyền chia sẻ",
+      "share.copied": "Đã tạo bản sao từ nội dung được chia sẻ",
+      "share.granted": "Đã chia sẻ",
+      "share.removed": "Đã gỡ khỏi danh sách được chia sẻ",
+      "share.revoked": "Đã ngừng chia sẻ",
       "student.created": "Đã tạo tài khoản học viên",
       "student.deleted": "Đã xoá tài khoản học viên",
       "student.password_reset": "Đã đặt lại mật khẩu của học viên",
@@ -1289,6 +1298,10 @@
       "teacher-questions": {
         "name": "Ngân hàng câu hỏi",
         "blurb": "Câu hỏi, thẻ, tìm kiếm và các nhóm câu hỏi."
+      },
+      "teacher-sharing": {
+        "name": "Chia sẻ",
+        "blurb": "Danh bạ giáo viên, quyền Có thể dùng và Có thể sửa, và Được chia sẻ với tôi."
       },
       "teacher-imports": {
         "name": "Nhập từ Word",

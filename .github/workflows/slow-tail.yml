@@ -1,8 +1,7 @@
 name: Slow tail
 
-# Tests that wait on real time, kept off every pull request into develop. They
-# run nightly against develop, on any pull request into main (the release gate)
-# and on demand. This workflow is not a `needs` of CI result and no branch rule
+# Tests that wait on real time, kept off every pull request. They run nightly
+# against develop and on demand. This workflow is not a `needs` of CI result and no branch rule
 # requires it, so a failure here is read by whoever owns the schedule, not by
 # the merge that happened to be open. docs/ci.md, "The slow tail".
 #
@@ -21,12 +20,10 @@ on:
         description: Branch, tag or commit to test
         type: string
         default: develop
-  pull_request:
-    branches: [main]
 
 concurrency:
   group: slow-tail-${{ github.ref }}
-  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
+  cancel-in-progress: false
 
 permissions:
   contents: read

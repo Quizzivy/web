@@ -35,6 +35,7 @@ import { PageHead } from "@/layouts/shell/PageHead";
 import { ApiError } from "@/lib/api/errors";
 import { useDisplayTimeZone } from "@/lib/i18n/datetime";
 import { useImportAvailability } from "@/features/imports/availability";
+import { ShareDialog, useCanShare } from "@/features/sharing";
 import {
   archiveTest,
   createTest,
@@ -132,7 +133,8 @@ function message(cause: unknown, fallback: string): string {
  * teacher has paused for 300 ms, and the tests as cards. Every
  * test, archived ones included, is under All. A card can be selected for the
  * bulk archive and delete, duplicated in place, and archived, restored or
- * deleted from its menu. The list pages 24 or 48 cards at a time, and its
+ * deleted from its menu, and its owner shares it from its footer. The list
+ * pages 24 or 48 cards at a time, and its
  * pager shows whenever a test matches, so a page past the end still leads
  * back.
  */
@@ -170,6 +172,8 @@ export default function TestsListPage() {
   const [archiving, setArchiving] = useState<Test | null>(null);
   const [deleting, setDeleting] = useState<Test | null>(null);
   const [duplicated, setDuplicated] = useState<ReadonlySet<string>>(new Set());
+  const [sharing, setSharing] = useState<Test | null>(null);
+  const canShare = useCanShare();
 
   const invalidate = () => client.invalidateQueries({ queryKey: ["teacher-tests"] });
   const besideRemoved = (removed: Test): HTMLElement | null => {
@@ -273,6 +277,7 @@ export default function TestsListPage() {
                   onArchive={fromMenu(setArchiving)}
                   onRestore={(archived) => restore.mutate(archived)}
                   onDelete={fromMenu(setDeleting)}
+                  onShare={canShare(test) ? setSharing : undefined}
                 />
               )}
             </CardGrid>
@@ -408,6 +413,16 @@ export default function TestsListPage() {
         returnFocus={returnTo}
         onConfirm={() => archiving && archive.mutate(archiving)}
       />
+      {sharing === null ? null : (
+        <ShareDialog
+          open
+          onOpenChange={(open) => !open && setSharing(null)}
+          kind="test"
+          resourceId={sharing.id}
+          name={sharing.title}
+          onSharedChange={() => void invalidate()}
+        />
+      )}
       <DeleteItemDialog
         open={deleting !== null}
         onOpenChange={(open) => !open && setDeleting(null)}

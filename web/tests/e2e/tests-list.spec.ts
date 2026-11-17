@@ -1,5 +1,5 @@
 import { expect, test, type Page, type Route } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, ownedByAdmin, sessionAs, stubApi } from "./support/api";
 import { contractJson } from "../support/contractResponse";
 import { dashboard23Summary } from "../support/dashboard23";
 
@@ -24,6 +24,7 @@ function testRow(id: string, title: string, status: Status) {
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: status === "archived" ? 1 : 0 },
     unpublishedChanges: null,
+    ...ownedByAdmin,
     sections: [],
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",

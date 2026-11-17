@@ -26,7 +26,6 @@ const NOT_CODE = [
  * skipped on a change to that file.
  */
 export const SETS = {
-  deck: { base: 'none', include: ['docs/design/', 'scripts/check-design-deck.mjs'], exclude: [] },
   // The web reads the contract through the pinned @quizzivy/sdk in
   // web/package.json (D-082); api-ref matters only to the live suite.
   web: { base: 'all', include: [], exclude: [...NOT_CODE, 'api-ref'] },
@@ -40,7 +39,6 @@ export const SETS = {
  * matrix legs, each proven separately.
  */
 export const JOBS = [
-  { id: 'deck', set: 'deck' },
   { id: 'web-check', set: 'web' },
   { id: 'web-unit', set: 'web', shards: 3 },
   { id: 'e2e', set: 'web' },

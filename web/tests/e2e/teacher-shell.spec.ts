@@ -59,6 +59,7 @@ async function prepare(
         liveAssignments: 1,
         answersToGrade: 2,
         unreadNotifications: 0,
+        sharedWithMe: 0,
       } satisfies TeacherSummary,
     },
     [`GET /teacher/assignments/${ASSIGNMENT_ID}`]: {

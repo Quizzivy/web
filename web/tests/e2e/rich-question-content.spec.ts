@@ -1,5 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import {
+  adminUser,
+  ownedByAdmin,
+  questionOwnedByAdmin,
+  sessionAs,
+  stubApi,
+} from "./support/api";
 import type { components } from "../../src/lib/api/schema";
 
 const ID = "018f0000-0000-7000-8000-0000000000b1";
@@ -18,6 +24,7 @@ function sample(): Question {
     explanation: "*Giải thích* bằng tiếng Việt.",
     points: 1,
     tags: [],
+    ...questionOwnedByAdmin,
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",
   };
@@ -100,8 +107,12 @@ async function setup(page: Page, initial = sample(), delayed = false) {
     [`GET /teacher/tests/${TEST}`]: {
       body: {
         skills: [],
+        assignments: { live: 0, scheduled: 0, closed: 0 },
+        unpublishedChanges: null,
+        ...ownedByAdmin,
         id: TEST,
         title: "Soạn nội dung",
+        description: null,
         status: "draft",
         currentVersion: 0,
         nextVersion: 1,
@@ -119,7 +130,7 @@ async function setup(page: Page, initial = sample(), delayed = false) {
         ],
         createdAt: "2026-01-01T00:00:00Z",
         updatedAt: "2026-01-01T00:00:00Z",
-      },
+      } satisfies components["schemas"]["Test"],
     },
   });
   return {

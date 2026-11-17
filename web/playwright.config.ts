@@ -92,7 +92,7 @@ export default defineConfig({
     /**
      * The live specs that wait on real time, kept off every pull request: E2E 5
      * waits out a one-minute deadline, a fifth of the live suite. The "Slow
-     * tail" workflow runs it nightly and on a pull request into main, with
+     * tail" workflow runs it nightly and on demand, with
      * `pnpm e2e:slow`, which needs postgres and the Go API.
      */
     {

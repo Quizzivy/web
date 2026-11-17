@@ -1,7 +1,8 @@
 # CI
 
-`.github/workflows/ci.yml` runs on every pull request and on every push to
-`main`, `develop` and `work/**`. One check, **CI result**, is what the branch
+`.github/workflows/ci.yml` runs on every pull request that is not a draft and
+on every push to `main`, `develop` and `work/**`. A draft runs nothing, not even
+Plan; it gets its CI run when it is marked ready for review. One check, **CI result**, is what the branch
 rules require; it passes only when every job did what the plan asked of it.
 The rules come from the monorepo's CI (`Quizzivy/api` keeps the server's half,
 in its `docs/setup/ci.md`).
@@ -11,7 +12,6 @@ in its `docs/setup/ci.md`).
 | Job | Reads | Does |
 |---|---|---|
 | Plan | everything | Tests `scripts/ci/`, then decides which jobs run |
-| Deck | `deck` | `scripts/check-design-deck.mjs` |
 | Web checks | `web` | On a PR into `main`, that `@quizzivy/sdk` is pinned to a release; `pnpm lint:ci`, typecheck, `pnpm format:ci`, integration tests, build |
 | Web unit | `web` | The unit suite, in three shards |
 | E2E | `web` | Playwright against a production build, API stubbed |
@@ -39,10 +39,9 @@ pass (`ci-pass-<job>-<hash>`, kept 30 days). A push to `main` and "Re-run all
 jobs" ignore earlier proof. Each job checks out only its set, so a test that
 reads a file outside it fails instead of being skipped.
 
-- `web`: everything but the docs, the deck and `api-ref`.
+- `web`: everything but the docs and `api-ref`.
 - `code`: everything but the docs; E2E (live API) reads it, so a bump of
   `api-ref` runs the live suite and nothing else.
-- `deck`: `docs/design/` and its checker.
 
 ## E2E (live API)
 
@@ -93,9 +92,9 @@ which the browser would not send it.
 `.github/workflows/slow-tail.yml` runs the specs of the `slow` Playwright
 project, which holds one spec today: E2E 5, `timer-expiry.live.spec.ts`, which
 waits out a real one-minute deadline. It runs every night at 19:00 UTC against
-`develop`, on every pull request into `main` (read its check, **E2E (waits on
-real time)**, before merging a release), and by hand. It is not part of **CI
-result**. GitHub starts a schedule only from the default branch's copy of the
+`develop` and by hand; it no longer runs on pull requests. Before merging a
+release, read its latest nightly run (**E2E (waits on real time)**), or start it
+by hand on the release branch. It is not part of **CI result**. GitHub starts a schedule only from the default branch's copy of the
 file. The server's half of E2E 5, the attempt deadline, is tested in
 `Quizzivy/api`.
 

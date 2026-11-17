@@ -41,7 +41,8 @@ relative name.
 Supporting files: `support.js` is the Claude Design canvas runtime (nothing in it is product
 behaviour); `qz-controls.js` draws the select popover and the date and time picker the pages use;
 `github.md` is Claude Design's own sync log and its screen-to-repo map; the SVGs are the assets
-the pages reference by name. `MANIFEST.sha256` pins every file.
+the pages reference by name. Since 2026-11-17 nothing pins or checks the deck: there is no
+manifest and CI no longer reads `docs/design/`.
 
 ## Reading a page
 
@@ -58,8 +59,7 @@ Each `.dc.html` is one `<x-dc>` template followed by one `<script type="text/x-d
   two dialogs they open.
 - The Teacher page mounts the Student page three times through `<dc-import name="Quizzivy Student">`
   with the props `exam` and `dark` (the builder's preview, Test detail's preview and the import's
-  preview), and `scripts/check-design-deck.mjs` reads the import as a reference to
-  `Quizzivy Student.dc.html`. On the Student page `renderVals()` is `renderValsBase()` overlaid by
+  preview), so `Quizzivy Student.dc.html` must sit beside it. On the Student page `renderVals()` is `renderValsBase()` overlaid by
   `examVals()`, which holds every take-test rule: the sections rail, the sheet, the stimulus pane,
   the gap card, the phone drawer and the recording card.
 - Breakpoints are measured from the page's own width with a ResizeObserver: `< 768` is mobile,
@@ -215,18 +215,15 @@ files in `deck/` byte for byte.
 The deck's `github.md` still says `repo: SekiroKenjii/Quizzivy`, because Claude Design wrote it
 before the web moved to `Quizzivy/web`. The path, `web/src`, is the same here. Point the Claude
 Design project at `Quizzivy/web` before its next sync, and let that sync rewrite the line; do not
-edit `github.md` by hand, since the manifest pins it.
+edit `github.md` by hand.
 
 
 1. Copy the pages, `support.js`, `qz-controls.js`, `github.md`, the SVGs and `brand/` over the
    old ones. Do not import `screenshots/`, `uploads/` or `.thumbnail` (see below).
-2. Regenerate the manifest:
-   `cd docs/design/deck && find . -type f ! -name MANIFEST.sha256 | sed 's|^\./||' | LC_ALL=C sort | while IFS= read -r f; do sha256sum "$f"; done > MANIFEST.sha256`
-3. `node scripts/check-design-deck.mjs` — it checks the manifest, that every page is one
-   template and one script, and that every file a page references is in the deck, a
-   `<dc-import name="X">` included (it must find `X.dc.html`). A `src` or `href` that a page's
-   script builds (its target holds a quote or a `$`) is not read as a file reference.
-4. Add a line to the log below, and say in the PR which screens changed.
+2. Open the changed pages with the server above and check that each loads and finds the files
+   it references, a `<dc-import name="X">` included (it needs `X.dc.html` beside it). Nothing in
+   CI checks this any more.
+3. Add a line to the log below, and say in the PR which screens changed.
 
 ## Proposals
 
@@ -249,7 +246,7 @@ that builds the screens reads the page as it reads the deck.
 
 1. Add or change the page under `deck/proposals/`. Never edit the seven exported pages or
    `page-width-proposal/`: the next export replaces them.
-2. Regenerate the manifest with the command above and run `node scripts/check-design-deck.mjs`.
+2. Open it with the server above and check that it loads.
 3. Add a line to the log below, and a note to each `gaps.md` row the page answers.
 
 To view one, start the server above and open, for example,

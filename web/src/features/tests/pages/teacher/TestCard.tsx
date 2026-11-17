@@ -9,9 +9,12 @@ import {
   RotateCw,
   Send,
   Trash2,
+  UserPlus,
+  UsersRound,
   type LucideIcon,
 } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -36,6 +39,8 @@ export type TestCardActions = Readonly<{
   onArchive: (test: Test) => void;
   onRestore: (test: Test) => void;
   onDelete: (test: Test) => void;
+  /** Opens the share dialog; absent unless the reader owns the test and holds `content.share`. */
+  onShare?: ((test: Test) => void) | undefined;
 }>;
 
 const PILL_SHAPE = "border-0 px-2";
@@ -55,8 +60,9 @@ const ICON_BUTTON =
  * and a footer with its questions, points and assignments. The whole card
  * opens the test's detail. Above that link sit the selection checkbox, the
  * Duplicate button and the "…" menu (Duplicate and Archive; Restore,
- * Duplicate and Delete for an archived one). Assigning starts from the
- * test's detail. `duplicated` marks a test just
+ * Duplicate and Delete for an archived one), and for its owner the deck's
+ * "Share" or "Shared · {n}" (T-R7.16). Assigning starts from the test's
+ * detail. `duplicated` marks a test just
  * duplicated or just made by duplicating; `duplicating` disables Duplicate.
  */
 export function TestCard({
@@ -145,6 +151,9 @@ export function TestCard({
           <Fact icon={Send}>{assignedLabel(test, t)}</Fact>
         </p>
         <div className="relative z-10 flex flex-none items-center gap-1.5">
+          {actions.onShare === undefined ? null : (
+            <ShareButton test={test} onShare={actions.onShare} />
+          )}
           <button
             type="button"
             aria-label={t("common.duplicateNamed", { name: test.title })}
@@ -158,6 +167,35 @@ export function TestCard({
         </div>
       </div>
     </article>
+  );
+}
+
+function ShareButton({
+  test,
+  onShare,
+}: Readonly<{ test: Test; onShare: (test: Test) => void }>) {
+  const { t } = useTranslation();
+  const shared = test.sharedWith > 0;
+  const Icon = shared ? UsersRound : UserPlus;
+  return (
+    <Button
+      type="button"
+      variant="outline"
+      size="xs"
+      data-test-share={test.id}
+      aria-label={
+        shared
+          ? t("sharing.entry.manage", { count: test.sharedWith })
+          : t("sharing.entry.shareNamed", { name: test.title })
+      }
+      onClick={() => onShare(test)}
+      className="flex-none shadow-none max-[767px]:h-11"
+    >
+      <Icon aria-hidden="true" />
+      {shared
+        ? t("sharing.entry.shared", { count: test.sharedWith })
+        : t("sharing.share")}
+    </Button>
   );
 }
 
@@ -179,7 +217,7 @@ function CardMenu({
   onArchive,
   onRestore,
   onDelete,
-}: Readonly<{ test: Test } & TestCardActions>) {
+}: Readonly<{ test: Test } & Omit<TestCardActions, "onShare">>) {
   const { t } = useTranslation();
   const archived = test.status === "archived";
   return (

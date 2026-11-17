@@ -44,7 +44,11 @@ import {
   getQuestion,
   toFormValues,
   updateQuestion,
+  type AdminQuestion,
 } from "@/features/question-bank/api";
+import { AiOff } from "@/features/ai/useAiAvailable";
+import { useCan } from "@/features/auth/permissions";
+import { staleOf } from "@/features/sharing";
 import { aiReadsOf, type QuestionAi } from "@/features/question-bank/questionAi";
 import {
   questionSchema,
@@ -52,6 +56,8 @@ import {
 } from "@/features/question-bank/questionSchema";
 import type { MediaAsset } from "@/features/media/api";
 import {
+  copyQuestionsForTest,
+  editTestQuestion,
   getTest,
   moveTestQuestion,
   publishTest,
@@ -110,6 +116,15 @@ import {
   type GroupPaneBridge,
 } from "../../components/BuilderGroupPane";
 import { GroupPickerDialog } from "../../components/GroupPickerDialog";
+import {
+  AccessBanner,
+  AccessOwnerLine,
+  type BuilderStale,
+} from "../../components/AccessBanner";
+import { AccessRemovedNotice } from "../../components/AccessRemovedNotice";
+import { SharingStopped, useTestAccess, type TestAccess } from "../../access";
+import { forkRowIds, withRowIds } from "../../forkIds";
+import { ReadOnlyBuilder } from "./ReadOnlyBuilder";
 import { BuilderWrites } from "../../BuilderWrites";
 import { BuilderAiActions, type BuilderAi } from "../../components/BuilderAiActions";
 import { aiPassagesIn, aiSections } from "../../aiSections";
@@ -163,13 +178,54 @@ export default function TestBuilderPage() {
     );
   }
 
-  return <Builder key={test.data.id} test={test.data} />;
+  return <BuilderFor key={test.data.id} test={test.data} />;
 }
 
-function Builder({ test }: Readonly<{ test: Test }>) {
+/**
+ * BuilderFor picks the builder for the caller's access (T-R7.18): Can use
+ * reads the test in ReadOnlyBuilder, which mounts no autosave; everyone else
+ * edits it. A recipient, at either access, gets no AI entry point (R7 Access
+ * Modes, Q1): the assistant spends the caller's credits and what it makes
+ * would land in the owner's bank. An admin on someone else's test keeps it,
+ * and its writes take the non-owner paths (fixQuestion).
+ */
+function BuilderFor({ test }: Readonly<{ test: Test }>) {
+  const access = useTestAccess(test);
+  return (
+    <AiOff value={access.access !== "owner"}>
+      {access.readOnly ? (
+        <ReadOnlyBuilder test={test} />
+      ) : (
+        <Builder test={test} access={access} />
+      )}
+    </AiOff>
+  );
+}
+
+/** A write that fails as the version guard does: the outline, a group or a question. */
+type Refused = "outline" | "test" | "question";
+
+function staleWrite(cause: unknown): boolean {
+  return cause instanceof ApiError && cause.code === "STALE_WRITE";
+}
+
+function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const queryClient = useQueryClient();
+  const canPublish = useCan("content.tests.publish");
+  // The owner's builder is as it was; a recipient publishes with the permission.
+  const showPublish = access.mine || canPublish;
+  const [staleBy, setStaleBy] = useState<BuilderStale | null>(null);
+  const [revoked, setRevoked] = useState(false);
+  // Set once a save finds the test is no longer shared: nothing is sent after.
+  const gone = useRef(false);
+  // A fork's id to the id its pane was opened with, so the pane stays mounted.
+  const [forkedFrom, setForkedFrom] = useState<ReadonlyMap<string, string>>(
+    () => new Map(),
+  );
+  // An original's id to the fork that replaced it in this draft.
+  const forkedTo = useRef(new Map<string, string>());
 
   const [title, setTitle] = useState(test.title);
   useCrumbs([{ label: title.trim() || t("tests.untitled") }]);
@@ -239,6 +295,108 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   // The version guard moves with each save.
   const version = useRef(test.updatedAt);
 
+  function stopSharing() {
+    gone.current = true;
+    setRevoked(true);
+  }
+
+  /**
+   * refused reads a failed write. A STALE_WRITE names who saved first, for
+   * the band. For a caller who is not the owner a 404 means the test is no
+   * longer theirs to edit: on the outline that is certain, elsewhere the test
+   * is read again to tell it from a question or group that went away.
+   */
+  function refused(cause: unknown, where: Refused) {
+    const named = staleOf(cause);
+    if (named) {
+      setStaleBy(
+        (current) =>
+          current ?? { ...named, what: where === "question" ? "question" : "test" },
+      );
+      return;
+    }
+    if (access.mine || !(cause instanceof ApiError) || cause.status !== 404) return;
+    if (where === "outline") {
+      stopSharing();
+      return;
+    }
+    void getTest(test.id).catch((again: unknown) => {
+      if (again instanceof ApiError && again.status === 404) stopSharing();
+    });
+  }
+
+  /** guarded runs a write unless sharing has stopped, and reads its failure. */
+  async function guarded<T>(where: Refused, operation: () => Promise<T>): Promise<T> {
+    if (gone.current) throw new SharingStopped();
+    try {
+      return await operation();
+    } catch (cause) {
+      refused(cause, where);
+      throw cause;
+    }
+  }
+
+  /**
+   * ownCopies is what the draft may hold of questions the caller picked from
+   * their bank: the same ids for the owner, else copies in the owner's bank
+   * (T-R7.7's question-copies), in the order picked, or null when that failed.
+   */
+  async function ownCopies(ids: string[]): Promise<string[] | null> {
+    if (access.forTestId === undefined || ids.length === 0) return ids;
+    setCreating(true);
+    try {
+      const copied = await guarded("test", () => copyQuestionsForTest(test.id, ids));
+      return copied.questionIds;
+    } catch (cause) {
+      setPublishError(
+        cause instanceof ApiError ? cause.message : t("builder.addFailed"),
+      );
+      return null;
+    } finally {
+      setCreating(false);
+    }
+  }
+
+  /**
+   * editShared saves a question of the draft for a caller who is not the
+   * owner (T-R7.6), in turn with the builder's other writes. The test's new
+   * `updatedAt` becomes the autosave base; a fork takes the original's place
+   * in the outline and the pane, with the toast that says why.
+   */
+  function editShared(questionId: string, body: QuestionValues, base: string) {
+    return guarded("question", () =>
+      writes.run(async () => {
+        const edit = await editTestQuestion(test.id, questionId, body, base);
+        version.current = edit.testUpdatedAt;
+        groupBridge.current?.advanceOwner(false, edit.testUpdatedAt);
+        if (edit.forked) swapForked(questionId, edit.question);
+        return edit;
+      }),
+    );
+  }
+
+  function swapForked(from: string, fork: AdminQuestion) {
+    queryClient.setQueryData(["teacher-question", fork.id], fork);
+    setForkedFrom((current) =>
+      new Map(current).set(fork.id, current.get(from) ?? from),
+    );
+    forkedTo.current.set(from, fork.id);
+    const swap = (list: OutlineSection[]) =>
+      list.map((section) => swapUnit(section, from, fork.id));
+    latestOutline.current = swap(latestOutline.current);
+    savedOutline.current = swap(savedOutline.current);
+    setSections(latestOutline.current);
+    setSelectedId((current) => (current === from ? fork.id : current));
+    setStarterIds((current) =>
+      current.has(from) ? new Set([...current, fork.id]) : current,
+    );
+    setUnkeyedDraft((current) => (current === from ? fork.id : current));
+    void queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
+    notify.info(t("questionEditor.forked", { name: access.ownerGiven }), {
+      duration: 6000,
+    });
+  }
+
   const coordinate = useCallback(
     (operation: () => Promise<void>) => writes.run(operation),
     [writes],
@@ -290,28 +448,34 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     queryClient.setQueryData(["teacher-test", test.id], saved);
   }
 
+  /** saveOutlineNow sends the title and outline, in turn with the builder's other writes. */
+  async function saveOutlineNow(draft: { title: string; sections: OutlineSection[] }) {
+    const known = await stopGroupReads();
+    // A draft scheduled before a fork still names the original.
+    const resolved = draft.sections.map((section) => ({
+      ...swapForks(section, forkedTo.current),
+      id: sectionIds.current.get(section.clientId ?? section.id ?? "") ?? section.id,
+    }));
+    const saved = await saveMixedOutline(
+      test.id,
+      version.current,
+      draft.title,
+      resolved.map((section) => ({
+        id: section.id,
+        title: section.title,
+        instructions: section.instructions,
+        units: unitsOf(section),
+      })),
+    );
+    acknowledge(saved, resolved, known);
+  }
+
   const outline = useAutosave<{ title: string; sections: OutlineSection[] }>({
-    save: (draft) =>
-      writes.run(async () => {
-        const known = await stopGroupReads();
-        const resolved = draft.sections.map((section) => ({
-          ...section,
-          id:
-            sectionIds.current.get(section.clientId ?? section.id ?? "") ?? section.id,
-        }));
-        const saved = await saveMixedOutline(
-          test.id,
-          version.current,
-          draft.title,
-          resolved.map((section) => ({
-            id: section.id,
-            title: section.title,
-            instructions: section.instructions,
-            units: unitsOf(section),
-          })),
-        );
-        acknowledge(saved, resolved, known);
-      }),
+    isStale: (cause) =>
+      staleWrite(cause) ||
+      cause instanceof SharingStopped ||
+      (!access.mine && cause instanceof ApiError && cause.status === 404),
+    save: (draft) => guarded("outline", () => writes.run(() => saveOutlineNow(draft))),
   });
 
   const questionIds = useMemo(
@@ -452,7 +616,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     const ids: string[] = [];
     try {
       for (const value of values) {
-        const created = await createQuestion(value);
+        const created = await createQuestion(value, { forTestId: access.forTestId });
         queryClient.setQueryData(["teacher-question", created.id], created);
         ids.push(created.id);
       }
@@ -514,6 +678,12 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     }
   }
 
+  /**
+   * fixQuestion applies an AI check's fix to a question of the draft. For a
+   * caller who is not the owner (an admin on someone else's test) it goes
+   * through the test's question path, as a manual edit does, so a question
+   * used elsewhere is forked rather than changed in every test that uses it.
+   */
   async function fixQuestion(finding: AiFinding) {
     const group = groupOf(finding.questionId);
     if (group) {
@@ -526,10 +696,14 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     const fresh = await getQuestion(questionId);
     const values = toFormValues(fresh);
     if (!fixFits(values, finding)) throw new AiWriteError(t("ai.check.fixGone"));
-    const saved = await updateQuestion(questionId, withFix(values, finding));
-    queryClient.setQueryData(["teacher-question", questionId], saved);
+    const fixed = withFix(values, finding);
+    const saved = access.mine
+      ? await updateQuestion(questionId, fixed)
+      : (await editShared(questionId, fixed, fresh.updatedAt)).question;
+    queryClient.setQueryData(["teacher-question", saved.id], saved);
     void queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
-    if (selectedId === questionId) setEditorEpoch((epoch) => epoch + 1);
+    if (selectedId === questionId || selectedId === saved.id)
+      setEditorEpoch((epoch) => epoch + 1);
   }
 
   async function onCreateQuestion() {
@@ -547,7 +721,9 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     }
     setCreating(true);
     try {
-      const created = await createQuestion(starterQuestion(t));
+      const created = await createQuestion(starterQuestion(t), {
+        forTestId: access.forTestId,
+      });
       queryClient.setQueryData(["teacher-question", created.id], created);
       setStarterIds((current) => new Set([...current, created.id]));
       appendQuestions([created.id]);
@@ -628,7 +804,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     setPublishError(null);
     try {
       await flushQuestion.current?.();
-      const copy = await duplicateQuestion(questionId);
+      const copy = await duplicateQuestion(questionId, { forTestId: access.forTestId });
       queryClient.setQueryData(["teacher-question", copy.id], copy);
       const current = latestOutline.current;
       updateOutline(
@@ -699,6 +875,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   }
 
   function report(cause: unknown) {
+    refused(cause, "test");
     setPublishError(
       cause instanceof ApiError ? cause.message : t("builder.saveBeforeSwitchFailed"),
     );
@@ -706,11 +883,13 @@ function Builder({ test }: Readonly<{ test: Test }>) {
 
   async function saveGroup(bundle: GroupBundle, revision: number) {
     await queryClient.cancelQueries({ queryKey: ["teacher-group", bundle.group.id] });
-    const saved = await updateGroup(bundle.group.id, {
-      bundle,
-      expectedRevision: revision,
-      expectedTestUpdatedAt: version.current,
-    });
+    const saved = await guarded("test", () =>
+      updateGroup(bundle.group.id, {
+        bundle,
+        expectedRevision: revision,
+        expectedTestUpdatedAt: version.current,
+      }),
+    );
     version.current = saved.testUpdatedAt ?? version.current;
     queryClient.setQueryData(["teacher-group", bundle.group.id], saved);
     return saved;
@@ -791,11 +970,38 @@ function Builder({ test }: Readonly<{ test: Test }>) {
 
   /**
    * pickFromBank takes what "Add from question bank" picked: into the section
-   * the outline's entry names, or into the group whose pane asked.
+   * the outline's entry names, or into the group whose pane asked. For a
+   * caller who is not the owner a group's room is checked before anything is
+   * copied into the owner's bank, so a full group leaves no unused copies.
    */
   function pickFromBank(ids: string[]) {
-    if (pickingInto === null) appendQuestions(ids);
-    else void addFromBankToGroup(pickingInto, ids);
+    const into = pickingInto;
+    void (async () => {
+      if (
+        into !== null &&
+        access.forTestId !== undefined &&
+        !(await hasRoom(into, ids))
+      )
+        return;
+      const own = await ownCopies(ids);
+      if (own === null) return;
+      if (into === null) appendQuestions(own);
+      else void addFromBankToGroup(into, own);
+    })();
+  }
+
+  /** hasRoom says whether a group can take the picked questions, with the notice when not. */
+  async function hasRoom(groupId: string, ids: readonly string[]) {
+    try {
+      const stored =
+        queryClient.getQueryData<StoredGroup>(["teacher-group", groupId]) ??
+        (await getGroup(groupId));
+      if (ids.length <= groupRoom(stored.bundle.group)) return true;
+      notify.error(t("builder.moveGroupFull"));
+    } catch (cause) {
+      report(cause);
+    }
+    return false;
   }
 
   function pickWholeGroup() {
@@ -991,6 +1197,7 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   }
 
   function refuseMove(cause: unknown) {
+    refused(cause, "test");
     if (cause instanceof ApiError && cause.code === "STALE_WRITE") {
       setMoveStale(true);
       return;
@@ -1126,10 +1333,11 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   const stale = saveStatus.kind === "stale" || moveStale;
   // Typed but not yet on the server: leaving now would lose it (F-14).
   const unsaved =
-    saveStatus.kind === "dirty" ||
-    saveStatus.kind === "saving" ||
-    saveStatus.kind === "failed" ||
-    saveStatus.kind === "stale";
+    !revoked &&
+    (saveStatus.kind === "dirty" ||
+      saveStatus.kind === "saving" ||
+      saveStatus.kind === "failed" ||
+      saveStatus.kind === "stale");
   const leaving = useBlocker(
     ({ currentLocation, nextLocation }) =>
       unsaved &&
@@ -1243,8 +1451,9 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     const questionId = selectedId;
     return (
       <QuestionPane
-        key={`${questionId}:${editorEpoch}`}
+        key={`${forkedFrom.get(questionId) ?? questionId}:${editorEpoch}`}
         questionId={questionId}
+        editShared={access.mine ? undefined : editShared}
         number={positionOf(sections, questionId, groups)}
         clearStarterPrompt={starterIds.has(questionId)}
         flushRef={flushQuestion}
@@ -1272,40 +1481,28 @@ function Builder({ test }: Readonly<{ test: Test }>) {
     );
   }
 
+  if (revoked) return <AccessRemovedNotice ownerName={access.owner.name} />;
+
   return (
     <fieldset
       disabled={creating || publishing || movingQuestion !== null}
       className="flex min-w-0 flex-col gap-3.5"
     >
       <div className="flex shrink-0 flex-wrap items-center justify-between gap-3">
-        <div className="flex min-w-0 flex-[1_1_320px] items-center gap-2.5">
-          <Button
-            variant="ghost"
-            size="icon"
-            aria-label={t("common.back")}
-            title={t("common.back")}
-            onClick={() => void navigate("/teacher/tests")}
-          >
-            <ArrowLeft aria-hidden="true" />
-          </Button>
-          <BuilderTitle title={title} onChange={updateTitle} />
-          <StatusBadge
-            kind="test"
-            status={test.status}
-            className={
-              test.status === "draft"
-                ? "border-border text-muted-fg h-5.5 shrink-0 rounded-full bg-transparent px-2 text-xs leading-[18px] font-medium"
-                : "shrink-0"
-            }
-          />
-          <AutosaveStatusLabel status={saveStatus} deck />
-        </div>
+        <BuilderHeading
+          access={access}
+          title={title}
+          onTitle={updateTitle}
+          status={test.status}
+          saveStatus={saveStatus}
+          stale={stale}
+        />
 
         <div className="flex min-w-0 flex-wrap items-center gap-2">
           <Button
             variant="ghost"
             size="icon"
-            className="text-muted-foreground"
+            className="text-muted-foreground max-[1023px]:size-11"
             aria-label={t("builder.versions")}
             title={t("builder.versions")}
             onClick={() => void navigate(`/teacher/tests/${test.id}#versions`)}
@@ -1316,20 +1513,22 @@ function Builder({ test }: Readonly<{ test: Test }>) {
           <Button
             variant="outline"
             size="md"
-            className="shadow-card h-9"
+            className="shadow-card h-9 max-[1023px]:h-11"
             onClick={() => void openPreview()}
           >
             <Eye aria-hidden="true" />
             {t("builder.preview")}
           </Button>
-          <Button
-            size="md"
-            className="h-9"
-            disabled={publishing || stale}
-            onClick={() => void openPublish()}
-          >
-            {t("builder.publish")}
-          </Button>
+          {showPublish ? (
+            <Button
+              size="md"
+              className="h-9 max-[1023px]:h-11"
+              disabled={publishing || stale}
+              onClick={() => void openPublish()}
+            >
+              {t("builder.publish")}
+            </Button>
+          ) : null}
         </div>
       </div>
 
@@ -1341,22 +1540,11 @@ function Builder({ test }: Readonly<{ test: Test }>) {
         }}
       />
 
-      {stale ? (
-        <div
-          role="alert"
-          className="flex shrink-0 items-center gap-3 border-b px-4 py-2"
-        >
-          <p className="text-sm">{t("builder.staleBody")}</p>
-          <Button
-            variant="outline"
-            size="sm"
-            className="ml-auto"
-            onClick={() => window.location.reload()}
-          >
-            {t("builder.reload")}
-          </Button>
-        </div>
-      ) : null}
+      <AccessBanner
+        access={access}
+        stale={stale ? (staleBy ?? "unnamed") : null}
+        onReload={() => window.location.reload()}
+      />
 
       {publishError === null ? null : (
         <p role="alert" className="text-danger-ink border-b px-4 py-2 text-sm">
@@ -1671,6 +1859,70 @@ function Builder({ test }: Readonly<{ test: Test }>) {
   );
 }
 
+/**
+ * BuilderHeading is the title bar's left half: Back, the title, the status
+ * and the save line. For a test the caller does not own, the owner line sits
+ * under it and Back leads to Shared with me (R7 Access Modes, note 1).
+ */
+function BuilderHeading({
+  access,
+  title,
+  onTitle,
+  status,
+  saveStatus,
+  stale,
+}: Readonly<{
+  access: TestAccess;
+  title: string;
+  onTitle: (value: string) => void;
+  status: Test["status"];
+  saveStatus: AutosaveStatus;
+  stale: boolean;
+}>) {
+  const { t } = useTranslation();
+  const navigate = useNavigate();
+  const back = access.access === "owner" ? "/teacher/tests" : "/teacher/shared-with-me";
+  const row = (
+    <div
+      className={cn(
+        "flex min-w-0 items-center gap-2.5",
+        access.mine && "flex-[1_1_320px]",
+      )}
+    >
+      <Button
+        variant="ghost"
+        size="icon"
+        aria-label={t("common.back")}
+        title={t("common.back")}
+        onClick={() => void navigate(back)}
+      >
+        <ArrowLeft aria-hidden="true" />
+      </Button>
+      <BuilderTitle title={title} onChange={onTitle} />
+      <StatusBadge
+        kind="test"
+        status={status}
+        className={
+          status === "draft"
+            ? "border-border text-muted-fg h-5.5 shrink-0 rounded-full bg-transparent px-2 text-xs leading-[18px] font-medium"
+            : "shrink-0"
+        }
+      />
+      {/* A refused save is the band's to say (R7 Access Modes: the save line goes). */}
+      {stale ? null : <AutosaveStatusLabel status={saveStatus} deck />}
+    </div>
+  );
+  if (access.mine) return row;
+  return (
+    <div className="flex min-w-0 flex-[1_1_320px] flex-col gap-1">
+      {row}
+      <div className="pl-12">
+        <AccessOwnerLine access={access} />
+      </div>
+    </div>
+  );
+}
+
 function BuilderTitle({
   title,
   onChange,
@@ -1737,8 +1989,19 @@ function BuilderTitle({
   );
 }
 
+/**
+ * EditShared saves a draft's question for a caller who is not the test's
+ * owner: through the test (T-R7.6), guarded by the question's `updatedAt`.
+ */
+type EditShared = (
+  questionId: string,
+  body: QuestionValues,
+  base: string,
+) => Promise<{ question: AdminQuestion; forked: boolean }>;
+
 function QuestionPane({
   questionId,
+  editShared,
   number,
   clearStarterPrompt,
   flushRef,
@@ -1748,6 +2011,7 @@ function QuestionPane({
   actions,
 }: Readonly<{
   questionId: string;
+  editShared?: EditShared | undefined;
   number: number | null;
   clearStarterPrompt: boolean;
   flushRef: RefObject<(() => Promise<void>) | null>;
@@ -1780,6 +2044,7 @@ function QuestionPane({
   return (
     <QuestionForm
       questionId={questionId}
+      editShared={editShared}
       number={number}
       clearStarterPrompt={clearStarterPrompt}
       initial={question.data}
@@ -1795,6 +2060,7 @@ function QuestionPane({
 
 function QuestionForm({
   questionId,
+  editShared,
   number,
   clearStarterPrompt,
   initial,
@@ -1806,6 +2072,7 @@ function QuestionForm({
   onRefresh,
 }: Readonly<{
   questionId: string;
+  editShared?: EditShared | undefined;
   number: number | null;
   clearStarterPrompt: boolean;
   initial: Parameters<typeof toFormValues>[0];
@@ -1838,15 +2105,44 @@ function QuestionForm({
 
   const storedReads = useRef(aiReadsOf(values));
   const lastSave = useRef<{ sent: QuestionValues; saved: QuestionValues } | null>(null);
+  // For a caller who is not the owner: the question this pane now saves to
+  // (a fork's once there is one), the `updatedAt` it last read, and the
+  // original's row ids mapped to the fork's.
+  const target = useRef(questionId);
+  const base = useRef(initial.updatedAt);
+  const rowIds = useRef(new Map<string, string>());
   const autosave = useAutosave<QuestionValues>({
     refuse,
+    ...(editShared === undefined
+      ? {}
+      : {
+          isStale: (cause: unknown) =>
+            staleWrite(cause) || cause instanceof SharingStopped,
+        }),
     save: async (next) => {
-      await queryClient.cancelQueries({ queryKey: ["teacher-question", questionId] });
+      await queryClient.cancelQueries({
+        queryKey: ["teacher-question", target.current],
+      });
       const body = adoptIds(
         next,
         lastSave.current?.sent ?? null,
         lastSave.current?.saved ?? null,
       );
+      if (editShared !== undefined) {
+        const sent = withRowIds(body, rowIds.current);
+        const edit = await editShared(target.current, sent, base.current);
+        const saved = toFormValues(edit.question);
+        if (edit.forked) {
+          forkRowIds(rowIds.current, sent, saved);
+          target.current = edit.question.id;
+        }
+        base.current = edit.question.updatedAt;
+        lastSave.current = { sent: next, saved };
+        storedReads.current = aiReadsOf(next);
+        queryClient.setQueryData(["teacher-question", edit.question.id], edit.question);
+        void queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
+        return;
+      }
       const saved = await updateQuestion(questionId, body);
       lastSave.current = { sent: next, saved: toFormValues(saved) };
       storedReads.current = aiReadsOf(next);
@@ -2101,4 +2397,27 @@ function publishGroups(
       ];
     }),
   );
+}
+
+/** swapUnit puts `to` where the section holds the standalone question `from`. */
+function swapUnit(section: OutlineSection, from: string, to: string): OutlineSection {
+  const units = unitsOf(section);
+  if (!units.some((unit) => unit.kind === "question" && unit.id === from))
+    return section;
+  return withUnits(
+    section,
+    units.map((unit) =>
+      unit.kind === "question" && unit.id === from ? { ...unit, id: to } : unit,
+    ),
+  );
+}
+
+/** swapForks puts each fork in place of its original, for a draft written before it. */
+function swapForks(
+  section: OutlineSection,
+  forks: ReadonlyMap<string, string>,
+): OutlineSection {
+  let out = section;
+  for (const [from, to] of forks) out = swapUnit(out, from, to);
+  return out;
 }

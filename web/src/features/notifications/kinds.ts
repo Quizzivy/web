@@ -5,16 +5,22 @@ import {
   Clock,
   FileCheck,
   Flag,
+  FileText,
   FolderInput,
   Hand,
+  LayoutDashboard,
+  MessageSquare,
   RotateCw,
   Sparkles,
   SquarePen,
   UserPlus,
   UserRoundCog,
+  UsersRound,
   type LucideIcon,
 } from "lucide-react";
 import { FLAGGED } from "@/features/integrity/tones";
+import { threadPath } from "@/features/messages/api";
+import { studentThreadPath } from "@/features/messages/studentApi";
 import { formatDateTime } from "@/lib/i18n/datetime";
 import type { Locale } from "@/lib/i18n";
 import type {
@@ -53,17 +59,34 @@ export const KIND_LOOK: Record<
   "ai.credit_request.decided": { icon: Sparkles, tone: "info" },
   "content.transferred": { icon: FolderInput, tone: "info" },
   "class.teacher_changed": { icon: UserRoundCog, tone: "info" },
+  "content.shared": { icon: UsersRound, tone: "info" },
+  "test.published_by_collaborator": { icon: FileText, tone: "info" },
+  "message.received": { icon: MessageSquare, tone: "info" },
+  "message.from_teacher": { icon: MessageSquare, tone: "neutral" },
+  "summary.weekly": { icon: LayoutDashboard, tone: "neutral" },
 };
-/** TEACHER_EVENTS lists the teacher's switches in contract order. */
+/**
+ * TEACHER_EVENTS lists the teacher's switches in the deck's order (Settings
+ * › Notifications): A student submits, An attempt is flagged, New message,
+ * An assignment is about to close, Weekly summary.
+ */
 export const TEACHER_EVENTS = [
   "attempt.submitted",
   "attempt.flagged",
+  "message.received",
   "assignment.closing",
+  "summary.weekly",
 ] as const satisfies readonly NotificationEvent[];
-/** STUDENT_EVENTS lists the student's switches in contract order. */
+/**
+ * STUDENT_EVENTS lists the student's switches in the deck's order: Test due
+ * soon, Result ready, Messages from teachers. `message.received` is both
+ * lists' (the contract's "New message" for a teacher, "Messages from
+ * teachers" for a student).
+ */
 export const STUDENT_EVENTS = [
   "assignment.due_soon",
   "result.ready",
+  "message.received",
 ] as const satisfies readonly NotificationEvent[];
 
 const teacherKinds = new Set<NotificationKind>([
@@ -77,6 +100,10 @@ const teacherKinds = new Set<NotificationKind>([
   "ai.credit_request.decided",
   "content.transferred",
   "class.teacher_changed",
+  "content.shared",
+  "test.published_by_collaborator",
+  "message.received",
+  "summary.weekly",
 ]);
 const uuid = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 function idPath(prefix: string, id: string | undefined, suffix = "") {
@@ -104,9 +131,39 @@ export function notificationPath(target: NotificationTarget | null): string | nu
       return idPath("/attempts", target.attemptId, "/result");
     case "studentAssignment":
       return idPath("/assignments", target.assignmentId);
+    case "sharedWithMe":
+      return "/teacher/shared-with-me";
+    case "test":
+      return idPath("/teacher/tests", target.testId);
+    case "dashboard":
+      return "/teacher";
+    case "messages":
+      return messagesPath(target.studentId);
+    case "studentMessages":
+      return studentMessagesPath(target);
     default:
       return null;
   }
+}
+
+/** messagesPath is the staff thread with a student, or Messages when the target names none. */
+function messagesPath(studentId: string | undefined) {
+  if (studentId === undefined) return "/teacher/messages";
+  return uuid.test(studentId) ? threadPath({ kind: "direct", id: studentId }) : null;
+}
+
+/** studentMessagesPath is the student's thread a target names: a class's channel, a teacher's direct thread, or Messages. */
+function studentMessagesPath(target: NotificationTarget) {
+  const { classId, teacherId } = target;
+  if (classId !== undefined)
+    return uuid.test(classId)
+      ? studentThreadPath({ kind: "class", id: classId })
+      : null;
+  if (teacherId !== undefined)
+    return uuid.test(teacherId)
+      ? studentThreadPath({ kind: "direct", id: teacherId })
+      : null;
+  return "/messages";
 }
 
 function hasText(value: unknown): value is string {
@@ -281,7 +338,67 @@ const sentences: Record<
         )
       : null;
   },
+  "content.shared": (p, t) => {
+    if (!hasText(p.sharerName) || !hasText(p.name)) return null;
+    if (p.contentKind !== "test" && p.contentKind !== "question_set") return null;
+    return literalSentence(
+      p.contentKind === "test"
+        ? "notifications.kind.sharedTest"
+        : "notifications.kind.sharedSet",
+      { sharerName: p.sharerName, name: p.name },
+      t,
+    );
+  },
+  "test.published_by_collaborator": (p, t) =>
+    hasText(p.editorName) && hasText(p.title) && hasCount(p.version) && p.version > 0
+      ? literalSentence(
+          "notifications.kind.coPublished",
+          { editorName: p.editorName, title: p.title, version: p.version },
+          t,
+        )
+      : null,
+  "message.received": (p, t) => messageSentence(p, t),
+  "message.from_teacher": (p, t) => messageSentence(p, t),
+  "summary.weekly": (p, t) =>
+    hasCount(p.count) && hasCount(p.toGrade) && hasCount(p.flagged)
+      ? literalSentence(
+          "notifications.kind.weekly",
+          { count: p.count, toGrade: p.toGrade, flagged: p.flagged },
+          t,
+        )
+      : null,
 };
+
+/**
+ * messageSentence words a message item: the sender and the newest message's
+ * excerpt, as the Student deck's bell draws one (`Giàu Bùi: "…"`), with the
+ * count in front only when more than one is new. The excerpt lives only in
+ * the reader's own bell. A class's channel (a student's
+ * `message.from_teacher` with `className`) is a class announcement and names
+ * the class.
+ */
+function messageSentence(p: NotificationParams, t: TFunction) {
+  if (!hasText(p.senderName) || !hasText(p.excerpt) || !hasCount(p.count)) return null;
+  if (p.count === 0) return null;
+  const many = p.count > 1;
+  const values = many
+    ? { senderName: p.senderName, excerpt: p.excerpt, count: p.count }
+    : { senderName: p.senderName, excerpt: p.excerpt };
+  if (p.className === undefined) {
+    const key = many ? "notifications.kind.messageMany" : "notifications.kind.message";
+    return literalSentence(key, values, t);
+  }
+  if (!hasText(p.className)) return null;
+  const key = many
+    ? "notifications.kind.classMessageMany"
+    : "notifications.kind.classMessage";
+  return literalSentence(key, { ...values, className: p.className }, t);
+}
+
+/** known refuses a kind the contract does not list (a later release's, or `__proto__`). */
+function known(kind: string): kind is NotificationKind {
+  return Object.hasOwn(KIND_LOOK, kind);
+}
 
 /** describeNotification returns a complete localised row or null for an unknown kind or missing sentence input, preserving grading fallback for readers who cannot grade. */
 export function describeNotification(
@@ -290,15 +407,16 @@ export function describeNotification(
   locale: Locale,
   options?: Readonly<{ canGrade?: boolean }>,
 ): NotificationView | null {
-  if (!Object.hasOwn(KIND_LOOK, notification.kind)) return null;
-  const text = sentences[notification.kind](notification.params, t, locale);
+  const kind = notification.kind;
+  if (!known(kind)) return null;
+  const text = sentences[kind](notification.params, t, locale);
   if (text === null) return null;
   const submitted = notification.kind === "attempt.submitted";
   const waiting = submitted && (notification.params.toGrade ?? 0) > 0;
   const look =
     submitted && !waiting
       ? { icon: FileCheck, tone: "neutral" as const }
-      : KIND_LOOK[notification.kind];
+      : KIND_LOOK[kind];
   const to =
     waiting && options?.canGrade !== false
       ? "/teacher/grading"

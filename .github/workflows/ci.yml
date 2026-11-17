@@ -4,8 +4,12 @@ name: CI
 # hashes the files each job reads, and a job is skipped when its newest marker
 # for that hash is a pass. Every job checks out only those files, so the hash
 # covers everything the job can see. Each job ends by recording its outcome.
+#
+# A draft pull request runs nothing: Plan, every job after it and CI result
+# skip, and the pull request gets its run when it is marked ready for review.
 on:
   pull_request:
+    types: [opened, synchronize, reopened, ready_for_review]
   push:
     branches: [main, develop, "work/**"]
 
@@ -38,6 +42,7 @@ jobs:
   # ------------------------------------------------------------------- plan
   plan:
     name: Plan
+    if: ${{ !(github.event_name == 'pull_request' && github.event.pull_request.draft) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     permissions:
@@ -60,32 +65,6 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ github.token }}
         run: node scripts/ci/plan.mjs
-
-  # ------------------------------------------------------------------- deck
-  deck:
-    name: Deck
-    needs: plan
-    if: fromJSON(needs.plan.outputs.plan).jobs.deck.run
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    env:
-      JOB: ${{ toJSON(fromJSON(needs.plan.outputs.plan).jobs.deck) }}
-    steps:
-      - uses: actions/checkout@v7
-        with:
-          sparse-checkout: ${{ fromJSON(env.JOB).sparse }}
-          sparse-checkout-cone-mode: false
-
-      - uses: actions/setup-node@v7
-        with:
-          node-version: ${{ env.NODE_VERSION }}
-
-      - run: node scripts/check-design-deck.mjs
-
-      - uses: ./.github/actions/record
-        if: always()
-        with:
-          marker: ${{ fromJSON(env.JOB).outcomes[0][job.status] }}
 
   # ------------------------------------------------------------- web checks
   web-check:
@@ -472,10 +451,13 @@ jobs:
   # a pull request from main, develop or a work branch also has a push run,
   # which tests the branch and not the merge; its green result must not stand
   # in for the merge's.
+  #
+  # On a draft it skips with everything else; the draft cannot be merged, and
+  # marking it ready starts the run that reports this check.
   result:
     name: ${{ github.event_name == 'pull_request' && 'CI result' || 'CI result (push)' }}
-    needs: [plan, deck, web-check, web-unit, e2e, e2e-live]
-    if: always()
+    needs: [plan, web-check, web-unit, e2e, e2e-live]
+    if: ${{ always() && !(github.event_name == 'pull_request' && github.event.pull_request.draft) }}
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:

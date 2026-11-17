@@ -22,6 +22,9 @@ const TONE: Record<NavTone, string> = {
   warning: "bg-warning-soft text-warning-ink",
 };
 
+/** MAX_SHOWN is the largest figure a badge draws; above it, "99+" (the screen reader hears the figure). */
+const MAX_SHOWN = 99;
+
 interface SidebarContent {
   workspace: StaffWorkspace;
   groups: readonly NavGroup[];
@@ -47,7 +50,7 @@ function CountBadge({
         TONE[count.tone],
       )}
     >
-      <span aria-hidden="true">{value}</span>
+      <span aria-hidden="true">{value > MAX_SHOWN ? `${MAX_SHOWN}+` : value}</span>
       {sentence}
     </span>
   );

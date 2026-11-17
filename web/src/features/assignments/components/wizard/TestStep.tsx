@@ -14,14 +14,18 @@ import {
   type Test,
   type TestVersion,
 } from "@/features/tests/api";
+import { useTestAccess } from "@/features/tests/access";
 import { useLazyList } from "@/hooks/useLazyList";
+import { nfc } from "@/lib/nfc";
 import { useDebounced } from "@/lib/useDebounced";
 
 const PAGE = 20;
 
 /**
- * TestStep is the wizard's "Which test?": the teacher's published tests as
- * radio rows, searched by title, each picking its current version.
+ * TestStep is the wizard's "Which test?": the teacher's published tests and
+ * those shared with them (`include=shared`, T-R7.18) as radio rows, searched
+ * by title, each picking its current version. A shared test says who shared
+ * it after its facts.
  */
 export function TestStep({
   picked,
@@ -41,8 +45,8 @@ export function TestStep({
     fetchPage: (page, signal) =>
       listTests(
         search === ""
-          ? { status: "published", page, limit: PAGE }
-          : { status: "published", q: search, page, limit: PAGE },
+          ? { include: "shared", status: "published", page, limit: PAGE }
+          : { include: "shared", status: "published", q: search, page, limit: PAGE },
         signal,
       ),
   });
@@ -114,6 +118,7 @@ export function TestStep({
 
 function TestRow({ test }: Readonly<{ test: Test }>) {
   const { t } = useTranslation();
+  const { mine } = useTestAccess(test);
   const versions = useQuery({
     queryKey: ["teacher-test-versions", test.id],
     queryFn: ({ signal }) => listVersions(test.id, signal),
@@ -143,7 +148,12 @@ function TestRow({ test }: Readonly<{ test: Test }>) {
       </div>
     );
   }
-  const meta = current === undefined ? "" : versionMeta(current, t);
+  const shared = mine
+    ? ""
+    : t("assignments.wizard.sharedBy", { name: nfc(test.owner.name) });
+  const meta = [current === undefined ? "" : versionMeta(current, t), shared]
+    .filter((part) => part !== "")
+    .join(" · ");
   return (
     <RadioGroup.Item
       value={test.id}

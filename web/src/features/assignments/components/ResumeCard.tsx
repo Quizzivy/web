@@ -5,6 +5,7 @@ import { useQueryClient } from "@tanstack/react-query";
 import { ArrowRight, Timer } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
+import { enterFullscreen } from "@/features/integrity/fullscreen";
 import { startOrResumeAttempt } from "@/features/take-test/api";
 import { useTick } from "@/hooks/useTick";
 import { ApiError } from "@/lib/api/errors";
@@ -60,6 +61,10 @@ export function ResumeCard({ card }: Readonly<{ card: StudentAssignmentCard }>) 
       const session = await (card.lastAttemptId == null
         ? startOrResumeAttempt(card.id)
         : continueAttempt(card.id, card.lastAttemptId));
+      // The card does not carry the policy, so the click's activation is
+      // spent on the request; a browser that has let it lapse refuses, and
+      // the paper's bar offers fullscreen again (§10.2).
+      if (session.integrity.requireFullscreen) void enterFullscreen();
       await navigate(`/attempts/${session.attempt.id}`);
     } catch (cause) {
       notify.error(

@@ -699,6 +699,8 @@ it("acknowledged marks update the real mounted teacher-summary reading before Fi
         liveAssignments: 1,
         answersToGrade: marked ? 0 : 1,
         unreadNotifications: 0,
+        sharedWithMe: 0,
+        unreadMessages: 0,
       }),
     ),
   );

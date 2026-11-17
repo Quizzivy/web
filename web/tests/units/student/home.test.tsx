@@ -44,6 +44,7 @@ const SAMPLE_CLASS = {
   id: "018f0000-0000-7000-8000-0000000000c1",
   name: "IELTS Foundation",
   description: null,
+  teacherId: "0190a000-0000-7000-8000-00000000a101",
   teacherName: "Cô Thương",
   teacherAvatarUrl: null,
   scheduleLabel: null,
@@ -314,6 +315,60 @@ describe("the resume card", () => {
       expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
     );
     expect(calls).toEqual(["start"]);
+  });
+
+  it("enters fullscreen once the resume answers, when the paper asks for it", async () => {
+    const user = userEvent.setup();
+    const request = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+    document.documentElement.requestFullscreen = request;
+    Object.defineProperty(document, "fullscreenEnabled", {
+      configurable: true,
+      get: () => true,
+    });
+    onTestFinished(() => {
+      Object.defineProperty(document, "fullscreenEnabled", {
+        configurable: true,
+        get: () => false,
+      });
+    });
+    server.use(
+      http.post(`${BASE}/app/assignments/${ASSIGNMENT}/attempts`, () => {
+        const session = attemptSession();
+        return contractJson("/app/assignments/{id}/attempts", "post", 200, {
+          ...session,
+          integrity: { ...session.integrity, requireFullscreen: true },
+        });
+      }),
+    );
+    const router = home({ dueNow: [live()] });
+    await user.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
+    );
+    expect(request).toHaveBeenCalledTimes(1);
+  });
+
+  it("does not touch fullscreen on a resume the paper does not ask it for", async () => {
+    const user = userEvent.setup();
+    const request = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+    document.documentElement.requestFullscreen = request;
+    Object.defineProperty(document, "fullscreenEnabled", {
+      configurable: true,
+      get: () => true,
+    });
+    onTestFinished(() => {
+      Object.defineProperty(document, "fullscreenEnabled", {
+        configurable: true,
+        get: () => false,
+      });
+    });
+    mockContinue();
+    const router = home({ dueNow: [live()] });
+    await user.click(await screen.findByRole("button", { name: "Tiếp tục làm bài" }));
+    await waitFor(() =>
+      expect(router.state.location.pathname).toBe(`/attempts/${ATTEMPT}`),
+    );
+    expect(request).not.toHaveBeenCalled();
   });
 
   it("continues the attempt the card was drawn for", async () => {

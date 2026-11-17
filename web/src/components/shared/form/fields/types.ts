@@ -11,6 +11,8 @@ type Keys<V, T> = { [K in keyof V & string]: V[K] extends T ? K : never }[keyof 
   string];
 type Common<V> = {
   label?: string;
+  /** Names the control for assistive technology only, with no visible label above it. */
+  hideLabel?: boolean;
   hint?: string | ((values: V) => string | undefined);
   required?: boolean;
   requiredText?: string;

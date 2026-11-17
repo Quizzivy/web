@@ -17,6 +17,9 @@ const test = {
   skills: [],
   assignments: { live: 0, scheduled: 0, closed: 0 },
   unpublishedChanges: null,
+  access: "owner",
+  owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
+  sharedWith: 0,
   id: TEST_ID,
   title: "Unit 5",
   description: null,
@@ -147,7 +150,7 @@ describe("the builder's autosave", () => {
     expect(screen.queryByText(/\d\d:\d\d/)).toBeNull();
   });
 
-  it("surfaces a stale write as 'open somewhere else', and stops saving", async () => {
+  it("surfaces a stale write in the band, not the save line, and stops saving", async () => {
     server.use(
       http.patch(`${BASE}/teacher/tests/:id`, () =>
         Response.json(
@@ -161,7 +164,10 @@ describe("the builder's autosave", () => {
     await user.type(title, "a");
     await vi.advanceTimersByTimeAsync(1500);
 
-    expect(await screen.findByText(/mở ở nơi khác/)).toBeInTheDocument();
+    expect(await screen.findByText(/Có nơi khác đã lưu thay đổi/)).toBeInTheDocument();
+    // R7 Access Modes: the save line goes while the band names the refusal.
+    expect(screen.queryByText("Bài này đang được mở ở nơi khác")).toBeNull();
+    expect(screen.queryByText("Đã lưu")).toBeNull();
     expect(screen.getByRole("button", { name: "Phát hành" })).toBeDisabled();
   });
 });

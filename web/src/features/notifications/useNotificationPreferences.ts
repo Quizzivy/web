@@ -5,7 +5,7 @@ import {
   updateNotificationPreferences,
 } from "./api";
 
-/** useNotificationPreferences reads all five switches and saves the server's canonical answer in their cache. */
+/** useNotificationPreferences reads every switch and saves the server's canonical answer in their cache. */
 export function useNotificationPreferences() {
   const client = useQueryClient();
   const query = useQuery({

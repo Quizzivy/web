@@ -31,6 +31,9 @@ const test = {
   skills: [],
   assignments: { live: 0, scheduled: 0, closed: 0 },
   unpublishedChanges: null,
+  access: "owner",
+  owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
+  sharedWith: 0,
   id: TEST_ID,
   title: "Unit 5",
   description: null,
@@ -779,6 +782,8 @@ describe("Check in a test with a shared-context group", () => {
     return dialog;
   }
 
+  // This walk opens the group, runs a check and reloads the group: about 5 s on
+  // CI's runners, so it gets the local timeout rather than Vitest's 5 s default.
   it("writes a member's fix through its group, changing only that member, and reloads the open group", async ({
     signal,
   }) => {
@@ -827,7 +832,7 @@ describe("Check in a test with a shared-context group", () => {
     expect(puts[1]!.bundle.questions[1]!.input.options?.[1]?.text).toBe(
       "Warm the streets",
     );
-  });
+  }, 15_000);
 
   it("opens a member inside its group", async ({ signal }) => {
     aiOn();

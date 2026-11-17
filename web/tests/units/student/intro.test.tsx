@@ -550,13 +550,15 @@ describe("what a paper that has not opened promises", () => {
     "assignment.closing",
     "assignment.due_soon",
     "result.ready",
+    "message.received",
+    "summary.weekly",
   ] as const;
 
   function switches(dueSoon: boolean) {
     return EVENTS.map((event) => ({
       event,
       inApp: event === "assignment.due_soon" ? dueSoon : true,
-      email: false,
+      email: event === "assignment.due_soon" ? dueSoon : true,
     }));
   }
 
@@ -1204,6 +1206,26 @@ describe("Start now?", () => {
     expect(calls).toEqual(["start"]);
     expect(router.state.location.pathname).toBe(`/assignments/${ASSIGNMENT}`);
     await waitFor(() => expect(asked).toBe(2));
+  });
+
+  it("leaves the fullscreen it entered when the start is refused", async () => {
+    const user = userEvent.setup();
+    const exit = vi.fn<() => Promise<void>>().mockResolvedValue(undefined);
+    document.exitFullscreen = exit;
+    request.mockImplementation(async () => {
+      Object.defineProperty(document, "fullscreenElement", {
+        configurable: true,
+        get: () => document.body,
+      });
+    });
+    mockStart(409);
+    show({ integrity: { ...POLICY, requireFullscreen: true } });
+    fireEvent.click(confirm(await ask(user)));
+    expect(request).toHaveBeenCalledTimes(1);
+    expect(await screen.findByRole("alert")).toHaveTextContent(
+      "Bạn đã dùng hết số lượt làm bài.",
+    );
+    expect(exit).toHaveBeenCalledTimes(1);
   });
 
   it("says it once when the paper it reads again has no attempt left", async () => {

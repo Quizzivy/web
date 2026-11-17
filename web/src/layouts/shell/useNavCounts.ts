@@ -6,12 +6,16 @@ import { useIdlePolling, useRefetchOnResume } from "@/hooks/useIdlePolling";
 
 /**
  * NavCounts preserves unavailable figures as null rather than claiming no
- * work; `unread` is the bell's count of unread notifications.
+ * work; `unread` is the bell's count of unread notifications,
+ * `unreadMessages` Messages' lime count and `sharedWithMe` the live grants
+ * to the caller, Shared with me's muted count.
  */
 export type NavCounts = {
   liveAssignments: number | null;
   toGrade: number | null;
   unread: number;
+  unreadMessages: number;
+  sharedWithMe: number;
 };
 
 const POLL_MS = 60_000;
@@ -34,5 +38,7 @@ export function useNavCounts(): NavCounts | null {
     liveAssignments: query.data.liveAssignments,
     toGrade: query.data.answersToGrade,
     unread: query.data.unreadNotifications,
+    unreadMessages: query.data.unreadMessages,
+    sharedWithMe: query.data.sharedWithMe,
   };
 }

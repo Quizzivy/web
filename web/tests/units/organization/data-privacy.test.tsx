@@ -72,6 +72,39 @@ describe("the Data & privacy section", () => {
     ]);
   });
 
+  it("says, after the three selects, that messages are kept, in a row with no control that the form never sends", async () => {
+    const stored = servesSettings();
+    await openData();
+
+    const label = screen.getByText("Tin nhắn");
+    const row = label.closest("div")!;
+    expect(
+      within(row).getByText(
+        "Được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.",
+      ),
+    ).toBeVisible();
+    expect(within(row).queryByRole("combobox")).toBeNull();
+    expect(within(row).queryByRole("button")).toBeNull();
+    const rows = [...row.parentElement!.children];
+    expect(rows.indexOf(row)).toBe(3);
+    expect(rows).toHaveLength(4);
+    expect(within(rows[2] as HTMLElement).getByRole("combobox")).toBe(anonymise());
+
+    const user = userEvent.setup({ delay: null });
+    await choose(user, await answers(), "Mãi mãi");
+    await user.click(save());
+    await waitFor(() => expect(stored.puts).toHaveLength(1));
+    expect(Object.keys(stored.puts[0]!.retention)).toEqual(
+      expect.arrayContaining([
+        "anonymiseDisabledAfterMonths",
+        "keepAnswersMonths",
+        "keepFocusEventsMonths",
+      ]),
+    );
+    expect(Object.keys(stored.puts[0]!.retention)).toHaveLength(3);
+    expect(JSON.stringify(stored.puts[0])).not.toMatch(/message/i);
+  });
+
   it("joins the unsaved-changes bar, and a longer retention saves without asking", async () => {
     const stored = servesSettings();
     const asked = servesRetentionImpact();

@@ -1,12 +1,53 @@
 import { readdir, readFile } from "node:fs/promises";
 import path from "node:path";
-import { expect, type Page } from "@playwright/test";
+import { expect, type APIRequestContext, type Page } from "@playwright/test";
 
 /** Shared by the live specs, which talk to a real API over the seeded database. */
 
 export const ADMIN = { email: "thuong@quizzivy.com", password: "quizzivy-dev" };
 export const STUDENT = { email: "hocvien@quizzivy.com", password: "quizzivy-dev" };
 export const TEACHER = { email: "giaovien@quizzivy.com", password: "quizzivy-dev" };
+/** seed/06's second teacher, Lê Văn Minh, who shares with TEACHER both ways (seed/11). */
+export const TEACHER_2 = { email: "giaovien2@quizzivy.com", password: "quizzivy-dev" };
+
+/** The live API's origin, the one the build is pointed at (playwright.config.ts). */
+export const API = "http://localhost:8080";
+
+/**
+ * apiAuth signs `who` in on the API directly and answers the header that
+ * carries the access token, for a spec's setup or for a read the screen does
+ * not show. A browser signed in as the same account keeps its own session.
+ */
+export async function apiAuth(
+  api: APIRequestContext,
+  who: typeof ADMIN,
+): Promise<Record<string, string>> {
+  const response = await api.post(`${API}/auth/login`, {
+    data: { email: who.email, password: who.password },
+  });
+  expect(response.status(), `the API sign-in of ${who.email}`).toBe(200);
+  const { accessToken } = (await response.json()) as { accessToken: string };
+  return { Authorization: `Bearer ${accessToken}` };
+}
+
+/**
+ * apiResponse waits for the API's answer to `method` on `path` itself: not
+ * the SPA document that shares a path, not a preflight, and not a poll of the
+ * same path with `?after=` or a page of it with `?before=`. Start it before
+ * the action that sends the request.
+ */
+export function apiResponse(page: Page, method: string, path: string) {
+  return page.waitForResponse((response) => {
+    const url = new URL(response.url());
+    return (
+      response.request().method() === method &&
+      url.origin === API &&
+      url.pathname === path &&
+      !url.searchParams.has("after") &&
+      !url.searchParams.has("before")
+    );
+  });
+}
 
 /** The assignments seed/04-dev-e2e.sql exists to provide. */
 export const ASSIGNMENT = {
@@ -206,12 +247,21 @@ export async function chooseOption(page: Page, text: string) {
   await page.locator("label").filter({ hasText: text }).click();
 }
 
+/** The Admin's class from seed/01, which the wizard specs assign to. */
+const SEEDED_CLASS = /Tiếng Anh giao tiếp/;
+
 /**
- * Assigns a published test to the seeded class through the wizard, with
- * every other choice left at its default, and lands on the list.
+ * Assigns a published test to the seeded class (or `classroom`) through the
+ * wizard, with every other choice left at its default, and lands on the list.
+ * `query` is pickInWizard's.
  */
-export async function assignToClass(page: Page, title: string) {
-  await pickInWizard(page, title);
+export async function assignToClass(
+  page: Page,
+  title: string,
+  query = "",
+  classroom: RegExp = SEEDED_CLASS,
+) {
+  await pickInWizard(page, title, query, classroom);
   await page.getByRole("button", { name: "Tiếp tục", exact: true }).click();
   await page.getByRole("button", { name: "Tiếp tục", exact: true }).click();
   await page.getByRole("button", { name: /^Giao (cho \d+ học viên|bài)$/ }).click();
@@ -223,19 +273,21 @@ export async function assignToClass(page: Page, title: string) {
 
 /**
  * Opens the new-assignment wizard with `query` (such as `?test=<id>`), picks
- * `title` unless the query preselected it, ticks the seeded class and stops
- * on the Students step.
+ * `title` unless the query preselected it, ticks the seeded class (or
+ * `classroom`) and stops on the Students step.
  */
-export async function pickInWizard(page: Page, title: string, query = "") {
+export async function pickInWizard(
+  page: Page,
+  title: string,
+  query = "",
+  classroom: RegExp = SEEDED_CLASS,
+) {
   await page.goto(`/teacher/assignments/new${query}`);
   const test = page.getByRole("radio", { name: new RegExp(title) });
   if (query.includes("test=")) await expect(test).toBeChecked();
   else await test.click();
   await page.getByRole("button", { name: "Tiếp tục", exact: true }).click();
-  await page
-    .getByRole("checkbox", { name: /Tiếng Anh giao tiếp/ })
-    .first()
-    .click();
+  await page.getByRole("checkbox", { name: classroom }).first().click();
 }
 
 /** Types `value` into the stepper named `name` and commits it with Enter. */

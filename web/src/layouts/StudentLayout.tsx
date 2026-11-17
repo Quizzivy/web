@@ -6,6 +6,7 @@ import {
   ChartColumn,
   CircleUser,
   House,
+  MessageSquare,
   Users,
   type LucideIcon,
 } from "lucide-react";
@@ -13,6 +14,7 @@ import { useTranslation } from "react-i18next";
 import { registerSkeleton } from "@/app/boot/handoff";
 import { modules } from "@/app/modules";
 import { BrandMark } from "@/components/shared/Brand";
+import { Badge } from "@/components/ui/badge";
 import { AccountMenu } from "@/features/auth/AccountMenu";
 import { NotificationBell } from "@/features/notifications/components/NotificationBell";
 import { useNotificationSummary } from "@/features/notifications/useNotificationSummary";
@@ -52,7 +54,8 @@ interface Destination {
  * it returns to the top and takes focus, so the keyboard scrolls the new
  * page; it does neither when a page moves between its own sections.
  * A destination whose module has not shipped is absent (`app/modules`), and
- * so is the bell while notifications are off; the bell polls `/me/summary`.
+ * so are the bell while notifications are off and the Messages button while
+ * messages are; both read `/me/summary`, which is polled while either is on.
  */
 export default function StudentLayout() {
   const { t } = useTranslation();
@@ -61,7 +64,10 @@ export default function StudentLayout() {
   const route = matches.at(-1)?.id;
   const detail = detailOf(matches);
   const dueSoon = useDueSoonCount();
-  const { unread } = useNotificationSummary("student", modules.notifications);
+  const { unread, unreadMessages } = useNotificationSummary(
+    "student",
+    modules.notifications || modules.messages,
+  );
   const [own, setTitle] = useState<string | null>(null);
   const context = useMemo(() => ({ setTitle }) satisfies DetailShell, []);
   const main = useRef<HTMLElement>(null);
@@ -141,6 +147,7 @@ export default function StudentLayout() {
           </nav>
         )}
         <div className="ml-auto flex items-center gap-1">
+          {modules.messages ? <MessagesButton unread={unreadMessages} /> : null}
           {modules.notifications ? (
             <NotificationBell audience="student" unread={unread} />
           ) : null}
@@ -186,6 +193,41 @@ export default function StudentLayout() {
         </nav>
       )}
     </div>
+  );
+}
+
+/**
+ * MessagesButton opens Messages from the top bar (T-R7.21), lit while
+ * Messages is open, with the lime count of unread messages from
+ * `/me/summary`.
+ */
+function MessagesButton({ unread }: Readonly<{ unread: number }>) {
+  const { t } = useTranslation();
+  return (
+    <NavLink
+      to="/messages"
+      aria-label={
+        unread > 0 ? t("messages.labelUnread", { count: unread }) : t("messages.title")
+      }
+      className={({ isActive }) =>
+        cn(
+          "hover:bg-hover relative grid size-9 flex-none place-items-center rounded-md",
+          isActive && "bg-hover",
+        )
+      }
+    >
+      <MessageSquare aria-hidden="true" className="size-4.5" />
+      {unread > 0 ? (
+        <Badge
+          variant="count-brand"
+          aria-hidden="true"
+          data-slot="messages-count"
+          className="absolute top-0.5 right-0.5"
+        >
+          {unread > 99 ? "99+" : unread}
+        </Badge>
+      ) : null}
+    </NavLink>
   );
 }
 

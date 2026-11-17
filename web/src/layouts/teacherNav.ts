@@ -5,8 +5,10 @@ import {
   GraduationCap,
   LayoutDashboard,
   Library,
+  MessageSquare,
   SquarePen,
   Users,
+  UsersRound,
 } from "lucide-react";
 import { holds, type Requirement } from "@/features/auth/permissions";
 import type { NavDestination, NavGroup } from "@/layouts/shell/nav";
@@ -31,7 +33,8 @@ export interface TeacherNavGroup extends NavGroup {
 
 /**
  * TEACHER_NAV is the teacher sidebar in the deck's order. A module that has
- * not shipped is absent from it.
+ * not shipped is absent from it: Calendar joins the first group between
+ * Dashboard and Messages in R8.
  */
 export const TEACHER_NAV: readonly TeacherNavGroup[] = [
   {
@@ -44,6 +47,19 @@ export const TEACHER_NAV: readonly TeacherNavGroup[] = [
         icon: LayoutDashboard,
         operation: "getDashboard",
         requires: "workspace.teacher",
+      },
+      {
+        id: "messages",
+        to: "/teacher/messages",
+        label: "messages.title",
+        icon: MessageSquare,
+        operation: "listStaffThreads",
+        requires: "workspace.teacher",
+        count: {
+          figure: "unreadMessages",
+          tone: "urgent",
+          sentence: "teacherShell.count.unreadMessages",
+        },
       },
     ],
   },
@@ -106,6 +122,19 @@ export const TEACHER_NAV: readonly TeacherNavGroup[] = [
         icon: FileText,
         operation: "listTests",
         requires: "workspace.teacher",
+      },
+      {
+        id: "shared",
+        to: "/teacher/shared-with-me",
+        label: "teacherShell.nav.sharedWithMe",
+        icon: UsersRound,
+        operation: "listSharedWithMe",
+        requires: "workspace.teacher",
+        count: {
+          figure: "sharedWithMe",
+          tone: "muted",
+          sentence: "teacherShell.count.shared",
+        },
       },
       {
         id: "bank",

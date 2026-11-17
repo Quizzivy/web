@@ -18,6 +18,9 @@ const STUDENT_PAGES = [
   "/settings/notifications",
   `/attempts/${ID}`,
   `/attempts/${ID}/result`,
+  "/messages",
+  `/messages/class/${ID}`,
+  `/messages/teacher/${ID}`,
   "/join",
   "/join/K7M3-P9QR",
 ];

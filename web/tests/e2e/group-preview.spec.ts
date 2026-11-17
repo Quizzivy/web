@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, ownedByAdmin, sessionAs, stubApi } from "./support/api";
 import {
   previewGroup,
   previewQuestions,
@@ -24,6 +24,7 @@ async function setup(page: Page) {
         audioCount: 2,
         assignments: { live: 0, scheduled: 0, closed: 0 },
         unpublishedChanges: 0,
+        ...ownedByAdmin,
         sections: [],
         createdAt: "2026-09-24T00:00:00Z",
         updatedAt: "2026-09-24T00:00:00Z",

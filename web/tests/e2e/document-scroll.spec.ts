@@ -1,5 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
-import { adminUser, sessionAs, studentUser, stubApi } from "./support/api";
+import {
+  adminUser,
+  ownedByAdmin,
+  sessionAs,
+  studentUser,
+  stubApi,
+} from "./support/api";
 import { paper, start } from "./support/engine";
 import { assignment, classes } from "./support/student";
 import {
@@ -41,6 +47,7 @@ const draft: components["schemas"]["Test"] = {
   skills: [],
   assignments: { live: 0, scheduled: 0, closed: 0 },
   unpublishedChanges: null,
+  ...ownedByAdmin,
   id: TEST_ID,
   title: "IELTS Reading Practice 3",
   description: null,

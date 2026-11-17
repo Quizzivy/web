@@ -26,7 +26,11 @@ import { EmptyState, LoadError } from "@/components/shared/ListState";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
-import { enterFullscreen, fullscreenSupported } from "@/features/integrity/fullscreen";
+import {
+  enterFullscreen,
+  exitFullscreen,
+  fullscreenSupported,
+} from "@/features/integrity/fullscreen";
 import { useDueSoonOn } from "@/features/notifications/useDueSoonOn";
 import { startOrResumeAttempt } from "@/features/take-test/api";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
@@ -387,6 +391,7 @@ function Action({
       await navigate(`/attempts/${session.attempt.id}`);
       queryClient.removeQueries({ queryKey: ["my-assignment", a.id] });
     } catch (cause) {
+      if (a.integrity.requireFullscreen) void exitFullscreen();
       setError(refusal(cause, t));
       setOpen(false);
       setBusy(false);

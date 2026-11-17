@@ -1,12 +1,17 @@
-import { expect, test, type Page } from "@playwright/test";
+import { expect, test, type APIRequestContext, type Page } from "@playwright/test";
 import {
+  API,
+  apiAuth,
+  apiResponse,
   ASSIGNMENT,
   freshAttempt,
   goToQuestion,
   gradeAttempt,
+  signIn,
   signInAsAdmin,
   signInAsStudent,
   submitAttempt,
+  TEACHER,
 } from "./support/live";
 
 /**
@@ -21,6 +26,11 @@ import {
  * criteria, and the explanation with its media. A second case reads a graded
  * result whose assignment hides the score, the answers and the explanations,
  * and finds none of them there either.
+ *
+ * Since R7 (T-R7.24) it also walks a student's Messages, the list, a class
+ * channel and a direct thread, which carry none of those keys nor the
+ * teacher's own: the read receipts (`seenBy`), the attempt events beside a
+ * thread (`contextEvents`) and a class's member count.
  */
 const BANNED = new Set(["iscorrect", "sampleanswer", "transcript", "acceptedanswers"]);
 const RESULT_ONLY = new Set([
@@ -53,12 +63,43 @@ const both = new Set([...BANNED, ...RESULT_ONLY]);
 
 /** The API's response to GET `path`, not the SPA document that shares it. */
 function apiRead(page: Page, path: string) {
-  return page.waitForResponse(
-    (r) =>
-      r.request().method() === "GET" &&
-      new URL(r.url()).origin === "http://localhost:8080" &&
-      new URL(r.url()).pathname === path,
-  );
+  return apiResponse(page, "GET", path);
+}
+
+/** What only staff read of a conversation: read receipts, attempt events, member counts. */
+const STAFF_ONLY = new Set(["seenby", "contextevents", "studentcount", "membercount"]);
+const MESSAGES_BANNED = new Set([...BANNED, ...STAFF_ONLY]);
+
+/** seed/08's Lê Hoàng Nam: his thread with Lan has the flagged attempt beside it. */
+const NAM = { email: "nam.le@quizzivy.com", password: "quizzivy-dev" };
+const LAN_ID = "01935000-0000-7000-8000-000000000601";
+
+interface StudentThreadRow {
+  thread: { kind: "class" | "direct"; classId?: string; teacherId?: string };
+}
+
+/** Lan's own reads of the same two threads, which hold every staff-only key. */
+async function staffSide(api: APIRequestContext, classId: string) {
+  const lan = await apiAuth(api, TEACHER);
+  const get = async (path: string) => {
+    const response = await api.get(`${API}${path}`, { headers: lan });
+    expect(response.status(), path).toBe(200);
+    return (await response.json()) as Record<string, unknown>;
+  };
+  const list = (await get("/teacher/messages/threads")) as {
+    threads: { title: string; studentCount?: number; thread: { studentId?: string } }[];
+  };
+  const nam = list.threads.find((row) => row.title === "Lê Hoàng Nam");
+  expect(nam?.thread.studentId, "Nam's thread in Lan's list").toBeTruthy();
+  return {
+    list,
+    channel: (await get(`/teacher/messages/classes/${classId}`)) as {
+      messages: { seenBy?: unknown }[];
+    },
+    direct: (await get(`/teacher/messages/students/${nam!.thread.studentId!}`)) as {
+      contextEvents?: unknown[];
+    },
+  };
 }
 
 test("E2E 9: GET /app/attempts/:id contains no part of the grading key", async ({
@@ -165,4 +206,59 @@ test("E2E 9: a graded result with the score, answers and explanations hidden car
   const essay = body.questions?.find((question) => question.type === "essay");
   expect(essay?.answer).toBeTruthy();
   expect(offendingPaths(body, both)).toEqual([]);
+});
+
+test("E2E 9: a student's Messages carry no part of the grading key and nothing only staff read", async ({
+  page,
+  playwright,
+}) => {
+  test.setTimeout(120_000);
+  await signIn(page, NAM, /\/$/);
+
+  const listed = apiRead(page, "/app/messages/threads");
+  await page.goto("/messages");
+  const listResponse = await listed;
+  expect(listResponse.status()).toBe(200);
+  const list = (await listResponse.json()) as { threads: StudentThreadRow[] };
+  const channel = list.threads.find((row) => row.thread.kind === "class")?.thread;
+  const direct = list.threads.find(
+    (row) => row.thread.kind === "direct" && row.thread.teacherId === LAN_ID,
+  )?.thread;
+  expect(channel?.classId, "a class channel in Nam's list").toBeTruthy();
+  expect(direct, "Lan's thread in Nam's list").toBeTruthy();
+  expect(offendingPaths(list, MESSAGES_BANNED)).toEqual([]);
+
+  // The same threads as Lan reads them hold every key looked for, so a key
+  // left out of the student's side cannot pass for one no side has.
+  const api = await playwright.request.newContext();
+  try {
+    const staff = await staffSide(api, channel!.classId!);
+    expect(staff.list.threads.some((row) => typeof row.studentCount === "number")).toBe(
+      true,
+    );
+    expect(staff.channel.messages.some((message) => message.seenBy !== undefined)).toBe(
+      true,
+    );
+    expect(staff.direct.contextEvents?.length ?? 0).toBeGreaterThan(0);
+  } finally {
+    await api.dispose();
+  }
+
+  for (const [screen, path] of [
+    [
+      `/messages/class/${channel!.classId!}`,
+      `/app/messages/classes/${channel!.classId!}`,
+    ],
+    [`/messages/teacher/${LAN_ID}`, `/app/messages/teachers/${LAN_ID}`],
+  ] as const) {
+    const opened = apiRead(page, path);
+    await page.goto(screen);
+    const response = await opened;
+    expect(response.status(), path).toBe(200);
+    const body = (await response.json()) as { messages?: unknown[] };
+    // The thread has posts, so an empty one cannot pass by accident.
+    expect(body.messages?.length ?? 0, path).toBeGreaterThan(0);
+    expect(offendingPaths(body, MESSAGES_BANNED), path).toEqual([]);
+    await expect(page.getByRole("log")).toBeVisible();
+  }
 });

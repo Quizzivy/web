@@ -54,6 +54,8 @@ function source(format: string, filename: string): WordImport["sources"][number]
 }
 
 describe("the imports' breadcrumb trails", () => {
+  // The first trails() imports the whole router, cold: about 5 s on CI's
+  // runners, so it gets the local timeout rather than Vitest's 5 s default.
   it("follow the deck's: Tests › Imports, then the import or the new one", async () => {
     const tests = "teacherShell.nav.tests";
     const imports = "imports.historyTitle";
@@ -64,7 +66,7 @@ describe("the imports' breadcrumb trails", () => {
       "/teacher/imports/:id/review": [tests, imports, "imports.review.crumb"],
       "/teacher/imports/:id/confirm": [tests, imports, "imports.confirm.crumb"],
     });
-  });
+  }, 15_000);
 
   it("name an import by its exam's file, a pasted one as pasted text", () => {
     const t = i18n.getFixedT("en");

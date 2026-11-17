@@ -527,6 +527,26 @@ describe("the owner's builder", () => {
   });
 });
 
+describe("the builder's title bar below 1024", () => {
+  // The R7 Access Modes proposal draws the title-bar buttons 44px below 1024
+  // in every mode, so a bar keeps one height whatever the reader's access.
+  it.each([
+    ["use", ["Phiên bản", "Xem trước", "Tạo bản sao"]],
+    ["edit", ["Phiên bản", "Xem trước", "Phát hành"]],
+    ["owner", ["Phiên bản", "Kiểm tra AI", "Tạo câu hỏi", "Xem trước", "Phát hành"]],
+  ] as const)("is 44px for %s", async (access, names) => {
+    aiOn();
+    open(access);
+    await screen.findByRole("button", { name: "Xem trước" });
+    for (const name of names) {
+      const control = await screen.findByRole("button", { name });
+      expect(control).toHaveClass(
+        name === "Phiên bản" ? "max-[1023px]:size-11" : "max-[1023px]:h-11",
+      );
+    }
+  });
+});
+
 describe("test detail by access", () => {
   function shared(access: Access) {
     signIn();

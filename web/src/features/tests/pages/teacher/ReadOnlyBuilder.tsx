@@ -172,7 +172,7 @@ export function ReadOnlyBuilder({ test }: Readonly<{ test: Test }>) {
           <Button
             variant="ghost"
             size="icon"
-            className="text-muted-foreground"
+            className="text-muted-foreground max-[1023px]:size-11"
             aria-label={t("builder.versions")}
             title={t("builder.versions")}
             onClick={() => void navigate(`/teacher/tests/${test.id}#versions`)}

@@ -1502,7 +1502,7 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
           <Button
             variant="ghost"
             size="icon"
-            className="text-muted-foreground"
+            className="text-muted-foreground max-[1023px]:size-11"
             aria-label={t("builder.versions")}
             title={t("builder.versions")}
             onClick={() => void navigate(`/teacher/tests/${test.id}#versions`)}
@@ -1513,7 +1513,7 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
           <Button
             variant="outline"
             size="md"
-            className="shadow-card h-9"
+            className="shadow-card h-9 max-[1023px]:h-11"
             onClick={() => void openPreview()}
           >
             <Eye aria-hidden="true" />
@@ -1522,7 +1522,7 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
           {showPublish ? (
             <Button
               size="md"
-              className="h-9"
+              className="h-9 max-[1023px]:h-11"
               disabled={publishing || stale}
               onClick={() => void openPublish()}
             >

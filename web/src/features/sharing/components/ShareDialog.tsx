@@ -243,7 +243,6 @@ export function ShareDialog({
               value={access}
               onChange={setAccess}
               label={t("sharing.permission")}
-              className="h-10"
             />
           ) : null}
         </div>

@@ -124,6 +124,27 @@ const teacherTree: RouteObject = {
           lazy: page(() => import("@/features/tests/pages/teacher/TestBuilderPage")),
         },
         {
+          path: "messages",
+          handle: { crumb: [{ key: "messages.title" }] },
+          lazy: page(
+            () => import("@/features/messages/pages/teacher/TeacherMessagesPage"),
+          ),
+        },
+        {
+          path: "messages/class/:classId",
+          handle: { crumb: [{ key: "messages.title" }] },
+          lazy: page(
+            () => import("@/features/messages/pages/teacher/TeacherMessagesPage"),
+          ),
+        },
+        {
+          path: "messages/student/:studentId",
+          handle: { crumb: [{ key: "messages.title" }] },
+          lazy: page(
+            () => import("@/features/messages/pages/teacher/TeacherMessagesPage"),
+          ),
+        },
+        {
           path: "shared-with-me",
           handle: { crumb: [{ key: "teacherShell.nav.sharedWithMe" }] },
           lazy: page(() => import("@/features/sharing/pages/teacher/SharedWithMePage")),
@@ -524,6 +545,29 @@ const studentTree: RouteObject = {
           path: "attempts/:attemptId/result",
           handle: { detail: { titleKey: "result.title", back: "/" } },
           lazy: page(() => import("@/features/results/pages/ResultPage")),
+        },
+        // Messages is a detail route whose back arrow goes home (DG-81); the
+        // open thread is in the address, as on the staff side (T-R7.21).
+        {
+          path: "messages",
+          handle: { detail: { titleKey: "messages.title", back: "/" } },
+          lazy: page(
+            () => import("@/features/messages/pages/student/StudentMessagesPage"),
+          ),
+        },
+        {
+          path: "messages/class/:classId",
+          handle: { detail: { titleKey: "messages.title", back: "/" } },
+          lazy: page(
+            () => import("@/features/messages/pages/student/StudentMessagesPage"),
+          ),
+        },
+        {
+          path: "messages/teacher/:teacherId",
+          handle: { detail: { titleKey: "messages.title", back: "/" } },
+          lazy: page(
+            () => import("@/features/messages/pages/student/StudentMessagesPage"),
+          ),
         },
       ],
     },

@@ -550,6 +550,7 @@ describe("what a paper that has not opened promises", () => {
     "assignment.closing",
     "assignment.due_soon",
     "result.ready",
+    "message.received",
   ] as const;
 
   function switches(dueSoon: boolean) {

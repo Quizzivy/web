@@ -2,11 +2,13 @@ import { useCallback, useMemo, useRef, useState, type RefObject } from "react";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { keepPreviousData, useQuery, useQueryClient } from "@tanstack/react-query";
+import { Link, useNavigate } from "react-router";
 import {
   ArrowRightLeft,
   Ban,
   ChartColumn,
   KeyRound,
+  MessageSquare,
   Trash2,
   UserMinus,
   UserPlus,
@@ -24,6 +26,13 @@ import { Skeleton } from "@/components/ui/skeleton";
 import { toast } from "@/components/ui/sonner";
 import { useCan } from "@/features/auth/permissions";
 import { fetchClasses } from "@/features/classes/api";
+import {
+  DIRECT_TAB,
+  MESSAGES_PATH,
+  directThreadPath,
+  mayMessage,
+  useOpensMessages,
+} from "@/features/messages/entry";
 import { useJoinCodesOff } from "@/features/organization/api";
 import {
   deleteStudent,
@@ -166,11 +175,13 @@ function ListSkeleton() {
 
 function StudentMenuItems({
   student,
+  canMessage,
   canMove,
   canReset,
   onAct,
 }: Readonly<{
   student: Student;
+  canMessage: boolean;
   canMove: boolean;
   canReset: boolean;
   onAct: (kind: "view" | "move" | "reset" | "remove") => void;
@@ -182,6 +193,14 @@ function StudentMenuItems({
         <ChartColumn aria-hidden="true" />
         {t("students.menu.results")}
       </DropdownMenuItem>
+      {canMessage && mayMessage(student) ? (
+        <DropdownMenuItem asChild>
+          <Link to={directThreadPath(student.id)}>
+            <MessageSquare aria-hidden="true" />
+            {t("students.menu.message")}
+          </Link>
+        </DropdownMenuItem>
+      ) : null}
       {canMove ? (
         <DropdownMenuItem onSelect={() => onAct("move")}>
           <ArrowRightLeft aria-hidden="true" />
@@ -212,7 +231,8 @@ function StudentMenuItems({
 }
 
 /**
- * StudentsBulkBar is the bulk bar of the students list: Move to class and
+ * StudentsBulkBar is the bulk bar of the students list: Message for a caller
+ * who reaches Messages, Move to class and
  * Remove with `teaching.classes.write`, Reset passwords with
  * `people.students.reset_password`, for up to 40 students at once, and, with
  * `people.users.manage`, suspending the accounts and deleting suspended ones
@@ -222,11 +242,13 @@ function StudentMenuItems({
  */
 function StudentsBulkBar({
   selected,
+  canMessage,
   canMove,
   canReset,
   canManage,
   moveRef,
   resetRef,
+  onMessage,
   onMove,
   onReset,
   onRemoved,
@@ -234,11 +256,13 @@ function StudentsBulkBar({
   onSettled,
 }: Readonly<{
   selected: readonly Student[];
+  canMessage: boolean;
   canMove: boolean;
   canReset: boolean;
   canManage: boolean;
   moveRef: RefObject<HTMLSpanElement | null>;
   resetRef: RefObject<HTMLSpanElement | null>;
+  onMessage: () => void;
   onMove: () => void;
   onReset: () => void;
   onRemoved: (ids: string[]) => void;
@@ -288,6 +312,11 @@ function StudentsBulkBar({
       onClear={onClear}
       onSettled={onSettled}
     >
+      {canMessage ? (
+        <BulkBarButton icon={MessageSquare} onClick={onMessage}>
+          {t("students.bulk.message")}
+        </BulkBarButton>
+      ) : null}
       {canMove ? (
         <span ref={moveRef} className="contents">
           <BulkBarButton icon={ArrowRightLeft} onClick={onMove}>
@@ -387,7 +416,10 @@ function RemoveStudentDialog({
  * request, once the teacher has paused for 300 ms. Each control shows only with its
  * permission: Add student with `people.students.create`, Reset password with
  * `people.students.reset_password`, Move to class and Remove from class with
- * `teaching.classes.write`. When a dialog closes, focus goes back to what
+ * `teaching.classes.write`, Send message (a row's) and Message (the bulk
+ * bar's, which opens the one student's thread, or Messages' Direct tab for
+ * several) for a caller who reaches Messages, on a student whose row carries
+ * `canMessage`. When a dialog closes, focus goes back to what
  * opened it: the row's menu, Add student, or the bulk bar's button while the
  * bar survives, else the table's select-all box, else the page.
  */
@@ -400,6 +432,8 @@ export default function StudentsPage() {
   const canReset = useCan("people.students.reset_password");
   const canMove = useCan("teaching.classes.write");
   const canManage = useCan("people.users.manage");
+  const canMessage = useOpensMessages();
+  const navigate = useNavigate();
   const { params, setParams, setFilter } = useListFilters();
   const applied = params.get("q") ?? "";
   const applyQuery = useCallback((value: string) => setFilter("q", value), [setFilter]);
@@ -482,6 +516,8 @@ export default function StudentsPage() {
       client.invalidateQueries({ queryKey: ["teacher-classes"] }),
     ]);
   const data = students.data;
+  // Message alone opens no checkboxes: it moves to another page, and a role
+  // that may only read students keeps the plain list, as the Assistant does.
   const selecting = canMove || canReset || canManage;
   const selectedRows = [...bulk.selected.values()];
   const filtered = search !== "" || classIds.length > 0 || accounts.length > 0;
@@ -538,11 +574,18 @@ export default function StudentsPage() {
       {selecting ? (
         <StudentsBulkBar
           selected={selectedRows}
+          canMessage={canMessage}
           canMove={canMove}
           canReset={canReset}
           canManage={canManage}
           moveRef={moveTrigger}
           resetRef={resetTrigger}
+          onMessage={() => {
+            const [only] = selectedRows;
+            if (selectedRows.length === 1 && only !== undefined && mayMessage(only))
+              void navigate(directThreadPath(only.id));
+            else void navigate(MESSAGES_PATH, { state: DIRECT_TAB });
+          }}
           onMove={() => {
             setOrigin(survivorOf(moveTrigger));
             setActing({ kind: "move", students: selectedRows });
@@ -575,6 +618,7 @@ export default function StudentsPage() {
           menu={(student, { triggerRef }) => (
             <StudentMenuItems
               student={student}
+              canMessage={canMessage}
               canMove={canMove}
               canReset={canReset}
               onAct={(kind) => act(kind, student, triggerRef)}

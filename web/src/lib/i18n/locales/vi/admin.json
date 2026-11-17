@@ -792,6 +792,7 @@
         "tests_other": "{{count}} đề",
         "questions_other": "{{count}} câu hỏi",
         "questionGroups_other": "{{count}} bài đọc, điền từ, bài nghe",
+        "questionSets_other": "{{count}} bộ câu hỏi",
         "media_other": "{{count}} tệp phương tiện",
         "assignments_other": "{{count}} bài giao"
       },
@@ -1041,6 +1042,8 @@
       "keepFocusHint": "Sau thời hạn này, các sự kiện rời khỏi bài thi bị xoá hằng đêm.",
       "anonymise": "Ẩn danh tài khoản đã tắt sau",
       "anonymiseHint": "Kết quả được giữ; tên và email bị xoá.",
+      "messages": "Tin nhắn",
+      "messagesHint": "Được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.",
       "options": {
         "year1": "1 năm",
         "year2": "2 năm",
@@ -1302,6 +1305,14 @@
       "teacher-sharing": {
         "name": "Chia sẻ",
         "blurb": "Danh bạ giáo viên, quyền Có thể dùng và Có thể sửa, và Được chia sẻ với tôi."
+      },
+      "teacher-messages": {
+        "name": "Tin nhắn",
+        "blurb": "Kênh thông báo của lớp và tin nhắn riêng với học viên. Tin nhắn riêng chỉ hai người trong cuộc đọc được."
+      },
+      "student-messages": {
+        "name": "Tin nhắn của học viên",
+        "blurb": "Tin nhắn riêng với giáo viên và thông báo của các lớp, chỉ để đọc."
       },
       "teacher-imports": {
         "name": "Nhập từ Word",

@@ -95,6 +95,7 @@ function member(userId: string, fullName: string) {
     joinedAt: NOW,
     joinCodeHint: null,
     stats,
+    canMessage: true,
   };
 }
 
@@ -117,6 +118,7 @@ function student(id: string, fullName: string, classIds: string[]) {
       joinedAt: NOW,
     })),
     stats,
+    canMessage: classIds.length > 0,
   };
 }
 

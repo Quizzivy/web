@@ -10,6 +10,7 @@ import {
   KeyRound,
   LayoutDashboard,
   Library,
+  MessageSquare,
   School,
   NotebookPen,
   PhoneIncoming,
@@ -48,6 +49,7 @@ export const API_GROUPS: Readonly<Record<string, ApiGroup>> = {
   "teacher-attempts": { icon: SquarePen, path: "/teacher/attempts/*" },
   "teacher-students": { icon: Users, path: "/teacher/students/*" },
   "teacher-classes": { icon: GraduationCap, path: "/teacher/classes/*" },
+  "teacher-messages": { icon: MessageSquare, path: "/teacher/messages/*" },
   "teacher-ai": { icon: Sparkles, path: "/teacher/ai/*" },
   "admin-users": { icon: UserCog, path: "/admin/users/*" },
   "admin-roles": { icon: ShieldCheck, path: "/admin/roles/*" },
@@ -60,6 +62,7 @@ export const API_GROUPS: Readonly<Record<string, ApiGroup>> = {
   "admin-settings": { icon: Settings, path: "/admin/settings/*" },
   "admin-leads": { icon: PhoneIncoming, path: "/admin/leads/*" },
   student: { icon: NotebookPen, path: "/app/classes/*" },
+  "student-messages": { icon: MessageSquare, path: "/app/messages/*" },
   "take-test": { icon: Timer, path: "/app/attempts/*" },
   me: { icon: User, path: "/me/*" },
 };

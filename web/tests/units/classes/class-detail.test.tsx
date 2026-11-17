@@ -126,6 +126,9 @@ beforeEach(() => {
             submittedCount: 14,
             score: { earned: 86, total: 100, pendingManual: 0 },
           }),
+          // The API says the caller may not write to him (his account is
+          // suspended, say): Send message is not offered.
+          canMessage: false,
         },
         {
           userId: HAN,
@@ -135,6 +138,7 @@ beforeEach(() => {
           joinedAt: "2026-08-29T01:12:00Z",
           joinCodeHint: "P9QR",
           stats: stats({}),
+          canMessage: true,
         },
       ].filter((member) => !removals.includes(member.userId));
       return contractJson("/teacher/classes/{id}/members", "get", 200, {
@@ -197,6 +201,7 @@ beforeEach(() => {
               },
             ],
             stats: stats({}),
+            canMessage: true,
           },
           {
             id: HAN,
@@ -211,6 +216,7 @@ beforeEach(() => {
             accountStatus: "active",
             classes: [],
             stats: stats({}),
+            canMessage: false,
           },
         ],
         facets: { total: 2, activeLast7Days: 1 },
@@ -236,6 +242,7 @@ function renderDetail() {
       { path: "/teacher/classes", element: <p>classes</p> },
       { path: "/teacher/students", element: <p>students</p> },
       { path: "/teacher/assignments/new", element: <p>wizard</p> },
+      { path: "/teacher/messages/*", element: <p>messages</p> },
     ],
     { initialEntries: [`/teacher/classes/${CLASS_ID}`] },
   );
@@ -498,6 +505,50 @@ describe("the members", () => {
     await waitFor(() => expect(removals).toEqual([HAN]));
   });
 
+  it("offers, in the member's menu, the deck's View results, Send message and Remove from class", async () => {
+    const { user, router } = renderDetail();
+    const han = await memberRow("Phạm Gia Hân");
+    await user.click(
+      within(han).getByRole("button", { name: "Thao tác với Phạm Gia Hân" }),
+    );
+    const menu = await screen.findByRole("menu");
+    expect(
+      within(menu)
+        .getAllByRole("menuitem")
+        .map((item) => item.textContent),
+    ).toEqual(["Xem kết quả", "Gửi tin nhắn", "Xoá khỏi lớp"]);
+    const send = within(menu).getByRole("menuitem", { name: "Gửi tin nhắn" });
+    expect(send).toHaveAttribute("href", `/teacher/messages/student/${HAN}`);
+    await user.click(send);
+    expect(router.state.location.pathname).toBe(`/teacher/messages/student/${HAN}`);
+  });
+
+  it("offers no Send message on a member the API says the caller may not write to", async () => {
+    const { user } = renderDetail();
+    const minh = await memberRow("Nguyễn Đức Minh");
+    await user.click(
+      within(minh).getByRole("button", { name: "Thao tác với Nguyễn Đức Minh" }),
+    );
+    const menu = await screen.findByRole("menu");
+    expect(
+      within(menu)
+        .getAllByRole("menuitem")
+        .map((item) => item.textContent),
+    ).toEqual(["Xem kết quả", "Xoá khỏi lớp"]);
+  });
+
+  it("offers Send message to no one who does not open the teacher workspace", async () => {
+    useAuthStore.setState({ user: { ...teacherUser, workspaces: ["admin"] } });
+    const { user } = renderDetail();
+    const han = await memberRow("Phạm Gia Hân");
+    await user.click(
+      within(han).getByRole("button", { name: "Thao tác với Phạm Gia Hân" }),
+    );
+    const menu = await screen.findByRole("menu");
+    expect(within(menu).queryByRole("menuitem", { name: "Gửi tin nhắn" })).toBeNull();
+    expect(within(menu).getByRole("menuitem", { name: "Xoá khỏi lớp" })).toBeVisible();
+  });
+
   it("offers a reader without the right to change classes no checkboxes and no removal", async () => {
     useAuthStore.setState({ user: assistantUser });
     renderDetail();
@@ -556,6 +607,7 @@ describe("adding students", () => {
           ]
         : [],
       stats: stats({}),
+      canMessage: joined.has(id),
     });
     server.use(
       http.post(`${BASE}/teacher/classes/${CLASS_ID}/members`, async ({ request }) => {

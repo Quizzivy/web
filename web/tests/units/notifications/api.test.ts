@@ -42,7 +42,7 @@ describe("notification wire API", () => {
       limit: "15",
     });
   });
-  it("reads summary with the audience and all five preferences and sends all five on PUT", async () => {
+  it("reads summary with the audience and all six preferences and sends all six on PUT", async () => {
     let body: unknown;
     const summaryUrls: URL[] = [];
     server.use(
@@ -57,7 +57,10 @@ describe("notification wire API", () => {
         return preferenceResponse("put");
       }),
     );
-    expect(await getMySummary("student")).toEqual({ unreadNotifications: 9 });
+    expect(await getMySummary("student")).toEqual({
+      unreadNotifications: 9,
+      unreadMessages: 0,
+    });
     expect(Object.fromEntries(summaryUrls[0]!.searchParams)).toEqual({
       audience: "student",
     });

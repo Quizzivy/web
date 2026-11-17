@@ -502,5 +502,43 @@
     "true": "Đúng",
     "false": "Sai",
     "notGiven": "Không có thông tin"
+  },
+  "messages": {
+    "title": "Tin nhắn",
+    "labelUnread_other": "Tin nhắn, {{count}} chưa đọc",
+    "back": "Về danh sách",
+    "loadEarlier": "Xem tin nhắn cũ hơn",
+    "earlierFailed": "Chưa tải được tin nhắn cũ hơn. Hãy thử lại.",
+    "announcement": "Thông báo · {{time}}",
+    "sending": "Đang gửi…",
+    "failed": "Chưa gửi được.",
+    "placeholderDirect": "Nhắn cho {{name}}…",
+    "send": "Gửi",
+    "accountOff": "Tài khoản của {{name}} đã bị vô hiệu hoá nên không nhắn được.",
+    "day": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua"
+    },
+    "list": {
+      "label": "Cuộc trò chuyện",
+      "unread_other": "{{count}} tin nhắn chưa đọc",
+      "error": "Không tải được tin nhắn."
+    },
+    "thread": {
+      "empty": "Chưa có tin nhắn.",
+      "channelEmpty": "Chưa có thông báo nào.",
+      "error": "Không tải được cuộc trò chuyện này."
+    },
+    "chip": {
+      "download": "Tải xuống {{name}}",
+      "meta": "{{kind}} · {{size}}",
+      "kind": {
+        "pdf": "PDF",
+        "word": "Word",
+        "image": "Ảnh",
+        "audio": "Âm thanh"
+      },
+      "downloadFailed": "Chưa tải được tệp. Hãy thử lại."
+    }
   }
 }

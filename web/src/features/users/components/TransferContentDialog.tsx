@@ -43,6 +43,7 @@ const MOVED = [
   "tests",
   "questions",
   "questionGroups",
+  "questionSets",
   "media",
   "assignments",
 ] as const;

@@ -4,9 +4,9 @@ import type { PermissionKey, Workspace } from "@/features/auth/permissions";
 import { adminUser, assistantUser, teacherUser } from "@tests/support/fixtures";
 
 const WHOLE = [
-  ["home", ["dashboard"]],
+  ["home", ["dashboard", "messages"]],
   ["teaching", ["assignments", "grading", "classes", "students"]],
-  ["content", ["tests", "bank", "media"]],
+  ["content", ["tests", "shared", "bank", "media"]],
 ];
 
 function role(permissions: PermissionKey[], workspaces: Workspace[] = ["teacher"]) {
@@ -18,14 +18,20 @@ function shown(user: Parameters<typeof navFor>[0]) {
 }
 
 describe("the teacher sidebar's destinations", () => {
-  it("are the deck's eight for R4, in its order, under its three groups", () => {
+  it("are the deck's ten for R7, in its order, under its three groups", () => {
     expect(
       TEACHER_NAV.map((group) => [
         group.label,
         group.items.map((item) => [item.label, item.to]),
       ]),
     ).toEqual([
-      [undefined, [["teacherShell.nav.dashboard", "/teacher"]]],
+      [
+        undefined,
+        [
+          ["teacherShell.nav.dashboard", "/teacher"],
+          ["messages.title", "/teacher/messages"],
+        ],
+      ],
       [
         "teacherShell.group.teaching",
         [
@@ -39,6 +45,7 @@ describe("the teacher sidebar's destinations", () => {
         "teacherShell.group.content",
         [
           ["teacherShell.nav.tests", "/teacher/tests"],
+          ["teacherShell.nav.sharedWithMe", "/teacher/shared-with-me"],
           ["teacherShell.nav.questionBank", "/teacher/question-bank"],
           ["teacherShell.nav.media", "/teacher/media"],
         ],
@@ -46,11 +53,19 @@ describe("the teacher sidebar's destinations", () => {
     ]);
   });
 
-  it("count live assignments quietly and papers to grade in the accent, and nothing else", () => {
+  it("count unread messages and papers to grade in the accent, live assignments and what is shared quietly, and nothing else", () => {
     const counted = TEACHER_NAV.flatMap((group) => group.items)
       .filter((item) => item.count !== undefined)
       .map((item) => [item.id, item.count]);
     expect(counted).toEqual([
+      [
+        "messages",
+        {
+          figure: "unreadMessages",
+          tone: "urgent",
+          sentence: "teacherShell.count.unreadMessages",
+        },
+      ],
       [
         "assignments",
         {
@@ -62,6 +77,14 @@ describe("the teacher sidebar's destinations", () => {
       [
         "grading",
         { figure: "toGrade", tone: "urgent", sentence: "teacherShell.count.toGrade" },
+      ],
+      [
+        "shared",
+        {
+          figure: "sharedWithMe",
+          tone: "muted",
+          sentence: "teacherShell.count.shared",
+        },
       ],
     ]);
   });
@@ -78,18 +101,18 @@ describe("the sidebar a user sees", () => {
 
   it("has no Students for a role without people.students.read", () => {
     expect(shown(role(["teaching.grading", "content.tests.write"]))).toEqual([
-      ["home", ["dashboard"]],
+      ["home", ["dashboard", "messages"]],
       ["teaching", ["assignments", "grading", "classes"]],
-      ["content", ["tests", "bank", "media"]],
+      ["content", ["tests", "shared", "bank", "media"]],
     ]);
   });
 
   it("has no Grading for a role with neither grading key", () => {
     expect(shown(role(["people.students.read", "teaching.assignments.write"]))).toEqual(
       [
-        ["home", ["dashboard"]],
+        ["home", ["dashboard", "messages"]],
         ["teaching", ["assignments", "classes", "students"]],
-        ["content", ["tests", "bank", "media"]],
+        ["content", ["tests", "shared", "bank", "media"]],
       ],
     );
   });
@@ -104,11 +127,11 @@ describe("the sidebar a user sees", () => {
     },
   );
 
-  it("is the six workspace destinations, in order, for a role with no key at all", () => {
+  it("is the eight workspace destinations, in order, for a role with no key at all", () => {
     expect(shown(role([]))).toEqual([
-      ["home", ["dashboard"]],
+      ["home", ["dashboard", "messages"]],
       ["teaching", ["assignments", "classes"]],
-      ["content", ["tests", "bank", "media"]],
+      ["content", ["tests", "shared", "bank", "media"]],
     ]);
   });
 
@@ -148,6 +171,10 @@ describe("the destination a path lights", () => {
     ["/teacher/students", "students"],
     ["/teacher/classes", "classes"],
     ["/teacher/classes/018f-g1", "classes"],
+    ["/teacher/messages", "messages"],
+    ["/teacher/messages/class/018f-h1", "messages"],
+    ["/teacher/messages/student/018f-h2", "messages"],
+    ["/teacher/shared-with-me", "shared"],
     ["/teacher/settings", null],
   ])("%s lights %s", (path, id) => {
     expect(activeNavId(path)).toBe(id);

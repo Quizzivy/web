@@ -46,6 +46,7 @@ async function prepare(
         answersToGrade: 1,
         unreadNotifications: 0,
         sharedWithMe: 0,
+        unreadMessages: 0,
       },
     },
     "GET /teacher/grading/queue": async (route) => {
@@ -279,6 +280,7 @@ async function prepareLong(page: Page, theme: "light" | "dark") {
         answersToGrade: 24,
         unreadNotifications: 0,
         sharedWithMe: 0,
+        unreadMessages: 0,
       },
     },
     "GET /teacher/grading/queue": async (route) => {
@@ -396,6 +398,7 @@ async function prepareAi(page: Page, theme: "light" | "dark") {
         answersToGrade: 1,
         unreadNotifications: 0,
         sharedWithMe: 0,
+        unreadMessages: 0,
       },
     },
     "GET /teacher/grading/queue": async (route) => {
@@ -590,6 +593,7 @@ async function prepareFinish(page: Page, theme: "light" | "dark", waiting: boole
         answersToGrade: waiting ? 1 : 0,
         unreadNotifications: 0,
         sharedWithMe: 0,
+        unreadMessages: 0,
       },
     },
     "GET /teacher/grading/queue": {

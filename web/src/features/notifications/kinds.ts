@@ -42,6 +42,8 @@ export type NotificationView = Readonly<{
 export const LATER_KINDS = [
   "content.shared",
   "test.published_by_collaborator",
+  "message.received",
+  "message.from_teacher",
 ] as const satisfies readonly NotificationKind[];
 /** ShownKind is every kind the bell draws. */
 type ShownKind = Exclude<NotificationKind, (typeof LATER_KINDS)[number]>;
@@ -75,6 +77,14 @@ export const TEACHER_EVENTS = [
 export const STUDENT_EVENTS = [
   "assignment.due_soon",
   "result.ready",
+] as const satisfies readonly NotificationEvent[];
+/**
+ * LATER_EVENTS are switches in the contract that no settings section draws
+ * yet (R7's T-R7.23 adds "New message" and "Messages from teachers"). The
+ * server still answers their rows, and a save sends them back unchanged.
+ */
+export const LATER_EVENTS = [
+  "message.received",
 ] as const satisfies readonly NotificationEvent[];
 
 const teacherKinds = new Set<NotificationKind>([

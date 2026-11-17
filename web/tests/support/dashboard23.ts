@@ -81,6 +81,7 @@ export function dashboard23Summary(): components["schemas"]["TeacherSummary"] {
     answersToGrade: 6,
     unreadNotifications: 2,
     sharedWithMe: 0,
+    unreadMessages: 0,
   };
 }
 

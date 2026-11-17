@@ -1670,6 +1670,7 @@ describe("the notifications section", () => {
       { event: "assignment.closing", inApp: true, email: false },
       { event: "assignment.due_soon", inApp: false, email: false },
       { event: "result.ready", inApp: true, email: false },
+      { event: "message.received", inApp: true, email: false },
     ]);
     await waitFor(() =>
       expect(

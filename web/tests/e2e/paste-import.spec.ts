@@ -60,7 +60,7 @@ async function prepare(page: Page) {
   await stubApi(page, {
     ...sessionAs(adminUser),
     "GET /teacher/summary": { body: dashboard23Summary() },
-    "GET /me/summary": { body: { unreadNotifications: 0 } },
+    "GET /me/summary": { body: { unreadNotifications: 0, unreadMessages: 0 } },
     "GET /teacher/imports/capabilities": {
       body: {
         intakeEnabled: true,

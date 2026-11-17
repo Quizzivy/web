@@ -12,6 +12,7 @@ export const classes = [
     id: classId,
     name: "Lớp luyện tập buổi tối",
     description: "Thứ ba và thứ năm",
+    teacherId: "0190a000-0000-7000-8000-00000000a101",
     teacherName: "Cô Thương",
     teacherAvatarUrl: null,
     scheduleLabel: null,

@@ -372,7 +372,9 @@
     },
     "count": {
       "live_other": "{{count}} bài giao đang mở",
-      "toGrade_other": "{{count}} câu trả lời chờ chấm"
+      "toGrade_other": "{{count}} câu trả lời chờ chấm",
+      "unreadMessages_other": "{{count}} tin nhắn chưa đọc",
+      "shared_other": "{{count}} mục được chia sẻ với bạn"
     },
     "sidebar": {
       "collapse": "Thu gọn thanh bên",
@@ -789,6 +791,8 @@
     "chooseFile": "Chọn tệp từ máy",
     "delete": "Xoá",
     "deleteFailed": "Không xoá được tệp.",
+    "deleteInUseElsewhere_other": "Không xoá được: {{count}} câu hỏi hoặc nhóm câu hỏi của giáo viên khác đang dùng tệp này.",
+    "deleteInUseElsewhereUncounted": "Không xoá được: câu hỏi hoặc nhóm câu hỏi của giáo viên khác đang dùng tệp này.",
     "emptyAudio": "Chưa có tệp nghe nào. Tải lên tệp nghe đầu tiên để bắt đầu.",
     "emptyImages": "Chưa có hình ảnh nào. Tải lên hình ảnh đầu tiên để bắt đầu.",
     "loadFailed": "Không tải được thư viện tệp.",
@@ -2075,6 +2079,7 @@
     "statusFacetTitle": "Lọc theo tài khoản",
     "menu": {
       "results": "Xem kết quả",
+      "message": "Gửi tin nhắn",
       "move": "Chuyển lớp",
       "reset": "Đặt lại mật khẩu"
     },
@@ -2083,7 +2088,8 @@
       "reset": "Đặt lại mật khẩu",
       "remove": "Xoá khỏi lớp",
       "removeBody_other": "Các học viên đã chọn sẽ rời mọi lớp đang học ({{count}} lượt tham gia): {{classes}}. Tài khoản và kết quả vẫn được giữ.",
-      "resetTooMany": "Mỗi lần chỉ đặt lại được tối đa {{count}} mật khẩu. Hãy bỏ chọn bớt."
+      "resetTooMany": "Mỗi lần chỉ đặt lại được tối đa {{count}} mật khẩu. Hãy bỏ chọn bớt.",
+      "message": "Nhắn tin"
     },
     "removeAll": "Xoá khỏi lớp",
     "removeAllTitle": "Xoá {{name}} khỏi các lớp của học viên?",
@@ -3950,6 +3956,64 @@
       "removed_other": "Đã gỡ {{count}} câu khỏi bộ",
       "deleted": "Đã xoá bộ “{{name}}”",
       "copiedToTest_other": "Đã sao chép {{count}} câu vào ngân hàng của bạn và thêm vào {{test}}"
+    }
+  },
+  "messages": {
+    "lead": "Thông báo tới lớp và tin nhắn riêng với học viên.",
+    "newAnnouncement": "Thông báo mới",
+    "newAnnouncementOff": "Bạn chưa dạy lớp nào.",
+    "former": "Học viên cũ",
+    "details": "Chi tiết",
+    "seenBy": "{{seen}}/{{of}} học viên đã xem",
+    "attemptEvent_other": "{{title}} · rời khỏi bài thi {{count}} lần",
+    "openAttempt": "Mở lượt làm bài",
+    "placeholderClass": "Viết thông báo tới lớp {{name}}…",
+    "attachFile": "Đính kèm tệp",
+    "classHint_other": "Gửi tới cả {{count}} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.",
+    "archived": "Lớp này đã được lưu trữ nên không đăng thêm thông báo được.",
+    "announceNotAllowed": "Bạn chưa có quyền đăng thông báo tới lớp.",
+    "list": {
+      "search": "Tìm người và lớp",
+      "tabs": "Lọc cuộc trò chuyện",
+      "tabAll": "Tất cả",
+      "tabDirect": "Riêng",
+      "tabClasses": "Lớp",
+      "you": "Bạn: ",
+      "attachment": "Tệp đính kèm · {{name}}",
+      "classSub_other": "{{count}} học viên",
+      "empty": "Chưa có tin nhắn. Nhắn cho một học viên từ trang Học viên, hoặc đăng thông báo tới một lớp.",
+      "noMatch": "Không có người hay lớp nào khớp với “{{q}}”.",
+      "candidates": "Học viên chưa nhắn tin"
+    },
+    "thread": {
+      "classSub_other": "{{count}} học viên · thông báo lớp"
+    },
+    "about": {
+      "student": "Học viên",
+      "class": "Lớp",
+      "classes": "Lớp đang học với bạn",
+      "openStudent": "Mở trong Học viên",
+      "members": "Thành viên",
+      "count_other": "{{count}} học viên",
+      "former": "Không còn học lớp nào của bạn.",
+      "openClass": "Mở trang lớp"
+    },
+    "chip": {
+      "remove": "Bỏ tệp {{name}}"
+    },
+    "attach": {
+      "title": "Đính kèm tệp",
+      "submit": "Đính kèm",
+      "choose": "Chọn tệp",
+      "accept": "PDF, Word, ảnh hoặc âm thanh · tối đa 20 MB",
+      "uploading": "Đang tải lên… {{percent}}%",
+      "progress": "Đang tải lên {{name}}",
+      "tooBig": "Tệp lớn hơn 20 MB. Hãy chọn tệp nhỏ hơn.",
+      "badType": "Chỉ nhận tệp PDF, Word (DOC, DOCX), PNG, JPEG, MP3 hoặc M4A.",
+      "macro": "Tệp Word có macro không gửi được. Hãy lưu lại thành tệp DOCX không có macro.",
+      "dimensions": "Ảnh lớn hơn 10000 × 10000 điểm ảnh. Hãy chọn ảnh nhỏ hơn.",
+      "limit": "Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.",
+      "failed": "Chưa tải lên được tệp. Hãy thử lại."
     }
   }
 }

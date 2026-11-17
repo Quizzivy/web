@@ -97,6 +97,7 @@ describe("idle notification summary", () => {
     );
     expect(setup.client.getQueryData(notificationKeys.summary("student"))).toEqual({
       unreadNotifications: 5,
+      unreadMessages: 0,
     });
     expect(hook.result.current.unread).toBe(0);
   });

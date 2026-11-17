@@ -59,11 +59,15 @@ export const handlers = [
         "assignment.closing",
         "assignment.due_soon",
         "result.ready",
+        "message.received",
       ].map((event) => ({ event, inApp: true, email: false })),
     ),
   ),
   http.get(`${BASE}/me/summary`, () =>
-    contractJson("/me/summary", "get", 200, { unreadNotifications: 0 }),
+    contractJson("/me/summary", "get", 200, {
+      unreadNotifications: 0,
+      unreadMessages: 0,
+    }),
   ),
   http.get(`${BASE}/me/notifications`, () =>
     contractJson("/me/notifications", "get", 200, { items: [], nextBefore: null }),

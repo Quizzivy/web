@@ -263,66 +263,72 @@ function student(id: string, mode: Mode) {
   };
 }
 
+/** threads answers the thread list, as `mode` says. */
+function threads(mode: Mode, url: URL): Promise<Response> {
+  if (mode.list === "hang") return new Promise<Response>(never);
+  if (mode.list === "fail") return Promise.reject(new TypeError("offline"));
+  if (mode.list === "empty") return json({ threads: [] });
+  return json({ threads: url.searchParams.get("q") === null ? THREADS : FOUND });
+}
+
+/** studentThread answers one student's thread, full only for Nam. */
+function studentThread(id: string, mode: Mode): Promise<Response> {
+  const full = id === NAM && mode.thread !== "empty";
+  const events = [
+    {
+      attemptId: uid(801),
+      assignmentId: uid(802),
+      title: "Mid-term Reading Mock",
+      focusLost: 3,
+      at: at(0, "20:14"),
+    },
+  ];
+  return json({
+    student: student(id, mode),
+    messages: full ? NAM_MESSAGES : [],
+    contextEvents: full ? events : [],
+    nextBefore: full ? uid(100) : null,
+    latestId: full ? NAM_MESSAGES.at(-1)!.id : null,
+  });
+}
+
+/** classChannel answers one class's channel, full only for the first class. */
+function classChannel(id: string, mode: Mode): Promise<Response> {
+  const row = THREADS.find((x) => x.thread.classId === id);
+  const full = id === C1 && mode.thread !== "empty";
+  return json({
+    class: {
+      id,
+      name: row?.title ?? "IELTS 6.5 Evening",
+      archived: mode.thread === "blocked",
+      studentCount: row?.studentCount ?? 24,
+    },
+    messages: full ? CHANNEL_MESSAGES : [],
+    nextBefore: null,
+    latestId: full ? CHANNEL_MESSAGES.at(-1)!.id : null,
+  });
+}
+
+const SUMMARY = {
+  liveAssignments: 2,
+  answersToGrade: 0,
+  unreadNotifications: 0,
+  sharedWithMe: 0,
+  unreadMessages: 1,
+};
+
 /** serve answers the page's calls from the proposal's fixtures, as `mode` says. */
 function serve(mode: Mode): typeof window.fetch {
   return (input, init) => {
     const url = new URL(typeof input === "string" ? input : (input as Request).url);
     const method = (init?.method ?? "GET").toUpperCase();
     const path = url.pathname;
-    if (path === "/teacher/summary")
-      return json({
-        liveAssignments: 2,
-        answersToGrade: 0,
-        unreadNotifications: 0,
-        sharedWithMe: 0,
-        unreadMessages: 1,
-      });
-    if (path === "/teacher/messages/threads") {
-      if (mode.list === "hang") return new Promise<Response>(never);
-      if (mode.list === "fail") return Promise.reject(new TypeError("offline"));
-      if (mode.list === "empty") return json({ threads: [] });
-      const q = url.searchParams.get("q");
-      return json({ threads: q === null ? THREADS : FOUND });
-    }
+    if (path === "/teacher/summary") return json(SUMMARY);
+    if (path === "/teacher/messages/threads") return threads(mode, url);
     const studentPath = /^\/teacher\/messages\/students\/([^/]+)$/.exec(path);
-    if (studentPath && method === "GET") {
-      const id = studentPath[1]!;
-      const full = id === NAM && mode.thread !== "empty";
-      return json({
-        student: student(id, mode),
-        messages: full ? NAM_MESSAGES : [],
-        contextEvents: full
-          ? [
-              {
-                attemptId: uid(801),
-                assignmentId: uid(802),
-                title: "Mid-term Reading Mock",
-                focusLost: 3,
-                at: at(0, "20:14"),
-              },
-            ]
-          : [],
-        nextBefore: full ? uid(100) : null,
-        latestId: full ? NAM_MESSAGES.at(-1)!.id : null,
-      });
-    }
+    if (studentPath && method === "GET") return studentThread(studentPath[1]!, mode);
     const classPath = /^\/teacher\/messages\/classes\/([^/]+)$/.exec(path);
-    if (classPath && method === "GET") {
-      const id = classPath[1]!;
-      const row = THREADS.find((x) => x.thread.classId === id);
-      const full = id === C1 && mode.thread !== "empty";
-      return json({
-        class: {
-          id,
-          name: row?.title ?? "IELTS 6.5 Evening",
-          archived: mode.thread === "blocked",
-          studentCount: row?.studentCount ?? 24,
-        },
-        messages: full ? CHANNEL_MESSAGES : [],
-        nextBefore: null,
-        latestId: full ? CHANNEL_MESSAGES.at(-1)!.id : null,
-      });
-    }
+    if (classPath && method === "GET") return classChannel(classPath[1]!, mode);
     if (method === "POST" && path.endsWith("/read"))
       return Promise.resolve(new Response(null, { status: 204 }));
     return Promise.resolve(new Response(null, { status: 404 }));

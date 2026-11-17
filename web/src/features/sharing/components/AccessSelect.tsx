@@ -15,8 +15,9 @@ const LABEL = { use: "sharing.canUse", edit: "sharing.canEdit" } as const;
 
 /**
  * AccessSelect is the share dialog's Can use / Can edit select: the deck's
- * 32px trigger with its up-down chevrons, 44px on a phone, and one width
- * (the wider label's) whatever it reads, so the rows line up. `label` names it
+ * 32px trigger with its up-down chevrons, 44px on a phone (the variant has to
+ * carry `data-[size=sm]` to outrank SelectTrigger's own `data-[size=sm]:h-8`),
+ * and one width (the wider label's) whatever it reads, so the rows line up. `label` names it
  * for a screen reader, since the dialog draws no label beside it.
  */
 export function AccessSelect({
@@ -46,7 +47,7 @@ export function AccessSelect({
         size="sm"
         aria-label={label}
         className={cn(
-          "bg-card dark:bg-card dark:hover:bg-card rounded-seg text-meta w-32 flex-none gap-2 px-3 max-[767px]:h-11",
+          "bg-card dark:bg-card dark:hover:bg-card rounded-seg text-meta w-32 flex-none gap-2 px-3 max-[767px]:data-[size=sm]:h-11",
           className,
         )}
       >

@@ -297,29 +297,35 @@ export function ShareDialog({
                 <div
                   key={grant.id}
                   data-grant={grant.id}
-                  className="flex items-center gap-3 border-t py-2"
+                  className="flex flex-wrap items-center gap-3 border-t py-2 max-[767px]:gap-y-1"
                 >
                   <Avatar name={grant.grantee.fullName} src={grant.grantee.avatarUrl} />
                   <Person name={grant.grantee.fullName} email={grant.grantee.email} />
-                  <AccessSelect
-                    value={grant.access}
-                    label={t("sharing.permissionFor", { name: grant.grantee.fullName })}
-                    onChange={(level) => change.mutate({ grant, level })}
-                  />
-                  <Button
-                    type="button"
-                    variant="ghost"
-                    size="icon-sm"
-                    aria-label={t("sharing.stop", { name: grant.grantee.fullName })}
-                    title={t("sharing.stop", { name: grant.grantee.fullName })}
-                    className="text-muted-fg hover:bg-hover hover:text-danger-ink dark:hover:bg-hover flex-none max-[767px]:size-11"
-                    onClick={() => {
-                      afterStop.current = null;
-                      setStopping(grant);
-                    }}
-                  >
-                    <UserMinus aria-hidden="true" />
-                  </Button>
+                  {/* Below 768 the select and Stop move under the name, so a
+                      phone shows the grantee in full (pl-11 = avatar + gap). */}
+                  <div className="flex flex-none items-center gap-3 max-[767px]:basis-full max-[767px]:pl-11">
+                    <AccessSelect
+                      value={grant.access}
+                      label={t("sharing.permissionFor", {
+                        name: grant.grantee.fullName,
+                      })}
+                      onChange={(level) => change.mutate({ grant, level })}
+                    />
+                    <Button
+                      type="button"
+                      variant="ghost"
+                      size="icon-sm"
+                      aria-label={t("sharing.stop", { name: grant.grantee.fullName })}
+                      title={t("sharing.stop", { name: grant.grantee.fullName })}
+                      className="text-muted-fg hover:bg-hover hover:text-danger-ink dark:hover:bg-hover flex-none max-[767px]:size-11"
+                      onClick={() => {
+                        afterStop.current = null;
+                        setStopping(grant);
+                      }}
+                    >
+                      <UserMinus aria-hidden="true" />
+                    </Button>
+                  </div>
                 </div>
               ))}
               {list.grants.length === 0 ? (

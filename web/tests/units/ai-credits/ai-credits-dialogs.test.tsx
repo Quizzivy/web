@@ -826,6 +826,8 @@ describe("the rules card", () => {
       "true",
     );
     const warn = await rule("Cảnh báo giáo viên khi dùng đến");
+    // The v2 deck's sentence, now that the warning also comes by email (T-R7.23).
+    expect(screen.getByText("Họ nhận được một thông báo và một email.")).toBeVisible();
     expect(within(warn).getByRole("button", { name: "80%" })).toHaveAttribute(
       "aria-pressed",
       "true",

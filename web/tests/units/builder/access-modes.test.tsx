@@ -591,6 +591,17 @@ describe("test detail by access", () => {
     expect(screen.queryByText(/đang mở/)).toBeNull();
   });
 
+  it("keeps its header buttons 44px below 1024, as the builder's title bar", async () => {
+    shared("use");
+    renderDetail();
+    const copy = await screen.findByRole("button", { name: "Tạo bản sao" });
+    const builder = screen.getByRole("link", { name: "Mở trình soạn đề" });
+    const assign = screen.getByText("Giao bài").closest("a, button");
+    for (const control of [copy, builder, assign]) {
+      expect(control).toHaveClass("h-9", "max-[1023px]:h-11");
+    }
+  });
+
   it("lets Can edit restore and make default but not delete", async () => {
     shared("edit");
     renderDetail();

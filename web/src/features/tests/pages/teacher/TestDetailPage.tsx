@@ -80,7 +80,9 @@ const PILL: Record<TestStatus, string> = {
   archived: `${PILL_SHAPE} bg-muted text-muted-fg [&>[aria-hidden]]:bg-muted-fg`,
 };
 
-const HEAD_BUTTON = "shadow-card h-9";
+// 44px below 1024, as the builder's title bar and the set page have it (R7
+// Access Modes, test detail at 360).
+const HEAD_BUTTON = "shadow-card h-9 max-[1023px]:h-11";
 
 const BANNER_BUTTON = "h-8 rounded-md px-3 text-sm";
 
@@ -489,7 +491,7 @@ function DetailHead({
             </Link>
           </Button>
           {assignLocked === null ? (
-            <Button asChild className="h-9">
+            <Button asChild className="h-9 max-[1023px]:h-11">
               <Link to={`/teacher/assignments/new?test=${test.id}`}>
                 <ClipboardList aria-hidden="true" />
                 {t("tests.detail.assign")}
@@ -497,7 +499,7 @@ function DetailHead({
             </Button>
           ) : (
             <Button
-              className="h-9 aria-disabled:cursor-default"
+              className="h-9 aria-disabled:cursor-default max-[1023px]:h-11"
               aria-disabled="true"
               title={assignLocked}
             >

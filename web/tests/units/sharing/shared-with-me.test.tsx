@@ -270,9 +270,12 @@ describe("Shared with me", () => {
     const { user, router } = renderPage("?kind=question_set&q=coll&page=2");
 
     await waitFor(() => expect(state.reads.length).toBeGreaterThan(0));
-    expect(lastRead().get("kind")).toBe("question_set");
-    expect(lastRead().get("q")).toBe("coll");
-    expect(lastRead().get("page")).toBe("2");
+    // The first read is the URL's. Page 2 is past the fixture's last page, so
+    // the page then reads page 1, which a slow runner may already have done.
+    const first = state.reads[0]!;
+    expect(first.get("kind")).toBe("question_set");
+    expect(first.get("q")).toBe("coll");
+    expect(first.get("page")).toBe("2");
     expect(tab("Câu hỏi")).toHaveAttribute("aria-pressed", "true");
     expect(screen.getByPlaceholderText("Tìm theo tên hoặc giáo viên")).toHaveValue(
       "coll",

@@ -551,13 +551,14 @@ describe("what a paper that has not opened promises", () => {
     "assignment.due_soon",
     "result.ready",
     "message.received",
+    "summary.weekly",
   ] as const;
 
   function switches(dueSoon: boolean) {
     return EVENTS.map((event) => ({
       event,
       inApp: event === "assignment.due_soon" ? dueSoon : true,
-      email: false,
+      email: event === "assignment.due_soon" ? dueSoon : true,
     }));
   }
 

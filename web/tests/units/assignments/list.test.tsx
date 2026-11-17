@@ -437,6 +437,10 @@ describe("the row menu", () => {
     const menu = await openMenu(user);
     await user.click(within(menu).getByRole("menuitem", { name: "Gia hạn" }));
     const dialog = await screen.findByRole("dialog", { name: "Gia hạn" });
+    // The deck's note: the notice goes in the app and by email (T-R7.23).
+    expect(
+      within(dialog).getByText("Học viên nhận thông báo trong ứng dụng và qua email."),
+    ).toBeVisible();
     await user.click(within(dialog).getByRole("button", { name: "1 giờ" }));
     await user.click(within(dialog).getByRole("button", { name: "Gia hạn" }));
 

@@ -417,7 +417,15 @@
       "aiDeclined": "Yêu cầu thêm {{credits}} tín dụng AI của bạn đã bị từ chối",
       "transferred_other": "Nội dung của {{teacherName}} đã được chuyển cho bạn: {{count}} mục",
       "teacherReceived": "Bạn được giao dạy lớp {{className}}",
-      "teacherChanged": "Lớp {{className}} đã được giao cho {{teacherName}}"
+      "teacherChanged": "Lớp {{className}} đã được giao cho {{teacherName}}",
+      "sharedTest": "{{sharerName}} đã chia sẻ đề thi {{name}} với bạn",
+      "sharedSet": "{{sharerName}} đã chia sẻ bộ câu hỏi {{name}} với bạn",
+      "coPublished": "{{editorName}} đã phát hành phiên bản {{version}} của {{title}}",
+      "message": "{{senderName}}: “{{excerpt}}”",
+      "messageMany": "{{count}} tin nhắn mới từ {{senderName}}: “{{excerpt}}”",
+      "classMessage": "Thông báo lớp mới ở {{className}} · {{senderName}}: “{{excerpt}}”",
+      "classMessageMany": "{{count}} thông báo lớp mới ở {{className}} · {{senderName}}: “{{excerpt}}”",
+      "weekly_other": "Tuần qua: {{count}} bài nộp, {{toGrade}} bài chờ chấm, {{flagged}} lượt bị gắn cờ"
     },
     "bell": {
       "label": "Thông báo",

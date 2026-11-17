@@ -738,14 +738,20 @@
       "update": "Update",
       "inApp": "In app",
       "inAppFor": "{{update}} in app",
+      "email": "Email",
+      "emailFor": "{{update}} by email",
       "loadFailed": "Your notification settings could not be loaded.",
       "events": {
         "submitted": "A student submits",
         "submittedHint": "Grouped every 15 minutes",
         "flagged": "An attempt is flagged",
         "flaggedHint": "Focus lost more than allowed",
+        "message": "New message",
+        "messageHint": "Direct messages from students",
         "closing": "An assignment is about to close",
-        "closingHint": "1 hour before, with who has not submitted"
+        "closingHint": "1 hour before, with who has not submitted",
+        "weekly": "Weekly summary",
+        "weeklyHint": "Monday morning, per class"
       }
     },
     "defaults": {
@@ -2062,7 +2068,7 @@
       "by1440": "1 day",
       "byCustom": "Pick a time…",
       "notify": "Notify students",
-      "notifySub": "They get an in-app message.",
+      "notifySub": "They get an in-app and email message.",
       "extendSubmit": "Extend",
       "extended": "Deadline extended by {{by}}.",
       "extendedMany": "{{count}} assignments extended by {{by}}.",

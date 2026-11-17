@@ -20,6 +20,7 @@ import { SearchInput } from "@/components/shared/SearchInput";
 import { useCan, useWorkspace } from "@/features/auth/permissions";
 import { getTeacherSummary } from "@/features/dashboard/api";
 import { dashboardKeys } from "@/features/dashboard/keys";
+import { notificationKeys } from "@/features/notifications/api";
 import { PageHead } from "@/layouts/shell/PageHead";
 import { useContentWidthAtLeast } from "@/layouts/shell/contentWidth";
 import { ApiError } from "@/lib/api/errors";
@@ -413,6 +414,8 @@ function StaffThreadPane({
           },
       );
       void client.invalidateQueries({ queryKey: dashboardKeys.summary });
+      // The server marks the bell's message.received item read with the pointer.
+      void client.invalidateQueries({ queryKey: notificationKeys.summary("teacher") });
     },
   });
   const data = thread.data;

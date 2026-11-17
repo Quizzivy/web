@@ -4,6 +4,7 @@ import { afterEach } from "vitest";
 import { cleanup } from "@testing-library/react";
 import { HttpResponse } from "msw";
 import { contractJson } from "@tests/support/contractResponse";
+import { notificationDefaults } from "@tests/support/fixtures";
 import type {
   Notification,
   NotificationPreference,
@@ -114,18 +115,86 @@ export const transferNotice = {
   createdAt: "2026-10-01T12:00:00Z",
   readAt: null,
 } as Notification;
-export const preferences: NotificationPreference[] = [
-  "attempt.submitted",
-  "attempt.flagged",
-  "assignment.closing",
-  "assignment.due_soon",
-  "result.ready",
-  "message.received",
-].map((event) => ({
-  event: event as NotificationPreference["event"],
-  inApp: true,
-  email: false,
-}));
+export const testId = id(1003);
+export const studentId = id(1004);
+export const teacherId = id(1005);
+export const classId = id(1006);
+/**
+ * collaborationNotices are R7's kinds (T-R7.23), each with the params and
+ * the target its producer writes: a share, a co-editor's publish, a
+ * student's direct message, a teacher's direct message and a class
+ * announcement for a student, and the Monday summary.
+ */
+export const collaborationNotices: Notification[] = [
+  {
+    kind: "content.shared",
+    params: {
+      sharerName: "Phan Minh Đức",
+      contentKind: "test",
+      name: "Mid-term Reading Mock",
+      access: "edit",
+      message: "Dùng cho lớp tối nhé",
+    },
+    target: { route: "sharedWithMe" },
+  },
+  {
+    kind: "content.shared",
+    params: {
+      sharerName: "Phan Minh Đức",
+      contentKind: "question_set",
+      name: "Collocations · B1",
+      access: "use",
+    },
+    target: { route: "sharedWithMe" },
+  },
+  {
+    kind: "test.published_by_collaborator",
+    params: { editorName: "Lý Thanh Vân", title, version: 4 },
+    target: { route: "test", testId },
+  },
+  {
+    kind: "message.received",
+    params: {
+      senderName: "Trần Minh Anh",
+      count: 2,
+      excerpt: "Em nộp lại bài được không ạ?",
+    },
+    target: { route: "messages", studentId },
+  },
+  {
+    kind: "message.from_teacher",
+    params: { senderName: "Giàu Bùi", count: 1, excerpt: "Nhớ ôn Unit 4 nhé" },
+    target: { route: "studentMessages", teacherId },
+  },
+  {
+    kind: "message.from_teacher",
+    params: {
+      senderName: "Giàu Bùi",
+      count: 3,
+      excerpt: "Lớp tối nay nghỉ",
+      className: "IELTS 6.5 Evening",
+    },
+    target: { route: "studentMessages", classId },
+  },
+  {
+    kind: "summary.weekly",
+    params: {
+      count: 41,
+      toGrade: 6,
+      flagged: 2,
+      classNames: ["IELTS 6.5 Evening", "IELTS Foundation A"],
+    },
+    target: { route: "dashboard" },
+  },
+].map((row, index) => ({
+  ...row,
+  id: id(index + 301),
+  createdAt: "2026-11-16T01:00:00Z",
+  readAt: null,
+})) as Notification[];
+export const preferences: NotificationPreference[] = notificationDefaults.map(
+  (row) => ({ ...row }),
+);
 export const page: NotificationPage = {
   items: Array.from({ length: 20 }, (_, index) => ({
     ...notices[index % notices.length]!,

@@ -5,13 +5,13 @@ import { preferences } from "./support";
 describe("notification preference rows", () => {
   it("changes one row without changing the order, the other rows or the other channel", () => {
     const changed = withPreference(preferences, "attempt.flagged", { inApp: false });
-    expect(changed).toHaveLength(6);
+    expect(changed).toHaveLength(7);
     expect(changed.map((row) => row.event)).toEqual(
       preferences.map((row) => row.event),
     );
     expect(changed[1]).toEqual({ ...preferences[1], inApp: false });
     expect(preferences[1]!.inApp).toBe(true);
-    for (const index of [0, 2, 3, 4, 5])
+    for (const index of [0, 2, 3, 4, 5, 6])
       expect(changed[index]).toBe(preferences[index]);
   });
   it("compares event, both channels, order and length", () => {
@@ -24,7 +24,7 @@ describe("notification preference rows", () => {
     expect(
       sameRows(
         preferences,
-        withPreference(preferences, "result.ready", { email: true }),
+        withPreference(preferences, "result.ready", { email: false }),
       ),
     ).toBe(false);
     expect(

@@ -1666,11 +1666,12 @@ describe("the notifications section", () => {
     await waitFor(() => expect(puts).toHaveLength(1));
     expect(puts[0]).toEqual([
       { event: "attempt.submitted", inApp: true, email: false },
-      { event: "attempt.flagged", inApp: true, email: false },
+      { event: "attempt.flagged", inApp: true, email: true },
       { event: "assignment.closing", inApp: true, email: false },
       { event: "assignment.due_soon", inApp: false, email: false },
-      { event: "result.ready", inApp: true, email: false },
-      { event: "message.received", inApp: true, email: false },
+      { event: "result.ready", inApp: true, email: true },
+      { event: "message.received", inApp: true, email: true },
+      { event: "summary.weekly", inApp: false, email: true },
     ]);
     await waitFor(() =>
       expect(

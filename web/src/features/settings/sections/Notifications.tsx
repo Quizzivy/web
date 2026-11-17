@@ -18,27 +18,42 @@ import { failureMessage } from "@/lib/api/errors";
 const EVENT_KEY: Record<(typeof TEACHER_EVENTS)[number], string> = {
   "attempt.submitted": "submitted",
   "attempt.flagged": "flagged",
+  "message.received": "message",
   "assignment.closing": "closing",
+  "summary.weekly": "weekly",
 };
 
-const GRID = "grid grid-cols-[minmax(0,1fr)_64px] items-center gap-3 px-4.5";
+/** CHANNELS are the grid's two columns, in the deck's order. */
+const CHANNELS = ["inApp", "email"] as const;
+type Channel = (typeof CHANNELS)[number];
 
-type Switches = ReadonlyMap<NotificationEvent, boolean>;
+const CHANNEL_ID: Record<Channel, string> = { inApp: "switch", email: "email" };
+
+const GRID = "grid grid-cols-[minmax(0,1fr)_64px_64px] items-center gap-3 px-4.5";
+
+/** A switch is one event's one channel, `${event} ${channel}`. */
+type SwitchKey = `${NotificationEvent} ${Channel}`;
+type Switches = ReadonlyMap<SwitchKey, boolean>;
 
 function switchesOf(rows: readonly NotificationPreference[]): Switches {
-  return new Map(rows.map((row) => [row.event, row.inApp]));
+  return new Map(
+    rows.flatMap((row) =>
+      CHANNELS.map((channel) => [`${row.event} ${channel}` as SwitchKey, row[channel]]),
+    ),
+  );
 }
 
 /**
  * NotificationsSection is the Notifications card of the teacher's settings:
- * "Choose where each update reaches you." with an In app switch for each of
- * the teacher's updates, A student submits, An attempt is flagged and An
- * assignment is about to close. Email arrives in R7, and New message and
- * Weekly summary with it. A change raises the DirtyBar; Save changes sends
- * all five switches, the student's two as they were read, and Discard
- * restores the saved ones. While saving, the switches stay focusable and
- * ignore a press; when Save changes or Discard ends the unsaved changes,
- * focus returns to the switch last changed.
+ * "Choose where each update reaches you." with a grid of Update, In app and
+ * Email, and a row with two switches for each of the teacher's updates in
+ * the deck's order: A student submits, An attempt is flagged, New message,
+ * An assignment is about to close and Weekly summary. The switches show the
+ * server's rows, whose defaults are the deck's (T-R7.13). A change raises
+ * the DirtyBar; Save changes sends all seven rows, the student's two as
+ * they were read, and Discard restores the saved ones. While saving, the
+ * switches stay focusable and ignore a press; when Save changes or Discard
+ * ends the unsaved changes, focus returns to the switch last changed.
  */
 export function NotificationsSection() {
   const { t } = useTranslation();
@@ -49,30 +64,36 @@ export function NotificationsSection() {
   const savedSwitches = saved === undefined ? undefined : switchesOf(saved);
   const dirty =
     savedSwitches !== undefined &&
-    [...edits].some(([event, on]) => savedSwitches.get(event) !== on);
+    [...edits].some(([key, on]) => savedSwitches.get(key) !== on);
 
   const saving = save.isPending;
   useUnsavedSection("notifications", dirty);
-  const lastToggled = useRef<string>(EVENT_KEY[TEACHER_EVENTS[0]]);
+  const lastToggled = useRef<string>(`notify-${EVENT_KEY[TEACHER_EVENTS[0]]}-switch`);
   const toggledSwitch = useCallback(
-    () => document.getElementById(`notify-${lastToggled.current}-switch`),
+    () => document.getElementById(lastToggled.current),
     [],
   );
 
-  const isOn = (event: NotificationEvent) =>
-    edits.get(event) ?? savedSwitches?.get(event) ?? false;
+  const isOn = (event: NotificationEvent, channel: Channel) => {
+    const key: SwitchKey = `${event} ${channel}`;
+    return edits.get(key) ?? savedSwitches?.get(key) ?? false;
+  };
 
-  function toggle(event: NotificationEvent, key: string, on: boolean) {
+  function toggle(event: NotificationEvent, channel: Channel, id: string, on: boolean) {
     if (saving) return;
-    lastToggled.current = key;
-    setEdits((current) => new Map(current).set(event, on));
+    lastToggled.current = id;
+    setEdits((current) => new Map(current).set(`${event} ${channel}`, on));
   }
 
   function submit() {
     if (saved === undefined) return;
     setError(null);
     save.mutate(
-      saved.map((row) => ({ ...row, inApp: edits.get(row.event) ?? row.inApp })),
+      saved.map((row) => ({
+        ...row,
+        inApp: edits.get(`${row.event} inApp`) ?? row.inApp,
+        email: edits.get(`${row.event} email`) ?? row.email,
+      })),
       {
         onSuccess: () => {
           setEdits(new Map());
@@ -96,6 +117,7 @@ export function NotificationsSection() {
         >
           <span>{t("settings.notifications.update")}</span>
           <span className="text-center">{t("settings.notifications.inApp")}</span>
+          <span className="text-center">{t("settings.notifications.email")}</span>
         </div>
         {query.isPending ? (
           <div role="status" aria-label={t("common.loading")}>
@@ -105,6 +127,7 @@ export function NotificationsSection() {
                   <Skeleton className="h-3.5 w-48" />
                   <Skeleton className="h-3 w-32" />
                 </span>
+                <Skeleton className="mx-auto h-5.5 w-9.5 rounded-full" />
                 <Skeleton className="mx-auto h-5.5 w-9.5 rounded-full" />
               </div>
             ))}
@@ -145,18 +168,26 @@ export function NotificationsSection() {
                       {t(`settings.notifications.events.${key}Hint`)}
                     </span>
                   </span>
-                  <span className="flex justify-center">
-                    <Switch
-                      id={`notify-${key}-switch`}
-                      checked={isOn(event)}
-                      aria-label={t("settings.notifications.inAppFor", {
-                        update: t(`settings.notifications.events.${key}`),
-                      })}
-                      aria-describedby={`notify-${key}-hint`}
-                      aria-disabled={saving || undefined}
-                      onCheckedChange={(on) => toggle(event, key, on)}
-                    />
-                  </span>
+                  {CHANNELS.map((channel) => {
+                    const id = `notify-${key}-${CHANNEL_ID[channel]}`;
+                    return (
+                      <span key={channel} className="flex justify-center">
+                        <Switch
+                          id={id}
+                          checked={isOn(event, channel)}
+                          aria-label={t(
+                            channel === "inApp"
+                              ? "settings.notifications.inAppFor"
+                              : "settings.notifications.emailFor",
+                            { update: t(`settings.notifications.events.${key}`) },
+                          )}
+                          aria-describedby={`notify-${key}-hint`}
+                          aria-disabled={saving || undefined}
+                          onCheckedChange={(on) => toggle(event, channel, id, on)}
+                        />
+                      </span>
+                    );
+                  })}
                 </div>
               );
             })}

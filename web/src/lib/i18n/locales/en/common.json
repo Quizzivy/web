@@ -435,7 +435,16 @@
       "transferred_one": "{{teacherName}}'s content is now yours: {{count}} item",
       "transferred_other": "{{teacherName}}'s content is now yours: {{count}} items",
       "teacherReceived": "You now teach {{className}}",
-      "teacherChanged": "{{className}} is now taught by {{teacherName}}"
+      "teacherChanged": "{{className}} is now taught by {{teacherName}}",
+      "sharedTest": "{{sharerName}} shared the test {{name}} with you",
+      "sharedSet": "{{sharerName}} shared the question set {{name}} with you",
+      "coPublished": "{{editorName}} published version {{version}} of {{title}}",
+      "message": "{{senderName}}: “{{excerpt}}”",
+      "messageMany": "{{count}} new messages from {{senderName}}: “{{excerpt}}”",
+      "classMessage": "New announcement in {{className}} · {{senderName}}: “{{excerpt}}”",
+      "classMessageMany": "{{count}} new announcements in {{className}} · {{senderName}}: “{{excerpt}}”",
+      "weekly_one": "Last week: {{count}} paper handed in, {{toGrade}} to grade, {{flagged}} flagged",
+      "weekly_other": "Last week: {{count}} papers handed in, {{toGrade}} to grade, {{flagged}} flagged"
     },
     "bell": {
       "label": "Notifications",

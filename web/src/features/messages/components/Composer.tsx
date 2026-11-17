@@ -101,7 +101,7 @@ export function Composer({
               event.preventDefault();
               send();
             }}
-            className="max-h-30 min-h-0 flex-1 resize-none overflow-y-auto rounded-none border-0 bg-transparent px-0 py-1 leading-normal outline-none!"
+            className="max-h-30 min-h-0 flex-1 resize-none overflow-y-auto rounded-none border-0 bg-transparent px-0 py-1 leading-normal outline-none! placeholder:truncate placeholder-shown:truncate"
           />
           {file?.button}
           <Button

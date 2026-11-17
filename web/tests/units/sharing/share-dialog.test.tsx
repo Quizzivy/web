@@ -312,6 +312,26 @@ describe("the share dialog", () => {
       ).toHaveClass("w-32");
   });
 
+  it("moves a grantee's select and Stop under the name on a phone, both 44px", async () => {
+    state.grants = [grant(1, DUC, "edit")];
+    await openDialog();
+    await screen.findByText(DUC.fullName);
+
+    const select = screen.getByRole("combobox", { name: `Quyền của ${DUC.fullName}` });
+    const stop = screen.getByRole("button", {
+      name: `Dừng chia sẻ với ${DUC.fullName}`,
+    });
+    // The controls share one wrapper that takes a line of its own below 768,
+    // so the name column keeps the row's width on a phone.
+    const controls = select.parentElement;
+    expect(controls).toBe(stop.parentElement);
+    expect(controls).toHaveClass("max-[767px]:basis-full", "max-[767px]:pl-11");
+    expect(controls?.parentElement).toHaveClass("flex-wrap");
+    // SelectTrigger's `data-[size=sm]:h-8` outranks a bare `max-[767px]:h-11`.
+    expect(select).toHaveClass("max-[767px]:data-[size=sm]:h-11");
+    expect(stop).toHaveClass("max-[767px]:size-11");
+  });
+
   it("sends no message and says nothing of a notification when notify is off", async () => {
     const { user } = await openDialog();
     await screen.findByText("Chưa chia sẻ với ai.");

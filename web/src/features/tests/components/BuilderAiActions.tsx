@@ -19,7 +19,7 @@ import {
   type QuestionValues,
 } from "@/features/question-bank/questionSchema";
 
-const ENTRY = "shadow-card h-9";
+const ENTRY = "shadow-card h-9 max-[1023px]:h-11";
 
 type BuilderPanel = "generate" | "check";
 

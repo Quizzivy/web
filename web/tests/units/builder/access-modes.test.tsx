@@ -527,6 +527,26 @@ describe("the owner's builder", () => {
   });
 });
 
+describe("the builder's title bar below 1024", () => {
+  // The R7 Access Modes proposal draws the title-bar buttons 44px below 1024
+  // in every mode, so a bar keeps one height whatever the reader's access.
+  it.each([
+    ["use", ["Phiên bản", "Xem trước", "Tạo bản sao"]],
+    ["edit", ["Phiên bản", "Xem trước", "Phát hành"]],
+    ["owner", ["Phiên bản", "Kiểm tra AI", "Tạo câu hỏi", "Xem trước", "Phát hành"]],
+  ] as const)("is 44px for %s", async (access, names) => {
+    aiOn();
+    open(access);
+    await screen.findByRole("button", { name: "Xem trước" });
+    for (const name of names) {
+      const control = await screen.findByRole("button", { name });
+      expect(control).toHaveClass(
+        name === "Phiên bản" ? "max-[1023px]:size-11" : "max-[1023px]:h-11",
+      );
+    }
+  });
+});
+
 describe("test detail by access", () => {
   function shared(access: Access) {
     signIn();
@@ -569,6 +589,17 @@ describe("test detail by access", () => {
     expect(screen.queryByRole("link", { name: "Sửa" })).toBeNull();
     expect(screen.queryByRole("button", { name: /Chia sẻ/ })).toBeNull();
     expect(screen.queryByText(/đang mở/)).toBeNull();
+  });
+
+  it("keeps its header buttons 44px below 1024, as the builder's title bar", async () => {
+    shared("use");
+    renderDetail();
+    const copy = await screen.findByRole("button", { name: "Tạo bản sao" });
+    const builder = screen.getByRole("link", { name: "Mở trình soạn đề" });
+    const assign = screen.getByText("Giao bài").closest("a, button");
+    for (const control of [copy, builder, assign]) {
+      expect(control).toHaveClass("h-9", "max-[1023px]:h-11");
+    }
   });
 
   it("lets Can edit restore and make default but not delete", async () => {

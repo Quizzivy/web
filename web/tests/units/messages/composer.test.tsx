@@ -37,6 +37,16 @@ function field() {
   return screen.getByRole("textbox", { name: "Nhắn cho Nam…" });
 }
 
+describe("the composer at rest", () => {
+  it("keeps an empty box to one line, the placeholder cut with an ellipsis", () => {
+    render(<Harness enterSends onSend={vi.fn()} />);
+    // Both are needed: the placeholder alone keeps one line but draws no
+    // ellipsis. Scoped to :placeholder-shown, so typed text still wraps.
+    expect(field()).toHaveClass("placeholder:truncate", "placeholder-shown:truncate");
+    expect(field()).not.toHaveClass("truncate");
+  });
+});
+
 describe("the composer's keys (T-R7.20, Q2)", () => {
   it("sends on Enter in a direct thread, trimmed, and empties the box", async () => {
     const onSend = vi.fn();

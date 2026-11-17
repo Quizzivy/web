@@ -450,6 +450,37 @@ describe("leaving fullscreen when the attempt ends", () => {
     expect(bufferedEvents()).toEqual([]);
   });
 
+  it("leaves it when the student leaves the paper by the ✕", async () => {
+    fullscreen({ enabled: true, element: document.body });
+    const router = await open(asked);
+    fireEvent.click(header().getByRole("button", { name: "Thoát khỏi bài làm" }));
+    await pass(0);
+    fireEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", { name: "Thoát" }),
+    );
+    await pass(0);
+    expect(router.state.location.pathname).toBe("/");
+    await pass(0);
+    expect(exit).toHaveBeenCalledTimes(1);
+  });
+
+  it("leaves it when the student navigates away from the paper", async () => {
+    fullscreen({ enabled: true, element: document.body });
+    const router = await open(asked);
+    await act(() => router.navigate("/"));
+    await pass(0);
+    expect(screen.getByText("home")).toBeInTheDocument();
+    expect(exit).toHaveBeenCalledTimes(1);
+  });
+
+  it("leaves a fullscreen the assignment did not ask for alone when the student leaves", async () => {
+    fullscreen({ enabled: true, element: document.body });
+    const router = await open();
+    await act(() => router.navigate("/"));
+    await pass(0);
+    expect(exit).not.toHaveBeenCalled();
+  });
+
   it("stays in fullscreen on a paper that is locked without a submit", async () => {
     fullscreen({ enabled: true, element: document.body });
     await open(asked);

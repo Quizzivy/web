@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http } from "msw";
@@ -84,13 +84,25 @@ async function rename(user: ReturnType<typeof renderBuilder>["user"], text: stri
   await user.type(title, text);
 }
 
+/**
+ * The stale-write notices say "at HH:mm" for a write made today and add the
+ * date for any other day, so the fixtures' 2026-11-16 times need a clock on
+ * that day. Only Date is faked; timers stay real and the clock moves with them.
+ */
+const TODAY = new Date("2026-11-16T05:00:00Z");
+
 beforeEach(() => {
+  vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+  vi.setSystemTime(TODAY);
   recordWrites();
   outlinePatches = [];
   outlineAnswer = "saved";
 });
 
-afterEach(signOut);
+afterEach(() => {
+  signOut();
+  vi.useRealTimers();
+});
 
 describe("the builder for a Can use recipient", () => {
   it("is read-only and sends nothing, with Make a copy and Assign", async () => {

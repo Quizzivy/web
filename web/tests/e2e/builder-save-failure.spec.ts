@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, ownedByAdmin, sessionAs, stubApi } from "./support/api";
 import type { components } from "../../src/lib/api/schema";
 
 const TEST_ID = "018f0000-0000-7000-8000-0000000000a1";
@@ -10,9 +10,7 @@ const draft: components["schemas"]["Test"] = {
   skills: [],
   assignments: { live: 0, scheduled: 0, closed: 0 },
   unpublishedChanges: null,
-  access: "owner",
-  owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
-  sharedWith: 0,
+  ...ownedByAdmin,
   id: TEST_ID,
   title: "IELTS Reading Practice 3",
   description: null,

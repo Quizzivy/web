@@ -1,6 +1,6 @@
 import { storedGroupBundle } from "@tests/support/storedGroupBundle";
 import { expect, test } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, ownedByAdmin, sessionAs, stubApi } from "./support/api";
 import type { components } from "../../src/lib/api/schema";
 
 test("leaving an offline group keeps an acknowledged local draft and restores its outline before saving", async ({
@@ -36,9 +36,7 @@ test("leaving an offline group keeps an acknowledged local draft and restores it
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: null,
-    access: "owner",
-    owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
-    sharedWith: 0,
+    ...ownedByAdmin,
     id: testId,
     title: "Đề phục hồi",
     description: null,
@@ -181,9 +179,7 @@ test("a passage edit cut off by a reload is offered back from the device and sav
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: null,
-    access: "owner",
-    owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
-    sharedWith: 0,
+    ...ownedByAdmin,
     id: testId,
     title: "Đề nội dung dùng chung",
     description: null,

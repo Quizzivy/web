@@ -147,8 +147,9 @@ git fetch origin && git tag v0.14.0 origin/main && git push origin v0.14.0
 gh pr create --base develop --head main   # back-merge; its CI run does not deploy
 ```
 
-CI refuses a `-dev` SDK pin on a PR into `main`. Read the slow tail's check
-(**E2E (waits on real time)**) on the release PR before merging.
+CI refuses a `-dev` SDK pin on a PR into `main`. The slow tail no longer runs
+on the release PR: read its latest nightly run on `develop` (**E2E (waits on
+real time)**) before merging, or start it by hand on the release branch.
 
 ## Verifying afterwards
 

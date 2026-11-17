@@ -75,13 +75,10 @@ test('the longest rule decides, and the base decides where none matches', () => 
   assert.equal(inSet(SETS.code, 'web/src/main.tsx'), true);
   assert.equal(inSet(SETS.code, '.github/workflows/deploy.yml'), false);
   assert.equal(inSet(SETS.code, 'web/README.md'), true);
-  assert.equal(inSet(SETS.deck, 'docs/design/deck/index.html'), true);
-  assert.equal(inSet(SETS.deck, 'scripts/check-design-deck.mjs'), true);
-  assert.equal(inSet(SETS.deck, 'web/src/main.tsx'), false);
   assert.equal(inSet(nested, 'web/package.json'), true);
   assert.equal(inSet(nested, 'web/src/main.tsx'), false);
   assert.equal(inSet(nested, 'web/src/features/join/code.ts'), true);
-  assert.equal(inSet(nested, 'scripts/check-design-deck.mjs'), false);
+  assert.equal(inSet(nested, 'docs/ci.md'), false);
 });
 
 test('every set reads the workflow, its actions and these scripts', () => {
@@ -141,8 +138,6 @@ test('a hash moves only when a file of the set changes', () => {
   assert.equal(hashOf(SETS.web, change('docs/design/deck/a.html')), hashOf(SETS.web, before));
   assert.notEqual(hashOf(SETS.web, change('web/src/a.ts')), hashOf(SETS.web, before));
   assert.notEqual(hashOf(SETS.code, change('api-ref')), hashOf(SETS.code, before));
-  assert.notEqual(hashOf(SETS.deck, change('docs/design/deck/a.html')), hashOf(SETS.deck, before));
-  assert.equal(hashOf(SETS.deck, change('web/src/a.ts')), hashOf(SETS.deck, before));
   assert.equal(hashOf(SETS.code, change('README.md')), hashOf(SETS.code, before));
   assert.notEqual(hashOf(SETS.code, [...before, entry('web/src/b.ts')]), hashOf(SETS.code, before));
   assert.notEqual(
@@ -191,12 +186,12 @@ test('the workflow, the gate and the plan name the same jobs', () => {
 });
 
 test('a job names a pass and a failure per shard, keyed by job status', () => {
-  assert.deepEqual(outcomesOf({ id: 'deck' }, 'abc'), [{ success: 'ci-pass-deck-abc', failure: 'ci-fail-deck-abc' }]);
+  assert.deepEqual(outcomesOf({ id: 'e2e' }, 'abc'), [{ success: 'ci-pass-e2e-abc', failure: 'ci-fail-e2e-abc' }]);
   assert.deepEqual(outcomesOf({ id: 'web-unit', shards: 2 }, 'abc'), [
     { success: 'ci-pass-web-unit-1of2-abc', failure: 'ci-fail-web-unit-1of2-abc' },
     { success: 'ci-pass-web-unit-2of2-abc', failure: 'ci-fail-web-unit-2of2-abc' },
   ]);
-  assert.equal(outcomesOf({ id: 'deck' }, 'abc')[0].cancelled, undefined);
+  assert.equal(outcomesOf({ id: 'e2e' }, 'abc')[0].cancelled, undefined);
 });
 
 test('evidence from a fork or from an expired artifact is not trusted', () => {
@@ -244,9 +239,9 @@ test('the lookup asks for one name and answers with its newest trusted artifact'
     };
   };
   const lookup = artifactLookup({ api: 'https://api.example', repository: 'o/r', token: 't', fetch: request });
-  assert.deepEqual(await lookup('ci-pass-deck-a b'), { run: 5, at: Date.parse('2026-10-02T00:00:00Z') });
+  assert.deepEqual(await lookup('ci-pass-e2e-a b'), { run: 5, at: Date.parse('2026-10-02T00:00:00Z') });
   assert.deepEqual(asked, [
-    { url: 'https://api.example/repos/o/r/actions/artifacts?per_page=100&name=ci-pass-deck-a%20b', authorization: 'Bearer t' },
+    { url: 'https://api.example/repos/o/r/actions/artifacts?per_page=100&name=ci-pass-e2e-a%20b', authorization: 'Bearer t' },
   ]);
 
   const refused = artifactLookup({ api: 'a', repository: 'o/r', token: 't', fetch: async () => ({ ok: false, status: 503 }) });
@@ -361,8 +356,8 @@ test('jobs on one set share a hash and a checkout, and name their own markers', 
   assert.deepEqual(result.jobs['web-unit'].shards, [1, 2, 3]);
   assert.deepEqual(result.jobs.sharded.shards, [1, 2, 3]);
   assert.equal(result.jobs.sharded.outcomes.length, 3);
-  assert.match(result.jobs.deck.sparse, /^\/docs\/design\/$/m);
-  assert.doesNotMatch(result.jobs.deck.sparse, /^\/\*$/m);
+  assert.match(result.jobs['web-check'].sparse, /^\/\*$/m);
+  assert.match(result.jobs['web-check'].sparse, /^!\/docs\/$/m);
   const names = Object.values(result.jobs).flatMap((job) => job.outcomes.flatMap((o) => [o.success, o.failure]));
   assert.equal(new Set(names).size, names.length);
 });

@@ -76,7 +76,13 @@ export function dashboard23(
 
 /** dashboard23Summary keeps unread notifications independent from nullable teaching counts. */
 export function dashboard23Summary(): components["schemas"]["TeacherSummary"] {
-  return { liveAssignments: 3, answersToGrade: 6, unreadNotifications: 2 };
+  return {
+    liveAssignments: 3,
+    answersToGrade: 6,
+    unreadNotifications: 2,
+    sharedWithMe: 0,
+    unreadMessages: 0,
+  };
 }
 
 /** dashboard23Assignments distinguishes an empty open list from an empty assignment collection. */
@@ -112,6 +118,9 @@ export function dashboard23Draft(): components["schemas"]["Test"] {
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: null,
+    access: "owner",
+    owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
+    sharedWith: 0,
     id: "018f0000-0000-7000-8000-0000000000a1",
     title: "Đề thi chưa đặt tên",
     description: null,

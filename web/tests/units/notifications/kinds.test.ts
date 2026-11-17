@@ -140,16 +140,28 @@ describe("notification kinds and sentences", () => {
   it("matches both contract enums exhaustively and validates all nine fixtures", () => {
     const schemas = loadSpec().components.schemas;
     expect(Object.keys(KIND_LOOK)).toEqual(schemas.NotificationKind.enum);
-    expect([...TEACHER_EVENTS, ...STUDENT_EVENTS]).toEqual(
-      schemas.NotificationEvent.enum,
+    expect(new Set([...TEACHER_EVENTS, ...STUDENT_EVENTS])).toEqual(
+      new Set(schemas.NotificationEvent.enum),
     );
-    expect(TEACHER_EVENTS).toEqual(schemas.NotificationEvent.enum.slice(0, 3));
-    expect(STUDENT_EVENTS).toEqual(schemas.NotificationEvent.enum.slice(3));
+    // The deck's order, not the contract's (Settings › Notifications).
+    expect(TEACHER_EVENTS).toEqual([
+      "attempt.submitted",
+      "attempt.flagged",
+      "message.received",
+      "assignment.closing",
+      "summary.weekly",
+    ]);
+    expect(STUDENT_EVENTS).toEqual([
+      "assignment.due_soon",
+      "result.ready",
+      "message.received",
+    ]);
+    // "New message" for a teacher is "Messages from teachers" for a student.
     expect(
       TEACHER_EVENTS.filter((event) =>
         (STUDENT_EVENTS as readonly string[]).includes(event),
       ),
-    ).toEqual([]);
+    ).toEqual(["message.received"]);
     expect(() => listResponse({ items: notices, nextBefore: null })).not.toThrow();
   });
   it.each(notices.map((notice, index) => ({ notice, index })))(

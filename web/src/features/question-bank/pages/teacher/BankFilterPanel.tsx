@@ -67,21 +67,26 @@ function Group({
  * (the stored types and Audio), Level and Skill as checkbox lists with the
  * server's counts, then the tag search. Audio has no count, because the
  * contract's facets carry none. Every change goes through `onChange`.
+ * `leading` is drawn first, above Type, at the groups' spacing: the Sets
+ * group (DG-90).
  */
 export function BankFilterPanel({
   filters,
   facets,
   tags,
   onChange,
+  leading,
 }: Readonly<{
   filters: BankFilters;
   facets: Facets | undefined;
   tags: readonly string[];
   onChange: (change: BankFilterChange) => void;
+  leading?: ReactNode;
 }>) {
   const { t } = useTranslation();
   return (
     <div className="flex flex-col gap-4.5">
+      {leading}
       <Group legend={t("bank.typeFilter")}>
         {BANK_TYPES.map((type) => (
           <Option

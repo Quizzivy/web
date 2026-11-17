@@ -227,7 +227,12 @@ function HeaderRow<T extends Item>({
         <div
           key={column.id}
           role="columnheader"
-          className={cn("min-w-0", column.align === "end" && "text-right")}
+          className={cn(
+            "min-w-0",
+            column.align === "end" && "text-right",
+            // the sr-only text is absolute: held here, it scrolls with the table, never the page
+            column.hideHeader && "relative",
+          )}
         >
           {column.hideHeader ? (
             <span className="sr-only">{column.header}</span>

@@ -645,6 +645,33 @@ describe("roles", () => {
     expect(header.firstElementChild).toHaveClass("sr-only");
   });
 
+  it("positions a hidden column header the same way", () => {
+    contentWidth(1200);
+    render(
+      <DataTable
+        label="Bài giao"
+        rows={ROWS}
+        rowSize={{ height: 60 }}
+        columns={[
+          COLUMNS[0]!,
+          {
+            id: "act",
+            header: "Nút",
+            hideHeader: true,
+            track: "120px",
+            cell: (row) => <button type="button">Mở {row.title}</button>,
+          },
+        ]}
+      />,
+    );
+    const header = screen.getByRole("columnheader", { name: "Nút" });
+    expect(header).toHaveClass("relative");
+    expect(header.firstElementChild).toHaveClass("sr-only");
+    expect(screen.getByRole("columnheader", { name: "Bài giao" })).not.toHaveClass(
+      "relative",
+    );
+  });
+
   it("gives each row's menu its own row", () => {
     const menu = vi.fn((row: Assignment, _context: DataTableMenuContext) => (
       <DropdownMenuItem>Nhân bản {row.title}</DropdownMenuItem>

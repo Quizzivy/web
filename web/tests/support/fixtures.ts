@@ -129,6 +129,7 @@ export const myClass: components["schemas"]["MyClass"] = {
   id: "019535da-0000-7000-8000-000000000001",
   name: "Tiếng Anh giao tiếp - Lớp A",
   description: null,
+  teacherId: "0190a000-0000-7000-8000-00000000a101",
   teacherName: "Cô Thương",
   teacherAvatarUrl: null,
   scheduleLabel: null,
@@ -147,3 +148,18 @@ export const sampleClass: components["schemas"]["Class"] = {
   joinCode: null,
   createdAt: "2026-01-01T00:00:00Z",
 };
+
+/**
+ * The seven notification switches as the server answers a caller who never
+ * changed one: the defaults the contract writes in `NotificationEvent`, in
+ * the enum's order. A student's rows keep `email` equal to `inApp` (DG-82).
+ */
+export const notificationDefaults: components["schemas"]["NotificationPreference"][] = [
+  { event: "attempt.submitted", inApp: true, email: false },
+  { event: "attempt.flagged", inApp: true, email: true },
+  { event: "assignment.closing", inApp: true, email: false },
+  { event: "assignment.due_soon", inApp: true, email: true },
+  { event: "result.ready", inApp: true, email: true },
+  { event: "message.received", inApp: true, email: true },
+  { event: "summary.weekly", inApp: false, email: true },
+];

@@ -40,21 +40,25 @@ const LIVE = /^Bài giao\s*3 bài giao đang mở$/;
 const TO_GRADE = /^Chấm bài\s*6 câu trả lời chờ chấm$/;
 const NAMES = [
   /^Tổng quan$/,
+  /^Tin nhắn$/,
   LIVE,
   TO_GRADE,
   /^Lớp học$/,
   /^Học viên$/,
   /^Đề thi$/,
+  /^Được chia sẻ với tôi$/,
   /^Ngân hàng câu hỏi$/,
   /^Thư viện media$/,
 ];
 const LABELS = [
   "Tổng quan",
+  "Tin nhắn",
   "Bài giao",
   "Chấm bài",
   "Lớp học",
   "Học viên",
   "Đề thi",
+  "Được chia sẻ với tôi",
   "Ngân hàng câu hỏi",
   "Thư viện media",
 ];
@@ -138,7 +142,7 @@ describe("the teacher shell from 768", () => {
     );
   });
 
-  it("lists the eight destinations under their groups, the current one lit", async () => {
+  it("lists the ten destinations under their groups, the current one lit", async () => {
     serveSummary(QUIET);
     renderShell("/teacher/classes", [home(), { ...CLASSES, element: <p>các lớp</p> }]);
     await screen.findByText("các lớp");
@@ -147,11 +151,13 @@ describe("the teacher shell from 768", () => {
       links().map((link) => [link.textContent, link.getAttribute("href")]),
     ).toEqual([
       ["Tổng quan", "/teacher"],
+      ["Tin nhắn", "/teacher/messages"],
       ["Bài giao", "/teacher/assignments"],
       ["Chấm bài", "/teacher/grading"],
       ["Lớp học", "/teacher/classes"],
       ["Học viên", "/teacher/students"],
       ["Đề thi", "/teacher/tests"],
+      ["Được chia sẻ với tôi", "/teacher/shared-with-me"],
       ["Ngân hàng câu hỏi", "/teacher/question-bank"],
       ["Thư viện media", "/teacher/media"],
     ]);
@@ -159,7 +165,7 @@ describe("the teacher shell from 768", () => {
       within(nav())
         .getAllByRole("list")
         .map((list) => within(list).getAllByRole("link").length),
-    ).toEqual([1, 4, 3]);
+    ).toEqual([2, 4, 4]);
     expect(within(nav()).getByText("Giảng dạy")).toBeInTheDocument();
     expect(within(nav()).getByText("Nội dung")).toBeInTheDocument();
     expect(
@@ -245,6 +251,40 @@ describe("the sidebar's counts", () => {
       "text-brand-fg",
     );
     expect(badges()).toHaveLength(2);
+  });
+
+  it("shows unread messages in the accent and what is shared with the teacher quietly, each said in words", async () => {
+    serveSummary({ ...QUIET, unreadMessages: 3, sharedWithMe: 2 });
+    renderShell("/teacher", [home()]);
+
+    const messages = await within(nav()).findByRole("link", {
+      name: /^Tin nhắn\s*3 tin nhắn chưa đọc$/,
+    });
+    const shared = within(nav()).getByRole("link", {
+      name: /^Được chia sẻ với tôi\s*2 mục được chia sẻ với bạn$/,
+    });
+    expect(messages).toHaveAttribute("href", "/teacher/messages");
+    expect(shared).toHaveAttribute("href", "/teacher/shared-with-me");
+    expect(messages.querySelector("[data-slot='nav-count']")).toHaveClass(
+      "bg-brand",
+      "text-brand-fg",
+    );
+    expect(shared.querySelector("[data-slot='nav-count']")).toHaveClass(
+      "bg-muted",
+      "text-muted-fg",
+    );
+    expect(within(messages).getByText("3")).toHaveAttribute("aria-hidden", "true");
+    expect(badges()).toHaveLength(2);
+  });
+
+  it("draws 99+ above 99 and says the figure", async () => {
+    serveSummary({ ...QUIET, unreadMessages: 120 });
+    renderShell("/teacher", [home()]);
+
+    const messages = await within(nav()).findByRole("link", {
+      name: /^Tin nhắn\s*120 tin nhắn chưa đọc$/,
+    });
+    expect(within(messages).getByText("99+")).toHaveAttribute("aria-hidden", "true");
   });
 
   it("draws no badge at zero, for either figure", async () => {
@@ -784,6 +824,11 @@ describe("the teacher shell below 768", () => {
     expect(within(drawer).getByText("Trần Thị Bình")).toBeInTheDocument();
     expect(await within(drawer).findByRole("link", { name: LIVE })).toBeInTheDocument();
     expect(badges()).toHaveLength(2);
+    expect(
+      within(drawer)
+        .getAllByRole("link")
+        .map((link) => link.textContent),
+    ).toEqual(expect.arrayContaining(["Tin nhắn", "Được chia sẻ với tôi"]));
     for (const link of within(drawer).getAllByRole("link"))
       expect(link).not.toHaveAttribute("title");
     expect(localStorage.getItem(STORED)).toBe("collapsed");

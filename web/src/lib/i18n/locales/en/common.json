@@ -435,7 +435,16 @@
       "transferred_one": "{{teacherName}}'s content is now yours: {{count}} item",
       "transferred_other": "{{teacherName}}'s content is now yours: {{count}} items",
       "teacherReceived": "You now teach {{className}}",
-      "teacherChanged": "{{className}} is now taught by {{teacherName}}"
+      "teacherChanged": "{{className}} is now taught by {{teacherName}}",
+      "sharedTest": "{{sharerName}} shared the test {{name}} with you",
+      "sharedSet": "{{sharerName}} shared the question set {{name}} with you",
+      "coPublished": "{{editorName}} published version {{version}} of {{title}}",
+      "message": "{{senderName}}: “{{excerpt}}”",
+      "messageMany": "{{count}} new messages from {{senderName}}: “{{excerpt}}”",
+      "classMessage": "New announcement in {{className}} · {{senderName}}: “{{excerpt}}”",
+      "classMessageMany": "{{count}} new announcements in {{className}} · {{senderName}}: “{{excerpt}}”",
+      "weekly_one": "Last week: {{count}} paper handed in, {{toGrade}} to grade, {{flagged}} flagged",
+      "weekly_other": "Last week: {{count}} papers handed in, {{toGrade}} to grade, {{flagged}} flagged"
     },
     "bell": {
       "label": "Notifications",
@@ -521,5 +530,45 @@
     "true": "True",
     "false": "False",
     "notGiven": "Not given"
+  },
+  "messages": {
+    "title": "Messages",
+    "labelUnread_one": "Messages, {{count}} unread",
+    "labelUnread_other": "Messages, {{count}} unread",
+    "back": "Back to conversations",
+    "loadEarlier": "Load earlier",
+    "earlierFailed": "Earlier messages could not be loaded. Try again.",
+    "announcement": "Announcement · {{time}}",
+    "sending": "Sending…",
+    "failed": "Not sent.",
+    "placeholderDirect": "Message {{name}}…",
+    "send": "Send",
+    "accountOff": "{{name}}’s account is disabled, so no message can be sent.",
+    "day": {
+      "today": "Today",
+      "yesterday": "Yesterday"
+    },
+    "list": {
+      "label": "Conversations",
+      "unread_one": "{{count}} unread message",
+      "unread_other": "{{count}} unread messages",
+      "error": "Messages could not be loaded."
+    },
+    "thread": {
+      "empty": "No messages yet.",
+      "channelEmpty": "No announcements yet.",
+      "error": "This conversation could not be loaded."
+    },
+    "chip": {
+      "download": "Download {{name}}",
+      "meta": "{{kind}} · {{size}}",
+      "kind": {
+        "pdf": "PDF",
+        "word": "Word",
+        "image": "Image",
+        "audio": "Audio"
+      },
+      "downloadFailed": "The file could not be downloaded. Try again."
+    }
   }
 }

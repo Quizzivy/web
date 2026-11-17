@@ -44,6 +44,7 @@ export function student(
     disabledAt: null,
     lastActiveAt: null,
     classes: [],
+    canMessage: false,
     stats: {
       submittedCount: 0,
       flaggedCount: 0,
@@ -139,7 +140,10 @@ export function renderStudents(
     defaultOptions: { queries: { retry: false }, mutations: { retry: false } },
   });
   const router = createMemoryRouter(
-    [{ path: "/teacher/students", element: <StudentsPage /> }],
+    [
+      { path: "/teacher/students", element: <StudentsPage /> },
+      { path: "/teacher/messages/*", element: <p>messages page</p> },
+    ],
     { initialEntries: [path] },
   );
   const view = render(

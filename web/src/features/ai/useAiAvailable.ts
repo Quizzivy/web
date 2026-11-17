@@ -1,3 +1,4 @@
+import { createContext, use } from "react";
 import { useQuery } from "@tanstack/react-query";
 import { useTranslation } from "react-i18next";
 import { useCan } from "@/features/auth/permissions";
@@ -38,14 +39,23 @@ export function useAiStatus(enabled: boolean) {
 
 /**
  * useAiAvailable reports whether AI entry points are drawn at all: the server
- * has an assistant (`PublicStatus.ai`) and the signed-in user holds `ai.use`.
- * Without `ai.use` the status is not read.
+ * has an assistant (`PublicStatus.ai`) and the signed-in user holds `ai.use`,
+ * outside an `AiOff`. Without `ai.use` the status is not read.
  */
 export function useAiAvailable(): boolean {
-  const allowed = useCan("ai.use");
+  const off = use(AiOff);
+  const allowed = useCan("ai.use") && !off;
   const status = useAiStatus(allowed);
   return allowed && status.data === true;
 }
+
+/**
+ * AiOff, provided as true, takes every AI entry point under it away, as
+ * though the user held no `ai.use`: a recipient of a shared test gets no AI
+ * in its builder (R7 Access Modes, Q1), since the assistant spends the
+ * caller's credits and its questions would land in the owner's bank.
+ */
+export const AiOff = createContext(false);
 
 /**
  * blockOf reads a month of usage as the reason the assistant cannot be used,

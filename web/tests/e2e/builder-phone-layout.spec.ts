@@ -1,5 +1,5 @@
 import { expect, test, type Page } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, ownedByAdmin, sessionAs, stubApi } from "./support/api";
 import type { components } from "../../src/lib/api/schema";
 
 const TEST_ID = "018f0000-0000-7000-8000-0000000002a1";
@@ -97,6 +97,7 @@ const draft: components["schemas"]["Test"] = {
   skills: [],
   assignments: { live: 0, scheduled: 0, closed: 0 },
   unpublishedChanges: null,
+  ...ownedByAdmin,
   id: TEST_ID,
   title: "Đề thi chưa đặt tên",
   description: null,

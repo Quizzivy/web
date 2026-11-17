@@ -5,6 +5,7 @@ import { clearAuthoringDrafts } from "@/lib/drafts/store";
 import { clearAnswerDrafts } from "@/features/take-test/draft";
 import { clearGroupPlayDrafts } from "@/features/take-test/groupPlaybackDraft";
 import { clearHeldSessions } from "@/features/take-test/heldSession";
+import { clearDrafts as clearMessageDrafts } from "@/features/messages/drafts";
 import {
   finishTransition,
   isTransitionCurrent,
@@ -30,6 +31,7 @@ export function beginAccountDeparture(
   clearAnswerDrafts();
   clearGroupPlayDrafts();
   clearHeldSessions();
+  clearMessageDrafts();
   if (useAppState.getState().overlay.kind === "expired")
     useAppState.getState().closeOverlay();
   let cleanup: Promise<void> | null = null;

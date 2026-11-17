@@ -3,11 +3,11 @@ import { act, render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { http, HttpResponse } from "msw";
-import { Toaster } from "@/components/ui/sonner";
+import { Toaster, toast } from "@/components/ui/sonner";
 import { NotificationsSection } from "@/features/settings/sections/Notifications";
 import { useAuthStore } from "@/stores/auth";
 import { contractJson } from "@tests/support/contractResponse";
-import { teacherUser } from "@tests/support/fixtures";
+import { notificationDefaults, teacherUser } from "@tests/support/fixtures";
 import { server } from "@tests/support/server";
 import { BASE, REQUEST_ID, signIn } from "./support";
 import "@/lib/i18n";
@@ -18,6 +18,8 @@ const STORED = [
   { event: "assignment.closing", inApp: false, email: false },
   { event: "assignment.due_soon", inApp: false, email: false },
   { event: "result.ready", inApp: true, email: false },
+  { event: "message.received", inApp: true, email: false },
+  { event: "summary.weekly", inApp: false, email: true },
 ] as const;
 
 let saved: unknown[] = [];
@@ -54,22 +56,123 @@ function renderSection() {
 
 const toggle = (update: string) =>
   screen.getByRole("switch", { name: `${update} trong ứng dụng` });
+const byEmail = (update: string) =>
+  screen.getByRole("switch", { name: `${update} qua email` });
+
+/** The deck's rows, in its order, with their hints. */
+const ROWS = [
+  ["Học viên nộp bài", "Gộp lại mỗi 15 phút"],
+  ["Một lượt làm bài bị gắn cờ", "Rời khỏi bài quá số lần cho phép"],
+  ["Tin nhắn mới", "Tin nhắn riêng từ học viên"],
+  ["Bài giao sắp đóng", "Trước 1 giờ, kèm những ai chưa nộp"],
+  ["Tổng kết tuần", "Sáng thứ Hai, theo từng lớp"],
+] as const;
 
 describe("the Notifications card", () => {
-  it("draws the teacher's three updates with an In app switch each, as stored", async () => {
+  it("draws the deck's grid: Update, In app and Email, and its five rows in order", async () => {
     renderSection();
 
     expect(screen.getByRole("heading", { name: "Thông báo" })).toBeVisible();
     expect(screen.getByText("Chọn nơi mỗi cập nhật đến với bạn.")).toBeVisible();
     expect(await screen.findByText("Gộp lại mỗi 15 phút")).toBeVisible();
-    expect(toggle("Học viên nộp bài")).toBeChecked();
-    expect(toggle("Một lượt làm bài bị gắn cờ")).toBeChecked();
-    expect(toggle("Bài giao sắp đóng")).not.toBeChecked();
-    expect(screen.getAllByRole("switch")).toHaveLength(3);
-    expect(screen.queryByText(/Email/)).toBeNull();
+    const head = screen.getByText("Cập nhật").parentElement!;
+    expect([...head.children].map((cell) => cell.textContent)).toEqual([
+      "Cập nhật",
+      "Trong ứng dụng",
+      "Email",
+    ]);
+    expect(
+      screen
+        .getAllByRole("switch")
+        .map((control) => control.getAttribute("aria-label")),
+    ).toEqual(
+      ROWS.flatMap(([update]) => [`${update} trong ứng dụng`, `${update} qua email`]),
+    );
+    for (const [update, hint] of ROWS) {
+      expect(toggle(update)).toHaveAccessibleDescription(hint);
+      expect(byEmail(update)).toHaveAccessibleDescription(hint);
+    }
   });
 
-  it("saves a switch turned off with the other four as they were read", async () => {
+  it("shows each switch as stored", async () => {
+    renderSection();
+    await screen.findByText("Gộp lại mỗi 15 phút");
+
+    expect(toggle("Học viên nộp bài")).toBeChecked();
+    expect(byEmail("Học viên nộp bài")).not.toBeChecked();
+    expect(byEmail("Một lượt làm bài bị gắn cờ")).toBeChecked();
+    expect(toggle("Bài giao sắp đóng")).not.toBeChecked();
+    expect(toggle("Tổng kết tuần")).not.toBeChecked();
+    expect(byEmail("Tổng kết tuần")).toBeChecked();
+  });
+
+  it("renders the server's defaults as the deck's table has them (T-R7.13)", async () => {
+    server.use(
+      http.get(`${BASE}/me/notification-preferences`, () =>
+        contractJson("/me/notification-preferences", "get", 200, notificationDefaults),
+      ),
+    );
+    renderSection();
+    await screen.findByText("Gộp lại mỗi 15 phút");
+
+    expect(
+      ROWS.map(([update]) => [
+        update,
+        (toggle(update) as HTMLButtonElement).getAttribute("aria-checked"),
+        (byEmail(update) as HTMLButtonElement).getAttribute("aria-checked"),
+      ]),
+    ).toEqual([
+      ["Học viên nộp bài", "true", "false"],
+      ["Một lượt làm bài bị gắn cờ", "true", "true"],
+      ["Tin nhắn mới", "true", "true"],
+      ["Bài giao sắp đóng", "true", "false"],
+      ["Tổng kết tuần", "false", "true"],
+    ]);
+  });
+
+  it("saves an Email switch, and an In app one of another row, with every other row as read", async () => {
+    const user = renderSection();
+    await screen.findByText("Gộp lại mỗi 15 phút");
+
+    await user.click(byEmail("Học viên nộp bài"));
+    await user.click(toggle("Tin nhắn mới"));
+    await user.click(screen.getByRole("button", { name: "Lưu thay đổi" }));
+
+    await waitFor(() =>
+      expect(saved).toEqual([
+        [
+          { event: "attempt.submitted", inApp: true, email: true },
+          { event: "attempt.flagged", inApp: true, email: true },
+          { event: "assignment.closing", inApp: false, email: false },
+          { event: "assignment.due_soon", inApp: false, email: false },
+          { event: "result.ready", inApp: true, email: false },
+          { event: "message.received", inApp: false, email: false },
+          { event: "summary.weekly", inApp: false, email: true },
+        ],
+      ]),
+    );
+    expect(await screen.findByText("Đã lưu cài đặt")).toBeInTheDocument();
+    expect(byEmail("Học viên nộp bài")).toBeChecked();
+    expect(toggle("Học viên nộp bài")).toBeChecked();
+    // Sonner keeps its toasts between renders: clear this one for the next test.
+    act(() => {
+      toast.dismiss();
+    });
+    await waitFor(() => expect(screen.queryByText("Đã lưu cài đặt")).toBeNull());
+  });
+
+  it("returns focus to the Email switch last changed after Discard", async () => {
+    const user = renderSection();
+    await screen.findByText("Gộp lại mỗi 15 phút");
+
+    await user.click(byEmail("Tổng kết tuần"));
+    await user.click(screen.getByRole("button", { name: "Bỏ thay đổi" }));
+
+    expect(byEmail("Tổng kết tuần")).toBeChecked();
+    expect(byEmail("Tổng kết tuần")).toHaveFocus();
+  });
+
+  it("saves a switch turned off with the other six rows as they were read", async () => {
     const user = renderSection();
     await screen.findByText("Gộp lại mỗi 15 phút");
 
@@ -85,6 +188,8 @@ describe("the Notifications card", () => {
           { event: "assignment.closing", inApp: false, email: false },
           { event: "assignment.due_soon", inApp: false, email: false },
           { event: "result.ready", inApp: true, email: false },
+          { event: "message.received", inApp: true, email: false },
+          { event: "summary.weekly", inApp: false, email: true },
         ],
       ]),
     );

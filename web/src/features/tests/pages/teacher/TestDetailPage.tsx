@@ -10,6 +10,7 @@ import {
 } from "@tanstack/react-query";
 import {
   ClipboardList,
+  Eye,
   FileClock,
   GitCompare,
   History,
@@ -17,6 +18,7 @@ import {
   Pencil,
   PencilLine,
   Smartphone,
+  UserPlus,
 } from "lucide-react";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { LoadError } from "@/components/shared/ListState";
@@ -49,8 +51,14 @@ import { VariantAction } from "@/features/tests/components/VariantAction";
 import { VersionChanges } from "@/features/tests/components/VersionChanges";
 import {
   VersionHistory,
+  type VersionActions,
   type VersionAction,
 } from "@/features/tests/components/VersionHistory";
+import { ShareDialog, useCanShare } from "@/features/sharing";
+import { useCan } from "@/features/auth/permissions";
+import { useTestAccess, type TestAccess } from "@/features/tests/access";
+import { AccessOwnerLine } from "@/features/tests/components/AccessBanner";
+import { MakeCopyAction } from "@/features/tests/components/MakeCopyAction";
 import { assignedLabel } from "@/features/tests/testFacts";
 import { diffSummary } from "@/features/tests/versionDiff";
 import { useContentWidthAtLeast } from "@/layouts/shell/contentWidth";
@@ -72,7 +80,9 @@ const PILL: Record<TestStatus, string> = {
   archived: `${PILL_SHAPE} bg-muted text-muted-fg [&>[aria-hidden]]:bg-muted-fg`,
 };
 
-const HEAD_BUTTON = "shadow-card h-9";
+// 44px below 1024, as the builder's title bar and the set page have it (R7
+// Access Modes, test detail at 360).
+const HEAD_BUTTON = "shadow-card h-9 max-[1023px]:h-11";
 
 const BANNER_BUTTON = "h-8 rounded-md px-3 text-sm";
 
@@ -204,6 +214,8 @@ function TestDetail({ test }: Readonly<{ test: Test }>) {
   );
   const id = test.id;
   const archived = test.status === "archived";
+  const access = useTestAccess(test);
+  const canPublish = useCan("content.tests.publish");
 
   const versions = useQuery({
     queryKey: ["teacher-test-versions", id],
@@ -267,6 +279,7 @@ function TestDetail({ test }: Readonly<{ test: Test }>) {
       onSelect={(version) =>
         update({ version: String(version), compare: null, history: null })
       }
+      can={versionActions(access)}
       onAction={(kind, version) => {
         change.reset();
         setAction({ kind, version });
@@ -276,12 +289,17 @@ function TestDetail({ test }: Readonly<{ test: Test }>) {
 
   return (
     <div className="flex min-w-0 flex-col gap-4">
-      <DetailHead test={test} wide={wide} onHistory={() => update({ history: "1" })} />
-      {(test.unpublishedChanges ?? 0) > 0 && !archived ? (
+      <DetailHead
+        test={test}
+        access={access}
+        wide={wide}
+        onHistory={() => update({ history: "1" })}
+      />
+      {(test.unpublishedChanges ?? 0) > 0 && !archived && !access.readOnly ? (
         <DraftBanner
           test={test}
           next={test.nextVersion}
-          onPublish={() => setPublishing(true)}
+          onPublish={access.mine || canPublish ? () => setPublishing(true) : undefined}
         />
       ) : null}
       <div
@@ -349,6 +367,18 @@ function TestDetail({ test }: Readonly<{ test: Test }>) {
   );
 }
 
+/**
+ * versionActions is what a version card offers by access (R7 Access Modes,
+ * test detail, note 4): the owner everything; Can edit Restore as draft and
+ * Make default, since deleting a version stays the owner's (Q2); Can use
+ * nothing, as it reads the history only.
+ */
+function versionActions(access: TestAccess): VersionActions {
+  if (access.readOnly) return { draft: false, current: false, delete: false };
+  if (access.access === "edit") return { draft: true, current: true, delete: false };
+  return { draft: true, current: true, delete: true };
+}
+
 const DONE: Record<VersionAction, string> = {
   draft: "tests.detail.restore.done",
   current: "tests.detail.makeDefault.done",
@@ -387,12 +417,30 @@ function useVersionSummaries(
 
 function DetailHead({
   test,
+  access,
   wide,
   onHistory,
-}: Readonly<{ test: Test; wide: boolean; onHistory: () => void }>) {
+}: Readonly<{
+  test: Test;
+  access: TestAccess;
+  wide: boolean;
+  onHistory: () => void;
+}>) {
   const { t } = useTranslation();
   const locale = useLocale();
+  const client = useQueryClient();
+  const canShare = useCanShare()(test);
+  const [sharing, setSharing] = useState(false);
   const assignLocked = assignLockedReason(test, t);
+  // A recipient's live assignments would be the owner's, so they are left out (Q4).
+  const recipient = access.access !== "owner";
+  const facts = [
+    t("tests.questionCount", { count: test.questionCount }),
+    t("tests.pointCount", {
+      count: test.totalPoints,
+      points: new Intl.NumberFormat(locale).format(test.totalPoints),
+    }),
+  ];
   return (
     <PageHead
       title={nfc(test.title)}
@@ -414,15 +462,36 @@ function DetailHead({
               {t("tests.detail.versionHistory")}
             </Button>
           )}
-          <VariantAction test={test} className={HEAD_BUTTON} />
+          {recipient ? (
+            <MakeCopyAction test={test} className={HEAD_BUTTON} />
+          ) : (
+            <VariantAction test={test} className={HEAD_BUTTON} />
+          )}
+          {canShare ? (
+            <Button
+              variant="outline"
+              className={HEAD_BUTTON}
+              onClick={() => setSharing(true)}
+            >
+              <UserPlus aria-hidden="true" />
+              {test.sharedWith > 0
+                ? t("sharing.entry.sharedWith", { count: test.sharedWith })
+                : t("sharing.share")}
+            </Button>
+          ) : null}
           <Button asChild variant="outline" className={HEAD_BUTTON}>
             <Link to={`/teacher/tests/${test.id}/edit`}>
-              <Pencil aria-hidden="true" />
+              {/* Can use opens the builder read-only (R7 Access Modes, test detail). */}
+              {access.readOnly ? (
+                <Eye aria-hidden="true" />
+              ) : (
+                <Pencil aria-hidden="true" />
+              )}
               {t("tests.detail.openBuilder")}
             </Link>
           </Button>
           {assignLocked === null ? (
-            <Button asChild className="h-9">
+            <Button asChild className="h-9 max-[1023px]:h-11">
               <Link to={`/teacher/assignments/new?test=${test.id}`}>
                 <ClipboardList aria-hidden="true" />
                 {t("tests.detail.assign")}
@@ -430,7 +499,7 @@ function DetailHead({
             </Button>
           ) : (
             <Button
-              className="h-9 aria-disabled:cursor-default"
+              className="h-9 aria-disabled:cursor-default max-[1023px]:h-11"
               aria-disabled="true"
               title={assignLocked}
             >
@@ -441,16 +510,42 @@ function DetailHead({
         </>
       }
     >
-      <p className="text-muted-fg text-sm">
-        {t("tests.detail.meta", {
-          questions: t("tests.questionCount", { count: test.questionCount }),
-          points: t("tests.pointCount", {
-            count: test.totalPoints,
-            points: new Intl.NumberFormat(locale).format(test.totalPoints),
-          }),
-          assigned: assignedLabel(test, t),
-        })}
-      </p>
+      {access.mine ? (
+        <p className="text-muted-fg text-sm">
+          {t("tests.detail.meta", {
+            questions: facts[0],
+            points: facts[1],
+            assigned: assignedLabel(test, t),
+          })}
+        </p>
+      ) : (
+        <AccessOwnerLine access={access}>
+          <span>
+            {recipient
+              ? facts.join(" · ")
+              : t("tests.detail.meta", {
+                  questions: facts[0],
+                  points: facts[1],
+                  assigned: assignedLabel(test, t),
+                })}
+          </span>
+        </AccessOwnerLine>
+      )}
+      {sharing ? (
+        <ShareDialog
+          open
+          onOpenChange={setSharing}
+          kind="test"
+          resourceId={test.id}
+          name={test.title}
+          onSharedChange={() =>
+            void Promise.all([
+              client.invalidateQueries({ queryKey: ["teacher-test", test.id] }),
+              client.invalidateQueries({ queryKey: ["teacher-tests"] }),
+            ])
+          }
+        />
+      ) : null}
     </PageHead>
   );
 }
@@ -468,7 +563,7 @@ function DraftBanner({
   test,
   next,
   onPublish,
-}: Readonly<{ test: Test; next: number; onPublish: () => void }>) {
+}: Readonly<{ test: Test; next: number; onPublish?: (() => void) | undefined }>) {
   const { t } = useTranslation();
   return (
     <div className="bg-warning-soft text-warning-ink flex flex-wrap items-center gap-3 rounded-xl px-3.5 py-3">
@@ -486,9 +581,11 @@ function DraftBanner({
           {t("tests.detail.banner.review")}
         </Link>
       </Button>
-      <Button className={cn(BANNER_BUTTON, "font-semibold")} onClick={onPublish}>
-        {t("tests.detail.banner.publish", { n: next })}
-      </Button>
+      {onPublish === undefined ? null : (
+        <Button className={cn(BANNER_BUTTON, "font-semibold")} onClick={onPublish}>
+          {t("tests.detail.banner.publish", { n: next })}
+        </Button>
+      )}
     </div>
   );
 }

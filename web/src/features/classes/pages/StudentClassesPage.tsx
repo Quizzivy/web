@@ -2,12 +2,15 @@ import { useState } from "react";
 import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
-import { Plus } from "lucide-react";
+import { Link } from "react-router";
+import { MessageSquare, Plus } from "lucide-react";
+import { modules } from "@/app/modules";
 import { EmptyState, LoadError } from "@/components/shared/ListState";
 import { Avatar } from "@/components/ui/avatar";
 import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { listMyAssignments } from "@/features/assignments/api";
+import { studentThreadPath } from "@/features/messages/studentApi";
 import { nextByClass, type ComingUpRow } from "@/features/assignments/studentHome";
 import { JoinDialog } from "@/features/join/components/JoinDialog";
 import { useMinute } from "@/hooks/useTick";
@@ -45,7 +48,9 @@ function nextLine(next: ComingUpRow, now: Date, locale: Locale, t: TFunction): s
  * StudentClassesPage is the student's Classes screen, as the design deck
  * draws it: the classes as cards, each with its teacher and the paper that
  * comes next there, and "Join a class", which opens the Join dialog. A card is
- * not a link, and nothing here leaves a class. "Next" follows Home's order and
+ * not a link, and nothing here leaves a class; its one link is the message
+ * button beside the teacher, which opens their thread once Messages has
+ * shipped (T-R7.21). "Next" follows Home's order and
  * repaints each minute. Until the timetable ships, the line under a class's
  * name is its description. A list that has loaded stays on screen when a
  * later refetch fails.
@@ -163,6 +168,23 @@ function ClassCard({ klass: c, next }: Readonly<{ klass: MyClass; next: Next }>)
                 {t("student.classes.teacher")}
               </span>
             </span>
+            {modules.messages && c.teacherId !== null && (
+              <Button
+                asChild
+                variant="outline"
+                size="icon"
+                className="ml-auto max-[1023px]:size-11"
+              >
+                <Link
+                  to={studentThreadPath({ kind: "direct", id: c.teacherId })}
+                  aria-label={t("messages.student.messageTeacher", {
+                    name: c.teacherName,
+                  })}
+                >
+                  <MessageSquare aria-hidden="true" className="size-4" />
+                </Link>
+              </Button>
+            )}
           </div>
         )}
       </div>

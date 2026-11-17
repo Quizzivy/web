@@ -35,10 +35,11 @@ const COLUMNS = [
  * and so overflows the table by up to 62px beside the aside; this drops the
  * column instead.
  */
-export function bankThresholds(aside: number): Record<string, number> {
+export function bankThresholds(aside: number, used = true): Record<string, number> {
   let need = BASE;
   const out: Record<string, number> = {};
   for (const column of COLUMNS) {
+    if (!used && column.id === "used") continue;
     need += GAP + column.track;
     out[column.id] = Math.max(column.deckFrom, need + aside);
   }
@@ -49,11 +50,16 @@ export function bankThresholds(aside: number): Record<string, number> {
  * bankColumns is the bank's table as the deck draws it: Question with its
  * tags, then Level, Type, Used and Updated as the content width allows
  * (bankThresholds). Below the Type column's threshold the Question cell
- * carries the type and level on a second line.
+ * carries the type and level on a second line. Without `used` the Used
+ * column is left out: a set's recipient does not see the owner's tests.
  */
-export function bankColumns(t: TFunction, aside: number): DataColumn<AdminQuestion>[] {
-  const from = bankThresholds(aside);
-  return [
+export function bankColumns(
+  t: TFunction,
+  aside: number,
+  { used = true }: Readonly<{ used?: boolean }> = {},
+): DataColumn<AdminQuestion>[] {
+  const from = bankThresholds(aside, used);
+  const columns: DataColumn<AdminQuestion>[] = [
     {
       id: "question",
       header: t("bank.prompt"),
@@ -92,4 +98,5 @@ export function bankColumns(t: TFunction, aside: number): DataColumn<AdminQuesti
       cell: (question) => <UpdatedCell question={question} />,
     },
   ];
+  return used ? columns : columns.filter((column) => column.id !== "used");
 }

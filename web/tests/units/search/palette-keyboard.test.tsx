@@ -96,6 +96,7 @@ function student() {
       flaggedCount: 0,
       activity: { live: false, lastAttemptAt: null },
     },
+    canMessage: true,
   };
 }
 
@@ -104,6 +105,9 @@ function test() {
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: null,
+    access: "owner",
+    owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
+    sharedWith: 0,
     id: TEST_ID,
     title: "Unit 5 — Present perfect",
     description: null,
@@ -303,10 +307,27 @@ describe("the command palette as it opens", () => {
       "Ngân hàng câu hỏi",
       "Học viên",
       "Lớp học",
+      "Tin nhắn",
       "Thư viện media",
       "Cài đặt",
     ]);
     expect(asked.some(({ path }) => path === "/teacher/tests")).toBe(false);
+  });
+
+  it("offers Messages to every teacher, opening it, and Shared with me to none, as the deck has it", async () => {
+    grant([]);
+    const user = renderPalette();
+    const pages = () =>
+      within(list().getByRole("group", { name: "Trang" }))
+        .getAllByRole("option")
+        .map((option) => option.textContent);
+    await waitFor(() => expect(pages()).toContain("Tin nhắn"));
+    expect(pages()).not.toContain("Được chia sẻ với tôi");
+
+    await user.type(screen.getByRole("combobox"), "tin nhan");
+    await waitFor(() => expect(pages()).toEqual(["Tin nhắn"]));
+    await user.keyboard("{Enter}");
+    expect(await screen.findByText("/teacher/messages")).toBeVisible();
   });
 
   it("leaves out a page and a group the user cannot open", async () => {

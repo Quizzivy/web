@@ -417,7 +417,15 @@
       "aiDeclined": "Yêu cầu thêm {{credits}} tín dụng AI của bạn đã bị từ chối",
       "transferred_other": "Nội dung của {{teacherName}} đã được chuyển cho bạn: {{count}} mục",
       "teacherReceived": "Bạn được giao dạy lớp {{className}}",
-      "teacherChanged": "Lớp {{className}} đã được giao cho {{teacherName}}"
+      "teacherChanged": "Lớp {{className}} đã được giao cho {{teacherName}}",
+      "sharedTest": "{{sharerName}} đã chia sẻ đề thi {{name}} với bạn",
+      "sharedSet": "{{sharerName}} đã chia sẻ bộ câu hỏi {{name}} với bạn",
+      "coPublished": "{{editorName}} đã phát hành phiên bản {{version}} của {{title}}",
+      "message": "{{senderName}}: “{{excerpt}}”",
+      "messageMany": "{{count}} tin nhắn mới từ {{senderName}}: “{{excerpt}}”",
+      "classMessage": "Thông báo lớp mới ở {{className}} · {{senderName}}: “{{excerpt}}”",
+      "classMessageMany": "{{count}} thông báo lớp mới ở {{className}} · {{senderName}}: “{{excerpt}}”",
+      "weekly_other": "Tuần qua: {{count}} bài nộp, {{toGrade}} bài chờ chấm, {{flagged}} lượt bị gắn cờ"
     },
     "bell": {
       "label": "Thông báo",
@@ -502,5 +510,43 @@
     "true": "Đúng",
     "false": "Sai",
     "notGiven": "Không có thông tin"
+  },
+  "messages": {
+    "title": "Tin nhắn",
+    "labelUnread_other": "Tin nhắn, {{count}} chưa đọc",
+    "back": "Về danh sách",
+    "loadEarlier": "Xem tin nhắn cũ hơn",
+    "earlierFailed": "Chưa tải được tin nhắn cũ hơn. Hãy thử lại.",
+    "announcement": "Thông báo · {{time}}",
+    "sending": "Đang gửi…",
+    "failed": "Chưa gửi được.",
+    "placeholderDirect": "Nhắn cho {{name}}…",
+    "send": "Gửi",
+    "accountOff": "Tài khoản của {{name}} đã bị vô hiệu hoá nên không nhắn được.",
+    "day": {
+      "today": "Hôm nay",
+      "yesterday": "Hôm qua"
+    },
+    "list": {
+      "label": "Cuộc trò chuyện",
+      "unread_other": "{{count}} tin nhắn chưa đọc",
+      "error": "Không tải được tin nhắn."
+    },
+    "thread": {
+      "empty": "Chưa có tin nhắn.",
+      "channelEmpty": "Chưa có thông báo nào.",
+      "error": "Không tải được cuộc trò chuyện này."
+    },
+    "chip": {
+      "download": "Tải xuống {{name}}",
+      "meta": "{{kind}} · {{size}}",
+      "kind": {
+        "pdf": "PDF",
+        "word": "Word",
+        "image": "Ảnh",
+        "audio": "Âm thanh"
+      },
+      "downloadFailed": "Chưa tải được tệp. Hãy thử lại."
+    }
   }
 }

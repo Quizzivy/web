@@ -248,6 +248,9 @@
       "dueSoonHint": "The day before and 1 hour before it closes",
       "resultReady": "Result ready",
       "resultReadyHint": "When your teacher finishes grading",
+      "messages": "Messages from teachers",
+      "messagesHint": "Announcements and direct messages",
+      "bothChannels": "Each update that is on also reaches you by email at {{email}}.",
       "loadFailed": "Couldn't load your notification settings.",
       "saveFailed": "Your change wasn't saved. Try again."
     }
@@ -343,5 +346,17 @@
       "questions": "Questions {{from}}–{{to}}"
     },
     "band": "Band {{band}}"
+  },
+  "messages": {
+    "student": {
+      "empty": "No messages yet. Your teachers’ announcements appear here.",
+      "teacher": "Your teacher",
+      "teacherSub": "Your teacher · {{classes}}",
+      "former": "Former teacher",
+      "channelSub": "Class announcements",
+      "readOnly": "Only your teacher can post here.",
+      "reply": "Reply to {{name}} directly",
+      "messageTeacher": "Message {{name}}"
+    }
   }
 }

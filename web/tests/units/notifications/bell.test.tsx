@@ -21,6 +21,7 @@ import { viewport } from "@tests/support/viewport";
 import {
   BASE,
   assignmentId,
+  collaborationNotices,
   errorResponse,
   id,
   listResponse,
@@ -226,6 +227,50 @@ function held() {
   });
   return { gate, release };
 }
+
+describe("R7's kinds in the bell (T-R7.23)", () => {
+  const expected = {
+    teacher: [
+      "/teacher/shared-with-me",
+      "/teacher/shared-with-me",
+      `/teacher/tests/${collaborationNotices[2]!.target!.testId}`,
+      `/teacher/messages/student/${collaborationNotices[3]!.target!.studentId}`,
+      "/teacher",
+    ],
+    student: [
+      `/messages/teacher/${collaborationNotices[4]!.target!.teacherId}`,
+      `/messages/class/${collaborationNotices[5]!.target!.classId}`,
+    ],
+  };
+
+  it.each(["teacher", "student"] as const)(
+    "lists the %s's new kinds only, and each row goes to its page",
+    async (audience) => {
+      const rows = collaborationNotices.filter(
+        (notice) => audienceOf(notice.kind) === audience,
+      );
+      const others = collaborationNotices.filter((notice) => !rows.includes(notice));
+      expect(
+        rows.map(
+          (notice) => describeNotification(notice, i18n.getFixedT("vi"), "vi")!.to,
+        ),
+      ).toEqual(expected[audience]);
+      for (const [index, notice] of rows.entries()) {
+        serveList(collaborationNotices);
+        const { user, router } = renderBell(audience);
+        const panel = await openBell(user);
+        const row = await within(panel).findByText(textOf(notice));
+        for (const other of others)
+          expect(within(panel).queryByText(textOf(other))).toBeNull();
+        await user.click(row);
+        await waitFor(() =>
+          expect(router.state.location.pathname).toBe(expected[audience][index]),
+        );
+        document.body.innerHTML = "";
+      }
+    },
+  );
+});
 
 describe("keeping focus while a request is out (QA-43-1, QA-47-1)", () => {
   it("keeps focus on Mark all read while it marks, and after nothing is left unread", async () => {

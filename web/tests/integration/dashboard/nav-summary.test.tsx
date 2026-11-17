@@ -118,7 +118,7 @@ describe("actual summary and home cache lifecycle", () => {
     board();
     await waitFor(() =>
       expect(screen.getByLabelText("counts")).toHaveTextContent(
-        '{"liveAssignments":3,"toGrade":null,"unread":2}',
+        '{"liveAssignments":3,"toGrade":null,"unread":2,"unreadMessages":0,"sharedWithMe":0}',
       ),
     );
     expect(summaryReads).toBe(1);
@@ -142,7 +142,7 @@ describe("actual summary and home cache lifecycle", () => {
     await act(() => client.invalidateQueries({ queryKey: ["teacher-dashboard"] }));
     await waitFor(() =>
       expect(screen.getByLabelText("counts")).toHaveTextContent(
-        '{"liveAssignments":null,"toGrade":null,"unread":2}',
+        '{"liveAssignments":null,"toGrade":null,"unread":2,"unreadMessages":0,"sharedWithMe":0}',
       ),
     );
     server.use(

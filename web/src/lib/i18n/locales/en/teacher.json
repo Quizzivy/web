@@ -390,6 +390,7 @@
       "classes": "Classes",
       "students": "Students",
       "tests": "Tests",
+      "sharedWithMe": "Shared with me",
       "questionBank": "Question bank",
       "media": "Media"
     },
@@ -397,7 +398,11 @@
       "live_one": "{{count}} live assignment",
       "live_other": "{{count}} live assignments",
       "toGrade_one": "{{count}} answer to grade",
-      "toGrade_other": "{{count}} answers to grade"
+      "toGrade_other": "{{count}} answers to grade",
+      "unreadMessages_one": "{{count}} unread message",
+      "unreadMessages_other": "{{count}} unread messages",
+      "shared_one": "{{count}} item shared with you",
+      "shared_other": "{{count}} items shared with you"
     },
     "sidebar": {
       "collapse": "Collapse sidebar",
@@ -733,14 +738,20 @@
       "update": "Update",
       "inApp": "In app",
       "inAppFor": "{{update}} in app",
+      "email": "Email",
+      "emailFor": "{{update}} by email",
       "loadFailed": "Your notification settings could not be loaded.",
       "events": {
         "submitted": "A student submits",
         "submittedHint": "Grouped every 15 minutes",
         "flagged": "An attempt is flagged",
         "flaggedHint": "Focus lost more than allowed",
+        "message": "New message",
+        "messageHint": "Direct messages from students",
         "closing": "An assignment is about to close",
-        "closingHint": "1 hour before, with who has not submitted"
+        "closingHint": "1 hour before, with who has not submitted",
+        "weekly": "Weekly summary",
+        "weeklyHint": "Monday morning, per class"
       }
     },
     "defaults": {
@@ -824,6 +835,9 @@
     "chooseFile": "Choose a file from your device",
     "delete": "Delete",
     "deleteFailed": "Could not delete the file.",
+    "deleteInUseElsewhere_one": "It can't be deleted: {{count}} question or group that another teacher owns uses this file.",
+    "deleteInUseElsewhere_other": "It can't be deleted: {{count}} questions or groups that other teachers own use this file.",
+    "deleteInUseElsewhereUncounted": "It can't be deleted: questions or groups that other teachers own use this file.",
     "emptyAudio": "No listening files yet. Upload your first one to get started.",
     "emptyImages": "No images yet. Upload your first image to get started.",
     "loadFailed": "Could not load the media library.",
@@ -1173,7 +1187,20 @@
         "lexical": "Lexical resource",
         "grammar": "Grammatical range and accuracy"
       }
-    }
+    },
+    "viewTitle": "View question",
+    "access": {
+      "editRest": "If {{name}} uses this question elsewhere, your change is saved as a new copy.",
+      "useLead": "You can open this question but not change it.",
+      "useRest": "Make a copy to have your own.",
+      "contextLead": "You can change this question when you open it from the set or test it was shared in."
+    },
+    "stale": {
+      "title": "{{name}} changed this question at {{time}}.",
+      "titleUnknown": "This question was changed somewhere else at {{time}}.",
+      "body": "Reload to see their changes. Unsaved changes here will be lost."
+    },
+    "forked": "Saved as a new copy of this question, because {{name}} uses the original elsewhere."
   },
   "builder": {
     "dragInstructions": "Press Space to pick up an item, use the arrow keys to move, then press Space to drop or Escape to cancel.",
@@ -1343,7 +1370,19 @@
       "inTest": "In this test"
     },
     "noCorrectAnswer": "No correct answer set",
-    "groupNeedsWork": "A question is not finished"
+    "groupNeedsWork": "A question is not finished",
+    "access": {
+      "editRest": "Questions you add also go into {{name}}’s bank.",
+      "useLead": "You can open this test but not change it.",
+      "useRest": "Assign it to your classes, or make a copy to edit."
+    },
+    "staleBy": {
+      "title": "{{name}} changed this test at {{time}}."
+    },
+    "revoked": {
+      "title": "{{name}} stopped sharing this test with you",
+      "body": "Changes after the last save were not saved. Assignments you already made from this test keep working."
+    }
   },
   "bank": {
     "filters": "Filters",
@@ -1423,7 +1462,18 @@
     "clearFilters": "Clear filters",
     "deleteSelectedBody": "Tests that already use them keep their copy. They are removed from the bank.",
     "questionsNoun_one": "question",
-    "questionsNoun_other": "questions"
+    "questionsNoun_other": "questions",
+    "addToSet": "Add to set",
+    "bulkShare": "Share…",
+    "sets": {
+      "title": "Question sets",
+      "empty": "No sets yet. Select questions, then “Add to set” to make your first one.",
+      "showAll_one": "Show all {{count}} sets",
+      "showAll_other": "Show all {{count}} sets",
+      "sharedWith_one": "Shared with {{count}} teacher",
+      "sharedWith_other": "Shared with {{count}} teachers",
+      "loadFailed": "Could not load your sets."
+    }
   },
   "tests": {
     "new": "New test",
@@ -1959,7 +2009,8 @@
         "body": "What you chose for this assignment is not saved. Save a draft to keep it.",
         "confirm": "Leave",
         "stay": "Stay"
-      }
+      },
+      "sharedBy": "Shared by {{name}}"
     },
     "list": {
       "description": "Tests you have sent to classes and students.",
@@ -2017,7 +2068,7 @@
       "by1440": "1 day",
       "byCustom": "Pick a time…",
       "notify": "Notify students",
-      "notifySub": "They get an in-app message.",
+      "notifySub": "They get an in-app and email message.",
       "extendSubmit": "Extend",
       "extended": "Deadline extended by {{by}}.",
       "extendedMany": "{{count}} assignments extended by {{by}}.",
@@ -2142,6 +2193,7 @@
     "statusFacetTitle": "Filter by account",
     "menu": {
       "results": "View results",
+      "message": "Send message",
       "move": "Move to class",
       "reset": "Reset password"
     },
@@ -2151,7 +2203,8 @@
       "remove": "Remove",
       "removeBody_one": "The selected students leave every class they are in ({{count}} membership): {{classes}}. Their accounts and results stay.",
       "removeBody_other": "The selected students leave every class they are in ({{count}} memberships): {{classes}}. Their accounts and results stay.",
-      "resetTooMany": "Up to {{count}} passwords can be reset at once. Select fewer students."
+      "resetTooMany": "Up to {{count}} passwords can be reset at once. Select fewer students.",
+      "message": "Message"
     },
     "removeAll": "Remove",
     "removeAllTitle": "Remove {{name}} from their classes?",
@@ -3941,5 +3994,249 @@
     "enter": "Enter",
     "up": "Up arrow",
     "down": "Down arrow"
+  },
+  "sharing": {
+    "title": "Share “{{name}}”",
+    "onlyYou": "Only you can see it until you share it.",
+    "addPlaceholder": "Add teachers by name or email",
+    "addMore": "Add more",
+    "removePending": "Remove {{name}}",
+    "noMatch": "No teacher matches. You can only share with teachers at this centre.",
+    "searchFailed": "Could not look up teachers. Try again.",
+    "accountDisabled": "Account disabled",
+    "permission": "Permission",
+    "permissionFor": "Permission for {{name}}",
+    "canUse": "Can use",
+    "canEdit": "Can edit",
+    "notify": "Send a notification",
+    "message": "Add a message (optional)",
+    "people": "People with access",
+    "you": "{{name}} (you)",
+    "owner": "Owner",
+    "nobody": "Not shared with anyone yet.",
+    "loadFailed": "Could not load who has access.",
+    "stop": "Stop sharing with {{name}}",
+    "stopTitle": "Stop sharing with {{name}}?",
+    "stopBody": "They lose access right away. Assignments they already made from it keep working for their students.",
+    "stopConfirm": "Stop sharing",
+    "help": {
+      "test": {
+        "use": "Open, assign to their classes and make their own copy.",
+        "edit": "Also change it and publish new versions. You see their changes."
+      },
+      "question_set": {
+        "use": "Open it, add its questions to their tests and make their own copy.",
+        "edit": "Also edit its questions and remove them from the set. You see their changes."
+      }
+    },
+    "footnote": "They can’t share it further or delete it. Their students’ results stay in their own classes.",
+    "share": "Share",
+    "done": "Done",
+    "entry": {
+      "shared": "Shared · {{count}}",
+      "sharedWith": "Shared with {{count}}",
+      "shareNamed": "Share {{name}}",
+      "manage_one": "Shared with {{count}} teacher. Manage sharing",
+      "manage_other": "Shared with {{count}} teachers. Manage sharing"
+    },
+    "toast": {
+      "shared_one": "Shared with {{count}} teacher",
+      "shared_other": "Shared with {{count}} teachers",
+      "sharedNotified_one": "Shared with {{count}} teacher. They’ll get a notification.",
+      "sharedNotified_other": "Shared with {{count}} teachers. They’ll get a notification.",
+      "nowEdit": "{{name}} can now edit it",
+      "nowUse": "{{name}} can now use it",
+      "stopped": "Stopped sharing with {{name}}",
+      "failed": "Could not save the change. Try again.",
+      "forbidden": {
+        "test": "You can no longer share this test.",
+        "question_set": "You can no longer share this set."
+      },
+      "someSkipped_one": "{{count}} skipped",
+      "someSkipped_other": "{{count}} skipped",
+      "skipped": {
+        "alreadyShared": "Already has access: {{names}}",
+        "notATeacher": "Not a teacher at this centre: {{names}}",
+        "disabled": "Account disabled: {{names}}",
+        "self": "That’s you: {{names}}"
+      }
+    },
+    "withMe": {
+      "lead": "Tests and questions other teachers shared with you. They still belong to the teacher who shared them.",
+      "callout": {
+        "use": "lets you open it, assign it to your classes and make your own copy.",
+        "edit": "also lets you change it, and your changes are what the owner sees."
+      },
+      "kinds": "Kind of content",
+      "tab": {
+        "all": "All",
+        "test": "Tests",
+        "question_set": "Questions"
+      },
+      "search": "Search name or teacher",
+      "column": {
+        "name": "Name",
+        "owner": "Shared by",
+        "access": "Access",
+        "sharedAt": "Shared"
+      },
+      "kind": {
+        "test": "Test",
+        "question_set_one": "Question set · {{count}} question",
+        "question_set_other": "Question set · {{count}} questions"
+      },
+      "open": "Open",
+      "copy": "Make a copy",
+      "remove": "Remove from my list",
+      "empty": "Nothing is shared with you yet. When a teacher shares a test or a question set, it appears here.",
+      "noMatch": "Nothing matches.",
+      "clearFilters": "Clear filters",
+      "loadFailed": "Could not load what is shared with you.",
+      "noun_one": "item",
+      "noun_other": "items",
+      "copyTitle": "Make a copy of “{{name}}”?",
+      "copyBody": "The copy is yours: only you can see it, and you can change it freely. {{owner}}’s original does not change.",
+      "removeTitle": "Remove “{{name}}” from your list?",
+      "removeBody": "You lose access to it. Assignments you already made from it keep working. {{owner}} can share it with you again.",
+      "removeBodyDisabled": "You lose access to it. Assignments you already made from it keep working. {{owner}}’s account is disabled, so nobody can share it again for now.",
+      "removeConfirm": "Remove",
+      "toast": {
+        "copied": {
+          "test": "Copied to your Tests",
+          "question_set": "Copied to your Question bank"
+        },
+        "removed": "Removed from Shared with me",
+        "gone": "This is no longer shared with you."
+      }
+    }
+  },
+  "sets": {
+    "add": {
+      "title_one": "Add {{count}} question to a set",
+      "title_other": "Add {{count}} questions to a set",
+      "desc": "A question set is a named list of questions from your bank that you can reuse and share with other teachers.",
+      "existing": "Existing set",
+      "new": "New set",
+      "setLabel": "Question set",
+      "option_one": "{{name}} · {{count}} question",
+      "option_other": "{{name}} · {{count}} questions",
+      "dupNote": "Questions already in the set are skipped.",
+      "full_one": "This set has {{count}} question. A set holds up to 500.",
+      "full_other": "This set has {{count}} questions. A set holds up to 500.",
+      "submit": "Add to set",
+      "create": "Create set"
+    },
+    "nameLabel": "Set name",
+    "namePlaceholder": "For example: Collocations · B1",
+    "descLabel": "Description",
+    "descPlaceholder": "Which class or purpose is this set for?",
+    "shareSel": {
+      "title_one": "Share {{count}} selected question",
+      "title_other": "Share {{count}} selected questions",
+      "desc": "Name these questions as a set, then choose the teachers to share it with. You can add and remove its questions later.",
+      "submit": "Create set and share"
+    },
+    "count_one": "{{count}} question",
+    "count_other": "{{count}} questions",
+    "updated": "Updated {{when}}",
+    "rename": "Rename",
+    "delete": "Delete set",
+    "more": "More actions",
+    "editLead": "Changes you make are saved to {{name}}’s copy.",
+    "editRest": "You can edit the questions and remove them from the set. Only {{name}} can add questions.",
+    "useLead": "You can open this set but not change it.",
+    "useRest": "Add its questions to your tests, or make a copy to edit.",
+    "empty": "This set has no questions yet.",
+    "emptyOwnerHint": "Select questions in the bank, then “Add to set”.",
+    "openBank": "Open the question bank",
+    "loadFailed": "Could not load the question set",
+    "goneTitle": "This question set can’t be opened",
+    "goneBodyOwner": "It may have been deleted.",
+    "goneBody": "It may have been deleted, or its owner stopped sharing it with you.",
+    "backToShared": "Back to Shared with me",
+    "backToBank": "Back to the question bank",
+    "renameTitle": "Rename question set",
+    "deleteTitle": "Delete “{{name}}”?",
+    "deleteBody": "The questions stay in your bank, and tests that use these questions are not affected. Teachers you shared it with can no longer open the set.",
+    "removeFromSet": "Remove from set",
+    "removeTitle_one": "Remove {{count}} question from the set?",
+    "removeTitle_other": "Remove {{count}} questions from the set?",
+    "removeBodyOwner": "They stay in your bank. Tests that use them are not affected.",
+    "removeBody": "They stay in {{name}}’s bank. Only {{name}} can add them back.",
+    "copyBodyOwner": "The copy is a new set with its own questions. Changing either one leaves the other as it is.",
+    "toast": {
+      "added_one": "{{count}} question added to “{{name}}”",
+      "added_other": "{{count}} questions added to “{{name}}”",
+      "created_one": "Set “{{name}}” created with {{count}} question",
+      "created_other": "Set “{{name}}” created with {{count}} questions",
+      "removed_one": "{{count}} question removed from the set",
+      "removed_other": "{{count}} questions removed from the set",
+      "deleted": "Set “{{name}}” deleted",
+      "copiedToTest_one": "{{count}} question copied to your bank and added to {{test}}",
+      "copiedToTest_other": "{{count}} questions copied to your bank and added to {{test}}"
+    }
+  },
+  "messages": {
+    "lead": "Announcements to classes and direct messages with students.",
+    "newAnnouncement": "New announcement",
+    "newAnnouncementOff": "You teach no class yet.",
+    "former": "Former student",
+    "details": "Details",
+    "seenBy": "Seen by {{seen}} of {{of}}",
+    "attemptEvent_one": "{{title}} · left the test {{count}} time",
+    "attemptEvent_other": "{{title}} · left the test {{count}} times",
+    "openAttempt": "Open attempt",
+    "placeholderClass": "Write an announcement to {{name}}…",
+    "attachFile": "Attach file",
+    "classHint_one": "Sent to {{count}} student. Replies come to you as direct messages.",
+    "classHint_other": "Sent to all {{count}} students. Replies come to you as direct messages.",
+    "archived": "This class is archived, so nothing more can be posted.",
+    "announceNotAllowed": "You don’t have permission to post announcements to classes.",
+    "list": {
+      "search": "Search people and classes",
+      "tabs": "Filter conversations",
+      "tabAll": "All",
+      "tabDirect": "Direct",
+      "tabClasses": "Classes",
+      "you": "You: ",
+      "attachment": "Attachment · {{name}}",
+      "classSub_one": "{{count}} student",
+      "classSub_other": "{{count}} students",
+      "empty": "No messages yet. Message a student from Students or post to a class.",
+      "noMatch": "No person or class matches “{{q}}”.",
+      "candidates": "Students not messaged yet"
+    },
+    "thread": {
+      "classSub_one": "{{count}} student · announcements",
+      "classSub_other": "{{count}} students · announcements"
+    },
+    "about": {
+      "student": "Student",
+      "class": "Class",
+      "classes": "Classes with you",
+      "openStudent": "Open in Students",
+      "members": "Members",
+      "count_one": "{{count}} student",
+      "count_other": "{{count}} students",
+      "former": "No longer in any of your classes.",
+      "openClass": "Open the class"
+    },
+    "chip": {
+      "remove": "Remove {{name}}"
+    },
+    "attach": {
+      "title": "Attach a file",
+      "submit": "Attach",
+      "choose": "Choose file",
+      "accept": "PDF, Word, image or audio · up to 20 MB",
+      "uploading": "Uploading… {{percent}}%",
+      "progress": "Uploading {{name}}",
+      "tooBig": "The file is larger than 20 MB. Choose a smaller one.",
+      "badType": "Only PDF, Word (DOC, DOCX), PNG, JPEG, MP3 or M4A files are accepted.",
+      "macro": "A Word file with macros cannot be sent. Save it as a DOCX without macros.",
+      "dimensions": "The image is larger than 10000 × 10000 pixels. Choose a smaller one.",
+      "limit": "Too many uploads in an hour. Try again later.",
+      "failed": "The file could not be uploaded. Try again."
+    }
   }
 }

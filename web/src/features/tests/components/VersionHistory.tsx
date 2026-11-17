@@ -13,6 +13,14 @@ import { cn } from "@/lib/utils";
 /** VersionAction is what a version card's buttons ask the page to confirm. */
 export type VersionAction = "draft" | "current" | "delete";
 
+/**
+ * VersionActions says which of a card's buttons the caller gets (T-R7.18): a
+ * button the caller may not use is left out, not greyed. Without it, all.
+ */
+export type VersionActions = Readonly<Record<VersionAction, boolean>>;
+
+const ALL: VersionActions = { draft: true, current: true, delete: true };
+
 const CARD_BUTTON =
   "h-7 rounded-seg font-medium px-2.5 text-xs disabled:opacity-45 aria-disabled:cursor-default aria-disabled:hover:bg-transparent";
 
@@ -34,10 +42,12 @@ export function VersionHistory({
   selected,
   summaries,
   pending,
+  can = ALL,
   onSelect,
   onAction,
 }: Readonly<{
   test: Test;
+  can?: VersionActions | undefined;
   query: UseQueryResult<{ items: TestVersion[] }>;
   selected: number | undefined;
   summaries: ReadonlyMap<number, string>;
@@ -56,7 +66,7 @@ export function VersionHistory({
           {t("tests.detail.history.archived")}
         </p>
       ) : null}
-      {unpublished || ahead ? <DraftRow test={test} /> : null}
+      {unpublished || ahead ? <DraftRow test={test} edit={can.draft} /> : null}
       {query.isPending ? <ListSkeleton rows={2} /> : null}
       {query.isError ? (
         <LoadError error={query.error} onRetry={() => void query.refetch()}>
@@ -79,6 +89,7 @@ export function VersionHistory({
               summary={summaries.get(version.version)}
               archived={archived}
               pending={pending}
+              can={can}
               onSelect={onSelect}
               onAction={onAction}
             />
@@ -89,7 +100,7 @@ export function VersionHistory({
   );
 }
 
-function DraftRow({ test }: Readonly<{ test: Test }>) {
+function DraftRow({ test, edit }: Readonly<{ test: Test; edit: boolean }>) {
   const { t } = useTranslation();
   const locale = useLocale();
   const when = formatRelative(test.updatedAt, locale);
@@ -106,11 +117,13 @@ function DraftRow({ test }: Readonly<{ test: Test }>) {
             : t("tests.detail.history.draftAhead", { when })}
         </span>
       </span>
-      <Button asChild variant="outline" className={cn(CARD_BUTTON, "shadow-none")}>
-        <Link to={`/teacher/tests/${test.id}/edit`}>
-          {t("tests.detail.history.edit")}
-        </Link>
-      </Button>
+      {edit ? (
+        <Button asChild variant="outline" className={cn(CARD_BUTTON, "shadow-none")}>
+          <Link to={`/teacher/tests/${test.id}/edit`}>
+            {t("tests.detail.history.edit")}
+          </Link>
+        </Button>
+      ) : null}
     </div>
   );
 }
@@ -122,10 +135,12 @@ function VersionCard({
   summary,
   archived,
   pending,
+  can,
   onSelect,
   onAction,
 }: Readonly<{
   version: TestVersion;
+  can: VersionActions;
   isDefault: boolean;
   on: boolean;
   summary: string | undefined;
@@ -189,7 +204,47 @@ function VersionCard({
         </span>
         {note ? <span className="text-muted-fg text-caption">{note}</span> : null}
       </span>
-      <div className="flex flex-wrap gap-1">
+      <VersionButtons
+        n={n}
+        can={can}
+        isDefault={isDefault}
+        inUse={inUse}
+        archived={archived}
+        pending={pending}
+        onAction={onAction}
+      />
+    </li>
+  );
+}
+
+/**
+ * VersionButtons is a card's Restore as draft, Make default and Delete, each
+ * only when `can` gives it; with none of them there is no row.
+ */
+function VersionButtons({
+  n,
+  can,
+  isDefault,
+  inUse,
+  archived,
+  pending,
+  onAction,
+}: Readonly<{
+  n: number;
+  can: VersionActions;
+  isDefault: boolean;
+  inUse: boolean;
+  archived: boolean;
+  pending: boolean;
+  onAction: (kind: VersionAction, version: number) => void;
+}>) {
+  const { t } = useTranslation();
+  const current = can.current && !isDefault;
+  const remove = can.delete && !isDefault;
+  if (!can.draft && !current && !remove) return null;
+  return (
+    <div className="flex flex-wrap gap-1">
+      {can.draft ? (
         <Button
           variant="outline"
           className={cn(CARD_BUTTON, "shadow-none")}
@@ -202,34 +257,34 @@ function VersionCard({
         >
           {t("tests.detail.history.restore")}
         </Button>
-        {isDefault ? null : (
-          <>
-            <Button
-              variant="ghost"
-              className={cn(CARD_BUTTON, "hover:bg-hover")}
-              disabled={archived || pending}
-              onClick={() => onAction("current", n)}
-            >
-              {t("tests.detail.history.makeDefault")}
-            </Button>
-            <Button
-              variant="ghost"
-              className={cn(
-                CARD_BUTTON,
-                "text-danger-ink hover:bg-hover hover:text-danger-ink aria-disabled:text-danger-ink/60 aria-disabled:hover:text-danger-ink/60",
-              )}
-              aria-disabled={inUse || undefined}
-              title={inUse ? t("tests.detail.history.deleteLocked") : undefined}
-              disabled={pending}
-              onClick={() => {
-                if (!inUse) onAction("delete", n);
-              }}
-            >
-              {t("tests.detail.history.delete")}
-            </Button>
-          </>
-        )}
-      </div>
-    </li>
+      ) : null}
+      {current ? (
+        <Button
+          variant="ghost"
+          className={cn(CARD_BUTTON, "hover:bg-hover")}
+          disabled={archived || pending}
+          onClick={() => onAction("current", n)}
+        >
+          {t("tests.detail.history.makeDefault")}
+        </Button>
+      ) : null}
+      {remove ? (
+        <Button
+          variant="ghost"
+          className={cn(
+            CARD_BUTTON,
+            "text-danger-ink hover:bg-hover hover:text-danger-ink aria-disabled:text-danger-ink/60 aria-disabled:hover:text-danger-ink/60",
+          )}
+          aria-disabled={inUse || undefined}
+          title={inUse ? t("tests.detail.history.deleteLocked") : undefined}
+          disabled={pending}
+          onClick={() => {
+            if (!inUse) onAction("delete", n);
+          }}
+        >
+          {t("tests.detail.history.delete")}
+        </Button>
+      ) : null}
+    </div>
   );
 }

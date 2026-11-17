@@ -45,6 +45,12 @@ export type FormDialogProps<V extends FormValues> = Readonly<{
   initial: V;
   fields: readonly FormField<V>[];
   validate?: (values: V) => Partial<Record<keyof V & string, string>> | null;
+  /**
+   * Shows what `validate` finds as soon as the values hold it, rather than
+   * after a submit, for a rule about a choice already made (a set that is
+   * full). Required fields still wait for a submit.
+   */
+  liveErrors?: boolean;
   submitLabel: string | ((values: V) => string);
   cancelLabel?: string | undefined;
   hideCancel?: boolean;
@@ -93,6 +99,7 @@ export function FormDialog<V extends FormValues>({
   initial,
   fields,
   validate,
+  liveErrors = false,
   submitLabel,
   cancelLabel,
   hideCancel = false,
@@ -131,12 +138,8 @@ export function FormDialog<V extends FormValues>({
     });
   const values = state.values;
   const shown = visibleFields(fields, values);
-  const errors = fieldErrors(
-    shown,
-    values,
-    t("formDialog.required"),
-    validate?.(values) ?? null,
-  );
+  const found = validate?.(values) ?? null;
+  const errors = fieldErrors(shown, values, t("formDialog.required"), found);
   const valid = Object.keys(errors).length === 0;
   function submit(event: SubmitEvent<HTMLFormElement>) {
     event.preventDefault();
@@ -208,7 +211,10 @@ export function FormDialog<V extends FormValues>({
             <fieldset disabled={disabled && !pending} className="contents">
               {shown.map((field) => {
                 const fieldId = `${id}-${field.name}`;
-                const message = state.touched ? errors[field.name] : undefined;
+                const message =
+                  state.touched || (liveErrors && found?.[field.name])
+                    ? errors[field.name]
+                    : undefined;
                 const hint =
                   typeof field.hint === "function" ? field.hint(values) : field.hint;
                 const describedBy =
@@ -222,7 +228,7 @@ export function FormDialog<V extends FormValues>({
                     aria-invalid={message !== undefined || undefined}
                     className="flex flex-col gap-1.5"
                   >
-                    {field.label && field.kind !== "toggle" && (
+                    {field.label && field.kind !== "toggle" && !field.hideLabel && (
                       <label htmlFor={fieldId} className="text-meta font-medium">
                         {field.label}
                         {optionalField(field) && (

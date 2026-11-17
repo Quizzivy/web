@@ -44,6 +44,7 @@ const SAMPLE_CLASS = {
   id: "018f0000-0000-7000-8000-0000000000c1",
   name: "IELTS Foundation",
   description: null,
+  teacherId: "0190a000-0000-7000-8000-00000000a101",
   teacherName: "Cô Thương",
   teacherAvatarUrl: null,
   scheduleLabel: null,

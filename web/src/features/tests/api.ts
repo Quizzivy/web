@@ -1,5 +1,6 @@
 import { api } from "@/lib/api/client";
 import type { components } from "@/lib/api/schema";
+import type { QuestionValues } from "@/features/question-bank/questionSchema";
 
 export type Test = components["schemas"]["Test"];
 export type TestSection = components["schemas"]["TestSection"];
@@ -8,6 +9,7 @@ export type TestVersion = components["schemas"]["TestVersion"];
 export type PublishViolation = components["schemas"]["PublishValidationError"];
 export type TestVersionDiff = components["schemas"]["TestVersionDiff"];
 export type DiffChange = components["schemas"]["DiffChange"];
+export type TestQuestionEdit = components["schemas"]["TestQuestionEdit"];
 
 /** What autosave sends: the whole outline, guarded by the version it read. */
 export interface OutlineDraft {
@@ -35,6 +37,8 @@ export function saveOutline(id: string, draft: OutlineDraft) {
 }
 
 export interface ListTestsParams {
+  /** `shared` adds the tests shared with the caller, for the wizard's test step (T-R7.4). */
+  include?: "shared";
   status?: TestStatus;
   /** Repeatable. Matches the tags of the questions a test contains (A-03). */
   tag?: string[];
@@ -45,6 +49,7 @@ export interface ListTestsParams {
 
 export function listTests(params: ListTestsParams = {}, signal?: AbortSignal) {
   const query: Record<string, unknown> = {};
+  if (params.include) query["include"] = params.include;
   if (params.status) query["status"] = params.status;
   if (params.tag?.length) query["tag"] = params.tag;
   if (params.q) query["q"] = params.q;
@@ -133,6 +138,43 @@ export function toOutlineDraft(test: Test): Omit<OutlineDraft, "expectedUpdatedA
       questionIds: section.questionIds,
     })),
   };
+}
+
+/**
+ * editTestQuestion saves a question of a test's draft for a caller who is not
+ * the test's owner (copy-on-write, T-R7.6), guarded by the question's
+ * `updatedAt` the editor last read. When the owner uses the question
+ * elsewhere the answer is a copy (`forked`), which the test now uses in its
+ * place; either way the test's `updatedAt` moves, and the answer carries it.
+ */
+export function editTestQuestion(
+  testId: string,
+  questionId: string,
+  body: QuestionValues,
+  expectedUpdatedAt: string,
+) {
+  return api("patch", "/teacher/tests/{id}/questions/{questionId}", {
+    path: { id: testId, questionId },
+    body: {
+      ...body,
+      level: body.level ?? null,
+      skill: body.skill ?? null,
+      expectedUpdatedAt,
+    },
+  });
+}
+
+/**
+ * copyQuestionsForTest copies questions the caller can read into the bank of
+ * the test's owner, for "From question bank" when the caller is not the
+ * owner: a draft holds only its owner's questions (T-R7.7). The answer's ids
+ * are in the order asked.
+ */
+export function copyQuestionsForTest(testId: string, questionIds: readonly string[]) {
+  return api("post", "/teacher/tests/{id}/question-copies", {
+    path: { id: testId },
+    body: { questionIds: [...questionIds] },
+  });
 }
 
 export function deleteTest(id: string) {

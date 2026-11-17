@@ -46,6 +46,8 @@ test("teacher settings keep an unsaved profile between sections and fit at every
         "assignment.closing",
         "assignment.due_soon",
         "result.ready",
+        "message.received",
+        "summary.weekly",
       ].map((event) => ({ event, inApp: true, email: false })),
     },
   });

@@ -1,6 +1,6 @@
 import { storedGroupBundle } from "@tests/support/storedGroupBundle";
 import { expect, test } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import { adminUser, ownedByAdmin, sessionAs, stubApi } from "./support/api";
 import { paneText, startGroup } from "./support/groupPane";
 import { contractJson } from "../support/contractResponse";
 import type { components } from "../../src/lib/api/schema";
@@ -19,6 +19,7 @@ test("a gap's card asks the assistant for wrong options from the sentence in the
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: null,
+    ...ownedByAdmin,
     id: testId,
     title: "Đề điền từ",
     description: null,

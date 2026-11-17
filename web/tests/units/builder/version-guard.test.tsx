@@ -28,6 +28,9 @@ function testBody() {
     skills: [],
     assignments: { live: 0, scheduled: 0, closed: 0 },
     unpublishedChanges: null,
+    access: "owner",
+    owner: { id: "019535d9-3df7-79fb-b466-fa907fa17fa0", name: "Trần Thị Bình" },
+    sharedWith: 0,
     id: TEST_ID,
     title: "Unit 5",
     description: null,
@@ -153,7 +156,7 @@ describe("the builder across several separated saves", () => {
     await vi.advanceTimersByTimeAsync(1500);
     await waitFor(() => expect(accepted).toBe(2));
 
-    expect(screen.queryByText(/mở ở nơi khác/)).toBeNull();
+    expect(screen.queryByText(/Có nơi khác đã lưu thay đổi/)).toBeNull();
     expect(screen.getByRole("button", { name: "Phát hành" })).toBeEnabled();
   });
 
@@ -170,7 +173,7 @@ describe("the builder across several separated saves", () => {
     await user.type(title, "b");
     await vi.advanceTimersByTimeAsync(1500);
 
-    expect(await screen.findByText(/mở ở nơi khác/)).toBeInTheDocument();
+    expect(await screen.findByText(/Có nơi khác đã lưu thay đổi/)).toBeInTheDocument();
     expect(staleWrites).toBe(1);
   });
 });

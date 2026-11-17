@@ -41,7 +41,13 @@ async function prepare(
   await stubApi(page, {
     ...sessionAs(user),
     "GET /teacher/summary": {
-      body: { liveAssignments: 1, answersToGrade: 1, unreadNotifications: 0 },
+      body: {
+        liveAssignments: 1,
+        answersToGrade: 1,
+        unreadNotifications: 0,
+        sharedWithMe: 0,
+        unreadMessages: 0,
+      },
     },
     "GET /teacher/grading/queue": async (route) => {
       const mode = new URL(route.request().url()).searchParams.get("mode") ?? "student";
@@ -269,7 +275,13 @@ async function prepareLong(page: Page, theme: "light" | "dark") {
   await stubApi(page, {
     ...sessionAs(user),
     "GET /teacher/summary": {
-      body: { liveAssignments: 1, answersToGrade: 24, unreadNotifications: 0 },
+      body: {
+        liveAssignments: 1,
+        answersToGrade: 24,
+        unreadNotifications: 0,
+        sharedWithMe: 0,
+        unreadMessages: 0,
+      },
     },
     "GET /teacher/grading/queue": async (route) => {
       await route.fulfill({
@@ -381,7 +393,13 @@ async function prepareAi(page: Page, theme: "light" | "dark") {
       },
     },
     "GET /teacher/summary": {
-      body: { liveAssignments: 1, answersToGrade: 1, unreadNotifications: 0 },
+      body: {
+        liveAssignments: 1,
+        answersToGrade: 1,
+        unreadNotifications: 0,
+        sharedWithMe: 0,
+        unreadMessages: 0,
+      },
     },
     "GET /teacher/grading/queue": async (route) => {
       await route.fulfill({
@@ -574,6 +592,8 @@ async function prepareFinish(page: Page, theme: "light" | "dark", waiting: boole
         liveAssignments: 1,
         answersToGrade: waiting ? 1 : 0,
         unreadNotifications: 0,
+        sharedWithMe: 0,
+        unreadMessages: 0,
       },
     },
     "GET /teacher/grading/queue": {

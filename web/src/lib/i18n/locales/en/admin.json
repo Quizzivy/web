@@ -61,6 +61,7 @@
       "organization.updated": "Updated the centre's settings",
       "question.created": "Created a question",
       "question.deleted": "Deleted a question",
+      "question.forked": "Forked a question while editing it",
       "question.updated": "Updated a question",
       "question_group.archived": "Archived a passage, cloze or recording",
       "question_group.created": "Created a passage, cloze or recording",
@@ -68,6 +69,9 @@
       "question_group.removed": "Removed a passage, cloze or recording from a test",
       "question_group.restored": "Restored a passage, cloze or recording",
       "question_group.updated": "Updated a passage, cloze or recording",
+      "question_set.created": "Created a question set",
+      "question_set.deleted": "Deleted a question set",
+      "question_set.updated": "Updated a question set",
       "refresh_token.reuse_detected": "Detected a reused sign-in session",
       "retention.answers_removed": "Removed answers past their retention",
       "retention.leads_removed": "Removed consultation requests past their retention",
@@ -76,6 +80,11 @@
       "role.updated": "Updated a role",
       "session.revoked": "Revoked a sign-in session",
       "session.revoked_others": "Revoked the other sign-in sessions",
+      "share.changed": "Changed a share's access",
+      "share.copied": "Made a copy of shared content",
+      "share.granted": "Shared content",
+      "share.removed": "Removed shared content from their list",
+      "share.revoked": "Stopped sharing",
       "student.created": "Created a student account",
       "student.deleted": "Deleted a student account",
       "student.password_reset": "Reset a student's password",
@@ -534,7 +543,7 @@
       },
       "warn": {
         "label": "Warn the teacher at",
-        "hint": "They get a notification."
+        "hint": "They get a notification and an email."
       },
       "limit": {
         "label": "When a teacher runs out",
@@ -824,6 +833,8 @@
         "questions_other": "{{count}} questions",
         "questionGroups_one": "{{count}} passage, cloze or recording",
         "questionGroups_other": "{{count}} passages, clozes and recordings",
+        "questionSets_one": "{{count}} question set",
+        "questionSets_other": "{{count}} question sets",
         "media_one": "{{count}} media file",
         "media_other": "{{count}} media files",
         "assignments_one": "{{count}} assignment",
@@ -1088,6 +1099,8 @@
       "keepFocusHint": "After this, focus-loss events are deleted overnight.",
       "anonymise": "Anonymise disabled accounts after",
       "anonymiseHint": "Results are kept; name and email are removed.",
+      "messages": "Messages",
+      "messagesHint": "Kept. Anonymising an account deletes its direct messages.",
       "options": {
         "year1": "1 year",
         "year2": "2 years",
@@ -1353,6 +1366,18 @@
       "teacher-questions": {
         "name": "Question bank",
         "blurb": "Questions, tags, search and the question groups."
+      },
+      "teacher-sharing": {
+        "name": "Sharing",
+        "blurb": "The colleague directory, Can use and Can edit grants, and Shared with me."
+      },
+      "teacher-messages": {
+        "name": "Messages",
+        "blurb": "Class announcement channels and direct messages with students. A direct thread is readable by its two participants only."
+      },
+      "student-messages": {
+        "name": "Student messages",
+        "blurb": "Direct threads with teachers and the classes' announcements, read-only."
       },
       "teacher-imports": {
         "name": "Word import",

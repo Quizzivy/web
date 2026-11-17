@@ -113,6 +113,8 @@ export const summaryBody: TeacherSummary = {
   liveAssignments: 3,
   answersToGrade: 6,
   unreadNotifications: 0,
+  sharedWithMe: 0,
+  unreadMessages: 0,
 };
 
 /**

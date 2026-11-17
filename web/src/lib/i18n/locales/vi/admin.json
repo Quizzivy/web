@@ -61,6 +61,7 @@
       "organization.updated": "Đã cập nhật thông tin trung tâm",
       "question.created": "Đã tạo câu hỏi",
       "question.deleted": "Đã xoá câu hỏi",
+      "question.forked": "Đã tách bản sao câu hỏi khi sửa",
       "question.updated": "Đã cập nhật câu hỏi",
       "question_group.archived": "Đã lưu trữ bài đọc, điền từ hoặc bài nghe",
       "question_group.created": "Đã tạo bài đọc, điền từ hoặc bài nghe",
@@ -68,6 +69,9 @@
       "question_group.removed": "Đã gỡ bài đọc, điền từ hoặc bài nghe khỏi bài kiểm tra",
       "question_group.restored": "Đã khôi phục bài đọc, điền từ hoặc bài nghe",
       "question_group.updated": "Đã cập nhật bài đọc, điền từ hoặc bài nghe",
+      "question_set.created": "Đã tạo bộ câu hỏi",
+      "question_set.deleted": "Đã xoá bộ câu hỏi",
+      "question_set.updated": "Đã cập nhật bộ câu hỏi",
       "refresh_token.reuse_detected": "Phát hiện một phiên đăng nhập bị dùng lại",
       "retention.answers_removed": "Đã xoá câu trả lời quá hạn lưu",
       "retention.leads_removed": "Đã xoá yêu cầu tư vấn quá hạn lưu",
@@ -76,6 +80,11 @@
       "role.updated": "Đã cập nhật vai trò",
       "session.revoked": "Đã thu hồi một phiên đăng nhập",
       "session.revoked_others": "Đã thu hồi các phiên đăng nhập khác",
+      "share.changed": "Đã đổi quyền chia sẻ",
+      "share.copied": "Đã tạo bản sao từ nội dung được chia sẻ",
+      "share.granted": "Đã chia sẻ",
+      "share.removed": "Đã gỡ khỏi danh sách được chia sẻ",
+      "share.revoked": "Đã ngừng chia sẻ",
       "student.created": "Đã tạo tài khoản học viên",
       "student.deleted": "Đã xoá tài khoản học viên",
       "student.password_reset": "Đã đặt lại mật khẩu của học viên",
@@ -514,7 +523,7 @@
       },
       "warn": {
         "label": "Cảnh báo giáo viên khi dùng đến",
-        "hint": "Họ nhận được một thông báo."
+        "hint": "Họ nhận được một thông báo và một email."
       },
       "limit": {
         "label": "Khi giáo viên dùng hết hạn mức",
@@ -783,6 +792,7 @@
         "tests_other": "{{count}} đề",
         "questions_other": "{{count}} câu hỏi",
         "questionGroups_other": "{{count}} bài đọc, điền từ, bài nghe",
+        "questionSets_other": "{{count}} bộ câu hỏi",
         "media_other": "{{count}} tệp phương tiện",
         "assignments_other": "{{count}} bài giao"
       },
@@ -1032,6 +1042,8 @@
       "keepFocusHint": "Sau thời hạn này, các sự kiện rời khỏi bài thi bị xoá hằng đêm.",
       "anonymise": "Ẩn danh tài khoản đã tắt sau",
       "anonymiseHint": "Kết quả được giữ; tên và email bị xoá.",
+      "messages": "Tin nhắn",
+      "messagesHint": "Được giữ. Ẩn danh một tài khoản sẽ xoá tin nhắn riêng của tài khoản đó.",
       "options": {
         "year1": "1 năm",
         "year2": "2 năm",
@@ -1289,6 +1301,18 @@
       "teacher-questions": {
         "name": "Ngân hàng câu hỏi",
         "blurb": "Câu hỏi, thẻ, tìm kiếm và các nhóm câu hỏi."
+      },
+      "teacher-sharing": {
+        "name": "Chia sẻ",
+        "blurb": "Danh bạ giáo viên, quyền Có thể dùng và Có thể sửa, và Được chia sẻ với tôi."
+      },
+      "teacher-messages": {
+        "name": "Tin nhắn",
+        "blurb": "Kênh thông báo của lớp và tin nhắn riêng với học viên. Tin nhắn riêng chỉ hai người trong cuộc đọc được."
+      },
+      "student-messages": {
+        "name": "Tin nhắn của học viên",
+        "blurb": "Tin nhắn riêng với giáo viên và thông báo của các lớp, chỉ để đọc."
       },
       "teacher-imports": {
         "name": "Nhập từ Word",

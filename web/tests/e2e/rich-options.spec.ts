@@ -1,5 +1,11 @@
 import { expect, test, type Page } from "@playwright/test";
-import { adminUser, sessionAs, stubApi } from "./support/api";
+import {
+  adminUser,
+  ownedByAdmin,
+  questionOwnedByAdmin,
+  sessionAs,
+  stubApi,
+} from "./support/api";
 import type { components } from "../../src/lib/api/schema";
 
 const QUESTION_ID = "018f0000-0000-7000-8000-0000000000b1";
@@ -61,8 +67,12 @@ test("builder flushes rich edits before switching questions and previews the sav
     [`GET /teacher/tests/${testID}`]: {
       body: {
         skills: [],
+        assignments: { live: 0, scheduled: 0, closed: 0 },
+        unpublishedChanges: null,
+        ...ownedByAdmin,
         id: testID,
         title: "Rich builder",
+        description: null,
         status: "draft",
         currentVersion: 0,
         nextVersion: 1,
@@ -80,7 +90,7 @@ test("builder flushes rich edits before switching questions and previews the sav
         ],
         createdAt: "2026-01-01T00:00:00Z",
         updatedAt: "2026-01-01T00:00:00Z",
-      },
+      } satisfies components["schemas"]["Test"],
     },
     [`GET /teacher/questions/${QUESTION_ID}`]: (route) =>
       route.fulfill({ json: question }),
@@ -207,6 +217,7 @@ test("bank formatting survives save and reload without changing the answer key",
         isCorrect: false,
       },
     ],
+    ...questionOwnedByAdmin,
     createdAt: "2026-01-01T00:00:00Z",
     updatedAt: "2026-01-01T00:00:00Z",
   };

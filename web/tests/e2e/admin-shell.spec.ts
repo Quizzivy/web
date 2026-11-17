@@ -63,6 +63,11 @@ test("the Admin console is a drawer at 360px and the page does not scroll sidewa
   await page.getByRole("button", { name: "Mở menu" }).click();
   const drawer = page.getByRole("dialog", { name: "Điều hướng chính" });
   await expect(drawer).toBeVisible();
+  // The drawer slides in for 200ms, and a box read mid-slide carries the
+  // transform's rounding (272.0000076): measure the drawer at rest.
+  await drawer.evaluate((node) =>
+    Promise.all(node.getAnimations().map((motion) => motion.finished)),
+  );
   expect((await drawer.boundingBox())?.width).toBe(272);
   await drawer.getByRole("link", { name: "Nhật ký kiểm tra" }).click();
   await expect(page).toHaveURL(/\/admin\/audit$/);

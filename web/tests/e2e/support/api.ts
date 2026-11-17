@@ -1,4 +1,5 @@
 import type { Page, Route } from "@playwright/test";
+import type { components } from "../../../src/lib/api/schema";
 
 /**
  * The E2E suite runs a production build against `vite preview` with no backend.
@@ -83,6 +84,33 @@ export const adminUser = {
   ],
   workspaces: ["teacher", "admin"],
 };
+
+/**
+ * ownedByAdmin is what the API sends on a test `adminUser` owns (R7's sharing
+ * contract): the owner's access, `adminUser` named as its owner, shared with
+ * no one. The builder tells the owner from `owner.id`, not from `access`
+ * (`scope.all` reads as `owner` on anyone's test), so a stub that names
+ * someone else saves through the test's shared-edit path instead of the
+ * question bank's.
+ */
+export const ownedByAdmin = {
+  access: "owner",
+  owner: { id: adminUser.id, name: adminUser.fullName },
+  sharedWith: 0,
+} as const satisfies Pick<
+  components["schemas"]["Test"],
+  "access" | "owner" | "sharedWith"
+>;
+
+/**
+ * questionOwnedByAdmin is what the question bank's operations send on a
+ * question `adminUser` owns: `access` and `owner`, which the contract has
+ * wherever the bank answers (a grading page leaves them out).
+ */
+export const questionOwnedByAdmin = {
+  access: ownedByAdmin.access,
+  owner: ownedByAdmin.owner,
+} as const satisfies Pick<components["schemas"]["AdminQuestion"], "access" | "owner">;
 
 export const studentUser = {
   ...adminUser,

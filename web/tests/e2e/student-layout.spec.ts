@@ -39,7 +39,11 @@ for (const width of [320, 360, 768, 1024, 1440, 1920]) {
       page.getByRole("heading", { level: 2, name: classes[0]!.name }),
     ).toBeVisible();
     await expect(page.getByText("Bài luyện tập 1 · đang làm")).toBeVisible();
-    await expect(page.getByRole("main").getByRole("link")).toHaveCount(0);
+    // A card is not a link; its one link is the message button beside the
+    // teacher (T-R7.21).
+    const links = page.getByRole("main").getByRole("link");
+    await expect(links).toHaveCount(1);
+    await expect(links).toHaveAccessibleName("Nhắn cho Cô Thương");
     const join = await page.getByRole("button", { name: "Tham gia lớp" }).boundingBox();
     expect(join!.height).toBe(40);
     await fits(page);
@@ -200,7 +204,7 @@ test("the student console follows the dark theme", async ({ page }) => {
 test("a destination whose module has not shipped is not a page", async ({ page }) => {
   await page.setViewportSize({ width: 1280, height: 900 });
   await student(page);
-  for (const path of ["/learn", "/grades", "/messages"]) {
+  for (const path of ["/learn", "/grades"]) {
     await page.goto(path);
     await expect(
       page.getByRole("heading", { name: "Trang này không tồn tại" }),

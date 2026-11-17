@@ -517,7 +517,7 @@ export default function StudentsPage() {
     ]);
   const data = students.data;
   // Message alone opens no checkboxes: it moves to another page, and a role
-  // that may only read students keeps the plain list (#285).
+  // that may only read students keeps the plain list, as the Assistant does.
   const selecting = canMove || canReset || canManage;
   const selectedRows = [...bulk.selected.values()];
   const filtered = search !== "" || classIds.length > 0 || accounts.length > 0;

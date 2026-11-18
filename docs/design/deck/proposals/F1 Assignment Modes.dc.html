@@ -1,0 +1,983 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--input:#8a9395;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--switch-thumb:#ffffff;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info:oklch(.6 .1 230);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--input:#5d6769;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--switch-thumb:#0e1213;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · F1 · Assignment modes · Proposal · 18 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Strict or flexible: how an assignment is taken, and what each side sees</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">A teacher asked for homework a student can stop and come back to. F1 gives every assignment a mode. Strict is the product as it is: a time limit from Start, and the teacher decides what happens when a student leaves the paper. Flexible has no time limit: the assignment’s close is the deadline, the close button is a break, and every absence is still recorded and the teacher told, with no action on the attempt. This page draws where the teacher chooses, what a student reads and sees under flexible, and the two times and the dated timeline a teacher reads afterwards. Each screen opens on the deck’s own frame, and every Vietnamese string that exists today is used as it is.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:6px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <sc-for list="{{ decisions }}" as="d" hint-placeholder-count="4"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ d.kicker }}</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">{{ d.head }}</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty"><sc-for list="{{ d.items }}" as="di" hint-placeholder-count="3"><li>{{ di }}</li></sc-for></ul>
+  </div></sc-for>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:6px;flex-wrap:wrap"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="co" hint-placeholder-count="2"><button type="button" aria-pressed="{{ co.on }}" onClick="{{ co.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ co.bg }};color:{{ co.fg }};box-shadow:{{ co.ring }}">{{ co.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick the screen and its state in the bar above. Every screen’s first state, “As today”, is the deck’s and the product’s own frame, so what changes can be set beside it. The teacher’s frames are the product’s, with its strings; the student’s are the deck’s Reading paper set flexible. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="font-size:12.5px;color:var(--muted-fg)"><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px;line-height:1.5">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--muted);color:var(--muted-fg);font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tShell }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ barTitle }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ f.sShell }}" hint-placeholder-val="{{ false }}">
+                <header style="flex:none;height:60px;display:flex;align-items:center;gap:14px;padding:0 {{ f.padX }};border-bottom:1px solid var(--border);background:var(--bg)"><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ m.isIntro }}" hint-placeholder-val="{{ false }}"><span style="width:36px;height:36px;flex:none;margin-left:-6px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:18px"></i></span></sc-if><span style="font-size:15px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0">{{ barTitle }}</span></sc-if><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></span><span style="display:flex;align-items:center;gap:2px;margin-left:14px"><sc-for list="{{ sNav }}" as="sn" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;font-size:14px;white-space:nowrap;color:{{ sn.fg }};background:{{ sn.bg }};font-weight:{{ sn.weight }}"><i class="icon-{{ sn.icon }}" style="font-size:16px"></i>{{ sn.label }}</span></sc-for></span></sc-if><span style="margin-left:auto;display:flex;align-items:center;gap:4px"><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-message-square" style="font-size:18px"></i></span><span style="width:36px;height:36px;display:grid;place-items:center;border-radius:8px"><i class="icon-bell" style="font-size:18px"></i></span><span style="width:32px;height:32px;flex:none;margin-left:4px;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;font-weight:600">BN</span></span></header>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;overflow:hidden;padding:{{ f.pad }}">
+
+                <sc-if value="{{ m.isWz }}" hint-placeholder-val="{{ true }}">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                    <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ wz.title }}</div><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ wz.desc }}</div></sc-if></div>
+                    <div style="display:grid;grid-template-columns:repeat({{ f.stepCols }},minmax(0,1fr));gap:8px"><sc-for list="{{ wz.steps }}" as="sp" hint-placeholder-count="4"><div style="display:flex;align-items:center;gap:10px;min-width:0;padding:10px 12px;border-radius:10px;border:1px solid {{ sp.border }};background:var(--card)"><span style="width:24px;height:24px;flex:none;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:600;background:{{ sp.numBg }};color:{{ sp.numFg }}"><sc-if value="{{ sp.done }}" hint-placeholder-val="{{ true }}"><i class="icon-check" style="font-size:14px"></i></sc-if><sc-if value="{{ sp.todo }}" hint-placeholder-val="{{ false }}">{{ sp.num }}</sc-if></span><span style="flex:1;min-width:0;overflow:hidden"><span style="display:block;font-size:13.5px;font-weight:500;line-height:18px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sp.label }}</span><span style="display:flex;align-items:center;gap:6px;font-size:12px;line-height:15px;color:var(--muted-fg);min-width:0"><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ sp.value }}</span><sc-if value="{{ sp.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.step.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.step.n }}</span></sc-if></sc-if></sc-if></span></span></div></sc-for></div>
+                    <div style="display:flex;gap:16px;align-items:flex-start;flex-wrap:wrap">
+                      <div style="flex:1 1 480px;min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);display:flex;flex-direction:column">
+                        <div style="padding:18px;display:flex;flex-direction:column;gap:14px">
+                        <sc-if value="{{ m.isWizard }}" hint-placeholder-val="{{ true }}">
+                          <div style="font-size:15px;font-weight:600">{{ wz.scheduleTitle }}</div>
+                          <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(200px,1fr));gap:12px"><sc-for list="{{ wz.window }}" as="wf" hint-placeholder-count="2"><div style="display:flex;flex-direction:column;gap:6px;max-width:480px"><span style="font-size:12.5px;font-weight:500">{{ wf.label }}</span><span style="display:flex;align-items:center;gap:8px;height:{{ f.inH }};border:1px solid var(--input);border-radius:8px;padding:0 12px;font-size:13.5px;background:var(--bg)"><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums">{{ wf.value }}</span><i class="icon-calendar" style="font-size:15px;color:var(--muted-fg)"></i></span></div></sc-for></div>
+                          <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-timer" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ wz.timeGroup }}</span></div>
+                            <sc-if value="{{ wz.hasMode }}" hint-placeholder-val="{{ true }}"><div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5"><span style="opacity:{{ wz.modeOp }}">{{ wz.mode }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mode.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.mode.n }}</span></sc-if></sc-if></span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty;opacity:{{ wz.modeOp }}">{{ wz.modeHint }}</span></span><div style="opacity:{{ wz.modeOp }}"><div style="display:flex;flex-wrap:wrap;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ wz.modes }}" as="o" hint-placeholder-count="2"><span style="flex:1 1 auto;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }};opacity:{{ o.op }}"><sc-if value="{{ o.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ o.icon }}" style="font-size:14px"></i></sc-if>{{ o.label }}</span></sc-for></div></div></div></sc-if>
+                            <sc-if value="{{ wz.hasTime }}" hint-placeholder-val="{{ true }}"><div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ wz.timeLimit }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ wz.timeLimitHint }}</span></span><div style="display:flex;flex-wrap:wrap;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ wz.times }}" as="o" hint-placeholder-count="2"><span style="flex:1 1 auto;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }};opacity:{{ o.op }}"><sc-if value="{{ o.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ o.icon }}" style="font-size:14px"></i></sc-if>{{ o.label }}</span></sc-for></div></div></sc-if>
+                            <div style="padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 16px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ wz.attempts }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ wz.attemptsHint }}</span></span><span style="justify-self:end"><span style="display:inline-flex;align-items:center;height:36px;border:1px solid var(--input);border-radius:8px;background:var(--bg)"><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-minus" style="font-size:14px"></i></span><span style="min-width:54px;text-align:center;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums">{{ wz.attemptsValue }}</span><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i></span></span></span></div></div>
+                        </sc-if>
+                        <sc-if value="{{ m.isRules }}" hint-placeholder-val="{{ false }}">
+                          <div style="font-size:15px;font-weight:600">{{ rl.title }}</div>
+                          <sc-for list="{{ rl.ghosts }}" as="gh" hint-placeholder-count="2"><div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-{{ gh.icon }}" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ gh.title }}</span></div><div style="padding:14px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--border)"><span style="display:block;height:11px;border-radius:6px;background:var(--muted);width:{{ gh.w1 }}"></span><span style="display:block;height:11px;border-radius:6px;background:var(--muted);width:{{ gh.w2 }}"></span></div></div></sc-for>
+                          <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden">
+                            <div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-shield-check" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ rl.integrity }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.integrity.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.integrity.n }}</span></sc-if></sc-if></div>
+                            <sc-for list="{{ rl.switches }}" as="sw" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:14px;padding:12px 14px;border-top:1px solid var(--border)"><span style="flex:1;min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ sw.label }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ sw.hint }}</span></span><span aria-hidden="true" style="width:38px;height:22px;flex:none;border-radius:999px;padding:2px;display:flex;justify-content:{{ sw.side }};background:{{ sw.track }}"><span style="width:18px;height:18px;flex:none;border-radius:50%;background:var(--switch-thumb);box-shadow:var(--shadow)"></span></span></div></sc-for>
+                            <sc-if value="{{ rl.strict }}" hint-placeholder-val="{{ true }}">
+                              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ rl.leaving }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ rl.leavingHint }}</span></span><div style="display:flex;flex-wrap:wrap;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ rl.leavingOpts }}" as="o" hint-placeholder-count="2"><span style="flex:1 1 auto;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }};opacity:{{ o.op }}"><sc-if value="{{ o.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ o.icon }}" style="font-size:14px"></i></sc-if>{{ o.label }}</span></sc-for></div><span style="display:flex;flex-wrap:wrap;align-items:center;gap:10px"><span style="display:inline-flex;align-items:center;height:36px;border:1px solid var(--input);border-radius:8px;background:var(--bg)"><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-minus" style="font-size:14px"></i></span><span style="min-width:54px;text-align:center;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums">{{ rl.timesValue }}</span><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i></span></span><span style="font-size:12.5px;color:var(--muted-fg)">{{ rl.timesAllowed }}</span></span></div>
+                              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ rl.action }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ rl.actionHint }}</span></span><div style="display:flex;flex-wrap:wrap;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ rl.actions }}" as="o" hint-placeholder-count="2"><span style="flex:1 1 auto;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }};opacity:{{ o.op }}"><sc-if value="{{ o.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ o.icon }}" style="font-size:14px"></i></sc-if>{{ o.label }}</span></sc-for></div></div>
+                              <div style="padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 16px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ rl.away }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ rl.awayHint }}</span></span><span style="justify-self:end"><span style="display:inline-flex;align-items:center;height:36px;border:1px solid var(--input);border-radius:8px;background:var(--bg)"><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-minus" style="font-size:14px"></i></span><span style="min-width:54px;text-align:center;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums">{{ rl.awayValue }}</span><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i></span></span></span></div>
+                            </sc-if>
+                            <sc-if value="{{ rl.flex }}" hint-placeholder-val="{{ false }}">
+                              <div style="padding:12px 14px;display:flex;flex-direction:column;gap:2px;border-top:1px solid var(--border)"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ rl.leaving }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.fixed.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.fixed.n }}</span></sc-if></sc-if></span><span style="display:block;font-size:13px;line-height:1.55;text-wrap:pretty;max-width:72ch">{{ rl.fixed }}</span></div>
+                            </sc-if>
+                            <div style="background:var(--sidebar);color:var(--muted-fg);font-size:12.5px;display:flex;gap:8px;padding:10px 14px;line-height:1.5;border-top:1px solid var(--border)"><i class="icon-info" style="font-size:14px;flex:none;margin-top:2px"></i><span style="min-width:0;display:flex;flex-direction:column;gap:6px"><span style="text-wrap:pretty">{{ rl.honesty }}</span><span style="color:var(--fg);font-weight:500;display:inline-flex;align-items:center;gap:4px"><i class="icon-chevron-right" style="font-size:13px"></i>{{ rl.limits }}</span></span></div>
+                          </div>
+                          <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13.5px;font-weight:500">{{ rl.note }}</span><span style="display:block;height:72px;border:1px solid var(--input);border-radius:8px;background:var(--bg)"></span></div>
+                        </sc-if>
+                        </div>
+                        <div style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;padding:12px {{ f.footPx }};border-top:1px solid var(--border)"><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 {{ f.btnPx }};border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap;box-shadow:none">{{ wz.back }}</span><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 {{ f.btnPx }};border-radius:8px;font-size:13.5px;font-weight:500;white-space:nowrap;margin-left:auto">{{ wz.saveDraft }}</span><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:600;white-space:nowrap">{{ wz.cont }}<i class="icon-arrow-right" style="font-size:15px"></i></span></div>
+                      </div>
+                      <div style="flex:1 1 244px;max-width:{{ f.asideMax }};min-width:0;display:flex;flex-direction:column;gap:12px">
+                        <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px"><div style="display:flex;flex-direction:column;gap:8px;padding-bottom:14px;margin-bottom:14px;border-bottom:1px solid var(--border)"><sc-for list="{{ wz.lines }}" as="ln" hint-placeholder-count="5"><div style="display:flex;justify-content:space-between;align-items:center;gap:12px;font-size:13px"><span style="color:var(--muted-fg);white-space:nowrap">{{ ln.label }}</span><span style="display:flex;align-items:center;gap:6px;min-width:0;text-align:right;font-weight:500;font-variant-numeric:tabular-nums">{{ ln.value }}<sc-if value="{{ ln.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.aside.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.aside.n }}</span></sc-if></sc-if></sc-if></span></div></sc-for></div><div style="display:flex;align-items:center;gap:6px;font-size:12.5px;font-weight:500;color:var(--muted-fg);margin-bottom:10px"><i class="icon-eye" style="font-size:14px"></i>{{ wz.reads }}</div><div style="display:flex;flex-direction:column;gap:8px;font-size:13.5px;line-height:1.55"><sc-for list="{{ wz.rules }}" as="ru" hint-placeholder-count="3"><span style="display:flex;gap:8px"><span style="color:var(--muted-fg)">·</span><span style="min-width:0;text-wrap:pretty">{{ ru.text }}</span><sc-if value="{{ ru.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.reads.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.reads.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></div>
+                        <div style="background:var(--warning-soft);color:var(--warning-ink);border-radius:12px;padding:14px 16px;display:flex;gap:10px;font-size:13px;line-height:1.5"><i class="icon-square-pen" style="font-size:16px;flex:none;margin-top:1px"></i><span>{{ wz.estimate }}</span></div>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ m.hasHead }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1600px;margin:0 auto 16px;display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;flex-direction:column;gap:4px"><span style="display:inline-flex;align-items:center;gap:6px;font-size:13px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:14px"></i>{{ hd.back }}</span><div style="display:flex;align-items:center;gap:8px 10px;flex-wrap:wrap"><span style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ hd.title }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;background:{{ hd.stBg }};color:{{ hd.stFg }};font-size:12px;font-weight:500;white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:{{ hd.stDot }}"></span>{{ hd.status }}</span><sc-if value="{{ hd.chip }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 9px;border-radius:999px;background:var(--muted);color:var(--fg);font-size:12px;font-weight:500;white-space:nowrap"><i class="icon-timer-off" style="font-size:12px"></i>{{ hd.chipLabel }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.chip.n }}</span></sc-if></sc-if></sc-if></div><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted-fg);margin-top:2px"><span style="min-width:0;text-wrap:pretty">{{ hd.meta }}</span><sc-if value="{{ hd.chip }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.meta.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.meta.n }}</span></sc-if></sc-if></sc-if></span></div>
+                    <div style="display:flex;gap:20px;border-bottom:1px solid var(--border)"><sc-for list="{{ hd.tabs }}" as="dt" hint-placeholder-count="3"><span style="padding:0 2px 10px;font-size:13.5px;white-space:nowrap;font-weight:500;color:{{ dt.fg }};box-shadow:{{ dt.line }}">{{ dt.label }}</span></sc-for></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ m.isSettings }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,380px),1fr));gap:12px;align-items:start">
+                    <sc-for list="{{ ad.cards }}" as="cd" hint-placeholder-count="5"><div style="min-width:0;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                      <div style="display:flex;align-items:center;gap:10px;padding:12px 12px 12px 16px;border-bottom:1px solid var(--border)"><span style="width:28px;height:28px;flex:none;border-radius:7px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ cd.icon }}" style="font-size:15px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:600">{{ cd.title }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ cd.hint }}</span></span>
+                        <sc-if value="{{ cd.locked }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:8px"><sc-if value="{{ cd.isTiming }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.lock.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.lock.n }}</span></sc-if></sc-if></sc-if><span style="display:inline-flex;align-items:center;gap:5px;font-size:12px;color:var(--muted-fg);white-space:nowrap"><i class="icon-lock" style="font-size:13px"></i>{{ ad.lockedPill }}</span></span></sc-if>
+                        <sc-if value="{{ cd.canEdit }}" hint-placeholder-val="{{ true }}"><span style="display:inline-flex;align-items:center;gap:6px;height:30px;padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap"><i class="icon-pencil" style="font-size:13px"></i>{{ ad.edit }}</span></sc-if></div>
+                      <sc-if value="{{ cd.full }}" hint-placeholder-val="{{ true }}"><sc-for list="{{ cd.rows }}" as="rw" hint-placeholder-count="3"><div style="display:grid;grid-template-columns:minmax(110px,150px) minmax(0,1fr);align-items:baseline;gap:4px 16px;padding:12px 16px;border-top:{{ rw.border }}"><span style="font-size:13px;color:var(--muted-fg)">{{ rw.label }}</span><span style="display:flex;flex-direction:column;gap:2px;min-width:0"><span style="display:flex;align-items:center;flex-wrap:wrap;gap:8px;font-size:13.5px;font-weight:500;overflow-wrap:anywhere"><sc-if value="{{ rw.hasPill }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;font-size:12px;font-weight:500;background:{{ rw.pillBg }};color:{{ rw.pillFg }}"><i class="icon-{{ rw.pillIcon }}" style="font-size:12px"></i>{{ rw.pill }}</span></sc-if>{{ rw.value }}<sc-if value="{{ rw.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.row.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.row.n }}</span></sc-if></sc-if></sc-if><sc-if value="{{ rw.isNew2 }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.leave.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.leave.n }}</span></sc-if></sc-if></sc-if></span><sc-if value="{{ rw.hasSub }}" hint-placeholder-val="{{ false }}"><span style="font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">{{ rw.sub }}</span></sc-if></span></div></sc-for></sc-if>
+                      <sc-if value="{{ cd.ghost }}" hint-placeholder-val="{{ false }}"><div style="padding:14px 16px;display:flex;flex-direction:column;gap:12px"><span style="display:block;height:11px;border-radius:6px;background:var(--muted);width:{{ cd.w1 }}"></span><span style="display:block;height:11px;border-radius:6px;background:var(--muted);width:{{ cd.w2 }}"></span></div></sc-if>
+                    </div></sc-for>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ m.hasRoster }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:12px">
+                    <div style="display:flex;flex-wrap:wrap;gap:8px;align-items:center"><span style="flex:1 1 180px;max-width:480px;display:flex;align-items:center;gap:8px;height:36px;border:1px solid var(--input);border-radius:8px;padding:0 10px;background:var(--bg);font-size:13.5px;color:var(--muted-fg)"><i class="icon-search" style="font-size:15px"></i>{{ rs.search }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:36px;padding:0 12px;border:1px solid var(--input);border-radius:8px;background:var(--bg);font-size:13.5px;white-space:nowrap">{{ rs.filter }}<i class="icon-chevron-down" style="font-size:14px;color:var(--muted-fg)"></i></span></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                      <div style="display:grid;grid-template-columns:{{ rs.cols }};gap:12px;padding:0 16px;height:40px;align-items:center;font-size:12.5px;color:var(--muted-fg);font-weight:500;background:var(--muted)"><span>{{ rs.hStudent }}</span><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span>{{ rs.hState }}</span></sc-if><span>{{ rs.hScore }}</span><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:6px">{{ rs.hTime }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.time.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.time.n }}</span></sc-if></sc-if></span><span>{{ rs.hFocus }}</span><span>{{ rs.hSubmitted }}</span></sc-if><span></span></div>
+                      <sc-for list="{{ rs.rows }}" as="rr" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:{{ rs.cols }};gap:12px;padding:0 16px;min-height:56px;align-items:center;border-top:1px solid var(--border);font-size:13.5px;background:{{ rr.bg }}">
+                        <span style="display:flex;align-items:center;gap:10px;min-width:0"><span style="width:30px;height:30px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11px;font-weight:600">{{ rr.initials }}</span><span style="min-width:0"><span style="display:block;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ rr.name }}</span><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:6px;margin-top:2px"><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:{{ rr.stR }};font-size:12px;font-weight:500;white-space:nowrap;background:{{ rr.stBg }};color:{{ rr.stFg }};border:{{ rr.stBorder }}">{{ rr.state }}</span><sc-if value="{{ rr.flagged }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:2px;font-size:12px;color:var(--danger-ink);font-variant-numeric:tabular-nums"><i class="icon-flag" style="font-size:12px"></i>{{ rr.focus }}</span></sc-if></span></sc-if></span></span>
+                        <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span><span style="display:inline-flex;align-items:center;height:22px;padding:0 9px;border-radius:{{ rr.stR }};font-size:12px;font-weight:500;white-space:nowrap;background:{{ rr.stBg }};color:{{ rr.stFg }};border:{{ rr.stBorder }}">{{ rr.state }}</span></span></sc-if>
+                        <span style="font-variant-numeric:tabular-nums;font-weight:{{ rr.scoreW }};color:{{ rr.scoreFg }}">{{ rr.score }}</span>
+                        <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;flex-direction:column;min-width:0;font-variant-numeric:tabular-nums"><span style="color:var(--muted-fg)">{{ rr.time }}</span><sc-if value="{{ rr.hasSpan }}" hint-placeholder-val="{{ false }}"><span style="font-size:12px;line-height:16px;color:var(--muted-fg);white-space:nowrap">{{ rr.span }}</span></sc-if></span>
+                        <span style="display:inline-flex;align-items:center;gap:5px;font-variant-numeric:tabular-nums;color:{{ rr.focusFg }}"><sc-if value="{{ rr.flagged }}" hint-placeholder-val="{{ false }}"><i class="icon-flag" style="font-size:13px"></i></sc-if>{{ rr.focus }}</span>
+                        <span style="color:var(--muted-fg);font-variant-numeric:tabular-nums;white-space:nowrap">{{ rr.submitted }}</span></sc-if>
+                        <span style="width:28px;height:28px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-ellipsis" style="font-size:16px"></i></span>
+                      </div></sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ m.isListTable }}" hint-placeholder-val="{{ false }}">
+                  <div style="width:100%;max-width:1600px;margin:0 auto;display:flex;flex-direction:column;gap:16px">
+                    <div style="display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap"><div style="min-width:0"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ ls.title }}</div><div style="margin-top:2px;color:var(--muted-fg);font-size:14px;text-wrap:pretty">{{ ls.desc }}</div></div><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:600;white-space:nowrap"><i class="icon-plus" style="font-size:15px"></i>{{ ls.newLabel }}</span></div>
+                    <div style="display:flex;flex-wrap:wrap;gap:10px;align-items:center;justify-content:space-between"><div style="display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px;max-width:100%;overflow:hidden"><sc-for list="{{ ls.tabs }}" as="lt" hint-placeholder-count="4"><span style="border-radius:7px;height:30px;padding:0 10px;font-size:13px;white-space:nowrap;display:flex;align-items:center;gap:6px;background:{{ lt.bg }};color:{{ lt.fg }};box-shadow:{{ lt.ring }};font-weight:500">{{ lt.label }}<span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--primary);color:var(--primary-fg);font-size:11px;font-weight:600;display:inline-grid;place-items:center;font-variant-numeric:tabular-nums">{{ lt.count }}</span></span></sc-for></div><span style="flex:1 1 220px;max-width:320px;display:flex;align-items:center;gap:8px;height:36px;border:1px solid var(--input);border-radius:8px;padding:0 10px;background:var(--bg);font-size:13.5px;color:var(--muted-fg)"><i class="icon-search" style="font-size:15px"></i>{{ ls.search }}</span></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden">
+                      <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:{{ ls.cols }};gap:12px;padding:0 16px;height:40px;align-items:center;font-size:12.5px;color:var(--muted-fg);font-weight:500;background:var(--muted)"><span>{{ ls.hAssignment }}</span><span>{{ ls.hWindow }}</span><span>{{ ls.hSubmitted }}</span><span>{{ ls.hToGrade }}</span><span>{{ ls.hStatus }}</span></div></sc-if>
+                      <sc-for list="{{ ls.rows }}" as="lr" hint-placeholder-count="3"><div style="border-top:{{ lr.border }}">
+                        <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="display:grid;grid-template-columns:{{ ls.cols }};gap:12px;padding:10px 16px;min-height:64px;align-items:center;font-size:13.5px"><span style="display:flex;flex-direction:column;min-width:0"><span style="font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ lr.title }}</span><span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:12.5px;color:var(--muted-fg)"><span>{{ lr.meta }}</span><sc-if value="{{ lr.flex }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:999px;background:var(--muted);color:var(--fg);font-size:11.5px;font-weight:500;white-space:nowrap"><i class="icon-timer-off" style="font-size:11px"></i>{{ lr.chip }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.chip.n }}</span></sc-if></sc-if></sc-if><sc-if value="{{ lr.hasGrade }}" hint-placeholder-val="{{ false }}"><span style="color:var(--warning-ink);font-weight:500">{{ lr.toGradeInline }}</span></sc-if></span><span style="font-size:12.5px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ lr.classes }}</span></span><span style="font-size:13px">{{ lr.when }}</span><span style="display:flex;align-items:center;gap:10px"><span style="flex:1;height:6px;border-radius:6px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ lr.pct }};background:var(--accent-c)"></span></span><span style="width:40px;text-align:right;font-size:12.5px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ lr.ratio }}</span></span><span style="font-size:13px;font-weight:500;color:{{ lr.gradeFg }};font-variant-numeric:tabular-nums">{{ lr.toGrade }}</span><span><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);font-size:12px;font-weight:500;white-space:nowrap"><span style="width:6px;height:6px;border-radius:50%;background:var(--success)"></span>{{ lr.status }}</span></span></div></sc-if>
+                        <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><div style="display:flex;flex-direction:column;gap:6px;padding:14px 16px"><span style="display:flex;align-items:flex-start;justify-content:space-between;gap:10px"><span style="font-size:14px;font-weight:500">{{ lr.title }}</span><span style="display:inline-flex;align-items:center;gap:6px;height:22px;padding:0 9px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);font-size:12px;font-weight:500;white-space:nowrap;flex:none"><span style="width:6px;height:6px;border-radius:50%;background:var(--success)"></span>{{ lr.status }}</span></span><span style="display:flex;align-items:center;flex-wrap:wrap;gap:4px 8px;font-size:12.5px;color:var(--muted-fg)"><sc-if value="{{ lr.flex }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:4px;height:20px;padding:0 7px;border-radius:999px;background:var(--muted);color:var(--fg);font-size:11.5px;font-weight:500;white-space:nowrap"><i class="icon-timer-off" style="font-size:11px"></i>{{ lr.chip }}</span></sc-if><span>{{ lr.phoneLine }}</span></span><span style="display:flex;align-items:center;gap:10px"><span style="flex:1;height:6px;border-radius:6px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ lr.pct }};background:var(--accent-c)"></span></span><span style="font-size:12.5px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ lr.ratio }}</span></span></div></sc-if>
+                      </div></sc-for>
+                    </div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ m.isIntro }}" hint-placeholder-val="{{ false }}">
+                  <div style="max-width:720px;margin:0 auto;display:flex;flex-direction:column;gap:18px">
+                    <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="align-self:flex-start;display:inline-flex;align-items:center;gap:6px;font-size:13.5px;color:var(--muted-fg)"><i class="icon-arrow-left" style="font-size:15px"></i>{{ it.home }}</span></sc-if>
+                    <div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:13px;color:var(--muted-fg)">{{ it.cls }}</span><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25;text-wrap:balance">{{ it.title }}</div></div>
+                    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:1px;background:var(--border);border:1px solid var(--border);border-radius:12px;overflow:hidden"><sc-for list="{{ it.facts }}" as="fa" hint-placeholder-count="3"><div style="background:var(--card);padding:14px 16px;min-width:0"><div style="font-size:12.5px;color:var(--muted-fg)">{{ fa.label }}</div><div style="display:flex;align-items:center;gap:6px;font-size:{{ f.factSize }};font-weight:600;margin-top:2px">{{ fa.value }}<sc-if value="{{ fa.isNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.fact.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.fact.n }}</span></sc-if></sc-if></sc-if></div></div></sc-for></div>
+                    <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden"><div style="padding:14px 16px;font-size:14.5px;font-weight:600;border-bottom:1px solid var(--border)">{{ it.before }}</div><sc-for list="{{ it.rules }}" as="ir" hint-placeholder-count="5"><div style="display:flex;gap:12px;padding:12px 16px;border-top:{{ ir.border }};align-items:flex-start"><span style="width:28px;height:28px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ ir.icon }}" style="font-size:15px"></i></span><span style="flex:1;min-width:0;font-size:14px;line-height:1.55;padding-top:3px;text-wrap:pretty">{{ ir.text }}</span><sc-if value="{{ ir.isNew }}" hint-placeholder-val="{{ false }}"><span style="padding-top:4px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.rule.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.rule.n }}</span></sc-if></sc-if></span></sc-if><sc-if value="{{ ir.isNew2 }}" hint-placeholder-val="{{ false }}"><span style="padding-top:4px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.rule2.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.rule2.n }}</span></sc-if></sc-if></span></sc-if></div></sc-for></div>
+                    <div style="display:flex;flex-direction:column;gap:8px;padding:12px 0 4px"><span style="display:flex;align-items:center;justify-content:center;gap:8px;height:50px;border-radius:11px;background:var(--primary);color:var(--primary-fg);font-size:16px;font-weight:600">{{ it.cta }}<i class="icon-arrow-right" style="font-size:18px"></i></span><span style="display:flex;align-items:center;justify-content:center;gap:8px;text-align:center;font-size:12.5px;color:var(--muted-fg)">{{ it.ctaHint }}<sc-if value="{{ it.hintNew }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.hint.n }}</span></sc-if></sc-if></sc-if></span></div>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ m.isHome }}" hint-placeholder-val="{{ false }}">
+                  <div style="max-width:960px;margin:0 auto;display:flex;flex-direction:column;gap:24px">
+                    <div><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ hm.greeting }}</div><p style="display:flex;align-items:center;gap:8px;margin:4px 0 0;color:var(--muted-fg);font-size:14.5px">{{ hm.sub }}<sc-if value="{{ hm.flex }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.sub.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.sub.n }}</span></sc-if></sc-if></sc-if></p></div>
+                    <section style="background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow);padding:20px;display:flex;gap:18px;align-items:center;flex-wrap:wrap">
+                      <span style="flex:1 1 280px;min-width:0;display:flex;flex-direction:column;gap:6px">
+                        <span style="display:flex;align-items:center;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;height:24px;padding:0 9px;border-radius:999px;background:var(--info-soft);color:var(--info-ink);font-size:12.5px;font-weight:500"><i class="icon-timer" style="font-size:13px"></i>{{ hm.pill }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pill.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.pill.n }}</span></sc-if></sc-if></span>
+                        <span style="font-size:19px;font-weight:600;letter-spacing:-0.01em;line-height:1.3">{{ hm.title }}</span>
+                        <span style="display:flex;align-items:center;gap:8px;font-size:13.5px;color:var(--muted-fg)"><span style="min-width:0;text-wrap:pretty">{{ hm.meta }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.meta.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.meta.n }}</span></sc-if></sc-if></span>
+                        <span style="height:6px;border-radius:6px;background:var(--muted);overflow:hidden;margin-top:6px;max-width:420px"><span style="display:block;height:100%;width:{{ hm.pct }};background:var(--accent-c)"></span></span>
+                      </span>
+                      <span style="display:inline-flex;align-items:center;justify-content:center;gap:8px;height:46px;padding:0 22px;border-radius:10px;background:var(--primary);color:var(--primary-fg);font-size:15px;font-weight:600;white-space:nowrap;flex:{{ f.ctaFlex }}">{{ hm.cta }}<i class="icon-arrow-right" style="font-size:17px"></i></span>
+                    </section>
+                    <section style="display:flex;flex-direction:column;gap:10px">
+                      <div style="display:flex;align-items:baseline;justify-content:space-between"><span style="font-size:16px;font-weight:600">{{ hm.coming }}</span><span style="font-size:13px;color:var(--muted-fg)">{{ hm.count }}</span></div>
+                      <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow:hidden"><sc-for list="{{ hm.upcoming }}" as="up" hint-placeholder-count="2"><div style="display:flex;align-items:center;gap:14px;padding:14px 16px;border-top:{{ up.border }}"><span style="width:44px;flex:none;display:flex;flex-direction:column;align-items:center;padding:4px 0;border-radius:9px;background:var(--muted)"><span style="font-size:10.5px;font-weight:600;text-transform:uppercase;letter-spacing:.04em">{{ up.dow }}</span><span style="font-size:17px;font-weight:600;line-height:1.1">{{ up.day }}</span></span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ up.title }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ up.meta }}</span></span><i class="icon-chevron-right" style="font-size:16px;color:var(--muted-fg)"></i></div></sc-for></div>
+                    </section>
+                  </div>
+                </sc-if>
+                <sc-if value="{{ m.isEngine }}" hint-placeholder-val="{{ false }}">
+                  <div style="height:100%;display:flex;flex-direction:column;background:var(--bg)">
+                    <header style="flex:none;height:60px;display:flex;align-items:center;gap:12px;padding:0 {{ f.padX }};border-bottom:1px solid var(--border)">
+                      <span style="display:flex;align-items:center;gap:6px"><span aria-label="{{ en.leaveName }}" style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px"><i class="icon-x" style="font-size:18px"></i></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.x.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.x.n }}</span></sc-if></sc-if></span>
+                      <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="min-width:0;display:flex;flex-direction:column;line-height:1.3"><span style="font-size:14px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ en.title }}</span><span style="font-size:12px;color:var(--muted-fg);display:flex;align-items:center;gap:5px"><i class="icon-cloud" style="font-size:12px"></i><span style="white-space:nowrap">{{ en.saved }}</span><sc-if value="{{ en.hasStatus }}" hint-placeholder-val="{{ false }}"><span>·</span><span style="white-space:nowrap">{{ en.status }}</span></sc-if></span></span></sc-if>
+                      <span style="margin:0 auto;display:inline-flex;align-items:center;gap:8px"><span role="{{ en.pillRole }}" aria-label="{{ en.pillName }}" style="display:inline-flex;align-items:center;gap:7px;height:36px;padding:0 14px;border-radius:999px;font-variant-numeric:tabular-nums;font-size:15px;font-weight:600;white-space:nowrap;background:{{ en.pillBg }};color:{{ en.pillFg }}"><i class="icon-{{ en.pillIcon }}" style="font-size:16px"></i><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}">{{ en.pill }}</sc-if><sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}">{{ en.pillPhone }}</sc-if></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pill.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.pill.n }}</span></sc-if></sc-if></span>
+                      <span style="height:38px;padding:0 16px;border-radius:9px;background:var(--primary);color:var(--primary-fg);font-size:14px;font-weight:600;white-space:nowrap;display:inline-flex;align-items:center">{{ en.submit }}</span>
+                    </header>
+                    <div style="flex:1;min-height:0;display:flex">
+                      <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><article style="flex:1 1 0;min-width:0;overflow:hidden;padding:24px 28px;border-right:1px solid var(--border)"><div style="max-width:640px;margin:0 auto;display:flex;flex-direction:column;gap:14px"><span style="font-size:22px;font-weight:600;letter-spacing:-0.01em;line-height:1.3">{{ en.passageTitle }}</span><sc-for list="{{ en.paras }}" as="pa" hint-placeholder-count="2"><p style="margin:0;font-size:16px;line-height:1.75;text-wrap:pretty"><span style="font-weight:700;margin-right:8px">{{ pa.k }}</span>{{ pa.t }}</p></sc-for></div></article></sc-if>
+                      <div style="flex:1 1 0;min-width:0;overflow:hidden;padding:{{ f.qPad }};display:flex;flex-direction:column;gap:16px">
+                        <span style="font-size:12.5px;color:var(--muted-fg)">{{ en.qOf }}</span>
+                        <span style="font-size:17px;font-weight:600;line-height:1.45;text-wrap:pretty">{{ en.prompt }}</span>
+                        <span style="font-size:13px;color:var(--muted-fg)">{{ en.choose }}</span>
+                        <div style="display:flex;flex-direction:column;gap:8px"><sc-for list="{{ en.opts }}" as="op" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:12px;min-height:52px;padding:10px 14px;border-radius:10px;border:1.5px solid {{ op.border }};background:{{ op.bg }};font-size:15px"><span style="width:28px;height:28px;flex:none;border-radius:7px;display:grid;place-items:center;font-size:13px;font-weight:600;background:{{ op.keyBg }};color:{{ op.keyFg }}">{{ op.key }}</span><span style="min-width:0;text-wrap:pretty">{{ op.text }}</span></span></sc-for></div>
+                        <div style="display:flex;justify-content:space-between;gap:10px;margin-top:auto;padding-top:8px"><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 {{ f.btnPx }};border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-chevron-left" style="font-size:15px"></i>{{ en.prev }}</span><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 {{ f.btnPx }};border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap">{{ en.next }}<i class="icon-chevron-right" style="font-size:15px"></i></span></div>
+                      </div>
+                    </div>
+                  </div>
+                </sc-if>
+
+              </div>
+            </div>
+
+            <sc-if value="{{ dg.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:10"></div><div role="dialog" aria-label="{{ dg.title }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};max-height:calc(100% - 32px);overflow:hidden;display:flex;flex-direction:column;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);z-index:11">
+              <div style="padding:18px 14px 4px 18px;display:flex;gap:12px;align-items:flex-start"><span style="width:36px;height:36px;border-radius:10px;flex:none;display:grid;place-items:center;background:var(--muted)"><i class="icon-pencil" style="font-size:17px"></i></span><div style="flex:1;min-width:0"><div style="font-size:16px;font-weight:600;line-height:1.35">{{ dg.title }}</div><div style="font-size:13px;color:var(--muted-fg);margin-top:3px;line-height:1.5">{{ dg.desc }}</div></div><span style="width:30px;height:30px;flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:16px"></i></span></div>
+              <div style="padding:14px 18px 4px;display:flex;flex-direction:column;gap:14px;overflow:hidden">
+                <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-timer" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ dt.timeGroup }}</span></div>
+                            <sc-if value="{{ dt.hasMode }}" hint-placeholder-val="{{ true }}"><div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5"><span style="opacity:{{ dt.modeOp }}">{{ dt.mode }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.mode.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.mode.n }}</span></sc-if></sc-if></span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty;opacity:{{ dt.modeOp }}">{{ dt.modeHint }}</span></span><div style="opacity:{{ dt.modeOp }}"><div style="display:flex;flex-wrap:wrap;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ dt.modes }}" as="o" hint-placeholder-count="2"><span style="flex:1 1 auto;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }};opacity:{{ o.op }}"><sc-if value="{{ o.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ o.icon }}" style="font-size:14px"></i></sc-if>{{ o.label }}</span></sc-for></div></div></div></sc-if>
+                            <sc-if value="{{ dt.hasTime }}" hint-placeholder-val="{{ true }}"><div style="padding:12px 14px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ dt.timeLimit }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ dt.timeLimitHint }}</span></span><div style="display:flex;flex-wrap:wrap;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ dt.times }}" as="o" hint-placeholder-count="2"><span style="flex:1 1 auto;border-radius:7px;height:{{ f.segH }};padding:0 10px;font-size:13px;white-space:nowrap;font-weight:500;display:flex;align-items:center;justify-content:center;gap:6px;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }};opacity:{{ o.op }}"><sc-if value="{{ o.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ o.icon }}" style="font-size:14px"></i></sc-if>{{ o.label }}</span></sc-for></div></div></sc-if>
+                            <div style="padding:12px 14px;display:grid;grid-template-columns:minmax(0,1fr) auto;align-items:center;gap:6px 16px;border-top:1px solid var(--border)"><span style="min-width:0"><span style="display:flex;align-items:center;gap:8px;font-size:13.5px;font-weight:500;line-height:1.5">{{ dt.attempts }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ dt.attemptsHint }}</span></span><span style="justify-self:end"><span style="display:inline-flex;align-items:center;height:36px;border:1px solid var(--input);border-radius:8px;background:var(--bg)"><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-minus" style="font-size:14px"></i></span><span style="min-width:54px;text-align:center;font-size:13.5px;font-weight:500;font-variant-numeric:tabular-nums">{{ dt.attemptsValue }}</span><span style="width:34px;height:34px;display:grid;place-items:center;color:var(--muted-fg)"><i class="icon-plus" style="font-size:14px"></i></span></span></span></div></div>
+                <div style="border:1px solid var(--border);border-radius:10px;overflow:hidden"><div style="display:flex;align-items:center;gap:8px;padding:10px 14px;background:var(--sidebar);font-size:13px;font-weight:600"><i class="icon-shuffle" style="font-size:15px;color:var(--muted-fg);flex:none"></i><span style="flex:1;min-width:0">{{ dg.order }}</span></div><div style="padding:14px;display:flex;flex-direction:column;gap:10px;border-top:1px solid var(--border)"><span style="display:block;height:11px;border-radius:6px;background:var(--muted);width:58%"></span><span style="display:block;height:11px;border-radius:6px;background:var(--muted);width:40%"></span></div></div>
+                <sc-if value="{{ dg.refused }}" hint-placeholder-val="{{ false }}"><div role="alert" style="display:flex;gap:10px;align-items:flex-start;padding:12px 14px;border-radius:10px;background:var(--danger-soft);color:var(--danger-ink);font-size:13px;line-height:1.5"><i class="icon-circle-alert" style="font-size:16px;flex:none;margin-top:1px"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ dg.refusedText }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.refused.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.refused.n }}</span></sc-if></sc-if></div></sc-if>
+              </div>
+              <div style="display:flex;justify-content:flex-end;gap:8px;padding:14px 18px 18px"><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 {{ f.btnPx }};border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap">{{ dg.cancel }}</span><span style="display:inline-flex;align-items:center;justify-content:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:600;white-space:nowrap">{{ dg.save }}</span></div>
+            </div></sc-if>
+            <sc-if value="{{ sh.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:20"></div><aside style="position:absolute;top:0;right:0;bottom:0;width:{{ f.sheetW }};background:var(--card);border-left:1px solid var(--border);z-index:21;display:flex;flex-direction:column;box-shadow:var(--shadow-lg)">
+              <div style="display:flex;align-items:center;gap:12px;padding:16px 18px;border-bottom:1px solid var(--border)"><span style="width:40px;height:40px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:13px;font-weight:600">{{ sh.initials }}</span><span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:15px">{{ sh.name }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ sh.test }}</span></span><span style="width:32px;height:32px;display:grid;place-items:center;border-radius:7px"><i class="icon-x" style="font-size:17px"></i></span></div>
+              <div style="flex:1;min-height:0;overflow:hidden;padding:18px;display:flex;flex-direction:column;gap:18px">
+                <div style="display:flex;flex-direction:column;gap:8px">
+                  <div style="display:grid;grid-template-columns:1fr 1fr;gap:10px"><div style="border:1px solid var(--border);border-radius:10px;padding:12px"><div style="font-size:12px;color:var(--muted-fg)">{{ sh.scoreLabel }}</div><div style="font-size:20px;font-weight:600;font-variant-numeric:tabular-nums">{{ sh.score }}</div></div><div style="border:1px solid var(--border);border-radius:10px;padding:12px"><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-fg)">{{ sh.timeLabel }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.tile.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.tile.n }}</span></sc-if></sc-if></div><div style="font-size:20px;font-weight:600;font-variant-numeric:tabular-nums">{{ sh.time }}</div><sc-if value="{{ sh.hasSpan }}" hint-placeholder-val="{{ false }}"><div style="font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ sh.span }}</div></sc-if></div></div>
+                  <div style="display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12px;color:var(--muted-fg)"><sc-for list="{{ sh.meta }}" as="me" hint-placeholder-count="2"><span style="display:inline-flex;align-items:center;gap:4px;color:{{ me.fg }}"><sc-if value="{{ me.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ me.icon }}" style="font-size:13px"></i></sc-if>{{ me.text }}</span></sc-for></div>
+                </div>
+                <div><div style="display:flex;align-items:center;gap:8px;font-size:13px;font-weight:600;margin-bottom:8px">{{ sh.timeline }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dates.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.dates.n }}</span></sc-if></sc-if></div>
+                  <sc-for list="{{ sh.events }}" as="ev" hint-placeholder-count="5"><div style="display:flex;gap:12px;padding-bottom:12px"><span style="width:10px;height:10px;flex:none;border-radius:50%;margin-top:5px;background:{{ ev.dot }};box-shadow:0 0 0 3px var(--card)"></span><span style="flex:1;min-width:0;font-size:13px"><span style="display:flex;align-items:center;gap:8px"><span style="min-width:0">{{ ev.text }}</span><sc-if value="{{ ev.isBreak }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.break.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.break.n }}</span></sc-if></sc-if></sc-if></span><span style="display:block;font-size:12px;color:var(--muted-fg);font-variant-numeric:tabular-nums">{{ ev.when }}</span></span></div></sc-for>
+                </div>
+                <div><div style="font-size:13px;font-weight:600;margin-bottom:6px">{{ sh.note }}</div><span style="display:block;height:64px;border:1px solid var(--input);border-radius:9px;background:var(--bg)"></span></div>
+              </div>
+              <div style="display:flex;gap:8px;padding:14px 18px;border-top:1px solid var(--border)"><span style="flex:1;height:38px;border-radius:8px;border:1px solid var(--border);background:var(--card);display:grid;place-items:center;font-size:13.5px;font-weight:500;white-space:nowrap">{{ sh.open1 }}</span><span style="flex:1;height:38px;border-radius:8px;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center;font-size:13.5px;font-weight:500;white-space:nowrap">{{ sh.grade }}</span></div>
+            </aside></sc-if>
+            <sc-if value="{{ sd.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:30"></div><div role="dialog" aria-label="{{ sd.title }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(440px,calc(100% - 24px));background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);z-index:31;padding:22px;display:flex;flex-direction:column;gap:14px">
+              <div><div style="display:flex;align-items:center;gap:8px;font-size:17px;font-weight:600">{{ sd.title }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dtitle.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.dtitle.n }}</span></sc-if></sc-if></div><div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--muted-fg);margin-top:4px;line-height:1.55"><span style="min-width:0;text-wrap:pretty">{{ sd.body }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dbody.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.dbody.n }}</span></sc-if></sc-if></div></div>
+              <div style="display:flex;justify-content:flex-end;gap:8px;flex-wrap:wrap"><span style="display:inline-flex;align-items:center;height:42px;padding:0 16px;border-radius:9px;border:1px solid var(--border);background:var(--card);font-size:14px;font-weight:500">{{ sd.cancel }}</span><span style="display:inline-flex;align-items:center;gap:8px;height:42px;padding:0 18px;border-radius:9px;background:var(--primary);color:var(--primary-fg);font-size:14px;font-weight:600">{{ sd.confirm }}<sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dconfirm.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.dconfirm.n }}</span></sc-if></sc-if></span></div>
+            </div></sc-if>
+            <sc-if value="{{ sk.open }}" hint-placeholder-val="{{ false }}"><div style="position:absolute;inset:0;background:var(--overlay);z-index:40"></div><div role="alertdialog" aria-label="{{ sk.title }}" style="position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:min(420px,calc(100% - 24px));background:var(--card);border:1px solid var(--border);border-radius:14px;box-shadow:var(--shadow-lg);z-index:41;padding:22px;display:flex;flex-direction:column;gap:12px;align-items:flex-start">
+              <span style="width:40px;height:40px;border-radius:10px;background:var(--warning-soft);color:var(--warning-ink);display:grid;place-items:center"><i class="icon-eye-off" style="font-size:20px"></i></span>
+              <div style="font-size:17px;font-weight:600">{{ sk.title }}</div>
+              <div style="display:flex;align-items:flex-start;gap:8px;font-size:14px;color:var(--muted-fg);line-height:1.55"><span style="min-width:0;text-wrap:pretty">{{ sk.body }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.strike.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;line-height:1;font-style:normal;letter-spacing:0;text-transform:none">{{ pin.strike.n }}</span></sc-if></sc-if></div>
+              <span style="align-self:stretch;height:46px;border-radius:10px;background:var(--primary);color:var(--primary-fg);display:grid;place-items:center;font-size:15px;font-weight:600">{{ sk.back }}</span>
+            </div></sc-if>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="nt" hint-placeholder-count="3"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700;margin-top:1px">{{ nt.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ nt.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is the product’s, or the deck’s.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The deck and the product beside this page, part by part</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The middle column is what the deck and the product draw today, which is each screen’s “As today” state above. The right is this page. Nothing in the left column changes for a strict assignment, apart from the Mode row and its line.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>The deck and the product</span><span>This page</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.3fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What each case does</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The last column is the rule of F1’s plan (docs/plan/77f-f1-assignment-modes.md) behind it. Rows marked “not drawn” have no frame above; their words are in the copy table.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Rule</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “As today” says both strings are in the locale files now, with their key; “Deck” and “Plan” say where the English comes from; “New” that both are proposed here. No student-facing string speaks of a violation or of cheating, and none says the student did wrong.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:900px">
+      <div style="display:grid;grid-template-columns:130px minmax(0,1.5fr) minmax(0,1.5fr) 150px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>From</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:130px minmax(0,1.5fr) minmax(0,1.5fr) 150px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }};overflow-wrap:anywhere">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The plan’s ten questions are settled (Q1 to Q10 of 77f, “Decided”). These are the ones drawing the screens raised. Each has a default, and the frames draw the default.</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}</span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">Default drawn:</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For T-F1.6, T-F1.7 and T-F1.8</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each component takes from this page. Nothing here needs an operation T-F1.1 does not already add.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Component</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// F1 · Assignment modes, strict and flexible. A proposal page for DG-232 and T-F1.0 (docs/plan/77f-f1-assignment-modes.md).
+// [key, where, Tiếng Việt, English, where the English comes from]. "As today · key" names the locale key the string has now.
+const STR = [
+  // the wizard, Schedule
+  ['wzTitle', 'Wizard', 'Giao bài mới', 'New assignment', 'As today · assignments.new'],
+  ['wzDesc', 'Wizard', 'Chưa có gì được gửi đi cho tới khi bạn bấm Giao bài. Mặc định là lựa chọn an toàn.', 'Nothing is sent until you press Assign. Defaults are the safe choice.', 'As today · wizard.description'],
+  ['stepTest', 'Wizard steps', 'Đề thi', 'Test', 'As today · wizard.steps.test'],
+  ['stepStudents', 'Wizard steps', 'Học viên', 'Students', 'As today · wizard.steps.students'],
+  ['stepSchedule', 'Wizard steps', 'Lịch', 'Schedule', 'As today · wizard.steps.schedule'],
+  ['stepRules', 'Wizard steps', 'Quy định', 'Rules', 'As today · wizard.steps.rules'],
+  ['valueSchedule', 'Wizard steps', '{opens} – {closes} · {minutes} phút', '{opens} – {closes} · {minutes} min', 'As today · wizard.value.schedule'],
+  ['valueScheduleFlexible', 'Wizard steps', '{opens} – {closes} · Linh hoạt', '{opens} – {closes} · Flexible', 'New'],
+  ['valueNoCopy', 'Wizard steps', 'Chặn sao chép/dán', 'No copy/paste', 'As today · wizard.value.noCopy'],
+  ['valueLeaving', 'Wizard steps', 'Được rời bài {count} lần', '{count}× leaving allowed', 'As today · wizard.value.leavingAllowed'],
+  ['valueScore', 'Wizard steps', 'Hiện điểm', 'Score shown', 'As today · wizard.value.scoreShown'],
+  ['scheduleTitle', 'Schedule', 'Khi nào học viên làm bài?', 'When can they take it?', 'As today · wizard.scheduleTitle'],
+  ['opens', 'Schedule', 'Mở', 'Opens', 'As today · wizard.opens'],
+  ['closes', 'Schedule', 'Đóng', 'Closes', 'As today · wizard.closes'],
+  ['timeGroup', 'Schedule', 'Thời gian và số lượt', 'Time and attempts', 'As today · wizard.timeAndAttempts'],
+  ['mode', 'Schedule, Settings', 'Kiểu làm bài', 'Mode', 'Plan'],
+  ['modeStrict', 'Schedule, Settings, chip', 'Nghiêm ngặt', 'Strict', 'Plan'],
+  ['modeFlexible', 'Schedule, Settings, chip', 'Linh hoạt', 'Flexible', 'Plan'],
+  ['modeStrictHint', 'Schedule', 'Có thời gian làm bài, tính từ lúc học viên bấm Bắt đầu. Bạn chọn điều xảy ra khi học viên rời bài.', 'A time limit from the moment the student presses Start. You choose what happens when a student leaves the test.', 'New'],
+  ['modeFlexibleHint', 'Schedule', 'Không giới hạn thời gian. Học viên được nghỉ giữa chừng và làm tiếp đến giờ đóng, trên thiết bị nào cũng được. Mỗi lần rời bài vẫn được ghi lại và bạn được báo.', 'No time limit. Students may stop partway and carry on until the close, on any device. Leaving the test is still recorded, and you are told.', 'New'],
+  ['modeLockedAttempts', 'Settings dialog', 'Đã có học viên làm bài, nên không đổi được kiểu làm bài.', 'Students have started, so the mode can no longer change.', 'New'],
+  ['timeLimit', 'Schedule', 'Thời gian làm bài', 'Time limit', 'As today · wizard.timeLimit'],
+  ['timeLimitHint', 'Schedule', 'Tính từ lúc học viên bấm Bắt đầu, không phải lúc bài mở', 'Starts when the student presses Start, not when the window opens', 'As today · wizard.timeLimitHint'],
+  ['minutes', 'Schedule', '{count} phút', '{count} min', 'As today · wizard.minutes'],
+  ['custom', 'Schedule', 'Tuỳ chỉnh', 'Custom', 'As today · wizard.custom'],
+  ['attempts', 'Schedule', 'Số lượt mỗi học viên', 'Attempts per student', 'As today · wizard.attempts'],
+  ['attemptsOne', 'Schedule', 'Một lượt, không làm lại', 'One attempt, no retakes', 'As today · wizard.attemptsOne'],
+  ['attemptsMany', 'Schedule', 'Lấy điểm cao nhất. Mỗi lượt có thời gian làm bài riêng.', 'The best score counts. Each attempt has its own time limit.', 'As today · wizard.attemptsMany'],
+  ['attemptsManyFlexible', 'Schedule (not drawn: 2 or more)', 'Lấy điểm cao nhất. Mỗi lượt làm được đến giờ đóng.', 'The best score counts. Each attempt can run until the close.', 'New'],
+  ['back', 'Wizard', 'Quay lại', 'Back', 'As today · common.back'],
+  ['saveDraft', 'Wizard', 'Lưu nháp', 'Save draft', 'As today · assignments.saveDraft'],
+  ['cont', 'Wizard', 'Tiếp tục', 'Continue', 'As today · wizard.continue'],
+  ['asideStudents', 'Wizard summary', 'Học viên', 'Students', 'As today · wizard.aside.students'],
+  ['asideWindow', 'Wizard summary', 'Thời gian mở', 'Window', 'As today · wizard.aside.window'],
+  ['asideDays', 'Wizard summary', '{count} ngày', '{count} days', 'As today · wizard.aside.days'],
+  ['asideTime', 'Wizard summary', 'Thời gian làm bài', 'Time limit', 'As today · wizard.aside.timeLimit'],
+  ['asideUntilClose', 'Wizard summary', 'Đến giờ đóng', 'Until the close', 'New'],
+  ['asideAttempts', 'Wizard summary', 'Số lượt', 'Attempts', 'As today · wizard.aside.attempts'],
+  ['asideManual', 'Wizard summary', 'Chấm tay', 'Manual grading', 'As today · wizard.aside.manual'],
+  ['asidePerAttempt', 'Wizard summary', '{count} câu mỗi lượt', '{count} per attempt', 'As today · wizard.aside.perAttempt'],
+  ['asideReads', 'Wizard summary', 'Học viên sẽ đọc', 'What students will read', 'As today · wizard.aside.reads'],
+  ['asideAuto', 'Wizard summary', 'Mọi câu đều được chấm tự động. Không có câu nào phải chấm tay.', 'Everything is marked automatically. Nothing to grade by hand.', 'As today · wizard.aside.auto'],
+  // the wizard, Rules
+  ['rulesTitle', 'Rules', 'Quy định', 'Rules', 'As today · wizard.rulesTitle'],
+  ['order', 'Rules', 'Thứ tự câu hỏi', 'Question order', 'As today · wizard.order'],
+  ['afterSubmit', 'Rules', 'Sau khi nộp, học viên được xem', 'After submitting, students can see', 'As today · wizard.afterSubmit'],
+  ['integrity', 'Rules', 'Tính trung thực', 'Integrity', 'As today · wizard.integrity'],
+  ['fullscreen', 'Rules', 'Bắt buộc toàn màn hình', 'Require fullscreen', 'As today · wizard.fullscreen'],
+  ['fullscreenHint', 'Rules', 'Bài mở ở chế độ toàn màn hình và nhắc học viên quay lại nếu thoát ra', 'The test starts in fullscreen and asks to return if they leave', 'As today · wizard.fullscreenHint'],
+  ['copy', 'Rules', 'Chặn sao chép và dán', 'Block copy and paste', 'As today · wizard.copy'],
+  ['copyHint', 'Rules', 'Không cho sao chép câu hỏi hay dán câu trả lời vào', 'Stops copying the questions or pasting in answers', 'As today · wizard.copyHint'],
+  ['leaving', 'Rules, Settings', 'Rời khỏi bài', 'Leaving the test', 'As today · wizard.leaving'],
+  ['leavingHint', 'Rules', 'Chuyển tab hay ứng dụng, hoặc thoát toàn màn hình, đều tính là một lần', 'Switching tab or app, or leaving fullscreen, counts as one time', 'As today · wizard.leavingHint'],
+  ['leavingNoLimit', 'Rules', 'Không giới hạn', 'No limit', 'As today · wizard.leavingNoLimit'],
+  ['leavingNone', 'Rules', 'Không được phép', 'Not allowed', 'As today · wizard.leavingNone'],
+  ['leavingLimit', 'Rules', 'Đặt giới hạn', 'Set a limit', 'As today · wizard.leavingLimit'],
+  ['leavingTimes', 'Rules', '{count} lần', '{count}×', 'As today · wizard.leavingTimes'],
+  ['timesAllowed', 'Rules', 'lần được phép', 'times allowed', 'As today · wizard.timesAllowed'],
+  ['action', 'Rules', 'Khi vượt giới hạn', 'When the limit is passed', 'As today · wizard.action'],
+  ['actionHintFlag', 'Rules', 'Đánh dấu bài làm để bạn xem lại.', 'Flag the attempt for you.', 'As today · wizard.actionHint.flag'],
+  ['actionWarn', 'Rules', 'Nhắc nhở', 'Warn', 'As today · wizard.actionWarn'],
+  ['actionFlag', 'Rules', 'Đánh dấu cho tôi', 'Flag for me', 'As today · wizard.actionFlag'],
+  ['actionAutoSubmit', 'Rules', 'Tự nộp bài', 'Auto-submit', 'As today · wizard.actionAutoSubmit'],
+  ['away', 'Rules', 'Bỏ qua lần rời ngắn', 'Ignore short absences', 'As today · wizard.away'],
+  ['awayHint', 'Rules', 'Rời bài ngắn hơn mức này thì không tính', 'Leaving for less than this is not counted', 'As today · wizard.awayHint'],
+  ['seconds', 'Rules, Settings', '{count} giây', '{count} s', 'As today · wizard.seconds'],
+  ['leavingFlexible', 'Rules', 'Mỗi lần học viên rời bài từ {seconds} giây trở lên đều được ghi lại. Lần đầu, bài làm được đánh dấu và bạn được báo; sau đó bạn được báo lại tối đa 15 phút một lần. Bài không bị tự nộp hay khoá vì việc này.', 'Every time a student leaves the test for {seconds} s or more is recorded. The first time, the attempt is flagged and you are told; after that you are told again at most every 15 minutes. The test is never submitted or locked for it.', 'New'],
+  ['honesty', 'Rules', 'Trình duyệt không thể ngăn gian lận. Các quy định này ghi lại điều đã xảy ra để bạn tự quyết định.', 'A browser cannot prevent cheating. These rules record what happened so you can decide.', 'As today · wizard.honesty'],
+  ['limitsTitle', 'Rules', 'Hệ thống thấy được gì và không thấy gì', 'What it can and cannot see', 'As today · wizard.limits.title'],
+  ['note', 'Rules', 'Lời nhắn cho học viên (không bắt buộc)', 'Note to students (optional)', 'As today · wizard.note'],
+  // what students read (the intro, and the wizard's summary)
+  ['rAvailableUntil', 'Students read', 'Bài mở đến {when}.', 'Available until {when}.', 'As today · rules.availableUntil'],
+  ['rAvailableToday', 'Students read', 'Bài mở đến {time} hôm nay.', 'Available until today {time}.', 'As today · rules.availableUntilToday'],
+  ['rOpens', 'Students read', 'Bài mở từ {from} đến {to}.', 'Opens {from} – {to}.', 'As today · rules.opens'],
+  ['rTimer', 'Students read', 'Đồng hồ chạy từ lúc bạn bấm Bắt đầu và không dừng lại, kể cả khi bạn đóng trang.', 'The timer starts when you press Start and does not pause, even if you close the page.', 'As today · rules.timer'],
+  ['rFlexible', 'Students read', 'Bài không tính giờ. Bạn có thể dừng giữa chừng rồi quay lại làm tiếp, kể cả trên thiết bị khác, trước khi bài đóng. Bài chưa nộp sẽ được nộp tự động lúc đóng.', 'There is no timer. You can stop partway and come back, on another device too, before the test closes. A test not yet submitted is submitted when it closes.', 'New'],
+  ['rCopy', 'Students read', 'Sao chép và dán bị tắt.', 'Copy and paste are turned off.', 'As today · rules.noCopyPaste'],
+  ['rLeavingLimit', 'Students read', 'Bạn được rời trang làm bài {count} lần. Sau đó, giáo viên sẽ được báo.', 'You can leave the test {count} times. After that, your teacher is told.', 'As today · rules.leaving.limit.flag'],
+  ['rLeavingFlexible', 'Students read', 'Mỗi lần rời trang làm bài đều được ghi lại, và giáo viên sẽ được báo.', 'Leaving the test is recorded, and your teacher is told.', 'New'],
+  ['rScore', 'Students read', 'Bạn sẽ xem được điểm sau khi nộp bài.', 'You will see your score after submitting.', 'As today · rules.score.only'],
+  // an assignment's heading, the list and the Settings tab
+  ['backToList', 'Assignment', 'Về danh sách bài giao', 'Back to assignments', 'As today · detail.backToList'],
+  ['stOpen', 'Assignment', 'Đang mở', 'Live', 'As today · status.assignment.open'],
+  ['stScheduled', 'Assignment', 'Đã lên lịch', 'Scheduled', 'As today · status.assignment.scheduled'],
+  ['stClosed', 'Assignment', 'Đã đóng', 'Closed', 'As today · status.assignment.closed'],
+  ['tabStudents', 'Assignment', 'Học viên', 'Students', 'As today · assignmentDetail.tabs.students'],
+  ['tabQuestions', 'Assignment', 'Câu hỏi', 'Questions', 'As today · assignmentDetail.tabs.questions'],
+  ['tabSettings', 'Assignment', 'Cài đặt', 'Settings', 'As today · assignmentDetail.tabs.settings'],
+  ['listTitle', 'Assignments', 'Bài giao', 'Assignments', 'As today · teacherShell.nav.assignments'],
+  ['listDesc', 'Assignments', 'Các đề bạn đã giao cho lớp và học viên.', 'Tests you have sent to classes and students.', 'As today · list.description'],
+  ['listSearch', 'Assignments', 'Tìm bài giao', 'Search assignments', 'As today · list.search'],
+  ['tabLive', 'Assignments', 'Đang mở', 'Live', 'As today · list.tab_open'],
+  ['tabScheduled', 'Assignments', 'Đã lên lịch', 'Scheduled', 'As today · list.tab_scheduled'],
+  ['tabClosed', 'Assignments', 'Đã đóng', 'Closed', 'As today · list.tab_closed'],
+  ['tabDraft', 'Assignments', 'Bản nháp', 'Drafts', 'As today · list.tab_draft'],
+  ['hAssignment', 'Assignments', 'Bài giao', 'Assignment', 'As today · list.assignment'],
+  ['hCloses', 'Assignments', 'Đóng lúc', 'Closes', 'As today · list.window_open'],
+  ['hSubmitted', 'Assignments, Monitor', 'Đã nộp', 'Submitted', 'As today · list.submitted'],
+  ['hToGrade', 'Assignments', 'Chờ chấm', 'To grade', 'As today · detail.pending'],
+  ['hStatus', 'Assignments, Monitor', 'Trạng thái', 'Status', 'As today · list.status'],
+  ['listMeta', 'Assignments', 'Đề v{version} · {count} câu hỏi', 'Test v{version} · {count} questions', 'As today · list.meta'],
+  ['stTiming', 'Settings', 'Đề và thời gian', 'Test & timing', 'As today · settings.timing.title'],
+  ['stTimingHint', 'Settings', 'Học viên làm đề nào và trong bao lâu', 'What students take and for how long', 'As today · settings.timing.hint'],
+  ['stWindow', 'Settings', 'Thời gian mở', 'Window', 'As today · settings.window.title'],
+  ['stWindowHint', 'Settings', 'Khi nào học viên có thể bắt đầu', 'When the test can be started', 'As today · settings.window.hint'],
+  ['stIntegrity', 'Settings', 'Tính toàn vẹn', 'Integrity', 'As today · settings.integrity.title'],
+  ['stIntegrityHint', 'Settings', 'Xử lý khi học viên rời bài', 'How focus loss is handled', 'As today · settings.integrity.hint'],
+  ['stResults', 'Settings', 'Kết quả', 'Results', 'As today · settings.results.title'],
+  ['stResultsHint', 'Settings', 'Học viên thấy gì sau khi nộp bài', 'What students see after submitting', 'As today · settings.results.hint'],
+  ['stNote', 'Settings', 'Lời nhắn cho học viên', 'Note to students', 'As today · settings.note.title'],
+  ['stNoteHint', 'Settings', 'Hiện trên trang giới thiệu bài', 'Shown on the test’s intro page', 'As today · settings.note.hint'],
+  ['lockedPill', 'Settings', 'Đã khóa', 'Locked', 'As today · settings.lockedPill'],
+  ['locked', 'Settings (the pill’s title)', 'Bị khóa khi học viên đang làm bài', 'Locked while students are taking the test', 'As today · settings.locked'],
+  ['edit', 'Settings', 'Sửa', 'Edit', 'As today · settings.edit'],
+  ['editTitle', 'Settings dialog', 'Sửa {group}', 'Edit {group}', 'As today · settings.editTitle'],
+  ['saveChanges', 'Settings dialog', 'Lưu thay đổi', 'Save changes', 'As today · settings.save'],
+  ['cancel', 'Settings dialog', 'Huỷ', 'Cancel', 'As today · common.cancel'],
+  ['refused', 'Settings dialog (the server’s message)', 'Bài đã mở nên phần Đề và thời gian đã bị khoá. Thay đổi chưa được lưu.', 'The assignment has opened, so Test & timing is locked. Your change was not saved.', 'New · from the API'],
+  ['test', 'Settings', 'Đề thi', 'Test', 'As today · detail.test'],
+  ['versionMeta', 'Settings', '{questions} câu · {points} điểm · {audio} câu nghe · {manual} câu chấm tay · bản v{version}', '{questions} questions · {points} points · {audio} listening · {manual} graded by hand · v{version}', 'As today · detail.versionMeta'],
+  ['modeStrictSub', 'Settings', 'Có thời gian làm bài', 'With a time limit', 'New'],
+  ['modeFlexibleSub', 'Settings', 'Làm đến giờ đóng, được nghỉ giữa chừng', 'Until the close, with breaks', 'New'],
+  ['timerSub', 'Settings', 'Đồng hồ chạy khi học viên bấm Bắt đầu', 'Timer starts when the student presses Start', 'As today · settings.timing.timerSub'],
+  ['attemptsLabel', 'Settings', 'Số lượt làm', 'Attempts', 'As today · detail.attempts'],
+  ['attemptsOneValue', 'Settings', '1 lượt', '1 attempt', 'As today · detail.attemptsOne'],
+  ['inOrder', 'Settings', 'Câu hỏi theo thứ tự · phương án theo thứ tự', 'Questions in order · options in order', 'As today · settings.timing.*'],
+  ['fsLabel', 'Settings', 'Toàn màn hình', 'Fullscreen', 'As today · detail.fullscreen'],
+  ['notRequired', 'Settings', 'Không bắt buộc', 'Not required', 'As today · detail.notRequired'],
+  ['copyLabel', 'Settings', 'Sao chép / dán', 'Copy / paste', 'As today · detail.copyPaste'],
+  ['blocked', 'Settings', 'Chặn', 'Blocked', 'As today · detail.blocked'],
+  ['focusLimitFlag', 'Settings', 'Cho phép {count} lần, quá thì đánh dấu để xem lại', '{count} times allowed, then flagged for review', 'As today · detail.focusLimit.flag'],
+  ['leavingFlexibleValue', 'Settings', 'Ghi lại từ {seconds} giây, và báo bạn', 'Recorded from {seconds} s, and you are told', 'New'],
+  ['leavingFlexibleSub', 'Settings', 'Bài Linh hoạt không có giới hạn hay hành động', 'A flexible assignment has no limit and no action', 'New'],
+  // the Monitor and the attempt sheet
+  ['rosterSearch', 'Monitor', 'Tìm học viên', 'Search students', 'As today · papers.search'],
+  ['rosterFilter', 'Monitor', 'Tất cả', 'All', 'As today · papers.tabs.all'],
+  ['hStudent', 'Monitor', 'Học viên', 'Student', 'As today · monitor.student'],
+  ['hScore', 'Monitor', 'Điểm', 'Score', 'As today · monitor.score'],
+  ['hTime', 'Monitor', 'Thời gian', 'Time', 'As today · assignmentDetail.time'],
+  ['hTimeName', 'Monitor (the column’s accessible name)', 'Thời gian trên bài, và từ lúc bắt đầu đến khi nộp', 'Time on the paper, and from start to hand-in', 'New'],
+  ['hFocus', 'Monitor', 'Rời trang', 'Focus lost', 'As today · assignmentDetail.focusLost'],
+  ['aSubmitted', 'Monitor', 'Đã nộp', 'Submitted', 'As today · status.attempt.submitted'],
+  ['aInProgress', 'Monitor', 'Đang làm', 'In progress', 'As today · status.attempt.in_progress'],
+  ['aNotStarted', 'Monitor', 'Chưa bắt đầu', 'Not started', 'As today · status.attempt.not_started'],
+  ['aTimedOut', 'Monitor', 'Hết giờ', 'Timed out', 'As today · status.attempt.timed_out'],
+  ['needsGrading', 'Monitor', 'Cần chấm', 'Needs grading', 'As today · assignmentDetail.needsGrading'],
+  ['tookMinutes', 'Monitor, sheet', '{count} phút', '{count} min', 'As today · papers.tookMinutes'],
+  ['over', 'Monitor, sheet', 'trong {span}', 'over {span}', 'New'],
+  ['spanDaysHours', 'Monitor, sheet, timeline', '{days} ngày {hours} giờ', '{days} days {hours} hours', 'As today · detail.left.daysHours'],
+  ['spanHours', 'Monitor, sheet', '{hours} giờ', '{hours} hours', 'As today · detail.left.hours'],
+  ['sheetScore', 'Attempt sheet', 'Điểm', 'Score', 'As today · monitor.score'],
+  ['sheetTime', 'Attempt sheet', 'Thời gian làm', 'Time spent', 'As today · sheet.timeSpent'],
+  ['sheetOnPaper', 'Attempt sheet', 'Thời gian trên bài', 'Time on the paper', 'Plan'],
+  ['answeredOf', 'Attempt sheet', '{answered} trên {total} câu đã trả lời', '{answered} of {total} questions answered', 'As today · monitor.answeredOf'],
+  ['flagged', 'Attempt sheet', 'Cần xem lại', 'Needs review', 'As today · status.attention.flagged'],
+  ['sheetTimeline', 'Attempt sheet', 'Diễn biến bài làm', 'Attempt timeline', 'As today · sheet.timeline'],
+  ['sheetNote', 'Attempt sheet', 'Ghi chú riêng', 'Private note', 'As today · sheet.note'],
+  ['sheetOpen', 'Attempt sheet', 'Mở toàn bộ bài làm', 'Open full attempt', 'As today · sheet.openFull'],
+  ['sheetGrade', 'Attempt sheet', 'Chấm câu trả lời', 'Grade answers', 'As today · sheet.grade'],
+  ['kStarted', 'Timeline', 'Bắt đầu làm bài', 'Started the test', 'As today · timeline.kind.started'],
+  ['kTab', 'Timeline', 'Chuyển sang tab khác', 'Switched to another tab', 'As today · timeline.kind.tab_hidden'],
+  ['kWindow', 'Timeline', 'Chuyển sang cửa sổ khác', 'Switched to another window', 'As today · timeline.kind.window_blur'],
+  ['kFullscreen', 'Timeline', 'Thoát toàn màn hình', 'Left fullscreen', 'As today · timeline.kind.fullscreen_exit'],
+  ['kPaperLeft', 'Timeline', 'Tạm nghỉ', 'Took a break', 'New · paper_left'],
+  ['kResume', 'Timeline', 'Vào lại bài', 'Resumed the test', 'As today · timeline.kind.resume'],
+  ['kPageHide', 'Timeline', 'Đóng trang', 'Closed the page', 'As today · timeline.kind.page_hide'],
+  ['kSubmitted', 'Timeline', 'Nộp bài', 'Submitted', 'As today · timeline.kind.submitted'],
+  ['onQuestion', 'Timeline', 'Đang ở câu', 'On question', 'As today · timeline.columns.question'],
+  ['spanSeconds', 'Timeline', '{n} giây', '{n} s', 'As today · timeline.span.seconds'],
+  ['spanMinSec', 'Timeline', '{m} phút {s} giây', '{m} min {s} s', 'As today · timeline.span.minutesSeconds'],
+  ['notifyFlagged', 'The bell (not drawn)', '{studentName} đã rời trang làm bài {count} lần', '{studentName} left the test {count} times', 'As today · notifications.kind.flagged'],
+  ['closeNowNoteFlexible', 'Close early (not drawn)', 'Bài làm dở sẽ được nộp tự động ngay khi bài đóng.', 'Attempts in progress are submitted as soon as it closes.', 'New'],
+  ['closeNowAckFlexible', 'Close early (not drawn)', 'Tôi hiểu bài làm dở sẽ được nộp ngay', 'I understand attempts in progress are submitted now', 'New'],
+  ['extendBodyFlexible', 'Extend (not drawn)', 'Hạn nộp của học viên được dời ngay lập tức, kể cả sau giờ đóng.', 'The student’s deadline moves right away, past the close if need be.', 'New'],
+  // the student: Home and the intro
+  ['greeting', 'Home', 'Chào buổi tối, {name}', 'Good evening, {name}', 'As today · home.greeting.evening'],
+  ['homeSub', 'Home', 'Bạn đang làm dở một bài. Bài đóng lúc {time}.', 'You have a test in progress. It closes at {time}.', 'As today · home.subLive'],
+  ['inProgress', 'Home', 'Đang làm', 'In progress', 'As today · home.inProgress'],
+  ['inProgressLeft', 'Home', 'Đang làm · còn {count} phút', 'In progress · {count} min left', 'As today · home.inProgressLeft'],
+  ['homeAnswered', 'Home', '{answered}/{total} câu đã trả lời', '{answered} of {total} answered', 'As today · home.answered'],
+  ['closesToday', 'Home', 'đóng {time} hôm nay', 'closes today {time}', 'As today · home.closesToday'],
+  ['closesOn', 'Home', 'đóng {when}', 'closes {when}', 'As today · home.closesOn'],
+  ['resume', 'Home, intro', 'Tiếp tục làm bài', 'Continue test', 'As today · student.resume'],
+  ['comingUp', 'Home', 'Sắp tới', 'Coming up', 'As today · home.comingUp'],
+  ['testsCount', 'Home', '{count} bài', '{count} tests', 'As today · home.tests'],
+  ['noTimer', 'Intro, Home’s Coming up', 'Không tính giờ', 'No timer', 'New'],
+  ['navHome', 'Intro', 'Trang chủ', 'Home', 'As today · student.shell.home'],
+  ['duration', 'Intro', 'Thời lượng', 'Time limit', 'As today · intro.duration'],
+  ['questions', 'Intro', 'Số câu', 'Questions', 'As today · intro.questions'],
+  ['introAttempts', 'Intro', 'Lượt làm', 'Attempts', 'As today · intro.attempts'],
+  ['before', 'Intro', 'Trước khi bắt đầu', 'Before you start', 'As today · intro.before'],
+  ['start', 'Intro', 'Bắt đầu', 'Start', 'As today · intro.startConfirm'],
+  ['startHint', 'Intro', 'Câu trả lời được lưu tự động.', 'Your answers save automatically.', 'As today · intro.startHint'],
+  ['resumeHintFlexible', 'Intro', 'Bạn làm tiếp được đến {when}.', 'You can carry on until {when}.', 'New'],
+  ['startTitle', 'Intro’s dialog', 'Bắt đầu ngay?', 'Start now?', 'As today · intro.startTitle'],
+  ['startBodyFlexible', 'Intro’s dialog', 'Bài không tính giờ. Câu trả lời được lưu tự động, và bạn có thể dừng rồi làm tiếp trước {when}.', 'There is no timer. Your answers save automatically, and you can stop and carry on before {when}.', 'New'],
+  ['startCancel', 'Intro’s dialog', 'Để sau', 'Not yet', 'As today · intro.startCancel'],
+  // the engine
+  ['allSaved', 'Engine', 'Đã lưu tất cả câu trả lời', 'All answers saved', 'As today · takeTest.allSaved'],
+  ['submit', 'Engine', 'Nộp bài', 'Submit', 'As today · takeTest.submit'],
+  ['timeLeft', 'Engine (the timer’s name)', 'Thời gian còn lại', 'Time left', 'As today · takeTest.timeLeft'],
+  ['enCloses', 'Engine header', 'Đóng {when}', 'Closes {when}', 'New'],
+  ['enClosesToday', 'Engine header (not drawn: the close is today)', 'Đóng {time} hôm nay', 'Closes today {time}', 'New'],
+  ['enClosesName', 'Engine header (the pill’s name)', 'Bài đóng lúc {when}', 'The test closes {when}', 'New'],
+  ['leaveName', 'Engine (the ✕’s name)', 'Thoát khỏi bài làm', 'Leave test', 'As today · takeTest.leave'],
+  ['qOf', 'Engine', 'Câu {n} trên {total} · {type}', 'Question {n} of {total} · {type}', 'As today · takeTest.questionOfType'],
+  ['single', 'Engine', 'Một đáp án', 'Single choice', 'As today · takeTest.type.single_choice'],
+  ['chooseSingle', 'Engine', 'Chọn một đáp án.', 'Choose one answer.', 'As today · takeTest.chooseSingle'],
+  ['prev', 'Engine', 'Trước', 'Previous', 'As today · takeTest.previous'],
+  ['next', 'Engine', 'Sau', 'Next', 'As today · takeTest.next'],
+  ['leaveTitle', 'Leave dialog', 'Thoát khỏi bài làm?', 'Leave the test?', 'As today · takeTest.leaveTitle'],
+  ['leaveBody', 'Leave dialog', 'Câu trả lời của bạn đã được lưu, nhưng đồng hồ vẫn chạy. Hãy quay lại trước khi hết giờ.', 'Your answers are saved, but the timer keeps running. Come back before it reaches zero.', 'As today · takeTest.leaveBody'],
+  ['leaveStay', 'Leave dialog', 'Ở lại', 'Stay', 'As today · takeTest.leaveStay'],
+  ['breakTitle', 'Leave dialog', 'Tạm nghỉ?', 'Take a break?', 'New'],
+  ['breakBody', 'Leave dialog', 'Câu trả lời của bạn đã được lưu. Bạn có thể quay lại làm tiếp, kể cả trên thiết bị khác, trước {when}.', 'Your answers are saved. You can come back and carry on, on another device too, before {when}.', 'New'],
+  ['breakPending', 'Leave dialog (not drawn: an answer still saving)', 'Câu trả lời mới nhất của bạn sẽ được lưu trước khi thoát. Bạn có thể quay lại làm tiếp trước {when}.', 'Your latest answers will be saved before you leave. You can come back and carry on before {when}.', 'New'],
+  ['breakUnsaved', 'Leave dialog (not drawn: the save failed)', 'Kết nối chưa ổn định. Hãy thử lưu lại trước khi thoát.', 'The connection is unstable. Try saving again before leaving.', 'New'],
+  ['breakConfirm', 'Leave dialog, the ✕’s name', 'Tạm nghỉ', 'Take a break', 'New'],
+  ['leftTitle', '“You left the test”', 'Bạn vừa rời trang làm bài', 'You left the test', 'As today · integrity.left.title'],
+  ['leftBack', '“You left the test”', 'Quay lại bài làm', 'Back to the test', 'As today · integrity.left.back'],
+  ['leftFlexible', '“You left the test”', 'Lần rời trang này đã được ghi lại, và giáo viên sẽ được báo. Câu trả lời của bạn vẫn an toàn. Nếu cần nghỉ, hãy bấm nút đóng ở góc trên: bài được lưu để bạn làm tiếp sau.', 'This time away is recorded, and your teacher is told. Your answers are safe. If you need a break, press the close button at the top: your test is saved for later.', 'New'],
+  ['toldTeacher', 'Engine header', 'Giáo viên đã được báo', 'Your teacher has been told', 'As today · integrity.flagged'],
+  ['submitBodyFlexible', 'Submit dialog (not drawn)', 'Chỗ trống, cặp nối và câu hỏi chưa trả lời sẽ không có điểm. Bài đóng lúc {when}.', 'Unanswered gaps, matches and questions score zero. The test closes {when}.', 'New']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+const PARTS = [['wizard', 'Wizard · Schedule'], ['rules', 'Wizard · Rules'], ['settings', 'Settings tab'], ['list', 'List and heading'], ['intro', 'Test intro'], ['engine', 'Take test'], ['home', 'Home'], ['monitor', 'Monitor and sheet']];
+const STATES = {
+  wizard: [['today', 'As today'], ['strict', 'Strict'], ['flexible', 'Flexible']],
+  rules: [['today', 'As today'], ['flexible', 'Flexible']],
+  settings: [['today', 'As today'], ['strict', 'Strict, live'], ['card', 'Flexible, scheduled'], ['edit', 'Editing it'], ['open', 'Flexible, live'], ['attempts', 'Closed, with attempts'], ['refused', 'Opened while editing']],
+  list: [['today', 'As today'], ['list', 'The list'], ['detail', 'The heading']],
+  intro: [['today', 'As today'], ['flexible', 'Flexible'], ['start', 'Starting'], ['resume', 'In progress']],
+  engine: [['today', 'As today'], ['flexible', 'Flexible'], ['lastHour', 'Last hour'], ['last5', 'Last 5 minutes'], ['leave', 'Taking a break'], ['strike', 'After an absence']],
+  home: [['today', 'As today'], ['flexible', 'Flexible'], ['lastHour', 'Last hour']],
+  monitor: [['today', 'As today'], ['flexible', 'Flexible'], ['sheetToday', 'Sheet, as today'], ['sheet', 'Sheet, flexible']]
+};
+const START = { wizard: 'flexible', rules: 'flexible', settings: 'card', list: 'list', intro: 'flexible', engine: 'flexible', home: 'flexible', monitor: 'flexible' };
+const NOTES = {
+  'wizard:strict': [['mode', 'The new first row of “Thời gian và số lượt”: a choice of two in the product’s Segmented, with an icon each, built as “Khi nào hiện kết quả” is: the line under the name changes with the choice. A new assignment opens on Strict unless the teacher’s stored default says Flexible (Q9 of the plan).']],
+  'wizard:flexible': [['mode', 'Flexible chosen. Its line says what students may do, and that leaving is still recorded and the teacher told.'], ['step', 'The step’s line names the mode where it named the minutes.'], ['aside', '“Thời gian làm bài” reads “Đến giờ đóng”. The time-limit row is gone from the form; the stored 20 minutes stay with the draft, so a switch back to Strict before the open finds them.'], ['reads', 'What students will read is the intro’s flexible sentences, word for word.']],
+  'rules:flexible': [['integrity', 'Fullscreen and copy-and-paste stay the teacher’s two switches.'], ['fixed', '“Rời khỏi bài” keeps its name and loses its controls: one fixed sentence says what is recorded and who is told, with the stored short-absence threshold in it. “Khi vượt giới hạn” and “Bỏ qua lần rời ngắn” are not asked (Q2).'], ['step', 'The step’s line drops “Được rời bài 2 lần”.'], ['reads', 'The summary’s sentence on leaving is the flexible one.']],
+  'settings:strict': [['row', 'An existing assignment reads Strict, in a row after the test, with the time limit under it as today.'], ['lock', 'The row locks with the card while the assignment is open, as the time limit does. The lock’s title is unchanged.']],
+  'settings:card': [['chip', 'The mode’s chip beside the status.'], ['row', 'Before the open: the mode and its line, and no time-limit row.'], ['leave', 'The Integrity card says what happens in place of a limit and an action. The short-absence row goes, as in the wizard.']],
+  'settings:edit': [['mode', 'The card’s dialog holds the wizard’s own group, so the Mode row is there with its line, and before the open it changes both ways.']],
+  'settings:open': [['lock', 'While the assignment is open the card is locked, and the mode with it (Q10 of the plan).']],
+  'settings:attempts': [['mode', 'Closed, with attempts. The card can be edited again, but the Mode row rests at 45%, as “Khi vượt giới hạn” does without a limit, and its line says why. The server refuses the change too.']],
+  'settings:refused': [['refused', 'The dialog’s error line, as today. If the assignment opened while the dialog was open, the save answers 409 ASSIGNMENT_LOCKED and the server’s message shows here.']],
+  'list:list': [['chip', 'A chip after the test’s line, only on a flexible assignment; a strict one reads as today (Q4). On a phone it starts the second line.']],
+  'list:detail': [['chip', 'The same chip beside the status in the heading.'], ['meta', 'The heading’s line drops the minutes: a flexible assignment has no time limit.']],
+  'intro:flexible': [['fact', '“Thời lượng” reads “Không tính giờ”.'], ['rule', 'The timer sentence becomes the flexible one: stop, come back on another device, before the close, and what happens at the close. It never says the clock does not stop.'], ['rule2', 'Leaving is recorded and the teacher told, with no allowance and no consequence named.']],
+  'intro:start': [['dbody', 'The start dialog’s sentence under flexible. The title and the two buttons are today’s.']],
+  'intro:resume': [['hint', 'An attempt in progress: “Tiếp tục làm bài”, and until when it can be carried on.']],
+  'engine:flexible': [['pill', 'The pill shows when the test closes, in the product’s short form for another day, with the calendar icon. It is not a timer and has no seconds. Below 768 the word “Đóng” goes and the icon says it, so the pill fits beside Nộp bài in English too.'], ['x', 'The close button is named “Tạm nghỉ”.']],
+  'engine:lastHour': [['pill', 'In the last hour the countdown comes back as today: the time left to the close.']],
+  'engine:last5': [['pill', 'Under five minutes, the danger tones, as today.']],
+  'engine:leave': [['dtitle', 'The leave dialog is a break.'], ['dbody', 'Answers saved, come back on another device too, before the close. Nothing about a clock.'], ['dconfirm', '“Tạm nghỉ” in place of “Thoát”.']],
+  'engine:strike': [['strike', 'Recorded, and the teacher told. No allowance, no count, no submit, and it points to the break for a student who needs one. The header’s status says the teacher has been told, as today after a flag.']],
+  'home:flexible': [['sub', 'The greeting’s line names the day, as the product writes a close on another day.'], ['pill', '“Đang làm” with no minutes while the close is more than an hour away.'], ['meta', '“đóng 22:00, 26/09”, the product’s line for a close on another day.']],
+  'home:lastHour': [['pill', 'In the last hour the minutes come back, as today.']],
+  'monitor:flexible': [['chip', 'The mode’s chip.'], ['time', '“Thời gian” is the time on the paper, and under it, when it differs, the time from start to hand-in (Q5). An attempt in progress shows its time on the paper so far.']],
+  'monitor:sheet': [['tile', 'The tile is the time on the paper, with the time from start to hand-in under it in the monitor’s words.'], ['dates', 'The first event of each day carries the day.'], ['break', 'A break, then “Vào lại bài”, in the neutral dot. Closing the page is neutral too. Only leaving the open paper takes the danger dot.']]
+};
+const PIN_KEYS = ['step', 'aside', 'reads', 'mode', 'integrity', 'fixed', 'chip', 'meta', 'lock', 'row', 'leave', 'time', 'fact', 'rule', 'rule2', 'hint', 'sub', 'pill', 'x', 'refused', 'tile', 'dates', 'break', 'dtitle', 'dbody', 'dconfirm', 'strike'];
+
+// the deck's fixtures: the Teacher page's assignments (a1, a2, a3) and roster, the Student page's Reading paper (s1)
+const A1 = { title: 'Mid-term Reading Mock', classes: 'IELTS 6.5 Evening', version: 3, q: 40, mins: 60, submitted: 18, target: 24, toGrade: 6 };
+const A2 = { title: 'Unit 4 · Listening: Directions', classes: 'IELTS Foundation A', version: 1, q: 20, mins: 30, submitted: 9, target: 16, toGrade: 0 };
+const A3 = { title: 'Vocabulary Quiz: Travel', classes: 'TOEIC 600 Weekend, Kids Starters B', version: 2, q: 25, mins: 20, submitted: 11, target: 30, toGrade: 0 };
+// [name, state, score, time, span, focus, flagged, submitted]: the deck's roster for a1, and the same students on a3 set flexible
+const ROSTER_TODAY = [['Lê Hoàng Nam', 'grading', '31 / 40', 52, null, 3, true, '20:14 · 24/09'], ['Trần Minh Anh', 'submitted', '36 / 40', 47, null, 0, false, '20:02 · 24/09'], ['Phạm Thu Hà', 'progress', '—', null, null, 0, false, '—'], ['Nguyễn Gia Bảo', 'grading', '28 / 40', 58, null, 1, false, '19:51 · 24/09'], ['Võ Khánh Linh', 'submitted', '34 / 40', 44, null, 0, false, '19:40 · 24/09'], ['Đặng Quốc Huy', 'grading', '22 / 40', 60, null, 0, false, '19:30 · 24/09'], ['Bùi Ngọc Mai', 'progress', '—', null, null, 0, false, '—'], ['Hoàng Đức Minh', 'notStarted', '—', null, null, 0, false, '—'], ['Đỗ Phương Thảo', 'submitted', '38 / 40', 41, null, 0, false, '19:12 · 24/09'], ['Ngô Thanh Tùng', 'notStarted', '—', null, null, 0, false, '—']];
+const ROSTER_FLEX = [['Lê Hoàng Nam', 'submitted', '21 / 25', 40, [2, 1], 3, true, '20:14 · 24/09'], ['Trần Minh Anh', 'submitted', '23 / 25', 16, null, 0, false, '19:40 · 23/09'], ['Phạm Thu Hà', 'progress', '—', 9, null, 0, false, '—'], ['Nguyễn Gia Bảo', 'submitted', '19 / 25', 22, [1, 2], 1, true, '21:40 · 23/09'], ['Võ Khánh Linh', 'submitted', '24 / 25', 14, null, 0, false, '19:05 · 24/09'], ['Đặng Quốc Huy', 'progress', '—', 31, null, 2, true, '—'], ['Bùi Ngọc Mai', 'progress', '—', 4, null, 0, false, '—'], ['Hoàng Đức Minh', 'notStarted', '—', null, null, 0, false, '—'], ['Đỗ Phương Thảo', 'submitted', '25 / 25', 12, [0, 3], 0, false, '18:30 · 22/09'], ['Ngô Thanh Tùng', 'notStarted', '—', null, null, 0, false, '—']];
+const S1 = { title: 'Reading · Why cities need green space', cls: 'IELTS 6.5 Evening', q: 8, mins: 45 };
+const PASSAGE_A = 'Planners once treated parks as a luxury, something to add only after housing and roads were finished. That view has changed. Research across forty European cities found that residents who lived within 300 metres of a park reported better sleep and visited their doctor less often.';
+const Q2 = { prompt: 'According to paragraph A, people who live near a park…', opts: ['move house less often', 'sleep better and see the doctor less', 'spend more time outside at night', 'pay less for their homes'] };
+const INIT = n => { const p = n.split(' '); return (p[p.length - 1][0] + p[0][0]).toUpperCase(); };
+
+// [part, the deck and the product, this page]
+const ADDS = [
+  ['Mode', 'Nowhere. Every assignment has a time limit (“Thời gian làm bài”: 30, 45 or 60 minutes, or Tuỳ chỉnh).', 'A first row in “Thời gian và số lượt”, “Kiểu làm bài”: Nghiêm ngặt or Linh hoạt, with a line that changes with the choice.'],
+  ['The time limit under flexible', 'Always asked.', 'Not shown. The stored minutes stay with the assignment and are not applied.'],
+  ['Rules › Tính trung thực', 'Fullscreen, copy-and-paste, “Rời khỏi bài” (three choices and a count), “Khi vượt giới hạn”, “Bỏ qua lần rời ngắn”, and the honesty note.', 'Under flexible: the two switches, “Rời khỏi bài” as one fixed sentence, and the note.'],
+  ['The wizard’s step lines and summary', '“… · 20 phút”; “Được rời bài 2 lần”; “Thời gian làm bài 20 phút”; the timer and leaving sentences students read.', '“… · Linh hoạt”; no leaving count; “Đến giờ đóng”; the flexible sentences.'],
+  ['Settings › Đề và thời gian', 'Test, time limit, attempts, order; locked while the assignment is open (DG-65).', 'A “Kiểu làm bài” row after the test, locked with the card; no time-limit row under flexible; in the dialog, the Mode row rests once attempts exist.'],
+  ['Settings › Tính toàn vẹn', 'The leaving rule and the short-absence threshold.', 'Under flexible, “Ghi lại từ 3 giây, và báo bạn” and why there is no limit.'],
+  ['Assignments list and an assignment’s heading', 'The status, and the minutes in the heading’s line.', 'A “Linh hoạt” chip on a flexible assignment; the heading’s line has no minutes.'],
+  ['Test intro', '“Thời lượng 45 phút”, the timer sentence and the leaving rule with its count; the start dialog says the timer does not pause.', '“Không tính giờ”; the flexible sentences; the start dialog’s and the resume line’s flexible words.'],
+  ['The engine’s header', 'A countdown at all times, in the danger tones under five minutes.', 'The close as a date until its last hour, then the countdown as today.'],
+  ['The leave dialog', '“Thoát khỏi bài làm?” and “đồng hồ vẫn chạy”, with Ở lại and Thoát.', '“Tạm nghỉ?”: saved, come back on another device too, with Ở lại and Tạm nghỉ.'],
+  ['“Bạn vừa rời trang làm bài”', 'A count against an allowance; past it, a flag, a warning or a submit.', 'Recorded, and the teacher told; nothing else happens to the paper.'],
+  ['Home’s resume card', '“Đang làm · còn 31 phút” and “đóng 21:00 hôm nay”.', '“Đang làm” and the close’s day; the minutes come back in the last hour.'],
+  ['Monitor › Thời gian', 'Start to hand-in, one line (“52 phút”), and “—” while in progress.', 'The time on the paper, and under it the time from start to hand-in when they differ.'],
+  ['Attempt sheet', '“Thời gian làm”; the timeline’s times have no day.', '“Thời gian trên bài” with the span under it; each day’s first event carries the day; a break in the neutral dot.']
+];
+// [when, what shows, rule]
+const WHENS = [
+  ['A new assignment', 'Strict, unless the teacher’s stored default is Flexible.', 'Plan Q9; assignmentDefaults.mode (T-F1.1).'],
+  ['An assignment made before F1', 'Strict, everything as at v0.14.0.', 'Plan Q9; the migration’s default.'],
+  ['Flexible is chosen', 'The time-limit row and the two leaving controls go. The body still sends the stored minutes and leaving rule.', 'T-F1.6; stored, not applied.'],
+  ['Strict is chosen again before the open', 'The teacher’s earlier minutes and leaving rule are back.', 'The decision to keep the time limit.'],
+  ['The assignment is open', '“Đề và thời gian” is locked, and the mode with it.', 'Plan Q10; requireUnlocked.'],
+  ['It is closed and has attempts', 'The card can be edited; the Mode row rests at 45% and says why.', 'Plan Q10: locked once any attempt exists.'],
+  ['It opens while the dialog is open', 'The save is refused (409) and the dialog’s error line shows the server’s message.', 'T-F1.6.'],
+  ['A student opens the intro', '“Không tính giờ” and the flexible sentences; the start dialog says there is no timer.', 'T-F1.7.'],
+  ['The close is more than an hour away', 'The header shows “Đóng 22:00, 26/09”; Home’s pill says “Đang làm”.', 'T-F1.7: the close as a date, a countdown in the last hour.'],
+  ['The last hour', 'The countdown, as today; Home’s pill says “còn 42 phút”.', 'As today.'],
+  ['The last five minutes', 'The danger tones.', 'As today.'],
+  ['The close passes with the paper open', 'The engine submits; the student reads “Bài đã hết giờ và được nộp tự động.”, the teacher “Hết giờ”.', 'Plan Q2; timer_expired at the deadline.'],
+  ['The student presses the close button', '“Tạm nghỉ?”. On Tạm nghỉ the paper is saved, paper_left is recorded, fullscreen is left and Home opens.', 'T-F1.7, T-F1.0b.'],
+  ['The student closes the page', 'Nothing is counted: it is a break. The timeline shows “Đóng trang”.', 'Plan Q4.'],
+  ['The student carries on from another device', 'The old tab locks (“Bài này đang mở ở thiết bị khác.”); the timeline reads “Vào lại bài”, and “Vào lại bài ở thẻ hoặc thiết bị khác” when the old tab was live.', 'Plan Q3.'],
+  ['The open paper is left for 3 s or more', '“Bạn vừa rời trang làm bài” with the flexible sentence. The first time flags the attempt and tells the teacher; later ones tell the teacher at most every 15 minutes.', 'Plan Q5; T-F1.4.'],
+  ['A repeated notice (not drawn)', 'The same item, “{name} đã rời trang làm bài {n} lần”, with the new count, in the danger tone with “Cần xem lại”.', 'T-F1.8.'],
+  ['The teacher reads an attempt from before F1', 'One time, start to hand-in, as today.', 'activeSeconds is null.'],
+  ['An attempt spans more than one day', 'Its first event of each day carries the day, in the sheet and on the review page.', 'T-F1.8.'],
+  ['The teacher closes it early (not drawn)', 'The confirmation says attempts in progress are submitted as it closes, and the box to tick says so.', 'A flexible deadline is the student’s close, an early close included.'],
+  ['The teacher extends one student (not drawn)', 'The dialog says the deadline moves, past the close if need be.', 'T-F1.3: extendAttempt under flexible.'],
+  ['The student submits early (not drawn)', 'The dialog’s “Còn lại” tile shows the close; its sentence names the close in place of the minutes.', 'T-F1.7.'],
+  ['Home’s Coming up lists a flexible test (not drawn)', '“Không tính giờ” where the minutes are.', 'T-F1.7.']
+];
+const QUESTIONS = [
+  ['Q1 · The words', 'Are these the Vietnamese words?', 'New here: “Kiểu làm bài” for the mode, “Nghiêm ngặt” and “Linh hoạt” for its two values, “Tạm nghỉ” for the break, “Không tính giờ” where the minutes were, “Thời gian trên bài” for time on the paper, and “trong {span}” for the time from start to hand-in. The owner’s own words were “loại” and “nghỉ ngơi”.', 'As in the copy table.'],
+  ['Q2 · Short absences under flexible', 'Should “Bỏ qua lần rời ngắn” stay under flexible?', 'The plan removes “Rời khỏi bài” and “Khi vượt giới hạn” and keeps fullscreen and copy-and-paste; it says nothing of the threshold, which still decides what is counted (3 s by default, the plan’s Q5). Hidden, it applies a value the teacher cannot see in the wizard.', 'Not shown. The stored value applies, and the fixed sentence and the Integrity card name it (“từ 3 giây”).'],
+  ['Q3 · The header far from the close', 'Should the header show the close as a date, or nothing until the last hour?', 'A flexible paper has no clock to show. The plan asks for “the close as a date”. A student on a phone has little room, and the date is also on Home and the intro.', 'The close as a date, “Đóng 22:00, 26/09” (“Đóng 22:00 hôm nay” on the day), then the countdown.'],
+  ['Q4 · A chip on strict assignments', 'Should a strict assignment carry a chip too?', 'Strict is what every assignment was. A chip on every row would be new noise in a list that is mostly strict.', 'Only a flexible assignment carries a chip.'],
+  ['Q5 · When the second time shows', 'Should the monitor always show both times?', 'For most strict attempts the two are the same minute, and two equal lines on every row is clutter. They differ when a student took breaks or left the paper for long.', 'The second line only when it differs from the first; an attempt in progress shows its time on the paper so far and no second line.'],
+  ['Q6 · Closing a flexible assignment early', 'Is the early close’s warning enough?', 'Today the confirmation says students mid-test keep their full minutes. Under flexible the deadline is the close, so closing early ends every attempt in progress at once.', 'The note and the box to tick say attempts in progress are submitted as it closes (copy table; not drawn).'],
+  ['Q7 · “Từ đầu” on the review page', 'How should the full timeline’s “Từ đầu” read after a day?', 'It counts from the start on the wall clock, so after a break of a day it reads 25:30:00 and more.', 'Days in front once past 24 hours: “1 ngày 01:29:30”.']
+];
+const HANDOFF = [
+  ['ScheduleStep / TimingRules', 'A first RuleRow, “Kiểu làm bài”, with a two-option Segmented (fill, lg; Timer and TimerOff icons) and a hint by value. Under flexible the time-limit RuleRow is not rendered and the draft keeps durationMinutes. The attempts hint is attemptsManyFlexible when more than one under flexible. The draft starts from assignmentDefaults.mode, else strict.'],
+  ['wizardValues.stepValues', 'The schedule line is valueScheduleFlexible under flexible; the rules line leaves out the leaving count.'],
+  ['WizardAside', 'The time-limit line reads asideUntilClose under flexible.'],
+  ['RulesStep / IntegrityRules', 'Under flexible: the two SwitchRows, then a row with “Rời khỏi bài” and the fixed sentence (seconds from minAwayMs), then the honesty block. The leaving Segmented, the action and the short-absence stepper are not rendered; their values are sent unchanged.'],
+  ['studentRules / previewRules', 'RulesInput takes mode. Under flexible the timer sentence is rFlexible (and timerRunning is not used), and leaving is rLeavingFlexible.'],
+  ['SettingsGroups', 'Timing rows: “Kiểu làm bài” after the test, with modeStrictSub or modeFlexibleSub; no time-limit row under flexible. Integrity rows under flexible: the leaving row reads leavingFlexibleValue with leavingFlexibleSub, and the short-absence row goes. In the dialog the Mode RuleRow is dimmed and its Segmented disabled once the assignment has attempts, with modeLockedAttempts as its hint; a 409 shows in the existing Callout.'],
+  ['AssignmentCell, AssignmentCard, AssignmentDetailPage', 'A ModeChip (Badge secondary, TimerOff, “Linh hoạt”) after the meta line, at the start of the phone card’s second line, and after the StatusBadge in PageHead; only under flexible. AssignmentMeta leaves out the minutes under flexible.'],
+  ['AssignmentIntroPage', 'The duration fact reads noTimer; the start dialog’s body is startBodyFlexible; an attempt in progress shows resumeHintFlexible.'],
+  ['ResumeCard, StudentHomePage, ComingUp', 'The pill is inProgress until 60 minutes are left, then inProgressLeft. homeSub and the card’s line use clockTime for a close on another day. A flexible upcoming row shows noTimer.'],
+  ['EngineHeader / Clock', 'Under flexible, while more than 60 minutes are left: a pill of the timer’s size (bg-muted), CalendarClock icon, enCloses with clockTime (enClosesToday on the day), role img named enClosesName. Below 768 the pill drops the word and keeps the icon and the date. From 60 minutes: Clock as today, danger under 5. LeaveButton is named breakConfirm.'],
+  ['LeaveDialog / useLeave', 'Under flexible: breakTitle, breakBody or breakPending, breakConfirm; breakUnsaved when the save fails. paper_left is recorded before leaving.'],
+  ['StrikeDialog / strikes.ts', 'Under flexible the sentence is leftFlexible, whatever the stored limit; StrikeIndicator shows toldTeacher once flagged and never a count; useIntegrityAutoSubmit never fires.'],
+  ['SubmitDialog', 'Under flexible the “Còn lại” tile shows enCloses and the body is submitBodyFlexible.'],
+  ['Monitor', 'The time column is 120px wide. Line 1: activeSeconds in minutes, or elapsedMinutes when it is null. Line 2, 12px: over with the start-to-hand-in span, when it rounds to a different value. The header is named hTimeName.'],
+  ['AttemptSheet', 'The time tile is sheetOnPaper with activeSeconds when it is set, and over with the span under it; sheetTime as today when it is null.'],
+  ['Timeline, timeline.ts, tones.ts', 'Once an attempt spans more than one day, the first event of each day is dayDate + “ · ” + the time, in the compact list and in the review table’s “Lúc”. paper_left reads kPaperLeft, its mark is “other”, and its span runs to the next resume, written in days and hours past a day (spanDaysHours). page_hide stays “other”.'],
+  ['Locales', 'Every string marked New in the copy table, Vietnamese first, in teacher.json, student.json and common.json.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'F1’s plan (docs/plan/77f-f1-assignment-modes.md: Deliverable, Decided, T-F1.0, T-F1.6 to T-F1.8); the deck’s Teacher page (New assignment’s steps 3 and 4, the Settings groups, the roster and the attempt sheet) and Student page (Home, Test intro, Take test, the leave and “You left the test” dialogs); and the product’s ScheduleStep, RulesStep, RuleGroup, WizardAside, SettingsGroups, AssignmentCells, EngineHeader, Clock, LeaveDialog, StrikeDialog, ResumeCard, Monitor, AttemptSheet and Timeline, with their Vietnamese and English strings.'],
+  ['What it leaves alone.', 'Everything a strict assignment does, apart from the Mode row and its line. The wizard’s other groups and the Settings tab’s other cards are blocks. No operation changes beyond T-F1.1.'],
+  ['What is not drawn.', 'The review page’s full timeline (the handoff gives its rule), the early close and extend dialogs, the submit dialog and the bell; their words are in the copy table and the states table.']
+];
+const DECISIONS = [
+  ['Where the teacher chooses', 'One row, beside the time limit it replaces.', ['“Kiểu làm bài” is the first row of “Thời gian và số lượt”, the group that holds the time limit, in the wizard and in the Settings dialog.', 'It is the product’s Segmented with a line that changes with the choice, as “Khi nào hiện kết quả” is. No new control.', 'Under flexible the time-limit row goes; in Rules, “Rời khỏi bài” becomes one fixed sentence and the two switches stay.']],
+  ['Locked with Test & timing', 'An attempt never changes mode under a student.', ['The mode is a row of the “Đề và thời gian” card and locks with it while the assignment is open.', 'Once any attempt exists the dialog’s Mode row rests and says why; the server refuses the change either way (the plan’s Q10).', 'A flexible assignment carries a “Linh hoạt” chip in the list and in its heading. A strict one reads as today.']],
+  ['What the student sees', 'The close, not a clock.', ['The header shows when the test closes. The countdown comes back in the last hour, in the danger tones under five minutes, as today.', 'The close button is a break: “Tạm nghỉ?”, answers saved, come back on another device too.', 'Leaving the open paper is recorded and the teacher told. The words never say more, and never call it cheating.']],
+  ['What the teacher reads afterwards', 'Two times, and the days.', ['The monitor and the sheet show the time on the paper, and the time from start to hand-in under it when they differ.', 'Once an attempt spans days, each day’s first event carries the day.', 'A break and a closed page are neutral; only leaving the open paper is in the danger tone.']]
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', part: 'wizard', st: { ...START }, anno: true, stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en';
+    const D = (a, b) => (vi ? a : b);
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const part = s.part, st = s.st[part], key = part + ':' + st;
+    const noteList = NOTES[key] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const opt = (label, on, icon, off) => ({ label, hasIcon: !!icon, icon: icon || '', bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none', op: off ? '.45' : '1' });
+    const sw = (label, hint, on) => ({ label, hint, side: on ? 'flex-end' : 'flex-start', track: on ? 'var(--primary)' : 'var(--input)' });
+    const today = st === 'today';
+    const flex = !today && st !== 'strict' && st !== 'sheetToday';
+    const isWizard = part === 'wizard', isRules = part === 'rules', isSettings = part === 'settings', isList = part === 'list', isIntro = part === 'intro', isEngine = part === 'engine', isHome = part === 'home', isMonitor = part === 'monitor';
+
+    // ---- dates, in the product's forms
+    const closeWhen = D('22:00, Thứ 6, 26/09', 'Fri 26 Sep, 22:00');   // rules.moment
+    const closeShort = D('22:00, 26/09', '22:00, 26 Sep');              // clockTime on another day
+    const span = (d, h) => (d > 0 ? fmt(tx.spanDaysHours, { days: d, hours: h }) : fmt(tx.spanHours, { hours: h }));
+    const mins = n => fmt(tx.tookMinutes, { count: n });
+
+    // ---- the wizard (Schedule and Rules) for a3
+    const wzFlex = (isWizard && st === 'flexible') || (isRules && st === 'flexible');
+    const wzMode = !(today);
+    const ruleValue = [tx.valueNoCopy].concat(wzFlex ? [] : [fmt(tx.valueLeaving, { count: 2 })]).concat([tx.valueScore]).join(' · ');
+    const opensD = D('Thứ 2, 22/09', 'Mon 22 Sep'), closesD = D('Thứ 6, 26/09', 'Fri 26 Sep');
+    const cur = isRules ? 3 : 2;
+    const stepVals = [A3.title, A3.classes, wzFlex ? fmt(tx.valueScheduleFlexible, { opens: opensD, closes: closesD }) : fmt(tx.valueSchedule, { opens: opensD, closes: closesD, minutes: A3.mins }), ruleValue];
+    const readsList = [
+      { text: fmt(tx.rOpens, { from: D('08:00, Thứ 2, 22/09', 'Mon 22 Sep, 08:00'), to: D('21:00, Thứ 6, 26/09', 'Fri 26 Sep, 21:00') }), isNew: false },
+      { text: wzFlex ? tx.rFlexible : tx.rTimer, isNew: false },
+      { text: tx.rCopy, isNew: false },
+      { text: wzFlex ? tx.rLeavingFlexible : fmt(tx.rLeavingLimit, { count: 2 }), isNew: wzFlex },
+      { text: tx.rScore, isNew: false }
+    ];
+    const timing = (flexOn, hasMode, modeOff, modeHint) => ({
+      timeGroup: tx.timeGroup, hasMode, mode: tx.mode, modeOp: modeOff ? '.45' : '1', modeHint: modeHint || (flexOn ? tx.modeFlexibleHint : tx.modeStrictHint),
+      modes: [opt(tx.modeStrict, !flexOn, 'timer'), opt(tx.modeFlexible, flexOn, 'timer-off')],
+      hasTime: !flexOn, timeLimit: tx.timeLimit, timeLimitHint: tx.timeLimitHint,
+      times: [30, 45, 60].map(n => opt(fmt(tx.minutes, { count: n }), false)).concat([opt(tx.custom, true)]),
+      attempts: tx.attempts, attemptsHint: tx.attemptsOne, attemptsValue: '1'
+    });
+    const wz = {
+      title: tx.wzTitle, desc: tx.wzDesc, scheduleTitle: tx.scheduleTitle, back: tx.back, saveDraft: tx.saveDraft, cont: tx.cont, reads: tx.asideReads, estimate: tx.asideAuto,
+      steps: [tx.stepTest, tx.stepStudents, tx.stepSchedule, tx.stepRules].map((label, i) => ({ label, value: stepVals[i], num: String(i + 1), done: i < cur, todo: i >= cur, isNew: wzFlex && ((isWizard && i === 2) || (isRules && i === 3)), border: i === cur ? 'var(--primary)' : 'var(--border)', numBg: i <= cur ? 'var(--primary)' : 'var(--muted)', numFg: i <= cur ? 'var(--primary-fg)' : 'var(--muted-fg)' })),
+      window: [{ label: tx.opens, value: D('22/09/2026 08:00', '22 Sep 2026, 08:00') }, { label: tx.closes, value: D('26/09/2026 21:00', '26 Sep 2026, 21:00') }],
+      lines: [[tx.asideStudents, String(A3.target), false], [tx.asideWindow, fmt(tx.asideDays, { count: 5 }), false], [tx.asideTime, wzFlex ? tx.asideUntilClose : fmt(tx.minutes, { count: A3.mins }), wzFlex], [tx.asideAttempts, '1', false], [tx.asideManual, fmt(tx.asidePerAttempt, { count: 0 }), false]].map(x => ({ label: x[0], value: x[1], isNew: x[2] })),
+      rules: readsList,
+      ...timing(wzFlex, wzMode, false)
+    };
+    const rl = {
+      title: tx.rulesTitle, integrity: tx.integrity, strict: !wzFlex, flex: wzFlex, note: tx.note,
+      ghosts: [{ icon: 'shuffle', title: tx.order, w1: '62%', w2: '48%' }, { icon: 'eye', title: tx.afterSubmit, w1: '70%', w2: '54%' }],
+      switches: [sw(tx.fullscreen, tx.fullscreenHint, false), sw(tx.copy, tx.copyHint, true)],
+      leaving: tx.leaving, leavingHint: tx.leavingHint, leavingOpts: [opt(tx.leavingNoLimit, false), opt(tx.leavingNone, false), opt(tx.leavingLimit, true)],
+      timesValue: fmt(tx.leavingTimes, { count: 2 }), timesAllowed: tx.timesAllowed,
+      action: tx.action, actionHint: tx.actionHintFlag, actions: [opt(tx.actionWarn, false), opt(tx.actionFlag, true), opt(tx.actionAutoSubmit, false)],
+      away: tx.away, awayHint: tx.awayHint, awayValue: fmt(tx.seconds, { count: 3 }),
+      fixed: fmt(tx.leavingFlexible, { seconds: 3 }), honesty: tx.honesty, limits: tx.limitsTitle
+    };
+
+    // ---- an assignment's heading
+    const status = isSettings ? { today: 'open', strict: 'open', card: 'scheduled', edit: 'scheduled', open: 'open', attempts: 'closed', refused: 'scheduled' }[st] : 'open';
+    const stTone = { open: [tx.stOpen, 'var(--success-soft)', 'var(--success-ink)', 'var(--success)'], scheduled: [tx.stScheduled, 'var(--info-soft)', 'var(--info-ink)', 'var(--info)'], closed: [tx.stClosed, 'var(--muted)', 'var(--muted-fg)', 'var(--muted-fg)'] }[status];
+    const headA = isMonitor && (st === 'today' || st === 'sheetToday') ? A1 : A3;
+    const headFlex = (isSettings && flex) || (isMonitor && flex) || (isList && st === 'detail');
+    const moment = status === 'scheduled' ? D('08:00 · Thứ hai, 22/09', '08:00 · Monday, 22/09') : headA === A1 ? D('21:00 · Thứ tư, 24/09', '21:00 · Wednesday, 24/09') : D('21:00 · Thứ sáu, 26/09', '21:00 · Friday, 26/09');
+    const tabOn = isSettings ? 2 : 0;
+    const hd = {
+      back: tx.backToList, title: headA.title, status: stTone[0], stBg: stTone[1], stFg: stTone[2], stDot: stTone[3], chip: headFlex, chipLabel: tx.modeFlexible,
+      meta: [headA.classes, moment].concat(headFlex ? [] : [fmt(tx.minutes, { count: headA.mins })]).join(' · '),
+      tabs: [tx.tabStudents, tx.tabQuestions, tx.tabSettings].map((label, i) => ({ label, fg: i === tabOn ? 'var(--fg)' : 'var(--muted-fg)', line: i === tabOn ? 'inset 0 -2px 0 var(--fg)' : 'none' }))
+    };
+
+    // ---- the Settings tab
+    const setFlex = isSettings && flex;
+    const timingLocked = status === 'open';
+    const pill = (on, yes, no) => ({ hasPill: true, pill: on ? yes : no, pillBg: on ? 'var(--success-soft)' : 'var(--muted)', pillFg: on ? 'var(--success-ink)' : 'var(--muted-fg)', pillIcon: on ? 'check' : 'minus' });
+    const noPill = { hasPill: false, pill: '', pillBg: 'transparent', pillFg: 'inherit', pillIcon: 'check' };
+    const row = (label, value, sub, extra) => ({ label, value, sub: sub || '', hasSub: !!sub, isNew: false, isNew2: false, ...noPill, ...(extra || {}) });
+    const timingRows = [row(tx.test, A3.title, fmt(tx.versionMeta, { questions: 25, points: 25, audio: 0, manual: 0, version: 2 }))]
+      .concat(today ? [] : [row(tx.mode, setFlex ? tx.modeFlexible : tx.modeStrict, setFlex ? tx.modeFlexibleSub : tx.modeStrictSub, { isNew: true })])
+      .concat(setFlex ? [] : [row(tx.timeLimit, fmt(tx.minutes, { count: A3.mins }), tx.timerSub)])
+      .concat([row(tx.attemptsLabel, tx.attemptsOneValue), row(tx.order, tx.inOrder)]);
+    const integrityRows = [row(tx.fsLabel, '', '', pill(false, '', tx.notRequired)),
+      setFlex ? row(tx.leaving, fmt(tx.leavingFlexibleValue, { seconds: 3 }), tx.leavingFlexibleSub, { isNew2: true }) : row(tx.leaving, fmt(tx.focusLimitFlag, { count: 2 })),
+      row(tx.copyLabel, '', '', pill(true, tx.blocked, ''))].concat(setFlex ? [] : [row(tx.away, fmt(tx.seconds, { count: 3 }))]);
+    const card = (icon, title, hint, rows, opts) => ({ icon, title, hint, rows: rows.map((r, i) => ({ ...r, border: i ? '1px solid var(--border)' : '0' })), full: rows.length > 0, ghost: rows.length === 0, locked: false, canEdit: true, isTiming: false, w1: '60%', w2: '42%', ...(opts || {}) });
+    const ad = {
+      lockedPill: tx.lockedPill, edit: tx.edit,
+      cards: [card('file-text', tx.stTiming, tx.stTimingHint, timingRows, { locked: timingLocked, canEdit: !timingLocked, isTiming: true }),
+        card('calendar-clock', tx.stWindow, tx.stWindowHint, [], { locked: status === 'closed', canEdit: status !== 'closed', w1: '64%', w2: '46%' }),
+        card('shield-check', tx.stIntegrity, tx.stIntegrityHint, integrityRows),
+        card('eye', tx.stResults, tx.stResultsHint, [], { w1: '58%', w2: '50%' }),
+        card('message-square-text', tx.stNote, tx.stNoteHint, [], { w1: '70%', w2: '30%' })]
+    };
+    const dgOpen = isSettings && (st === 'edit' || st === 'attempts' || st === 'refused');
+    const dg = { open: dgOpen, title: fmt(tx.editTitle, { group: tx.stTiming }), desc: tx.stTimingHint, order: tx.order, refused: st === 'refused', refusedText: tx.refused, cancel: tx.cancel, save: tx.saveChanges };
+    const dt = timing(true, true, st === 'attempts', st === 'attempts' ? tx.modeLockedAttempts : null);
+
+    // ---- the roster
+    const badge = state => ({ grading: [tx.needsGrading, 'var(--warning-soft)', 'var(--warning-ink)', '0', '999px'], submitted: [tx.aSubmitted, 'var(--muted)', 'var(--fg)', '0', '999px'], progress: [tx.aInProgress, 'var(--primary)', 'var(--primary-fg)', '0', '999px'], notStarted: [tx.aNotStarted, 'transparent', 'var(--muted-fg)', '1px solid var(--border)', '4px'], timedOut: [tx.aTimedOut, 'var(--warning-soft)', 'var(--warning-ink)', '0', '999px'] }[state]);
+    const rosterFlex = (isMonitor && flex) || (isList && st === 'detail');
+    const rosterSrc = rosterFlex ? ROSTER_FLEX : ROSTER_TODAY;
+    const sheetOpen = isMonitor && (st === 'sheet' || st === 'sheetToday');
+    const rs = {
+      search: tx.rosterSearch, filter: tx.rosterFilter, hStudent: tx.hStudent, hState: tx.hStatus, hScore: tx.hScore, hTime: tx.hTime, hFocus: tx.hFocus, hSubmitted: tx.hSubmitted,
+      cols: 'minmax(180px,2fr) 130px 90px 120px 100px 110px 28px',
+      rows: rosterSrc.map((r, i) => { const b = badge(r[1]); return { name: r[0], initials: INIT(r[0]), state: b[0], stBg: b[1], stFg: b[2], stBorder: b[3], stR: b[4], score: r[2], scoreW: r[2] === '—' ? '400' : '500', scoreFg: r[2] === '—' ? 'var(--muted-fg)' : 'var(--fg)', time: r[3] == null ? '—' : mins(r[3]), hasSpan: !!r[4], span: r[4] ? fmt(tx.over, { span: span(r[4][0], r[4][1]) }) : '', focus: r[5] ? r[5] + '×' : '—', flagged: r[6], focusFg: r[6] ? 'var(--danger-ink)' : 'var(--muted-fg)', submitted: r[7], bg: sheetOpen && i === 0 ? 'var(--hover)' : 'transparent' }; })
+    };
+
+    // ---- the attempt sheet
+    const sheetFlex = isMonitor && st === 'sheet';
+    const ev = (dot, text, when, isBreak) => ({ dot, text, when, isBreak: !!isBreak });
+    const q = n => tx.onQuestion + ' ' + n;
+    const dots = { start: 'var(--info)', away: 'var(--danger)', other: 'var(--muted-fg)', done: 'var(--success)' };
+    const sheetEvents = sheetFlex ? [
+      ev(dots.start, tx.kStarted, D('Thứ 2, 22/09', 'Mon 22 Sep') + ' · 19:02:10'),
+      ev(dots.away, tx.kTab + ' · ' + fmt(tx.spanSeconds, { n: 34 }), '19:09:44 · ' + q(6)),
+      ev(dots.other, tx.kPaperLeft + ' · ' + fmt(tx.spanDaysHours, { days: 1, hours: 1 }), '19:15:02 · ' + q(9), true),
+      ev(dots.other, tx.kResume, D('Thứ 3, 23/09', 'Tue 23 Sep') + ' · 20:31:40'),
+      ev(dots.away, tx.kWindow + ' · ' + fmt(tx.spanSeconds, { n: 12 }), '20:38:15 · ' + q(14)),
+      ev(dots.other, tx.kPageHide, '20:44:30 · ' + q(17)),
+      ev(dots.other, tx.kResume, D('Thứ 4, 24/09', 'Wed 24 Sep') + ' · 19:58:03'),
+      ev(dots.away, tx.kTab + ' · ' + fmt(tx.spanMinSec, { m: 1, s: 5 }), '20:05:11 · ' + q(21)),
+      ev(dots.done, tx.kSubmitted, '20:14:22')
+    ] : [
+      ev(dots.start, tx.kStarted, '19:22:04'),
+      ev(dots.away, tx.kFullscreen + ' · ' + fmt(tx.spanSeconds, { n: 14 }), '19:41:10 · ' + q(12)),
+      ev(dots.away, tx.kTab + ' · ' + fmt(tx.spanSeconds, { n: 32 }), '19:58:31 · ' + q(23)),
+      ev(dots.away, tx.kFullscreen + ' · ' + fmt(tx.spanSeconds, { n: 8 }), '20:06:47 · ' + q(31)),
+      ev(dots.done, tx.kSubmitted, '20:14:02')
+    ];
+    const sh = {
+      open: sheetOpen, initials: INIT('Lê Hoàng Nam'), name: 'Lê Hoàng Nam', test: sheetFlex ? A3.title : A1.title, scoreLabel: tx.sheetScore, score: sheetFlex ? '21 / 25' : '31 / 40',
+      timeLabel: sheetFlex ? tx.sheetOnPaper : tx.sheetTime, time: mins(sheetFlex ? 40 : 52), hasSpan: sheetFlex, span: sheetFlex ? fmt(tx.over, { span: span(2, 1) }) : '',
+      meta: [{ text: '1/1', fg: 'var(--muted-fg)', hasIcon: false, icon: '' }, { text: fmt(tx.answeredOf, sheetFlex ? { answered: 25, total: 25 } : { answered: 40, total: 40 }), fg: 'var(--muted-fg)', hasIcon: false, icon: '' }, { text: tx.flagged, fg: 'var(--danger-ink)', hasIcon: true, icon: 'flag' }],
+      timeline: tx.sheetTimeline, events: sheetEvents, note: tx.sheetNote, open1: tx.sheetOpen, grade: tx.sheetGrade
+    };
+
+    // ---- the list
+    const listFlex = isList && st !== 'today';
+    const lsRow = (a, when, phoneWhen, isFlex, i) => ({ title: a.title, meta: fmt(tx.listMeta, { version: a.version, count: a.q }), flex: isFlex, chip: tx.modeFlexible, hasGrade: false, toGradeInline: '', classes: a.classes, when, phoneLine: a.classes + ' · ' + phoneWhen, pct: Math.round(a.submitted / a.target * 100) + '%', ratio: a.submitted + '/' + a.target, toGrade: a.toGrade ? String(a.toGrade) : '—', gradeFg: a.toGrade ? 'var(--warning-ink)' : 'var(--muted-fg)', status: tx.stOpen, border: i ? '1px solid var(--border)' : '0' });
+    const ls = {
+      title: tx.listTitle, desc: tx.listDesc, newLabel: tx.wzTitle, search: tx.listSearch,
+      tabs: [[tx.tabLive, 3, true], [tx.tabScheduled, 1, false], [tx.tabClosed, 1, false], [tx.tabDraft, 1, false]].map(x => ({ label: x[0], count: String(x[1]), ...opt(x[0], x[2]) })),
+      cols: 'minmax(200px,2.2fr) 120px minmax(140px,1fr) 80px 110px', hAssignment: tx.hAssignment, hWindow: tx.hCloses, hSubmitted: tx.hSubmitted, hToGrade: tx.hToGrade, hStatus: tx.hStatus,
+      rows: [lsRow(A1, D('Hôm nay, 21:00', 'Today, 21:00'), D('hôm nay, 21:00', 'today, 21:00'), false, 0), lsRow(A2, D('Ngày mai, 08:00', 'Tomorrow, 08:00'), D('ngày mai, 08:00', 'tomorrow, 08:00'), false, 1), lsRow(A3, D('Thứ 6, 26/09', 'Fri 26 Sep'), D('Thứ 6, 26/09', 'Fri 26 Sep'), listFlex, 2)]
+    };
+
+    // ---- the intro (the deck's s1, set flexible)
+    const inFlex = isIntro && !today;
+    const rule = (icon, text, isNew, isNew2) => ({ icon, text, isNew: !!isNew, isNew2: !!isNew2 });
+    const it = {
+      home: tx.navHome, cls: S1.cls, title: S1.title, before: tx.before,
+      facts: [{ label: tx.duration, value: inFlex ? tx.noTimer : fmt(tx.minutes, { count: S1.mins }), isNew: inFlex }, { label: tx.questions, value: String(S1.q), isNew: false }, { label: tx.introAttempts, value: st === 'resume' ? '1/1' : '0/1', isNew: false }],
+      rules: (inFlex ? [rule('calendar-clock', fmt(tx.rAvailableUntil, { when: closeWhen })), rule('timer-off', tx.rFlexible, true), rule('clipboard-x', tx.rCopy), rule('eye', tx.rLeavingFlexible, false, true), rule('circle-check', tx.rScore)]
+        : [rule('calendar-clock', fmt(tx.rAvailableToday, { time: '21:00' })), rule('timer', tx.rTimer), rule('clipboard-x', tx.rCopy), rule('eye', fmt(tx.rLeavingLimit, { count: 2 })), rule('circle-check', tx.rScore)]).map((r, i) => ({ ...r, border: i ? '1px solid var(--border)' : '0' })),
+      cta: st === 'resume' ? tx.resume : tx.start, ctaHint: st === 'resume' ? fmt(tx.resumeHintFlexible, { when: closeWhen }) : tx.startHint, hintNew: st === 'resume'
+    };
+
+    // ---- Home
+    const hmFlex = isHome && st === 'flexible', hmLast = isHome && st === 'lastHour';
+    const hm = {
+      greeting: fmt(tx.greeting, { name: 'Bảo' }), flex: hmFlex, sub: fmt(tx.homeSub, { time: hmFlex ? closeShort : today ? '21:00' : '22:00' }),
+      pill: hmFlex ? tx.inProgress : fmt(tx.inProgressLeft, { count: today ? 31 : 42 }), title: S1.title,
+      meta: [S1.cls, fmt(tx.homeAnswered, { answered: 5, total: 8 }), hmFlex ? fmt(tx.closesOn, { when: closeShort }) : fmt(tx.closesToday, { time: today ? '21:00' : '22:00' })].join(' · '),
+      pct: '63%', cta: tx.resume, coming: tx.comingUp, count: fmt(tx.testsCount, { count: 3 }),
+      upcoming: [{ dow: D('T5', 'Thu'), day: '25', title: 'Unit 4 · Listening: Directions', meta: 'IELTS Foundation A · ' + fmt(tx.minutes, { count: 30 }) }, { dow: D('T2', 'Mon'), day: '29', title: 'Present Perfect vs Past Simple', meta: 'IELTS Foundation A · ' + fmt(tx.minutes, { count: 40 }) }].map((x, i) => ({ ...x, border: i ? '1px solid var(--border)' : '0' }))
+    };
+
+    // ---- the engine
+    const enFlex = isEngine && !today;
+    const countdown = { today: '31:12', lastHour: '42:10', last5: '04:12' }[st];
+    const dateMode = enFlex && !countdown;
+    const en = {
+      title: S1.title, saved: tx.allSaved, hasStatus: isEngine && st === 'strike', status: tx.toldTeacher, submit: tx.submit,
+      leaveName: enFlex ? tx.breakConfirm : tx.leaveName,
+      pill: dateMode ? fmt(tx.enCloses, { when: closeShort }) : (countdown || ''), pillPhone: dateMode ? closeShort : (countdown || ''), pillIcon: dateMode ? 'calendar-clock' : 'timer', pillRole: dateMode ? 'img' : 'timer',
+      pillName: dateMode ? fmt(tx.enClosesName, { when: closeWhen }) : tx.timeLeft,
+      pillBg: st === 'last5' ? 'var(--danger-soft)' : 'var(--muted)', pillFg: st === 'last5' ? 'var(--danger-ink)' : 'var(--fg)',
+      passageTitle: 'Why cities need green space', paras: [{ k: 'A', t: PASSAGE_A }],
+      qOf: fmt(tx.qOf, { n: 2, total: S1.q, type: tx.single }), prompt: Q2.prompt, choose: tx.chooseSingle,
+      opts: Q2.opts.map((t, i) => ({ key: 'ABCD'[i], text: t, border: i === 1 ? 'var(--primary)' : 'var(--border)', bg: i === 1 ? 'var(--muted)' : 'var(--card)', keyBg: i === 1 ? 'var(--primary)' : 'var(--muted)', keyFg: i === 1 ? 'var(--primary-fg)' : 'var(--fg)' })),
+      prev: tx.prev, next: tx.next
+    };
+    const sdStart = isIntro && st === 'start', sdLeave = isEngine && st === 'leave';
+    const sd = { open: sdStart || sdLeave, title: sdStart ? tx.startTitle : tx.breakTitle, body: sdStart ? fmt(tx.startBodyFlexible, { when: closeWhen }) : fmt(tx.breakBody, { when: closeWhen }), cancel: sdStart ? tx.startCancel : tx.leaveStay, confirm: sdStart ? tx.start : tx.breakConfirm };
+    const sk = { open: isEngine && st === 'strike', title: tx.leftTitle, body: tx.leftFlexible, back: tx.leftBack };
+
+    const m = { isWz: isWizard || isRules, isWizard, isRules, isSettings, hasHead: isSettings || isMonitor || (isList && st === 'detail'), hasRoster: isMonitor || (isList && st === 'detail'), isListTable: isList && st !== 'detail', isIntro, isEngine, isHome };
+
+    // ---- the shells
+    const navOn = 'assignments';
+    const item = (id, icon, label, count) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || '') });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', D('Tổng quan', 'Dashboard')), item('calendar', 'calendar-days', D('Lịch', 'Calendar')), item('messages', 'message-square', D('Tin nhắn', 'Messages'))] },
+      { hasLabel: true, label: D('Giảng dạy', 'Teaching'), items: [item('assignments', 'clipboard-list', D('Bài giao', 'Assignments')), item('grading', 'square-pen', D('Chấm bài', 'Grading')), item('classes', 'graduation-cap', D('Lớp học', 'Classes')), item('students', 'users', D('Học viên', 'Students')), item('attendance', 'calendar-check', D('Điểm danh', 'Attendance'))] },
+      { hasLabel: true, label: D('Nội dung', 'Content'), items: [item('tests', 'file-text', D('Đề thi', 'Tests')), item('shared', 'users-round', D('Được chia sẻ với tôi', 'Shared with me'), 2), item('bank', 'library', D('Ngân hàng câu hỏi', 'Question bank')), item('media', 'audio-lines', D('Thư viện media', 'Media'))] },
+      { hasLabel: true, label: D('Thống kê', 'Insights'), items: [item('gradebook', 'table', D('Sổ điểm', 'Gradebook')), item('reports', 'chart-column', D('Báo cáo', 'Reports'))] }
+    ];
+    const sNav = [['house', D('Trang chủ', 'Home'), isHome], ['users', D('Lớp', 'Classes'), false], ['book-open', D('Học tập', 'Learn'), false], ['chart-column', D('Điểm số', 'Grades'), false]].map(x => ({ icon: x[0], label: x[1], fg: x[2] ? 'var(--fg)' : 'var(--muted-fg)', bg: x[2] ? 'var(--hover)' : 'transparent', weight: x[2] ? 600 : 400 }));
+    const barTitle = m.isWz ? tx.wzTitle : isList && st !== 'detail' ? tx.listTitle : isIntro ? S1.title : isHome ? D('Trang chủ', 'Home') : headA.title;
+
+    const teacher = !isIntro && !isHome && !isEngine;
+    const H = {
+      wizard: [900, 1640], rules: wzFlex ? [1110, 1880] : [1310, 2330], settings: [880, 1640], list: st === 'detail' ? [860, 960] : [560, 760],
+      intro: [840, 1180], engine: [720, 760], home: [660, 720], monitor: [860, 960]
+    }[part];
+    const Wd = s.stageW || 1280;
+    const names = { wizard: 'Assignment wizard, Schedule', rules: 'Assignment wizard, Rules', settings: 'Assignment settings', list: 'Assignments', intro: 'Test intro', engine: 'Take test', home: 'Home', monitor: 'Assignment, Students' };
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: (teacher ? 'Teacher · ' : 'Student · ') + names[part] + ' · ' + w, desk: !phone, phone, pins: s.anno && !phone,
+      sidebar: teacher && !phone, tShell: teacher, sShell: isIntro || isHome,
+      barPad: phone ? '0 14px' : '0 28px', padX: phone ? '14px' : '24px',
+      pad: isEngine ? '0' : teacher ? (phone ? '14px' : '24px 28px 28px') : (phone ? '18px 16px 28px' : '32px 24px 48px'),
+      h1: teacher ? (phone ? '20px' : '24px') : (phone ? '22px' : '26px'), btnH: phone ? '40px' : '36px', btnPx: phone ? '12px' : '14px', footPx: phone ? '14px' : '18px', inH: phone ? '44px' : '38px', segH: phone ? '36px' : '32px',
+      stepCols: phone ? 2 : 4, asideMax: phone ? '100%' : '304px', factSize: phone ? '15px' : '17px', ctaFlex: phone ? '1 1 100%' : 'none', qPad: phone ? '18px 16px' : '24px 28px',
+      dlgLeft: phone ? '0' : '50%', dlgRight: phone ? '0' : 'auto', dlgTop: phone ? 'auto' : '50%', dlgBottom: phone ? '0' : 'auto', dlgMove: phone ? 'none' : 'translate(-50%,-50%)', dlgW: phone ? 'auto' : '560px', dlgR: phone ? '16px 16px 0 0' : '12px',
+      sheetW: phone ? '100%' : '420px'
+    });
+    const frames = [mk(1280, H[0], Math.min(1, Wd / 1280), false, teacher ? 'the teacher’s shell, in the 1600px frame' : isEngine ? 'the engine, full screen' : 'the student’s page, at the deck’s width'), mk(360, H[1], Math.min(1, Wd / 360), true, 'the same state on a phone')];
+
+    const ctl = [
+      { label: 'Screen', opts: this.seg(PARTS, part, v => this.setState({ part: v })) },
+      { label: 'State', opts: this.seg(STATES[part], st, v => this.setState(x => ({ st: { ...x.st, [part]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) }
+    ];
+    const tone = r => (/^New/.test(r) ? 'var(--accent-ink)' : 'var(--muted-fg)');
+    const stLabel = (STATES[part].find(x => x[0] === st) || ['', ''])[1];
+    const partLabel = (PARTS.find(x => x[0] === part) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, wz, rl, hd, ad, dg, dt, rs, sh, ls, it, hm, en, sd, sk, pin, nav, sNav, barTitle, frames, ctl, stageRef: this.stageRef,
+      chips: ['F1 · v0.14.x', 'T-F1.0, T-F1.6 to T-F1.8', 'DG-232', 'No operation beyond T-F1.1', 'Vietnamese first'],
+      decisions: DECISIONS.map(d => ({ kicker: d[0], head: d[1], items: d[2] })),
+      reset: () => this.setState({ lang: 'vi', theme: null, part: 'wizard', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: today || st === 'sheetToday' ? partLabel + ' · ' + stLabel + ': the deck’s and the product’s frame, nothing new' : 'What is new on “' + partLabel + ' · ' + stLabel + '”',
+      notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone(r[4]) })),
+      questions: QUESTIONS.map(x => ({ id: x[0], q: x[1], why: x[2], def: x[3] })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

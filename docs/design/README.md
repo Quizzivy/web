@@ -693,6 +693,20 @@ To view one, start the server above and open, for example,
   dark, Vietnamese and English; 70 strings, seven of them the app's. Eight questions for
   Thuong. The handoff says what the notice promises of the build, and that the 12-month
   deletion's nightly run has not reached the database since it moved.
+- 2026-11-18 — Twenty-second proposal page: `proposals/F1 Assignment Modes.dc.html`, for DG-232
+  (F1; T-F1.0, for T-F1.6 to T-F1.8). A teacher asked for homework a student can stop and come
+  back to, and F1 gives an assignment a mode: Strict, as every assignment is today, or Flexible,
+  with the close as the deadline and breaks until then. The page draws the Mode as the first row
+  of the wizard's "Thời gian và số lượt" and of the Settings dialog, locked with "Đề và thời
+  gian"; under Flexible no time-limit row, and in Rules the two switches with "Rời khỏi bài" as
+  one fixed sentence; a "Linh hoạt" chip in the list and the heading; the intro's sentences; the
+  engine's header with the close as a date and the countdown in the last hour; the leave dialog as
+  "Tạm nghỉ?"; "Bạn vừa rời trang làm bài" with no allowance; Home's card; the monitor's and the
+  attempt sheet's two times; and a timeline with the day on each day's first event and a break in
+  the neutral dot. Each of its eight screens opens on the deck's and the product's own frame, so
+  what changes sits beside it. Thirty-two states, at 1280 and 360, light and dark, Vietnamese and
+  English. No operation beyond T-F1.1. Its seven questions for Thuong are on the page; the first
+  is the Vietnamese words.
 
 ## The brand
 

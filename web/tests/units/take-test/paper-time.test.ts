@@ -19,6 +19,7 @@ import {
   type SubmitState,
 } from "@/features/take-test/store";
 import { useSaveStatus } from "@/features/take-test/saveStatus";
+import { ApiError } from "@/lib/api/errors";
 import { useAppState } from "@/stores/appState";
 import { session, text } from "./support";
 
@@ -274,6 +275,40 @@ describe("reporting the time on the paper", () => {
     const status = renderHook(() => useSaveStatus());
     act(() => store().setAnswer("q1", text("parks")));
     expect(status.result.current).toBe("saving");
+  });
+
+  it("keeps the minute going through a hand-in that the server turns back", async () => {
+    store().hydrate({
+      ...session({
+        serverTime: NOW.toISOString(),
+        deadlineAt: new Date(NOW.getTime() + 30_000).toISOString(),
+      }),
+      mode: "flexible",
+    });
+    startPaperTime(NOW.getTime());
+    let refuse!: (error: unknown) => void;
+    submitted.mockImplementationOnce(
+      () => new Promise((_, reject) => (refuse = reject)),
+    );
+    await pass(30_000);
+    expect(submitted).toHaveBeenCalledWith("att-1", { reason: "timer_expired" });
+    await pass(40_000); // the minute comes round while the hand-in is out
+    expect(saved).not.toHaveBeenCalled();
+    await act(async () =>
+      refuse(
+        new ApiError({
+          status: 409,
+          code: "DEADLINE_NOT_REACHED",
+          message: "Chưa hết giờ.",
+          details: { deadlineAt: DEADLINE },
+        }),
+      ),
+    );
+    expect(store().submitState).toBe("idle");
+    await pass(REPORT_EVERY_MS);
+    expect(saved).toHaveBeenCalledTimes(1);
+    expect(saved.mock.calls[0]?.[1]).toMatchObject({ answers: {} });
+    expect(reported()[0]).toBeGreaterThan(0);
   });
 
   it("reports it before a hand-in by the student, even with nothing else unsaved", async () => {

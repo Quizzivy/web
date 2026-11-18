@@ -567,8 +567,8 @@ export function cancelScheduledFlush() {
 /**
  * The report timer: REPORT_EVERY_MS after the paper loads and after each
  * acknowledged save, a save goes with the time on the paper when some has
- * accrued and nothing else is on its way; otherwise it waits another round.
- * A locked or submitting paper has nothing to report to.
+ * accrued and nothing else is on its way; otherwise it waits another round,
+ * a hand-in on its way included. A locked paper has nothing to report to.
  */
 let pendingReport: ReturnType<typeof setTimeout> | undefined;
 
@@ -577,9 +577,11 @@ function armReport() {
   pendingReport = setTimeout(() => {
     pendingReport = undefined;
     const state = useTakeTestStore.getState();
-    if (state.attemptId === null || state.lock !== null || state.submitState !== "idle")
-      return;
+    if (state.attemptId === null || state.lock !== null) return;
+    // A hand-in on its way may be refused and the paper go on, so the minute
+    // waits another round rather than ending with it.
     if (
+      state.submitState !== "idle" ||
       activeFlush !== null ||
       pendingFlush !== undefined ||
       state.flushInFlight ||

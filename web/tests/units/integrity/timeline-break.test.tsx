@@ -92,6 +92,29 @@ describe("the timeline of an attempt over days (F1)", () => {
     }
   });
 
+  it("gives a break returned to in the same tab its length, with no row for the return", async () => {
+    const all = events();
+    mount(
+      "compact",
+      [
+        ...all.slice(0, 3),
+        { ...all[3]!, kind: "paper_returned", occurredAt: "2026-09-22T12:40:02Z" },
+      ],
+      "2026-09-22T12:50:00Z",
+    );
+    const region = await screen.findByRole("region", { name: "Diễn biến bài làm" });
+    expect(
+      within(region)
+        .getAllByRole("listitem")
+        .map((item) => item.textContent),
+    ).toEqual([
+      "Bắt đầu làm bài19:02:10",
+      "Chuyển sang tab khác · 34 giây19:09:44",
+      "Tạm nghỉ · 25 phút19:15:02",
+      "Nộp bài19:50:00",
+    ]);
+  });
+
   it("dates nothing for an attempt that keeps to one day, as today", async () => {
     mount("compact", events().slice(0, 2), "2026-09-22T12:40:00Z");
     const region = await screen.findByRole("region", { name: "Diễn biến bài làm" });

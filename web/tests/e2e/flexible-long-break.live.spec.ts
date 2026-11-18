@@ -1,12 +1,15 @@
 import { expect, test } from "@playwright/test";
 import {
   ADMIN,
+  attemptEvents,
   chooseOption,
   createFlexibleAssignment,
   reviewAttempt,
+  sameTabBreakMs,
   sharedApiAuth,
   signInAsAdmin,
   signInAsStudent,
+  spokenSpan,
   startAttempt,
   submitAttempt,
   takeBreak,
@@ -18,6 +21,8 @@ import {
  * because the wait is real: the teacher's two times differ only once they
  * round to different minutes, and the assignment stores a one-minute time
  * limit, which a flexible attempt running past it shows is not applied.
+ * The break is returned to in the same tab, so the sheet's timeline ends it
+ * at the paper_returned the engine records, with no resume.
  * flexible.live.spec.ts walks everything else.
  */
 
@@ -70,6 +75,9 @@ test("F1: after a break past a minute the teacher reads time on the paper and th
         60_000,
     );
     expect(span, "the span rounds past the time on the paper").toBeGreaterThan(onPaper);
+    // The break, as long as the server's events say.
+    const breakMs = sameTabBreakMs(await attemptEvents(api, admin, attemptId));
+    expect(breakMs).toBeGreaterThan(0);
 
     const teacher = await staff.newPage();
     await signInAsAdmin(teacher);
@@ -86,6 +94,18 @@ test("F1: after a break past a minute the teacher reads time on the paper and th
     const fact = sheet.locator("dl > div").filter({ hasText: "Thời gian trên bài" });
     await expect(fact).toContainText(minutesLabel(onPaper), { timeout: 30_000 });
     await expect(fact).toContainText(`trong ${minutesLabel(span)}`);
+    // The timeline: one break with its length; the return draws no row, and
+    // nothing reads as a resume elsewhere.
+    const timeline = sheet.getByRole("list").filter({ hasText: "Tạm nghỉ" });
+    await expect(
+      timeline
+        .getByRole("listitem")
+        .filter({ hasText: `Tạm nghỉ · ${spokenSpan(breakMs)}` }),
+    ).toHaveCount(1);
+    await expect(
+      timeline.getByRole("listitem").filter({ hasText: /^Vào lại bài/ }),
+    ).toHaveCount(0);
+    await expect(timeline.getByText("paper_returned")).toHaveCount(0);
   } finally {
     await staff.close();
     await api.dispose();

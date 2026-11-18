@@ -190,6 +190,56 @@ export async function reviewAttempt(
   return (await response.json()) as ReviewedAttempt;
 }
 
+/** One event of an attempt's timeline, as the teacher's API lists it. */
+export interface TimelineEvent {
+  kind: string;
+  occurredAt: string;
+}
+
+/** attemptEvents is the attempt's timeline as the teacher's API orders it. */
+export async function attemptEvents(
+  api: APIRequestContext,
+  admin: Record<string, string>,
+  attemptId: string,
+): Promise<TimelineEvent[]> {
+  const response = await api.get(`${API}/teacher/attempts/${attemptId}/events`, {
+    headers: admin,
+  });
+  expect(response.status()).toBe(200);
+  return ((await response.json()) as { events: TimelineEvent[] }).events;
+}
+
+/**
+ * sameTabBreakMs is how long the attempt's first break lasted when it was
+ * returned to in the same tab (F1): from its paper_left to the paper_returned
+ * after it. That tab still holds its session, so nothing after the break may
+ * be a resume or a takeover.
+ */
+export function sameTabBreakMs(events: TimelineEvent[]): number {
+  const leftAt = events.findIndex((event) => event.kind === "paper_left");
+  expect(leftAt, "paper_left on the server").toBeGreaterThanOrEqual(0);
+  const after = events.slice(leftAt + 1);
+  const kinds = after.map((event) => event.kind);
+  expect(kinds, "no resume and no takeover after the break").not.toContain("resume");
+  expect(kinds).not.toContain("session_takeover");
+  const returned = after.find((event) => event.kind === "paper_returned");
+  expect(returned, "paper_returned after the break").toBeDefined();
+  return (
+    new Date(returned!.occurredAt).getTime() -
+    new Date(events[leftAt]!.occurredAt).getTime()
+  );
+}
+
+/** spokenSpan words a span as the timeline's compact rows do: "6 giây", "1 phút 5 giây". */
+export function spokenSpan(ms: number): string {
+  const total = Math.round(ms / 1000);
+  const minutes = Math.floor(total / 60);
+  const seconds = total % 60;
+  if (minutes === 0) return `${seconds} giây`;
+  if (seconds === 0) return `${minutes} phút`;
+  return `${minutes} phút ${seconds} giây`;
+}
+
 export async function signIn(page: Page, who: typeof ADMIN, landing: RegExp) {
   await page.goto("/login");
   await page.getByLabel("Email").fill(who.email);

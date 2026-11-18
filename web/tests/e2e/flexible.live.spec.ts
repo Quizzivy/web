@@ -141,16 +141,61 @@ async function leaveTheTab(
     .toBe(count);
 }
 
+/** The fifteen-minute bucket of `ms` (since the epoch), as FlaggedAgainKey counts it. */
+function bucketOf(ms: number): number {
+  return Math.floor(ms / FLAGGED_BUCKET_MS);
+}
+
 /**
  * outsideBucketEdge waits for the next fifteen-minute bucket when fewer than
- * `marginMs` are left of this one, so that the absences after it fall in one
- * bucket: two of them either side of an edge are two buckets, and the server
- * rightly tells the teacher twice. The bucket is the server's clock, which
- * here and in CI is this machine's.
+ * `marginMs` are left of this one, so that the absences after it usually
+ * fall in one bucket and the spec sees the third absence change the second
+ * notice. It is a preference, not a guarantee: a slow runner can still carry
+ * the third absence over an edge, which noticesAfterTheThird allows for.
+ * The bucket is the server's clock, which here and in CI is this machine's.
  */
 async function outsideBucketEdge(page: Page, marginMs = 45_000) {
   const left = FLAGGED_BUCKET_MS - (Date.now() % FLAGGED_BUCKET_MS);
   if (left < marginMs) await waitUntil(page, Date.now() + left + 1_000);
+}
+
+/**
+ * noticesAfterTheThird waits for the notices of the third absence and answers
+ * their counts. The server tells the teacher again at most once per bucket,
+ * by its own clock when the write lands: a third absence in the second
+ * notice's bucket changes that notice's count to 3 and adds none ([1, 3]); in
+ * a later bucket it is a notice of its own ([1, 2, 3]). `secondAt` is when
+ * the second notice was written and `before` when the third absence began, so
+ * the outcome is [1, 3] if `before` is still in the second's bucket and the
+ * write lands in it, and [1, 2, 3] otherwise. A third notice in the second's
+ * bucket is the server telling the teacher twice in one bucket, and fails.
+ */
+async function noticesAfterTheThird(
+  api: APIRequestContext,
+  admin: Record<string, string>,
+  attemptId: string,
+  { secondAt, before }: { secondAt: number; before: number },
+): Promise<number[]> {
+  const same = bucketOf(secondAt);
+  // Until the third absence's notice is written the counts read [1,2], which neither matches.
+  const outcome = bucketOf(before) === same ? /^\[1,(2,)?3\]$/ : /^\[1,2,3\]$/;
+  let counts: number[] = [];
+  await expect
+    .poll(
+      async () => {
+        counts = await noticeCounts(api, admin, attemptId);
+        return JSON.stringify(counts);
+      },
+      { message: `the third absence's notices, ${String(outcome)}`, timeout: 30_000 },
+    )
+    .toMatch(outcome);
+  if (counts.length === 3) {
+    expect(
+      bucketOf(Date.now()),
+      "a third notice only once the third absence is in a later bucket than the second",
+    ).toBeGreaterThan(same);
+  }
+  return counts;
 }
 
 /** spokenSpan words a span as the timeline's compact rows do: "6 giây", "1 phút 5 giây". */
@@ -249,14 +294,22 @@ test("F1: a flexible paper takes a break, resumes on another device, leaves the 
     await expect
       .poll(() => noticeCounts(api, admin, attemptId), { timeout: 30_000 })
       .toEqual([1, 2]);
+    const secondAt = Date.parse(
+      (await flaggedNotices(api, admin, attemptId))[1]!.createdAt,
+    );
 
+    const before = Date.now();
     await leaveTheTab(two, api, admin, attemptId, { count: 3, answer: "gone" });
-    await expect
-      .poll(() => noticeCounts(api, admin, attemptId), { timeout: 30_000 })
-      .toEqual([1, 3]);
+    // Usually [1, 3]; [1, 2, 3] when the third absence crossed into the next bucket.
+    const notices = await noticesAfterTheThird(api, admin, attemptId, {
+      secondAt,
+      before,
+    });
     // Email, the Admin's default for a flag, is sent once per notice key:
-    // the flag and the bucket, two for the three absences.
-    await expect.poll(() => flaggedEmails(attemptId), { timeout: 30_000 }).toBe(2);
+    // the flag and each bucket, two for the three absences in one bucket.
+    await expect
+      .poll(() => flaggedEmails(attemptId), { timeout: 30_000 })
+      .toBe(notices.length);
 
     // No submit and no lock: the paper is still in progress on the server,
     // the engine still saves, and nothing on it says it was handed in.
@@ -280,7 +333,7 @@ test("F1: a flexible paper takes a break, resumes on another device, leaves the 
     const handedIn = await reviewAttempt(api, admin, attemptId);
     expect(handedIn.attempt.status).toBe("submitted");
     // The hand-in adds no notice of its absences.
-    expect(await noticeCounts(api, admin, attemptId)).toEqual([1, 3]);
+    expect(await noticeCounts(api, admin, attemptId)).toEqual(notices);
 
     // ------------------------------------------------------------ the two times
     // Time on the paper is measured, and the break is not in it: it is at
@@ -331,8 +384,8 @@ test("F1: a flexible paper takes a break, resumes on another device, leaves the 
         .filter({ hasText: /^Vào lại bài/ })
         .first(),
     ).toBeVisible();
-    // Still two emails, long after the third absence was announced.
-    expect(await flaggedEmails(attemptId)).toBe(2);
+    // Still one email per notice, long after the third absence was announced.
+    expect(await flaggedEmails(attemptId)).toBe(notices.length);
   } finally {
     await first.close();
     await second.close();

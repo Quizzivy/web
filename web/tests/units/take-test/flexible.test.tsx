@@ -148,6 +148,7 @@ beforeEach(() => {
       return true;
     }),
   });
+  vi.mocked(getAttempt).mockReset();
   vi.mocked(saveAnswers)
     .mockReset()
     .mockImplementation(async () => reply());
@@ -407,7 +408,8 @@ describe("coming back from a break in the same tab (F1)", () => {
   it("records none when the paper comes back under another session, whose resume the server wrote", async () => {
     const router = await open();
     await leaveByTheX();
-    const first = (await vi.mocked(getAttempt).mock.results[0]!
+    expect(getAttempt).toHaveBeenCalledTimes(1);
+    const first = (await vi.mocked(getAttempt).mock.results.at(-1)!
       .value) as AttemptSession;
     vi.mocked(getAttempt).mockResolvedValue({ ...first, sessionId: "ses-2" });
     await reopen(router);

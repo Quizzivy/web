@@ -871,6 +871,33 @@ describe("the assignments list on a phone", () => {
   });
 });
 
+describe("the mode chip (F1)", () => {
+  it("marks a flexible assignment and leaves a strict one as it was", async () => {
+    viewport("desktop");
+    items = [
+      assignment({ mode: "flexible" }),
+      assignment({ id: A2, testTitle: "Unit 6" }),
+    ];
+    renderList();
+    const rows = await table();
+    const [flexible, strict] = ["Unit 5", "Unit 6"].map((title) =>
+      rows.getAllByRole("row").find((row) => within(row).queryByText(title) !== null)!,
+    );
+    expect(within(flexible!).getByText("Linh hoạt")).toBeVisible();
+    expect(within(strict!).queryByText("Linh hoạt")).toBeNull();
+  });
+
+  it("starts the second line of a phone card", async () => {
+    viewport("phone");
+    items = [assignment({ mode: "flexible" })];
+    renderList();
+    const list = await screen.findByRole("list", { name: "Bài giao" });
+    const chip = within(list).getByText("Linh hoạt");
+    expect(chip.parentElement?.firstElementChild).toBe(chip);
+    expect(chip.parentElement).toHaveTextContent(/^Linh hoạtIELTS Foundation · /);
+  });
+});
+
 describe("exportResults", () => {
   it("removes the link at once but revokes the file's URL only later", async () => {
     vi.useFakeTimers({ toFake: ["Date", "setTimeout", "clearTimeout"], now: NOW });

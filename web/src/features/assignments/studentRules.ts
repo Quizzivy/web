@@ -1,5 +1,9 @@
 import type { TFunction } from "i18next";
-import type { IntegrityPolicy, ReviewPolicy } from "@/features/assignments/api";
+import type {
+  AssignmentMode,
+  IntegrityPolicy,
+  ReviewPolicy,
+} from "@/features/assignments/api";
 import type { Locale } from "@/lib/i18n";
 import {
   APP_TIME_ZONE,
@@ -15,8 +19,12 @@ import {
  * and, where the caller knows them, the window, whether an attempt is already
  * running, the paper's audio and whether this browser has fullscreen. `window`
  * is left out for a closed assignment, about which no date would be true.
+ * `mode` is strict when left out; under flexible the timer sentence says the
+ * student may stop and come back before the close, and the leaving sentence
+ * names what is recorded and what is not, with no allowance (F1).
  */
 export interface RulesInput {
+  readonly mode?: AssignmentMode;
   readonly review: Pick<
     ReviewPolicy,
     "showScore" | "showCorrectAnswers" | "showExplanations"
@@ -84,7 +92,13 @@ function availability(
       });
 }
 
-function leaving(integrity: IntegrityPolicy, t: TFunction): string {
+function timer(running: boolean, flexible: boolean, t: TFunction): string {
+  if (flexible) return t("assignments.rules.flexible");
+  return t(running ? "assignments.rules.timerRunning" : "assignments.rules.timer");
+}
+
+function leaving(integrity: IntegrityPolicy, flexible: boolean, t: TFunction): string {
+  if (flexible) return t("assignments.rules.leaving.flexible");
   const { maxFocusLoss: limit, onLimitExceeded: action } = integrity;
   if (limit === 0) return t("assignments.rules.leaving.recorded");
   return limit < 0
@@ -111,6 +125,7 @@ export function studentRules(
   zone = getDisplayTimeZone(),
 ): Rule[] {
   const { review, integrity, audio } = input;
+  const flexible = input.mode === "flexible";
   const rules: Rule[] = [];
   const add = (id: string, kind: RuleKind, text: string) =>
     rules.push({ id, kind, text });
@@ -121,11 +136,7 @@ export function studentRules(
       "availability",
       availability(input.window, t, locale, now, zone),
     );
-  add(
-    "timer",
-    "timer",
-    t(input.running ? "assignments.rules.timerRunning" : "assignments.rules.timer"),
-  );
+  add("timer", "timer", timer(input.running === true, flexible, t));
   if (integrity.requireFullscreen)
     add(
       "fullscreen",
@@ -137,7 +148,7 @@ export function studentRules(
       ),
     );
   if (integrity.blockCopyPaste) add("copy", "copy", t("assignments.rules.noCopyPaste"));
-  add("leaving", "leaving", leaving(integrity, t));
+  add("leaving", "leaving", leaving(integrity, flexible, t));
   if (audio)
     add(
       "audio",
@@ -152,10 +163,11 @@ export function studentRules(
 }
 
 /**
- * PreviewInput is what the teacher's form holds: the policies and the window
- * as `datetime-local` values.
+ * PreviewInput is what the teacher's form holds: the mode, the policies and
+ * the window as `datetime-local` values.
  */
 export interface PreviewInput {
+  readonly mode?: AssignmentMode;
   readonly review: RulesInput["review"];
   readonly integrity: IntegrityPolicy;
   readonly opensAt: string;
@@ -180,6 +192,7 @@ export function previewRules(
     closesAt.getTime() > opensAt.getTime() && closesAt.getTime() > now.getTime();
   return studentRules(
     {
+      ...(input.mode === undefined ? {} : { mode: input.mode }),
       review: input.review,
       integrity: input.integrity,
       ...(dated

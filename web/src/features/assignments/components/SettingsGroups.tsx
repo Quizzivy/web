@@ -1,4 +1,5 @@
 import { useId, useState, type ReactNode } from "react";
+import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
@@ -69,13 +70,22 @@ const GROUPS: readonly { group: SettingsGroup; icon: LucideIcon }[] = [
  * locked while the assignment is open (DG-65), and Window once it is closed,
  * since a closed assignment's close moves only through Extend or a reopening,
  * which keep the reason (DG-160): a locked card shows a Lock pill with its
- * reason in place of Edit. Editing needs `teaching.assignments.write`.
+ * reason in place of Edit. The mode is a row of Test & timing and locks with
+ * it; once any attempt exists (`started`) the dialog rests the mode and says
+ * why, as the server refuses the change too (F1). Editing needs
+ * `teaching.assignments.write`.
  */
 export function SettingsGroups({
   a,
   version,
   status,
-}: Readonly<{ a: Assignment; version: TestVersion | undefined; status: Status }>) {
+  started = false,
+}: Readonly<{
+  a: Assignment;
+  version: TestVersion | undefined;
+  status: Status;
+  started?: boolean;
+}>) {
   const { t } = useTranslation();
   const write = useCan("teaching.assignments.write");
   const [editing, setEditing] = useState<SettingsGroup | null>(null);
@@ -101,6 +111,7 @@ export function SettingsGroups({
           a={a}
           group={editing}
           status={status}
+          started={started}
           onClose={() => setEditing(null)}
         />
       )}
@@ -236,6 +247,59 @@ function SettingPill({ pill }: Readonly<{ pill: Pill }>) {
   );
 }
 
+/**
+ * modeRows is the mode, with the time limit under it under strict: a flexible
+ * assignment stores its minutes and does not apply them (F1).
+ */
+function modeRows(a: Assignment, t: TFunction): Row[] {
+  if (a.mode === "flexible")
+    return [
+      {
+        label: t("assignments.wizard.mode"),
+        value: t("assignments.wizard.modeFlexible"),
+        sub: t("assignmentDetail.settings.timing.modeFlexibleSub"),
+      },
+    ];
+  return [
+    {
+      label: t("assignments.wizard.mode"),
+      value: t("assignments.wizard.modeStrict"),
+      sub: t("assignmentDetail.settings.timing.modeStrictSub"),
+    },
+    {
+      label: t("assignments.wizard.timeLimit"),
+      value: t("assignments.minutes", { count: a.durationMinutes }),
+      sub: t("assignmentDetail.settings.timing.timerSub"),
+    },
+  ];
+}
+
+/** leavingRow is the leaving rule as applied: under flexible, recorded and told, with no limit (F1). */
+function leavingRow(
+  integrity: Assignment["integrity"],
+  mode: Assignment["mode"],
+  t: TFunction,
+): Row {
+  const label = t("assignments.wizard.leaving");
+  if (mode === "flexible")
+    return {
+      label,
+      value: t("assignmentDetail.settings.integrity.leavingFlexible", {
+        seconds: Math.round(integrity.minAwayMs / 1000),
+      }),
+      sub: t("assignmentDetail.settings.integrity.leavingFlexibleSub"),
+    };
+  return {
+    label,
+    value:
+      integrity.maxFocusLoss === 0
+        ? t("assignments.detail.focusUnlimited")
+        : t(`assignments.detail.focusLimit.${integrity.onLimitExceeded}`, {
+            count: Math.max(0, integrity.maxFocusLoss),
+          }),
+  };
+}
+
 function useRows(
   a: Assignment,
   version: TestVersion | undefined,
@@ -290,11 +354,7 @@ function useRows(
           },
         ),
       },
-      {
-        label: t("assignments.wizard.timeLimit"),
-        value: t("assignments.minutes", { count: a.durationMinutes }),
-        sub: t("assignmentDetail.settings.timing.timerSub"),
-      },
+      ...modeRows(a, t),
       {
         label: t("assignments.detail.attempts"),
         value:
@@ -350,15 +410,7 @@ function useRows(
           t("assignments.detail.notRequired"),
         ),
       },
-      {
-        label: t("assignments.wizard.leaving"),
-        value:
-          integrity.maxFocusLoss === 0
-            ? t("assignments.detail.focusUnlimited")
-            : t(`assignments.detail.focusLimit.${integrity.onLimitExceeded}`, {
-                count: Math.max(0, integrity.maxFocusLoss),
-              }),
-      },
+      leavingRow(integrity, a.mode, t),
       {
         label: t("assignments.detail.copyPaste"),
         value: "",
@@ -410,11 +462,13 @@ function SettingsEditDialog({
   a,
   group,
   status,
+  started,
   onClose,
 }: Readonly<{
   a: Assignment;
   group: SettingsGroup;
   status: Status;
+  started: boolean;
   onClose: () => void;
 }>) {
   const { t } = useTranslation();
@@ -453,6 +507,7 @@ function SettingsEditDialog({
         <GroupControls
           group={group}
           a={a}
+          started={started}
           draft={draft}
           onChange={patch}
           onDraft={setDraft}
@@ -505,12 +560,14 @@ function merge(
 function GroupControls({
   group,
   a,
+  started,
   draft,
   onChange,
   onDraft,
 }: Readonly<{
   group: SettingsGroup;
   a: Assignment;
+  started: boolean;
   draft: AssignmentDraft;
   onChange: (change: RulesPatch | SchedulePatch) => void;
   onDraft: (draft: AssignmentDraft) => void;
@@ -519,7 +576,7 @@ function GroupControls({
     case "timing":
       return (
         <>
-          <TimingRules draft={draft} onChange={onChange} />
+          <TimingRules draft={draft} onChange={onChange} modeLocked={started} />
           <OrderRules draft={draft} onChange={onChange} />
         </>
       );

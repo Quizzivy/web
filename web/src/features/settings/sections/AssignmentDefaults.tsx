@@ -1,5 +1,6 @@
 import { useCallback, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
+import { Timer, TimerOff } from "lucide-react";
 import { DirtyBar } from "@/components/shared/DirtyBar";
 import { SettingsCard } from "@/components/shared/SettingsCard";
 import { Segmented } from "@/components/ui/segmented";
@@ -24,9 +25,13 @@ const RULES = [
   { field: "requireFullscreen", key: "fullscreen" },
 ] as const;
 
-type Defaults = Required<Omit<AssignmentDefaults, "mode">>;
+type Defaults = Required<AssignmentDefaults>;
 
 function fieldControl(field: keyof Defaults): HTMLElement | null {
+  if (field === "mode")
+    return document.querySelector<HTMLElement>(
+      '#defaults-mode-options [aria-pressed="true"]',
+    );
   if (field === "durationMinutes")
     return document.querySelector<HTMLElement>(
       '#defaults-duration-options [aria-pressed="true"]',
@@ -39,6 +44,7 @@ function fieldControl(field: keyof Defaults): HTMLElement | null {
 
 function defaultsOf(draft: AssignmentDraft): Defaults {
   return {
+    mode: draft.mode,
     durationMinutes: draft.durationMinutes,
     shuffleQuestions: draft.shuffleQuestions,
     showScore: draft.review.showScore,
@@ -53,6 +59,7 @@ function withFallback(stored: AssignmentDefaults | undefined): Defaults {
 
 function same(a: Defaults, b: Defaults): boolean {
   return (
+    a.mode === b.mode &&
     a.durationMinutes === b.durationMinutes &&
     a.shuffleQuestions === b.shuffleQuestions &&
     a.showScore === b.showScore &&
@@ -63,10 +70,13 @@ function same(a: Defaults, b: Defaults): boolean {
 
 /**
  * AssignmentDefaultsSection is the Assignment defaults card of the teacher's
- * settings: the time limit (30, 45, 60 or 90 minutes) and four rules that
- * every new assignment starts with, and that each assignment can still
- * change. A change raises the DirtyBar; Save changes stores all five in
- * `preferences.assignmentDefaults`, and Discard restores the saved ones.
+ * settings: the mode (strict unless stored), the time limit (30, 45, 60 or
+ * 90 minutes, shown whatever the mode, since a strict assignment still uses
+ * it) and four rules that every new assignment starts with, and that each
+ * assignment can still change. They only seed new drafts and never change
+ * an existing assignment. A change raises the DirtyBar; Save changes stores
+ * all six in `preferences.assignmentDefaults`, and Discard restores the
+ * saved ones.
  * While saving, the controls stay focusable and ignore a press; when Save
  * changes or Discard ends the unsaved changes, focus returns to the control
  * last changed.
@@ -114,9 +124,52 @@ export function AssignmentDefaultsSection() {
         description={t("settings.defaults.hint")}
         className="overflow-hidden"
       >
+        <div id="defaults-mode-options" className="flex flex-col gap-2 px-4.5 py-3.5">
+          <span className="min-w-0">
+            <span
+              id="defaults-mode"
+              className="text-ui block leading-normal font-medium"
+            >
+              {t("assignments.wizard.mode")}
+            </span>
+            <span
+              id="defaults-mode-hint"
+              className="text-muted-fg text-meta block leading-normal"
+            >
+              {t(
+                current.mode === "flexible"
+                  ? "assignments.wizard.modeFlexibleHint"
+                  : "assignments.wizard.modeStrictHint",
+              )}
+            </span>
+          </span>
+          <Segmented
+            pending={saving}
+            label={t("assignments.wizard.mode")}
+            value={current.mode}
+            fill
+            options={[
+              {
+                value: "strict",
+                label: t("assignments.wizard.modeStrict"),
+                icon: Timer,
+                describedBy: "defaults-mode-hint",
+              },
+              {
+                value: "flexible",
+                label: t("assignments.wizard.modeFlexible"),
+                icon: TimerOff,
+                describedBy: "defaults-mode-hint",
+              },
+            ]}
+            onChange={(value) =>
+              change("mode", { mode: value === "flexible" ? "flexible" : "strict" })
+            }
+          />
+        </div>
         <div
           id="defaults-duration-options"
-          className="flex flex-col gap-2 px-4.5 py-3.5"
+          className="flex flex-col gap-2 border-t px-4.5 py-3.5"
         >
           <span id="defaults-duration" className="text-ui leading-normal font-medium">
             {t("settings.defaults.duration")}
@@ -134,6 +187,12 @@ export function AssignmentDefaultsSection() {
               change("durationMinutes", { durationMinutes: Number(value) })
             }
           />
+          <span
+            id="defaults-duration-hint"
+            className="text-muted-fg text-meta leading-normal"
+          >
+            {t("settings.defaults.durationHint")}
+          </span>
         </div>
         {RULES.map(({ field, key }) => (
           <div key={field} className="flex items-center gap-3.5 border-t px-4.5 py-3">

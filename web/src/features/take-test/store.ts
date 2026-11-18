@@ -430,6 +430,13 @@ function serverNow(state: Pick<TakeTestState, "offsetMs">): string {
 /** The deadline, armed as a single timeout rather than polled. */
 let deadlineTimer: ReturnType<typeof setTimeout> | undefined;
 
+/**
+ * The longest single wait for the deadline. A flexible paper's deadline is the
+ * close, which can be weeks away, and a timeout above 2^31-1 ms fires at once;
+ * a longer wait is taken a day at a time, re-measured each time.
+ */
+export const DEADLINE_STEP_MS = 24 * 60 * 60_000;
+
 export function armDeadline() {
   cancelDeadline();
   const state = useTakeTestStore.getState();
@@ -439,17 +446,22 @@ export function armDeadline() {
     state.submitState !== "idle"
   )
     return;
+  const wait = Math.max(
+    remainingMs(state),
+    state.submitReason === "timer_expired" ? state.retryDelayMs : 0,
+  );
   deadlineTimer = setTimeout(
     () => {
       deadlineTimer = undefined;
+      if (wait > DEADLINE_STEP_MS) {
+        armDeadline();
+        return;
+      }
       void useTakeTestStore
         .getState()
         .submit(state.submitReason === "auto_submit" ? "auto_submit" : "timer_expired");
     },
-    Math.max(
-      remainingMs(state),
-      state.submitReason === "timer_expired" ? state.retryDelayMs : 0,
-    ),
+    Math.min(wait, DEADLINE_STEP_MS),
   );
 }
 

@@ -40,6 +40,15 @@ const STUDENT_NAME = /Nguyễn Văn An/;
 /** An absence the server counts: past seed/12's minAwayMs of 3000. */
 const AWAY_MS = 3_500;
 
+/**
+ * The close test's window, from just before its assignment is made: the start,
+ * a save and the break, on a loaded runner, with room to spare.
+ */
+const CLOSE_WINDOW_MS = 60_000;
+
+/** How long the close test waits for its one save, well inside CLOSE_WINDOW_MS. */
+const SAVE_TIMEOUT_MS = 20_000;
+
 /** The server's bucket for the repeats of attempt.flagged (FlaggedBucket). */
 const FLAGGED_BUCKET_MS = 15 * 60_000;
 
@@ -398,17 +407,19 @@ test("F1: a flexible attempt left on a break reaches its close and reads timed o
   page,
   playwright,
 }) => {
-  test.setTimeout(120_000);
+  test.setTimeout(150_000);
   const api = await playwright.request.newContext();
   try {
     const admin = await sharedApiAuth(api, ADMIN);
-    // Its own assignment per run, closing shortly: the close is the deadline,
-    // so this is the wait. A stored time limit of one minute is longer than
-    // the window and is not applied either way.
-    const closesAt = new Date(Date.now() + 25_000);
-    const assignmentId = await createFlexibleAssignment(api, admin, { closesAt });
-
+    // Signed in first, so that the window holds only the paper.
     await signInAsStudent(page);
+    // Its own assignment per run, closing shortly: the close is the deadline,
+    // so this is the wait. CLOSE_WINDOW_MS holds the start, a save that takes
+    // as long as SAVE_TIMEOUT_MS allows, and the break. The window begins
+    // before the start, so the stored time limit of one minute would end
+    // after the close, and it is not applied either way.
+    const closesAt = new Date(Date.now() + CLOSE_WINDOW_MS);
+    const assignmentId = await createFlexibleAssignment(api, admin, { closesAt });
     const attemptId = await startAttempt(page, assignmentId);
     const started = await reviewAttempt(api, admin, attemptId);
     expect(started.attempt.status).toBe("in_progress");
@@ -418,7 +429,12 @@ test("F1: a flexible attempt left on a break reaches its close and reads timed o
     ).toBeLessThan(1_000);
 
     await chooseOption(page, "went");
-    await expect(page.getByText(/^Đã lưu /)).toBeVisible({ timeout: 30_000 });
+    await expect(
+      page.getByText(/^Đã lưu /),
+      "the answer saved before the break",
+    ).toBeVisible({
+      timeout: SAVE_TIMEOUT_MS,
+    });
     await takeBreak(page);
     expect(Date.now(), "the break began before the close").toBeLessThan(
       closesAt.getTime(),

@@ -52,6 +52,51 @@ describe("a break on the timeline (F1)", () => {
     expect(rows[0]?.breakMs).toBe(30 * MINUTE);
   });
 
+  it("ends a break at the same tab's return to the paper, which draws no row of its own", () => {
+    const rows = timelineRows(
+      [
+        events[0]!,
+        event({ id: 2, kind: "paper_returned", occurredAt: "2026-09-22T12:40:02Z" }),
+        event({
+          id: 3,
+          kind: "tab_hidden",
+          occurredAt: "2026-09-22T12:41:00Z",
+          durationMs: 4_000,
+        }),
+        event({ id: 4, kind: "tab_visible", occurredAt: "2026-09-22T12:41:04Z" }),
+      ],
+      "all",
+    );
+    expect(rows.map((row) => [row.event.kind, row.breakMs])).toEqual([
+      ["paper_left", 25 * MINUTE],
+      ["tab_hidden", null],
+    ]);
+  });
+
+  it("is not stretched by a later move to another device, whose takeover the old session writes last", () => {
+    // The server orders a session's takeover after its own events, and the
+    // new session's resume after the old session.
+    const rows = timelineRows(
+      [
+        events[0]!,
+        event({ id: 2, kind: "paper_returned", occurredAt: "2026-09-22T12:25:02Z" }),
+        event({ id: 3, kind: "session_takeover", occurredAt: "2026-09-22T13:15:02Z" }),
+        event({
+          id: 4,
+          kind: "resume",
+          occurredAt: "2026-09-22T13:15:02Z",
+          sessionId: "018f0000-0000-7000-8000-00000000ab02",
+        }),
+      ],
+      "all",
+    );
+    expect(rows.map((row) => [row.event.kind, row.breakMs])).toEqual([
+      ["paper_left", 10 * MINUTE],
+      ["session_takeover", null],
+      ["resume", null],
+    ]);
+  });
+
   it("is not an absence: no chip narrows to it and its dot is neutral, as a closed page's", () => {
     expect(timelineRows(events, "away")).toEqual([]);
     expect(timelineMark("paper_left")).toBe("other");

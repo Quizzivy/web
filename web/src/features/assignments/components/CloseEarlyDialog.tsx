@@ -40,7 +40,8 @@ export function CloseEarlyDialog({
   const [understood, setUnderstood] = useState(false);
   const planned = formatMoment(assignment.window.closesAt, locale);
   // Under flexible no time limit applies: students mid-test carry on until the
-  // planned close, which closing now never moves earlier (77f Q6).
+  // planned close, which closing now never moves earlier (question Q6 on
+  // Quizzivy/web issue 150).
   const flexible = assignment.mode === "flexible";
 
   return (

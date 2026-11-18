@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi,
+} from "vitest";
 import {
   act,
   fireEvent,
@@ -18,6 +26,8 @@ import {
   type StudentQuestion,
 } from "@/features/take-test/api";
 import { FLUSH_DEBOUNCE_MS, useTakeTestStore } from "@/features/take-test/store";
+import { pending } from "@/features/integrity/useIntegrityMonitor";
+import { clearSession } from "@/features/integrity/buffer";
 import { session, text, viewport } from "./support";
 import i18n from "@/lib/i18n";
 
@@ -115,7 +125,10 @@ async function leaveFor(ms: number) {
 }
 
 function beacons(): Promise<
-  { events: { kind: string; questionId?: string }[]; activeMs?: number }[]
+  {
+    events: { kind: string; questionId?: string; clientSeq: number }[];
+    activeMs?: number;
+  }[]
 > {
   return Promise.all(sent.map(async ({ body }) => JSON.parse(await body.text())));
 }
@@ -135,6 +148,7 @@ beforeEach(() => {
       return true;
     }),
   });
+  vi.mocked(getAttempt).mockReset();
   vi.mocked(saveAnswers)
     .mockReset()
     .mockImplementation(async () => reply());
@@ -314,6 +328,116 @@ describe("the ✕ under flexible", () => {
     await pass(0);
     expect(useTakeTestStore.getState().attemptId).toBe("att-1");
     expect(sent).toEqual([]);
+  });
+});
+
+describe("coming back from a break in the same tab (F1)", () => {
+  /** Leaves by the header's × and its dialog: "Tạm nghỉ" under flexible, "Thoát" under strict. */
+  async function leaveByTheX(flexible = true) {
+    fireEvent.click(
+      banner().getByRole("button", {
+        name: flexible ? "Tạm nghỉ" : "Thoát khỏi bài làm",
+      }),
+    );
+    await pass(0);
+    fireEvent.click(
+      within(screen.getByRole("dialog")).getByRole("button", {
+        name: flexible ? "Tạm nghỉ" : "Thoát",
+      }),
+    );
+    await pass(10);
+  }
+
+  async function reopen(router: Awaited<ReturnType<typeof open>>) {
+    await act(() => router.navigate("/attempts/att-1"));
+    await pass(0);
+  }
+
+  it("records paper_returned on the open question when the paper opens again in the break's session", async () => {
+    const router = await open();
+    await leaveByTheX();
+    expect(router.state.location.pathname).toBe("/");
+    const [left] = (await beacons())[0]?.events ?? [];
+    expect(left?.kind).toBe("paper_left");
+    await pass(5 * MINUTE);
+    await reopen(router);
+    expect(router.state.location.pathname).toBe("/attempts/att-1");
+    expect(pending().map((event) => [event.kind, event.questionId])).toEqual([
+      ["paper_returned", "q1"],
+    ]);
+    expect(pending()[0]!.clientSeq).toBeGreaterThan(left!.clientSeq);
+    expect(Date.parse(pending()[0]!.occurredAt) - NOW.getTime()).toBeGreaterThanOrEqual(
+      5 * MINUTE,
+    );
+  });
+
+  it("records it too when the storage throws, as with site data blocked", async () => {
+    onTestFinished(() => clearSession("att-1"));
+    for (const method of ["getItem", "setItem", "removeItem"] as const)
+      vi.spyOn(Storage.prototype, method).mockImplementation(() => {
+        throw new DOMException("denied", "SecurityError");
+      });
+    const router = await open();
+    await leaveByTheX();
+    expect(router.state.location.pathname).toBe("/");
+    expect((await beacons())[0]?.events.map((event) => event.kind)).toEqual([
+      "paper_left",
+    ]);
+    await reopen(router);
+    expect(router.state.location.pathname).toBe("/attempts/att-1");
+    expect(store().sessionId).toBe("ses-1");
+    expect(pending().map((event) => event.kind)).toEqual(["paper_returned"]);
+  });
+
+  it("records it once: the paper opened again after the return records none", async () => {
+    const router = await open();
+    await leaveByTheX();
+    await reopen(router);
+    await act(() => router.navigate("/"));
+    await pass(10);
+    await reopen(router);
+    const kinds = [
+      ...(await beacons()).flatMap((beacon) =>
+        beacon.events.map((event) => event.kind),
+      ),
+      ...pending().map((event) => event.kind),
+    ];
+    expect(kinds).toEqual(["paper_left", "paper_returned"]);
+  });
+
+  it("records none when the paper comes back under another session, whose resume the server wrote", async () => {
+    const router = await open();
+    await leaveByTheX();
+    expect(getAttempt).toHaveBeenCalledTimes(1);
+    const first = (await vi.mocked(getAttempt).mock.results.at(-1)!
+      .value) as AttemptSession;
+    vi.mocked(getAttempt).mockResolvedValue({ ...first, sessionId: "ses-2" });
+    await reopen(router);
+    expect(store().sessionId).toBe("ses-2");
+    expect(pending()).toEqual([]);
+  });
+
+  it("records none for a paper opened again without a break", async () => {
+    const router = await open();
+    await act(() => router.navigate("/"));
+    await pass(10);
+    await reopen(router);
+    expect(pending()).toEqual([]);
+  });
+
+  it("records none under strict, whose × is no break", async () => {
+    const router = await open({ mode: "strict" });
+    await leaveByTheX(false);
+    expect(router.state.location.pathname).toBe("/");
+    await reopen(router);
+    const kinds = [
+      ...(await beacons()).flatMap((beacon) =>
+        beacon.events.map((event) => event.kind),
+      ),
+      ...pending().map((event) => event.kind),
+    ];
+    expect(kinds).not.toContain("paper_left");
+    expect(kinds).not.toContain("paper_returned");
   });
 });
 

@@ -1,7 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import type { IntegrityPolicy } from "@/features/take-test/api";
 import { coversPaper, useAppState } from "@/stores/appState";
-import { beginSession, pending, record } from "./buffer";
+import { beginSession, closeBreak, openBreak, pending, record } from "./buffer";
 import { flushByBeacon } from "./beacon";
 import { sendHeld } from "./sendHeld";
 import { isFullscreen } from "./fullscreen";
@@ -19,7 +19,10 @@ export interface IntegrityStatus {
  * §10's signals, in one hook and one effect. No focus change is recorded
  * while the maintenance or "sign in again" overlay stands over the page, and
  * an away episode open when one appears is dropped, so time spent on the
- * overlay never counts against the student.
+ * overlay never counts against the student. A paper opened again in the
+ * session its break was taken in, in this tab, records `paper_returned`
+ * (F1): that return writes no `resume` on the server, and the teacher's
+ * timeline ends the break at it.
  */
 export function useIntegrityMonitor({
   attemptId,
@@ -66,6 +69,8 @@ export function useIntegrityMonitor({
         ...(meta === undefined ? {} : { meta }),
       });
     };
+
+    if (closeBreak(attemptId)) note("paper_returned");
 
     const leave = (kind: string) => {
       if (coversPaper(useAppState.getState().overlay)) return;
@@ -159,12 +164,14 @@ export function useIntegrityMonitor({
 }
 
 /**
- * recordPaperLeft records that the student left the paper by its ✕, a break
- * under a flexible assignment (F1). It goes to the server with the buffer's
- * next save or by the beacon the engine sends as it unmounts.
+ * recordPaperLeft records that the student left the paper by its ×, a break
+ * under a flexible assignment (F1), and marks the session as on a break. It
+ * goes to the server with the buffer's next save or by the beacon the engine
+ * sends as it unmounts.
  */
 export function recordPaperLeft(attemptId: string, questionId: string | null): void {
   record(attemptId, "paper_left", questionId === null ? {} : { questionId });
+  openBreak(attemptId);
 }
 
 /** What the audio player reports, which no listener here can observe. */

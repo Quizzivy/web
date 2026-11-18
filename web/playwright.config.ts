@@ -27,7 +27,7 @@ process.env["EMAIL_SINK_DIR"] = EMAIL_SINK_DIR;
  * Phase 4. This file and the smoke test exist so that when the first real one
  * is written there is nothing to set up.
  */
-const SLOW = /timer-expiry\.live\.spec\.ts$/;
+const SLOW = /(timer-expiry|flexible-long-break)\.live\.spec\.ts$/;
 
 /**
  * The two hosts of the hosts specs (tests/e2e/support/hosts.ts). The live API
@@ -91,7 +91,8 @@ export default defineConfig({
     },
     /**
      * The live specs that wait on real time, kept off every pull request: E2E 5
-     * waits out a one-minute deadline, a fifth of the live suite. The "Slow
+     * waits out a one-minute deadline, a fifth of the live suite, and F1's
+     * long break holds a flexible paper away for more than a minute. The "Slow
      * tail" workflow runs it nightly and on demand, with
      * `pnpm e2e:slow`, which needs postgres and the Go API.
      */

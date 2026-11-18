@@ -11,9 +11,14 @@ const AUDIO = new Set(["audio_play", "audio_ended", "audio_blocked", "audio_seek
 const NETWORK = new Set(["network_offline", "network_online"]);
 const CLOSERS = new Set([...AWAY_CLOSERS, "network_online", "audio_ended"]);
 const SERVER_START = "start";
-/** A break taken by the paper's ✕ (F1), and the kinds that end it. */
+/**
+ * A break taken by the paper's × (F1), and the kinds that end it: a resume, a
+ * takeover, or the paper opened again in the same tab and session, which
+ * writes neither and draws no row of its own.
+ */
 const BREAK = "paper_left";
-const BREAK_ENDS = new Set(["resume", "session_takeover"]);
+const RETURN = "paper_returned";
+const BREAK_ENDS = new Set(["resume", "session_takeover", RETURN]);
 const HOUR_MS = 3_600_000;
 
 /** Whether the attempt recorded anything beyond the server's own start, which the table's "Started" row stands for. */
@@ -37,8 +42,9 @@ export interface TimelineRow {
   /** playNo numbers an audio play within its question or shared recording. */
   playNo: number | null;
   /**
-   * breakMs is how long a break (`paper_left`) lasted, to the next resume;
-   * null for every other kind, and for a break nothing has resumed yet.
+   * breakMs is how long a break (`paper_left`) lasted, to the next resume or
+   * same-tab return; null for every other kind, and for a break nothing has
+   * ended yet.
    */
   breakMs: number | null;
 }
@@ -51,7 +57,8 @@ export interface TimelineRow {
  * later closed its family -- the "đang tiếp diễn" row (G-05b). An audio play
  * with no recorded end is kept and is not ongoing, because most plays never
  * record one. The server's own start is dropped too: the table draws a
- * "Started" row from `startedAt`.
+ * "Started" row from `startedAt`. So is a same-tab return to the paper, which
+ * only ends the break above it.
  */
 export function timelineRows(
   events: IntegrityEvent[],
@@ -60,7 +67,8 @@ export function timelineRows(
   const plays = new Map<string, number>();
   const rows: TimelineRow[] = [];
   events.forEach((event, index) => {
-    if (CLOSERS.has(event.kind) || event.kind === SERVER_START) return;
+    if (CLOSERS.has(event.kind) || event.kind === SERVER_START || event.kind === RETURN)
+      return;
     let playNo: number | null = null;
     if (event.kind === "audio_play") {
       const key = audioSubject(event);
@@ -77,7 +85,7 @@ export function timelineRows(
   return rows;
 }
 
-/** breakLength runs a break to the first resume after it; null when none followed. */
+/** breakLength runs a break to the first resume or return after it; null when none followed. */
 function breakLength(events: IntegrityEvent[], index: number): number | null {
   const left = events[index];
   if (left === undefined) return null;

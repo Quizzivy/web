@@ -31,6 +31,31 @@ export async function apiAuth(
 }
 
 /**
+ * The API lets one account sign in twenty times an hour (POST /auth/login's
+ * perEmail bucket), and the live suite signs the seeded accounts in close to
+ * that already. sharedApiAuth signs `who` in once per worker and hands the
+ * same header to every caller until the access token (fifteen minutes) is
+ * near its end, for the specs that only read and write through the API.
+ */
+const sharedTokens = new Map<
+  string,
+  { header: Promise<Record<string, string>>; at: number }
+>();
+const SHARED_TOKEN_MS = 10 * 60_000;
+
+export function sharedApiAuth(
+  api: APIRequestContext,
+  who: typeof ADMIN,
+): Promise<Record<string, string>> {
+  const held = sharedTokens.get(who.email);
+  if (held !== undefined && Date.now() - held.at < SHARED_TOKEN_MS) return held.header;
+  const header = apiAuth(api, who);
+  sharedTokens.set(who.email, { header, at: Date.now() });
+  header.catch(() => sharedTokens.delete(who.email));
+  return header;
+}
+
+/**
  * apiResponse waits for the API's answer to `method` on `path` itself: not
  * the SPA document that shares a path, not a preflight, and not a poll of the
  * same path with `?after=` or a page of it with `?before=`. Start it before
@@ -62,7 +87,158 @@ export const ASSIGNMENT = {
     payload: "01935000-0000-7000-8000-000000001008",
     hidden: "01935000-0000-7000-8000-000000001009",
   },
+  /**
+   * seed/12-dev-flexible.sql: a flexible assignment of 02's paper (a single
+   * choice whose right option is "went", and a short answer), open to the
+   * seeded student for thirty days, fifty attempts, the Admin its teacher.
+   * The time limit and the leaving rule it stores are one minute and a
+   * submit on the second absence, which flexible never applies.
+   */
+  flexible: "01935000-0000-7000-8000-000000001201",
 };
+
+/** STUDENT's user id in seed/01, for a spec that assigns to the student alone. */
+export const STUDENT_ID = "01935000-0000-7000-8000-0000000000a2";
+
+/** 02's published version: the paper ASSIGNMENT.flexible sets, for a spec's own assignment. */
+export const FLEXIBLE_PAPER_VERSION = "01935000-0000-7000-8000-00000000dd02";
+
+/**
+ * createFlexibleAssignment assigns 02's paper to the seeded student alone as
+ * the Admin (`admin`, an apiAuth header), through the API: flexible, open
+ * from a minute ago until `closesAt`, one attempt, no fullscreen, and the
+ * stored time limit `durationMinutes`, one minute unless given, so that a
+ * flexible attempt which applied it would show. It answers the id.
+ */
+export async function createFlexibleAssignment(
+  api: APIRequestContext,
+  admin: Record<string, string>,
+  { closesAt, durationMinutes = 1 }: { closesAt: Date; durationMinutes?: number },
+): Promise<string> {
+  const created = await api.post(`${API}/teacher/assignments`, {
+    headers: admin,
+    data: {
+      testVersionId: FLEXIBLE_PAPER_VERSION,
+      targets: { classIds: [], studentIds: [STUDENT_ID] },
+      window: {
+        opensAt: new Date(Date.now() - 60_000).toISOString(),
+        closesAt: closesAt.toISOString(),
+      },
+      mode: "flexible",
+      durationMinutes,
+      maxAttempts: 1,
+      shuffleQuestions: false,
+      shuffleOptions: false,
+      review: { showScore: true, showCorrectAnswers: false, showExplanations: false },
+      integrity: {
+        requireFullscreen: false,
+        blockCopyPaste: false,
+        maxFocusLoss: 1,
+        onLimitExceeded: "auto_submit",
+        minAwayMs: 3000,
+      },
+      draft: false,
+    },
+  });
+  expect(created.status(), await created.text()).toBe(201);
+  const assignment = (await created.json()) as { id: string; mode: string };
+  expect(assignment.mode).toBe("flexible");
+  return assignment.id;
+}
+
+/**
+ * takeBreak leaves a flexible paper by its × (F1), which the header names
+ * "Tạm nghỉ", through the "Tạm nghỉ?" dialog, and lands on Home.
+ */
+export async function takeBreak(page: Page) {
+  await page
+    .getByRole("banner")
+    .getByRole("button", { name: "Tạm nghỉ", exact: true })
+    .click();
+  const dialog = page.getByRole("dialog", { name: "Tạm nghỉ?" });
+  await expect(dialog).toContainText("Bạn có thể quay lại làm tiếp");
+  await dialog.getByRole("button", { name: "Tạm nghỉ", exact: true }).click();
+  await expect(page).toHaveURL(/\/$/);
+}
+
+/** What the teacher's API says of one attempt: GET /teacher/attempts/{id}. */
+export interface ReviewedAttempt {
+  attempt: {
+    status: string;
+    startedAt: string;
+    deadlineAt: string;
+    submittedAt?: string | null;
+    integrity?: { focusLossCount: number; flagged: boolean } | null;
+  };
+  answers: Record<string, { answer: unknown }>;
+  activeSeconds?: number | null;
+}
+
+/**
+ * reviewAttempt reads one attempt as the Admin, its teacher in the seed, with
+ * `admin`, apiAuth's header: signed in once, since a spec polls this.
+ */
+export async function reviewAttempt(
+  api: APIRequestContext,
+  admin: Record<string, string>,
+  attemptId: string,
+): Promise<ReviewedAttempt> {
+  const response = await api.get(`${API}/teacher/attempts/${attemptId}`, {
+    headers: admin,
+  });
+  expect(response.status(), `the review of ${attemptId}`).toBe(200);
+  return (await response.json()) as ReviewedAttempt;
+}
+
+/** One event of an attempt's timeline, as the teacher's API lists it. */
+export interface TimelineEvent {
+  kind: string;
+  occurredAt: string;
+}
+
+/** attemptEvents is the attempt's timeline as the teacher's API orders it. */
+export async function attemptEvents(
+  api: APIRequestContext,
+  admin: Record<string, string>,
+  attemptId: string,
+): Promise<TimelineEvent[]> {
+  const response = await api.get(`${API}/teacher/attempts/${attemptId}/events`, {
+    headers: admin,
+  });
+  expect(response.status()).toBe(200);
+  return ((await response.json()) as { events: TimelineEvent[] }).events;
+}
+
+/**
+ * sameTabBreakMs is how long the attempt's first break lasted when it was
+ * returned to in the same tab (F1): from its paper_left to the paper_returned
+ * after it. That tab still holds its session, so nothing after the break may
+ * be a resume or a takeover.
+ */
+export function sameTabBreakMs(events: TimelineEvent[]): number {
+  const leftAt = events.findIndex((event) => event.kind === "paper_left");
+  expect(leftAt, "paper_left on the server").toBeGreaterThanOrEqual(0);
+  const after = events.slice(leftAt + 1);
+  const kinds = after.map((event) => event.kind);
+  expect(kinds, "no resume and no takeover after the break").not.toContain("resume");
+  expect(kinds).not.toContain("session_takeover");
+  const returned = after.find((event) => event.kind === "paper_returned");
+  expect(returned, "paper_returned after the break").toBeDefined();
+  return (
+    new Date(returned!.occurredAt).getTime() -
+    new Date(events[leftAt]!.occurredAt).getTime()
+  );
+}
+
+/** spokenSpan words a span as the timeline's compact rows do: "6 giây", "1 phút 5 giây". */
+export function spokenSpan(ms: number): string {
+  const total = Math.round(ms / 1000);
+  const minutes = Math.floor(total / 60);
+  const seconds = total % 60;
+  if (minutes === 0) return `${seconds} giây`;
+  if (seconds === 0) return `${minutes} phút`;
+  return `${minutes} phút ${seconds} giây`;
+}
 
 export async function signIn(page: Page, who: typeof ADMIN, landing: RegExp) {
   await page.goto("/login");
@@ -235,6 +411,17 @@ export async function goAway(page: Page, ms: number) {
   await page.evaluate(() => window.dispatchEvent(new Event("blur")));
   await page.waitForTimeout(ms);
   await page.evaluate(() => window.dispatchEvent(new Event("focus")));
+}
+
+/**
+ * waitUntil lets real time pass until `moment` (milliseconds since the
+ * epoch), for a spec whose subject is time itself: a close that has to pass,
+ * a break that has to last. Nothing on the page changes until then, so
+ * there is no condition to wait on instead.
+ */
+export async function waitUntil(page: Page, moment: number) {
+  const left = moment - Date.now();
+  if (left > 0) await page.waitForTimeout(left);
 }
 
 /**

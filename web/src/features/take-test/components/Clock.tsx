@@ -1,13 +1,17 @@
 import { useEffect, useEffectEvent, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Timer } from "lucide-react";
-import { countdown } from "@/lib/i18n/datetime";
+import { CalendarClock, Timer } from "lucide-react";
+import type { Locale } from "@/lib/i18n";
+import { clockTime, countdown, sameAppDay } from "@/lib/i18n/datetime";
 import { cn } from "@/lib/utils";
 import { usePaper } from "../paper";
-import { timeLeft } from "../timeLeft";
+import { serverNow, timeLeft } from "../timeLeft";
 
 const LOW_MS = 5 * 60_000;
 const LAST_MS = 60_000;
+const HOUR_MS = 60 * 60_000;
+const PILL =
+  "text-md mx-auto inline-flex h-9 flex-none items-center gap-[7px] rounded-full px-3.5 font-semibold whitespace-nowrap";
 
 function minutesToSay(
   before: number,
@@ -40,9 +44,12 @@ function cells(text: string) {
  * server has said the time is up it stands at 00:00 in the danger tones and
  * says nothing. Each digit sits in a cell one zero wide, because the typeface
  * has no tabular figures and the pill would otherwise change width, and move,
- * every second.
+ * every second. Under a flexible assignment (F1) there is no time limit: until
+ * the last hour the pill shows when the test closes instead, with the
+ * calendar icon and no seconds, and from 768px the word "Closes"; from the
+ * last hour it is the countdown, as under strict.
  */
-export function Clock() {
+export function Clock({ wide = true }: Readonly<{ wide?: boolean }>) {
   const { t } = useTranslation();
   const paper = usePaper();
   const { deadlineAt, offsetMs } = paper;
@@ -62,13 +69,26 @@ export function Clock() {
     return () => clearInterval(tick);
   }, []);
   const left = timeLeft({ deadlineAt, offsetMs, lock: over ? "deadline" : null });
+  const announcement = (
+    <span role="status" className="sr-only">
+      {said === null ? "" : t("takeTest.minutesLeft", { count: said })}
+    </span>
+  );
+  if (paper.mode === "flexible" && left > HOUR_MS)
+    return (
+      <>
+        <ClosesPill deadlineAt={deadlineAt} offsetMs={offsetMs} wide={wide} />
+        {announcement}
+      </>
+    );
   return (
     <>
       <span
         role="timer"
         aria-label={t("takeTest.timeLeft")}
         className={cn(
-          "text-md mx-auto inline-flex h-9 flex-none items-center gap-[7px] rounded-full px-3.5 font-semibold whitespace-nowrap tabular-nums",
+          PILL,
+          "tabular-nums",
           left < LOW_MS ? "bg-danger-soft text-danger-ink" : "bg-muted text-fg",
         )}
       >
@@ -85,9 +105,42 @@ export function Clock() {
           )}
         </span>
       </span>
-      <span role="status" className="sr-only">
-        {said === null ? "" : t("takeTest.minutesLeft", { count: said })}
-      </span>
+      {announcement}
     </>
+  );
+}
+
+/**
+ * ClosesPill is the flexible paper's header pill while the close is more than
+ * an hour away: "Đóng 22:00, 26/09", or "Đóng 22:00 hôm nay" on the day, read
+ * on the server's clock. Below 768px the word goes and the icon says it. It
+ * is an image named "Bài đóng lúc …", not a timer: nothing in it ticks.
+ */
+function ClosesPill({
+  deadlineAt,
+  offsetMs,
+  wide,
+}: Readonly<{ deadlineAt: number; offsetMs: number; wide: boolean }>) {
+  const { t, i18n } = useTranslation();
+  const locale = i18n.language as Locale;
+  const now = serverNow(offsetMs);
+  const closes = new Date(deadlineAt);
+  const when = clockTime(closes, now, locale);
+  let shown = when;
+  if (wide)
+    shown = sameAppDay(closes, now)
+      ? t("takeTest.closesToday", { time: when })
+      : t("takeTest.closes", { when });
+  const label = t("takeTest.closesName", { when });
+  return (
+    <span
+      role="img"
+      aria-label={label}
+      title={label}
+      className={cn(PILL, "bg-muted text-fg")}
+    >
+      <CalendarClock aria-hidden="true" className="size-4" />
+      <span aria-hidden="true">{shown}</span>
+    </span>
   );
 }

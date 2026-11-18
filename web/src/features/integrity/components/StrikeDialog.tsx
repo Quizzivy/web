@@ -16,6 +16,8 @@ const FRAME =
 
 function sentence(state: StrikeState, t: TFunction): string {
   const { count: n, limit, consequence } = state;
+  if (state.flexible)
+    return t("integrity.left.flexible", { breakName: t("takeTest.breakConfirm") });
   if (limit === null) return t("integrity.left.recorded");
   if (state.exceeded && consequence === "auto_submit") {
     return t("integrity.autoSubmitBody");
@@ -51,8 +53,11 @@ function sentence(state: StrikeState, t: TFunction): string {
  * deck does not draw use the same frame and say only what the server does: a
  * `warn` policy never names the teacher, an assignment that allows no absence
  * states no number, an `auto_submit` policy says the test is submitted next,
- * and with no limit it says the absence is recorded, once a sitting. It opens
- * again on each counted absence, keyed to this sitting's `strikes`. It cannot
+ * and with no limit it says the absence is recorded, once a sitting. Under a
+ * flexible assignment (F1) it says the absence is recorded and the teacher
+ * told, with no count and no consequence, and points to the ✕ for a break.
+ * It opens again on each counted absence, keyed to this sitting's `strikes`,
+ * except under strict with no limit. It cannot
  * be closed from the backdrop and has no close button, so it is not waved
  * away unread, but Escape acknowledges it as the button does: the student is
  * never trapped.
@@ -68,7 +73,7 @@ export function StrikeDialog({
   const [acknowledged, setAcknowledged] = useState(0);
 
   const unseen = strikes > acknowledged;
-  const open = unseen && (state.limit !== null || acknowledged === 0);
+  const open = unseen && (state.limit !== null || state.flexible || acknowledged === 0);
 
   return (
     <Dialog

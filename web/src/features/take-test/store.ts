@@ -9,6 +9,7 @@ import {
 import { abandonSession } from "@/features/integrity/sendHeld";
 import { ApiError } from "@/lib/api/errors";
 import { releaseSession } from "./heldSession";
+import { reportablePaperTime, resetPaperTime, settlePaperTime } from "./activeTime";
 import { remainingMs } from "./timeLeft";
 import {
   getAttempt,
@@ -16,6 +17,7 @@ import {
   saveAnswers,
   submitAttempt,
   type Answer,
+  type AssignmentMode,
   type AttemptSession,
   type IntegrityPolicy,
   type StudentQuestion,
@@ -55,6 +57,8 @@ interface TakeTestState {
   touchedAt: Record<string, number>;
   audioPlays: Record<string, number>;
   integrity: IntegrityPolicy | null;
+  /** The assignment's mode: under `flexible` the deadline is the student's close (F1). */
+  mode: AssignmentMode;
   // Questions the student marked to come back to (S-06's "đánh dấu").
   flags: ReadonlySet<string>;
   // Counted away episodes before this sitting, per the server.
@@ -78,7 +82,11 @@ interface TakeTestState {
   setAnswer: (questionId: string, answer: Answer) => void;
   toggleFlag: (questionId: string) => void;
   notePlay: (questionId: string) => void;
-  flush: () => Promise<boolean>;
+  /**
+   * Sends what is unsaved. With `report`, a save also goes when only time on
+   * the paper is waiting, with no answer and no event (F1).
+   */
+  flush: (report?: boolean) => Promise<boolean>;
   submit: (reason?: SubmitReason) => Promise<void>;
   lockNow: (reason: LockReason) => void;
   reset: (options?: { keepDraft?: boolean }) => void;
@@ -92,6 +100,12 @@ let generation = 0;
 
 /** §3's builder debounce, and the same reasoning: fast enough to feel saved. */
 export const FLUSH_DEBOUNCE_MS = 1_500;
+
+/**
+ * REPORT_EVERY_MS is the longest the engine goes without a save while time on
+ * the paper is waiting to be reported (F1).
+ */
+export const REPORT_EVERY_MS = 60_000;
 
 const initial = {
   attemptId: null,
@@ -108,6 +122,7 @@ const initial = {
   touchedAt: {} as Record<string, number>,
   audioPlays: {} as Record<string, number>,
   integrity: null,
+  mode: "strict" as AssignmentMode,
   flags: new Set<string>() as ReadonlySet<string>,
   focusLossCount: 0,
   deadlineAt: 0,
@@ -167,6 +182,7 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
         answers,
         audioPlays: session.audioPlays,
         integrity: session.integrity,
+        mode: session.mode,
         flags:
           state.attemptId === session.attempt.id
             ? state.flags
@@ -185,6 +201,7 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
       .hydrate(session, (reason) => get().lockNow(reason));
     if (get().lock === "superseded")
       useGroupPlaybackStore.getState().lockNow("superseded");
+    armReport();
   },
 
   toggleFlag: (questionId) => {
@@ -245,12 +262,18 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
       });
   },
 
-  flush: async () => {
+  flush: async (report = false) => {
     if (activeFlush !== null) return activeFlush;
     const state = get();
     const { attemptId, sessionId } = state;
     if (attemptId === null || sessionId === null || state.lock !== null) return false;
-    if (state.dirty.size === 0 && pendingEvents().length === 0) return true;
+    const activeMs = reportablePaperTime();
+    if (
+      state.dirty.size === 0 &&
+      pendingEvents().length === 0 &&
+      !(report && activeMs > 0)
+    )
+      return true;
     cancelScheduledFlush();
     const epoch = generation;
     const events = drainEvents(attemptId);
@@ -266,8 +289,10 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
           sessionId,
           answers,
           ...(events.length === 0 ? {} : { events }),
+          ...(activeMs > 0 ? { activeMs } : {}),
         });
         if (generation !== epoch) return false;
+        settlePaperTime(activeMs);
         set((current) => {
           const dirty = new Set(current.dirty);
           for (const [id, answer] of Object.entries(answers)) {
@@ -284,6 +309,7 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
           };
         });
         if (get().dirty.size > 0 || pendingEvents().length > 0) scheduleFlush();
+        armReport();
         return true;
       } catch (error) {
         if (generation !== epoch) return false;
@@ -293,7 +319,10 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
           lock: lockForError(error) ?? current.lock,
           retryDelayMs: Math.min(current.retryDelayMs * 2, RETRY_CEILING_MS),
         }));
-        if (get().lock === null) scheduleFlush(get().retryDelayMs);
+        if (get().lock === null) {
+          scheduleFlush(get().retryDelayMs);
+          armReport();
+        }
         return false;
       }
     })();
@@ -318,7 +347,9 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
 
     set({ submitState: "inFlight", submitReason: reason });
     try {
-      let saved = await get().flush();
+      // A manual hand-in reports the time on the paper first; at the deadline
+      // the server would refuse that save, so the timer goes straight on.
+      let saved = await get().flush(reason === "manual");
       let left = Infinity;
       while (saved && generation === epoch && waiting() > 0 && waiting() < left) {
         left = waiting();
@@ -368,6 +399,7 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
     const lock = get().lock;
     if (reason === "deadline" && (lock === "closed" || lock === "superseded")) return;
     cancelScheduledFlush();
+    cancelReport();
     cancelDeadline();
     set({ lock: reason });
     if (reason === "deadline") armDeadline();
@@ -380,7 +412,9 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
     generation += 1;
     activeFlush = null;
     cancelScheduledFlush();
+    cancelReport();
     cancelDeadline();
+    resetPaperTime();
     set({ ...initial, dirty: new Set<string>(), flags: new Set<string>() });
   },
 }));
@@ -507,6 +541,41 @@ export function cancelScheduledFlush() {
   if (pendingFlush !== undefined) {
     clearTimeout(pendingFlush);
     pendingFlush = undefined;
+  }
+}
+
+/**
+ * The report timer: REPORT_EVERY_MS after the paper loads and after each
+ * acknowledged save, a save goes with the time on the paper when some has
+ * accrued and nothing else is on its way; otherwise it waits another round.
+ * A locked or submitting paper has nothing to report to.
+ */
+let pendingReport: ReturnType<typeof setTimeout> | undefined;
+
+function armReport() {
+  cancelReport();
+  pendingReport = setTimeout(() => {
+    pendingReport = undefined;
+    const state = useTakeTestStore.getState();
+    if (state.attemptId === null || state.lock !== null || state.submitState !== "idle")
+      return;
+    if (
+      activeFlush !== null ||
+      pendingFlush !== undefined ||
+      state.flushInFlight ||
+      reportablePaperTime() === 0
+    ) {
+      armReport();
+      return;
+    }
+    void state.flush(true);
+  }, REPORT_EVERY_MS);
+}
+
+function cancelReport() {
+  if (pendingReport !== undefined) {
+    clearTimeout(pendingReport);
+    pendingReport = undefined;
   }
 }
 

@@ -24,7 +24,7 @@ import { exitFullscreen } from "@/features/integrity/fullscreen";
 import { useFullscreenReleased } from "@/features/integrity/useFullscreenReleased";
 import { StrikeDialog } from "@/features/integrity/components/StrikeDialog";
 import { StrikeIndicator } from "@/features/integrity/components/StrikeIndicator";
-import { strikeState } from "@/features/integrity/strikes";
+import { strikeState, type StrikeState } from "@/features/integrity/strikes";
 import { useClipboardNotice } from "@/features/integrity/useClipboardNotice";
 import { useIntegrityMonitor } from "@/features/integrity/useIntegrityMonitor";
 import { dotsOf } from "../answered";
@@ -36,6 +36,7 @@ import {
 } from "../openQuestion";
 import { PaperSourceContext } from "../paper";
 import { useLivePaperSource } from "../livePaper";
+import { usePaperTime } from "../activeTime";
 import { paperKey } from "../shortcuts";
 import { paperStops } from "../stops";
 import { useTakeTestStore, type LockReason } from "../store";
@@ -43,6 +44,16 @@ import { useLeave } from "../useLeave";
 import { useEngineWidthAtLeast } from "../width";
 
 const WIDE_PX = 768;
+
+/**
+ * showsStrikes says whether the header carries the strike phrase: under
+ * strict whenever the assignment sets a limit, under flexible once an
+ * absence has been counted (F1).
+ */
+function showsStrikes(state: StrikeState | null): state is StrikeState {
+  if (state === null) return false;
+  return state.flexible ? state.count > 0 : state.limit !== null;
+}
 
 function unlessTaken(sessionId: string | null, lock: LockReason | null) {
   return lock === "superseded" ? null : sessionId;
@@ -62,7 +73,8 @@ function unlessTaken(sessionId: string | null, lock: LockReason | null) {
  * paper. Once the attempt is submitted, by the student, the timer or an
  * auto-submit, the page shows the submitted screen and leaves the fullscreen
  * the assignment asked for. From then on no fullscreen change is recorded, so
- * that exit is never noted as the student's.
+ * that exit is never noted as the student's. In both modes the engine adds up
+ * the time the paper is visible and reports it with its saves (F1).
  */
 export default function TakeTestPage() {
   const { t } = useTranslation();
@@ -83,6 +95,7 @@ export default function TakeTestPage() {
   const sessionId = useTakeTestStore((s) => s.sessionId);
   const beaconToken = useTakeTestStore((s) => s.beaconToken);
   const integrity = useTakeTestStore((s) => s.integrity);
+  const mode = useTakeTestStore((s) => s.mode);
   const focusLossCount = useTakeTestStore((s) => s.focusLossCount);
   const lock = useTakeTestStore((s) => s.lock);
   const submitState = useTakeTestStore((s) => s.submitState);
@@ -112,6 +125,7 @@ export default function TakeTestPage() {
   });
 
   const autoSubmitting = useIntegrityAutoSubmit(focusLossCount + strikes);
+  usePaperTime({ loaded: status === "ready", lock, submitState });
   useClipboardNotice(
     attemptId !== undefined && sessionId !== null && integrity?.blockCopyPaste === true,
   );
@@ -262,15 +276,14 @@ export default function TakeTestPage() {
   // The server's count from before this sitting plus what this tab has seen since.
   const watching = integrity !== null && lock === null;
   const strikeStatus = watching
-    ? strikeState(integrity, focusLossCount + strikes)
+    ? strikeState(integrity, focusLossCount + strikes, mode)
     : null;
   const strikeDialog = strikeStatus !== null && (
     <StrikeDialog state={strikeStatus} strikes={strikes} />
   );
-  const strikeIndicator =
-    strikeStatus === null || strikeStatus.limit === null ? null : (
-      <StrikeIndicator state={strikeStatus} />
-    );
+  const strikeIndicator = showsStrikes(strikeStatus) ? (
+    <StrikeIndicator state={strikeStatus} />
+  ) : null;
 
   return (
     <>

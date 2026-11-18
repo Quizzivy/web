@@ -59,6 +59,23 @@ function moment(at: string | Date, t: TFunction, locale: Locale, zone: string): 
   });
 }
 
+/**
+ * closeMoment is when a flexible paper can be carried on until, as the
+ * student's sentences write it: "22:00, Thứ 6, 26/09" on another day, and the
+ * time alone on the day of `now`.
+ */
+export function closeMoment(
+  at: string | Date,
+  now: Date,
+  t: TFunction,
+  locale: Locale,
+  zone = getDisplayTimeZone(),
+): string {
+  return sameAppDay(at, now, zone)
+    ? formatTime(at, locale, zone)
+    : moment(at, t, locale, zone);
+}
+
 function availability(
   window: NonNullable<RulesInput["window"]>,
   t: TFunction,

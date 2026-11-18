@@ -42,7 +42,7 @@ export function EngineHeader({
   const { title, lock } = usePaper();
   const locked = lock !== null;
   const closed = lock === "closed";
-  const clock = preview ? <NoTimeLimit /> : <Clock />;
+  const clock = preview ? <NoTimeLimit /> : <Clock wide={wide} />;
 
   return (
     <header
@@ -112,15 +112,17 @@ function PaperTitle({
 }
 
 /**
- * LeaveButton is the header's 36px ✕, named "Leave test". It asks before it
- * leaves; the caller opens the Leave dialog.
+ * LeaveButton is the header's 36px ✕, named "Leave test", or "Take a break"
+ * under a flexible assignment (F1). It asks before it leaves; the caller opens
+ * the Leave dialog.
  */
 export function LeaveButton({ onClick }: Readonly<{ onClick: () => void }>) {
   const { t } = useTranslation();
+  const { mode } = usePaper();
   return (
     <button
       type="button"
-      aria-label={t("takeTest.leave")}
+      aria-label={t(mode === "flexible" ? "takeTest.breakConfirm" : "takeTest.leave")}
       className="hover:bg-hover grid size-9 min-h-0 min-w-0 flex-none place-items-center rounded-md"
       onClick={onClick}
     >

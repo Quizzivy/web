@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import type { IntegrityPolicy } from "@/features/take-test/api";
-import { useAppState, type Overlay } from "@/stores/appState";
+import { coversPaper, useAppState } from "@/stores/appState";
 import { beginSession, pending, record } from "./buffer";
 import { flushByBeacon } from "./beacon";
 import { sendHeld } from "./sendHeld";
@@ -13,10 +13,6 @@ export interface IntegrityStatus {
   /** How long the latest counted episode lasted. Null until there is one. */
   lastAwayMs: number | null;
   fullscreen: boolean;
-}
-
-function pausing(overlay: Overlay): boolean {
-  return overlay.kind === "maintenance" || overlay.kind === "expired";
 }
 
 /**
@@ -72,13 +68,13 @@ export function useIntegrityMonitor({
     };
 
     const leave = (kind: string) => {
-      if (pausing(useAppState.getState().overlay)) return;
+      if (coversPaper(useAppState.getState().overlay)) return;
       note(kind);
       if (awaySince === null) awaySince = Date.now();
     };
 
     const returned = (kind: string) => {
-      if (pausing(useAppState.getState().overlay)) {
+      if (coversPaper(useAppState.getState().overlay)) {
         awaySince = null;
         return;
       }
@@ -128,7 +124,7 @@ export function useIntegrityMonitor({
     };
 
     const unsubscribe = useAppState.subscribe((state) => {
-      if (pausing(state.overlay)) awaySince = null;
+      if (coversPaper(state.overlay)) awaySince = null;
     });
 
     document.addEventListener("visibilitychange", onVisibility);
@@ -160,6 +156,15 @@ export function useIntegrityMonitor({
   }, [attemptId, sessionId]);
 
   return { ...episodes, fullscreen };
+}
+
+/**
+ * recordPaperLeft records that the student left the paper by its ✕, a break
+ * under a flexible assignment (F1). It goes to the server with the buffer's
+ * next save or by the beacon the engine sends as it unmounts.
+ */
+export function recordPaperLeft(attemptId: string, questionId: string | null): void {
+  record(attemptId, "paper_left", questionId === null ? {} : { questionId });
 }
 
 /** What the audio player reports, which no listener here can observe. */

@@ -13,6 +13,7 @@ export function assignment(
   over: Partial<components["schemas"]["Assignment"]> = {},
 ): components["schemas"]["Assignment"] {
   return {
+    mode: "strict",
     id: ASSIGNMENT_ID,
     testId: "018f0000-0000-7000-8000-0000000000a1",
     testVersionId: "018f0000-0000-7000-8000-0000000000f1",

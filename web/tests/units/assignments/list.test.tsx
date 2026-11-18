@@ -41,6 +41,7 @@ function assignment(over: Record<string, unknown> = {}) {
       closesAt: "2026-08-31T14:00:00Z",
       closedAt: null,
     },
+    mode: "strict",
     durationMinutes: 45,
     maxAttempts: 1,
     shuffleQuestions: false,

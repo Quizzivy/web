@@ -24,7 +24,7 @@ const RULES = [
   { field: "requireFullscreen", key: "fullscreen" },
 ] as const;
 
-type Defaults = Required<AssignmentDefaults>;
+type Defaults = Required<Omit<AssignmentDefaults, "mode">>;
 
 function fieldControl(field: keyof Defaults): HTMLElement | null {
   if (field === "durationMinutes")

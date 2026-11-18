@@ -16,6 +16,7 @@ function id(n: number) {
 
 function paper(n: number, over: Partial<StudentAssignmentCard> = {}) {
   return {
+    mode: "strict",
     id: id(n),
     testTitle: `Paper ${n}`,
     status: "open",

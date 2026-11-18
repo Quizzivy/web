@@ -19,11 +19,12 @@ import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import type { Assignment } from "@/features/assignments/api";
 import {
-  elapsedMinutes,
+  paperTime,
   reviewMatches,
 } from "@/features/assignments/pages/teacher/assignmentDetail";
 import { useCan, useWorkspace } from "@/features/auth/permissions";
 import { Timeline } from "@/features/integrity/components/Timeline";
+import { longSpan, minutesLabel } from "@/features/integrity/timeline";
 import { FLAGGED } from "@/features/integrity/tones";
 import { useTick } from "@/hooks/useTick";
 import { ApiError } from "@/lib/api/errors";
@@ -208,13 +209,10 @@ function AttemptFacts({
       ? null
       : new Date(row.deadlineAt).getTime() -
         (lastTick * 1000 + new Date(serverTime).getTime() - receivedAt);
-  const spent = elapsedMinutes(data.attempt);
-  let time = "—";
-  if (spent !== null)
-    time =
-      spent < 1
-        ? t("papers.tookUnderMinute")
-        : t("papers.tookMinutes", { count: spent });
+  const spent = paperTime({
+    ...data.attempt,
+    activeSeconds: data.activeSeconds ?? null,
+  });
   const score = data.attempt.score;
   return (
     <>
@@ -227,9 +225,18 @@ function AttemptFacts({
         </div>
         <div className="rounded-[10px] border p-3">
           <dt className="text-muted-fg text-xs">
-            {t("assignmentDetail.sheet.timeSpent")}
+            {spent.onPaper
+              ? t("assignmentDetail.sheet.onPaper")
+              : t("assignmentDetail.sheet.timeSpent")}
           </dt>
-          <dd className="text-xl font-semibold tabular-nums">{time}</dd>
+          <dd className="text-xl font-semibold tabular-nums">
+            {minutesLabel(spent.minutes, t)}
+          </dd>
+          {spent.spanMs !== null && (
+            <dd className="text-muted-fg text-xs">
+              {t("assignmentDetail.over", { span: longSpan(spent.spanMs, t) })}
+            </dd>
+          )}
         </div>
       </dl>
       <div className="text-muted-fg flex flex-wrap gap-x-3 gap-y-1 text-xs">

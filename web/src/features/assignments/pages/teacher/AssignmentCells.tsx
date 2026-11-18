@@ -1,6 +1,7 @@
 import { useTranslation } from "react-i18next";
 import { StatusBadge } from "@/components/shared/StatusBadge";
 import type { Assignment, AssignmentStatus } from "@/features/assignments/api";
+import { ModeChip } from "@/features/assignments/components/ModeChip";
 import { statusAt } from "@/features/assignments/status";
 import { targetsOf, windowOf, type ListTab } from "./assignmentWindow";
 
@@ -39,7 +40,7 @@ export function AssignmentStatusPill({
 
 /**
  * AssignmentCell is the Assignment column: the title, "Test v{n} · {q}
- * questions", what is left to grade in warning ink when `toGrade` (the table
+ * questions" and the Flexible chip of a flexible assignment, what is left to grade in warning ink when `toGrade` (the table
  * has hidden its To grade column), and `inline`, the classes, when the table
  * has hidden Assigned to.
  */
@@ -53,13 +54,14 @@ export function AssignmentCell({
   return (
     <span className="flex min-w-0 flex-col">
       <span className="truncate font-medium">{assignment.testTitle}</span>
-      <span className="text-muted-fg flex flex-wrap gap-x-2 text-[12.5px]">
+      <span className="text-muted-fg flex flex-wrap items-center gap-x-2 text-[12.5px]">
         <span>
           {t("assignments.list.meta", {
             version: assignment.testVersion,
             count: assignment.questionCount ?? 0,
           })}
         </span>
+        <ModeChip mode={assignment.mode} />
         {showToGrade && toGrade > 0 ? (
           <span className="text-warning-ink font-medium">
             {t("assignments.list.toGrade", { count: toGrade })}
@@ -111,7 +113,10 @@ export function SubmittedBar({ assignment }: Readonly<{ assignment: Assignment }
   );
 }
 
-/** AssignmentCard is a row below 768px: title and status, "classes · when", then the bar. */
+/**
+ * AssignmentCard is a row below 768px: title and status, "classes · when"
+ * after the Flexible chip of a flexible assignment, then the bar.
+ */
 export function AssignmentCard({
   assignment,
   tab,
@@ -124,8 +129,11 @@ export function AssignmentCard({
         <span className="text-base font-medium">{assignment.testTitle}</span>
         <AssignmentStatusPill assignment={assignment} now={now} className="flex-none" />
       </span>
-      <span className="text-muted-fg text-[12.5px]">
-        {targetsOf(assignment, t)} · {windowOf(assignment, tab, now, t)}
+      <span className="text-muted-fg flex flex-wrap items-center gap-x-2 gap-y-1 text-[12.5px]">
+        <ModeChip mode={assignment.mode} />
+        <span>
+          {targetsOf(assignment, t)} · {windowOf(assignment, tab, now, t)}
+        </span>
       </span>
       <SubmittedBar assignment={assignment} />
     </>

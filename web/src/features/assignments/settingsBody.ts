@@ -27,6 +27,7 @@ export function settingsBody(
     case "timing":
       return {
         ...base,
+        mode: draft.mode,
         durationMinutes: draft.durationMinutes,
         maxAttempts: draft.maxAttempts,
         shuffleQuestions: draft.shuffleQuestions,

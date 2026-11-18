@@ -12,6 +12,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
+import type { AssignmentMode } from "@/features/assignments/api";
 import { ApiError } from "@/lib/api/errors";
 import { extendAttempt, resetAttempt, voidAttempt, type MonitorRow } from "../api";
 
@@ -19,19 +20,25 @@ export type Intervention = "extend" | "reset" | "void";
 
 const EXTENSIONS = [5, 10, 15, 20, 30, 45, 60];
 
-/** InterventionDialog requires a reason for each authorized intervention and optionally returns focus to its caller. */
+/**
+ * InterventionDialog requires a reason for each authorized intervention and
+ * optionally returns focus to its caller. Under flexible, where the paper shows
+ * no clock until its last hour, an extension says the deadline moves instead.
+ */
 export function InterventionDialog({
   kind,
   row,
   onOpenChange,
   onDone,
   returnFocus,
+  mode = "strict",
 }: Readonly<{
   kind: Intervention | null;
   row: MonitorRow | null;
   onOpenChange: (open: boolean) => void;
   onDone: () => Promise<void> | void;
   returnFocus?: RefObject<HTMLElement | null>;
+  mode?: AssignmentMode;
 }>) {
   const { t } = useTranslation();
   const [minutes, setMinutes] = useState(10);
@@ -74,7 +81,11 @@ export function InterventionDialog({
         onOpenChange(open);
       }}
       title={t(`monitor.${kind}.title`, { name, no })}
-      description={t(`monitor.${kind}.body`, { name, no, next: no + 1 })}
+      description={
+        kind === "extend" && mode === "flexible"
+          ? t("monitor.extend.bodyFlexible")
+          : t(`monitor.${kind}.body`, { name, no, next: no + 1 })
+      }
       confirmLabel={t(`monitor.${kind}.confirm`)}
       destructive={kind === "void"}
       disabled={blank}

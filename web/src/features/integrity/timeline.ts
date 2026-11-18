@@ -1,3 +1,5 @@
+import type { TFunction } from "i18next";
+import { formatInTimeZone } from "date-fns-tz";
 import type { IntegrityEvent } from "@/features/attempts/api";
 
 /** The G-05 filter chips. */
@@ -9,6 +11,15 @@ const AUDIO = new Set(["audio_play", "audio_ended", "audio_blocked", "audio_seek
 const NETWORK = new Set(["network_offline", "network_online"]);
 const CLOSERS = new Set([...AWAY_CLOSERS, "network_online", "audio_ended"]);
 const SERVER_START = "start";
+/**
+ * A break taken by the paper's × (F1), and the kinds that end it: a resume, a
+ * takeover, or the paper opened again in the same tab and session, which
+ * writes neither and draws no row of its own.
+ */
+const BREAK = "paper_left";
+const RETURN = "paper_returned";
+const BREAK_ENDS = new Set(["resume", "session_takeover", RETURN]);
+const HOUR_MS = 3_600_000;
 
 /** Whether the attempt recorded anything beyond the server's own start, which the table's "Started" row stands for. */
 export function hasRecordedEvents(events: readonly IntegrityEvent[]): boolean {
@@ -30,6 +41,12 @@ export interface TimelineRow {
   ongoing: boolean;
   /** playNo numbers an audio play within its question or shared recording. */
   playNo: number | null;
+  /**
+   * breakMs is how long a break (`paper_left`) lasted, to the next resume or
+   * same-tab return; null for every other kind, and for a break nothing has
+   * ended yet.
+   */
+  breakMs: number | null;
 }
 
 /**
@@ -40,7 +57,8 @@ export interface TimelineRow {
  * later closed its family -- the "đang tiếp diễn" row (G-05b). An audio play
  * with no recorded end is kept and is not ongoing, because most plays never
  * record one. The server's own start is dropped too: the table draws a
- * "Started" row from `startedAt`.
+ * "Started" row from `startedAt`. So is a same-tab return to the paper, which
+ * only ends the break above it.
  */
 export function timelineRows(
   events: IntegrityEvent[],
@@ -49,7 +67,8 @@ export function timelineRows(
   const plays = new Map<string, number>();
   const rows: TimelineRow[] = [];
   events.forEach((event, index) => {
-    if (CLOSERS.has(event.kind) || event.kind === SERVER_START) return;
+    if (CLOSERS.has(event.kind) || event.kind === SERVER_START || event.kind === RETURN)
+      return;
     let playNo: number | null = null;
     if (event.kind === "audio_play") {
       const key = audioSubject(event);
@@ -60,9 +79,22 @@ export function timelineRows(
     const ongoing = opener && event.durationMs == null && !closedLater(events, index);
     if (opener && event.durationMs == null && !ongoing) return;
     if (filter !== "all" && family(event.kind) !== filter) return;
-    rows.push({ event, ongoing, playNo });
+    const breakMs = event.kind === BREAK ? breakLength(events, index) : null;
+    rows.push({ event, ongoing, playNo, breakMs });
   });
   return rows;
+}
+
+/** breakLength runs a break to the first resume or return after it; null when none followed. */
+function breakLength(events: IntegrityEvent[], index: number): number | null {
+  const left = events[index];
+  if (left === undefined) return null;
+  const resumed = events.slice(index + 1).find((later) => BREAK_ENDS.has(later.kind));
+  if (resumed === undefined) return null;
+  return Math.max(
+    0,
+    new Date(resumed.occurredAt).getTime() - new Date(left.occurredAt).getTime(),
+  );
 }
 
 function audioSubject(event: IntegrityEvent): string {
@@ -89,6 +121,68 @@ function closedLater(events: IntegrityEvent[], index: number): boolean {
 /** The trailing episode the strip must say it is not summing (G-05b). */
 export function hasOpenEpisode(events: IntegrityEvent[]): boolean {
   return timelineRows(events, "away").some((row) => row.ongoing);
+}
+
+/**
+ * dayClockSpan is the review table's shape for a span that can pass a day (F1):
+ * under 24 hours `clockSpan` as before, past it the whole days apart and the
+ * rest as "01:29:30", which the caller words as "1 ngày 01:29:30".
+ */
+export function dayClockSpan(ms: number): { days: number; clock: string } {
+  const total = Math.max(0, Math.round(ms / 1000));
+  const days = Math.floor(total / 86_400);
+  if (days === 0) return { days, clock: clockSpan(ms) };
+  const rest = total % 86_400;
+  const pad = (n: number) => String(n).padStart(2, "0");
+  return {
+    days,
+    clock: `${pad(Math.floor(rest / 3600))}:${pad(Math.floor((rest % 3600) / 60))}:${pad(rest % 60)}`,
+  };
+}
+
+/** minutesLabel is a time in whole minutes as the roster and the sheet write it: "—" when unknown. */
+export function minutesLabel(minutes: number | null, t: TFunction): string {
+  if (minutes === null) return "—";
+  return minutes < 1
+    ? t("papers.tookUnderMinute")
+    : t("papers.tookMinutes", { count: minutes });
+}
+
+/**
+ * longSpan words a span the teacher reads in minutes, hours or days (F1): the
+ * whole minutes under an hour ("52 phút", "dưới 1 phút"), the whole hours
+ * under a day ("3 giờ"), and past it days and hours ("2 ngày 1 giờ").
+ */
+export function longSpan(ms: number, t: TFunction): string {
+  const minutes = Math.round(Math.max(0, ms) / 60_000);
+  if (minutes < 60) return minutesLabel(minutes, t);
+  const hours = Math.round(ms / HOUR_MS);
+  if (hours < 24) return t("assignments.detail.left.hours", { hours });
+  return t("assignments.detail.left.daysHours", {
+    days: Math.floor(hours / 24),
+    hours: hours % 24,
+  });
+}
+
+/**
+ * datedRows says which of the moments a list shows carry their day (F1): once
+ * the attempt's own moments (`all`) fall on more than one day in the zone, the
+ * first shown moment of each day does; otherwise none does.
+ */
+export function datedRows(
+  shown: readonly string[],
+  all: readonly string[],
+  zone: string,
+): boolean[] {
+  const dayOf = (moment: string) => formatInTimeZone(moment, zone, "yyyy-MM-dd");
+  if (new Set(all.map(dayOf)).size < 2) return shown.map(() => false);
+  let last: string | null = null;
+  return shown.map((moment) => {
+    const day = dayOf(moment);
+    const first = day !== last;
+    last = day;
+    return first;
+  });
 }
 
 /** "2:41" from milliseconds, the strip's and the table's shape. */

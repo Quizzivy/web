@@ -232,6 +232,8 @@ const sentences: Record<
         )
       : null;
   },
+  // Under a flexible assignment the server writes the item again with the new
+  // `focusLost` (F1): it reads that count each time, in the same look.
   "attempt.flagged": (p, t) =>
     hasText(p.studentName) && hasCount(p.focusLost)
       ? literalSentence(

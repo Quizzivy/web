@@ -17,6 +17,7 @@ async function signIn(page: Page) {
     score: gradedResult.attempt.score ?? null,
   };
   const intro: Detail = {
+    mode: "strict",
     id: open.id,
     testTitle: open.testTitle,
     className: classes[0]!.name,

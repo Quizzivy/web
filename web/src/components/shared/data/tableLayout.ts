@@ -11,7 +11,8 @@ import type { ReactNode } from "react";
  * that are not. `aside` draws under `cell` in the same cell, outside the link
  * or button that opens the row: the place for a control in the first column.
  * `hideHeader` keeps the header's text for assistive technology only, for a
- * column the deck draws no header over.
+ * column the deck draws no header over. `headerName` is the header's
+ * accessible name when the short visible text says less than the column holds.
  */
 export interface DataColumn<T> {
   readonly id: string;
@@ -20,6 +21,7 @@ export interface DataColumn<T> {
   readonly showFrom?: number;
   readonly align?: "end";
   readonly hideHeader?: boolean;
+  readonly headerName?: string;
   readonly cell: (row: T, shown: ReadonlySet<string>) => ReactNode;
   readonly aside?: (row: T, shown: ReadonlySet<string>) => ReactNode;
 }

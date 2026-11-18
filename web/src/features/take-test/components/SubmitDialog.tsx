@@ -9,18 +9,25 @@ import {
 } from "@/components/shared/DeckDialog";
 import { Button } from "@/components/ui/button";
 import { useTick } from "@/hooks/useTick";
-import { countdown } from "@/lib/i18n/datetime";
+import type { Locale } from "@/lib/i18n";
+import { clockTime, countdown, sameAppDay } from "@/lib/i18n/datetime";
 import { cn } from "@/lib/utils";
 import { useTakeTestStore } from "../store";
-import { timeLeft } from "../timeLeft";
+import { serverNow, timeLeft } from "../timeLeft";
 import type { DotState } from "./Navigator";
 
 const MINUTE_MS = 60_000;
 const LOW_MS = 5 * MINUTE_MS;
 
-function bodyOf(unanswered: number, left: number, t: TFunction): string {
+function bodyOf(
+  unanswered: number,
+  left: number,
+  closes: string | null,
+  t: TFunction,
+): string {
   if (unanswered === 0) return t("takeTest.submitDialog.bodyAll");
   if (left <= 0) return t("takeTest.submitDialog.bodyOver");
+  if (closes !== null) return t("takeTest.submitDialog.bodyFlexible", { when: closes });
   const minutes = Math.floor(left / MINUTE_MS);
   if (minutes === 0) return t("takeTest.submitDialog.bodySoon");
   return t("takeTest.submitDialog.bodyUnanswered", { count: minutes });
@@ -53,7 +60,8 @@ function titleOf(untouched: number, partly: number, t: TFunction): string {
  * submission is out the dialog cannot be dismissed and both buttons are
  * inert; one that fails says so in the dialog and leaves it open to try
  * again. The chips scroll inside their own box on a long paper, so the two
- * buttons stay in reach.
+ * buttons stay in reach. Under a flexible assignment (F1) the third tile is
+ * when the test closes, and the sentence names the close, not the minutes.
  */
 export function SubmitDialog({
   open,
@@ -66,8 +74,9 @@ export function SubmitDialog({
   onClose: () => void;
   onGo: (index: number) => void;
 }>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const goId = useId();
+  const flexible = useTakeTestStore((s) => s.mode === "flexible");
   const busy = useTakeTestStore((s) => s.submitState === "inFlight");
   const deadlineAt = useTakeTestStore((s) => s.deadlineAt);
   const offsetMs = useTakeTestStore((s) => s.offsetMs);
@@ -79,6 +88,14 @@ export function SubmitDialog({
   const partly = unanswered.filter((index) => dots[index]?.partly).length;
   const untouched = unanswered.length - partly;
   const flagged = dots.filter((dot) => dot.flagged).length;
+  const now = serverNow(offsetMs);
+  const closes = flexible
+    ? clockTime(new Date(deadlineAt), now, i18n.language as Locale)
+    : null;
+  const closesValue =
+    closes !== null && sameAppDay(new Date(deadlineAt), now)
+      ? t("takeTest.submitDialog.closesToday", { time: closes })
+      : closes;
   const facts = [
     {
       label: t("takeTest.submitDialog.answered"),
@@ -91,8 +108,12 @@ export function SubmitDialog({
       ink: flagged > 0 ? "text-warning-ink" : undefined,
     },
     {
-      label: t("takeTest.submitDialog.timeLeft"),
-      value: countdown(left),
+      label: t(
+        closesValue === null
+          ? "takeTest.submitDialog.timeLeft"
+          : "takeTest.submitDialog.closesLabel",
+      ),
+      value: closesValue ?? countdown(left),
       ink: left < LOW_MS ? "text-danger-ink" : undefined,
     },
   ];
@@ -104,7 +125,7 @@ export function SubmitDialog({
         if (!next && !busy) onClose();
       }}
       title={titleOf(untouched, partly, t)}
-      description={bodyOf(unanswered.length, left, t)}
+      description={bodyOf(unanswered.length, left, closes, t)}
     >
       <dl className="bg-border grid grid-cols-3 gap-px overflow-hidden rounded-lg border">
         {facts.map((fact) => (

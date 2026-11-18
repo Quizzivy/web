@@ -195,3 +195,45 @@ describe("a deadline that moves while the paper is open", () => {
     expect(store().submitState).toBe("done");
   });
 });
+
+/**
+ * Under flexible the deadline is the close, which can be weeks away: further
+ * than one timeout can wait (2^31-1 ms), which would otherwise fire at once.
+ */
+describe("a flexible close weeks away", () => {
+  const close = new Date(serverNow.getTime() + 30 * 24 * 60 * 60_000);
+
+  function startFlexible() {
+    store().hydrate({
+      ...session({
+        serverTime: serverNow.toISOString(),
+        deadlineAt: close.toISOString(),
+      }),
+      mode: "flexible",
+    });
+  }
+
+  it("does not hand the paper in when it loads", async () => {
+    submitted.mockRejectedValue(
+      new ApiError({
+        status: 409,
+        code: "DEADLINE_NOT_REACHED",
+        message: "Chưa hết giờ.",
+        details: { deadlineAt: close.toISOString() },
+      }),
+    );
+    startFlexible();
+    await vi.advanceTimersByTimeAsync(5_000);
+    expect(submitted).not.toHaveBeenCalled();
+    expect(store().submitState).toBe("idle");
+  });
+
+  it("still hands it in at the close", async () => {
+    startFlexible();
+    await vi.advanceTimersByTimeAsync(close.getTime() - Date.now() - 60_000);
+    expect(submitted).not.toHaveBeenCalled();
+    await vi.advanceTimersByTimeAsync(60_000 + 100);
+    expect(submitted).toHaveBeenCalledTimes(1);
+    expect(submitted).toHaveBeenCalledWith("att-1", { reason: "timer_expired" });
+  });
+});

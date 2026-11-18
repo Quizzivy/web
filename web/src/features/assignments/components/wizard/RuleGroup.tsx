@@ -32,20 +32,32 @@ export function RuleGroup({
 
 /**
  * RuleText is a row's name and the line under it, which says what the
- * setting does. `id` names the line for the control it describes.
+ * setting does. `id` names the line for the control it describes. A
+ * `restingLabel` is drawn at 45% while the line stays at full ink.
  */
 export function RuleText({
   label,
   hint,
   id,
   labelFor,
-}: Readonly<{ label: string; hint: string; id?: string; labelFor?: string }>) {
+  restingLabel = false,
+}: Readonly<{
+  label: string;
+  hint: string;
+  id?: string | undefined;
+  labelFor?: string;
+  restingLabel?: boolean;
+}>) {
+  const labelClass = cn(
+    "text-ui block leading-normal font-medium",
+    restingLabel && "opacity-45",
+  );
   return (
     <span className="min-w-0">
       {labelFor === undefined ? (
-        <span className="text-ui block leading-normal font-medium">{label}</span>
+        <span className={labelClass}>{label}</span>
       ) : (
-        <label htmlFor={labelFor} className="text-ui block leading-normal font-medium">
+        <label htmlFor={labelFor} className={labelClass}>
           {label}
         </label>
       )}
@@ -94,19 +106,25 @@ export function SwitchRow({
 
 /**
  * RuleRow is a setting with a control of its own under its text, or beside
- * it when `inline`.
+ * it when `inline`. A `dimmed` row is drawn whole at 45%. A `locked` row
+ * rests its name and its control at 45% and keeps its line at full ink,
+ * since the line is what says why it cannot change. `hintId` names the line.
  */
 export function RuleRow({
   label,
   hint,
+  hintId,
   inline = false,
   dimmed = false,
+  locked = false,
   children,
 }: Readonly<{
   label: string;
   hint: string;
+  hintId?: string;
   inline?: boolean;
   dimmed?: boolean;
+  locked?: boolean;
   children: ReactNode;
 }>) {
   return (
@@ -119,8 +137,10 @@ export function RuleRow({
         dimmed && "opacity-45",
       )}
     >
-      <RuleText label={label} hint={hint} />
-      <span className={cn(inline && "justify-self-end")}>{children}</span>
+      <RuleText label={label} hint={hint} id={hintId} restingLabel={locked} />
+      <span className={cn(inline && "justify-self-end", locked && "opacity-45")}>
+        {children}
+      </span>
     </div>
   );
 }

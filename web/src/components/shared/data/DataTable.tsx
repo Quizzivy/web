@@ -227,6 +227,7 @@ function HeaderRow<T extends Item>({
         <div
           key={column.id}
           role="columnheader"
+          aria-label={column.headerName}
           className={cn(
             "min-w-0",
             column.align === "end" && "text-right",

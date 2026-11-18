@@ -15,6 +15,8 @@ import type { components } from "@/lib/api/schema";
 export type Assignment = components["schemas"]["Assignment"];
 export type AssignmentInput = components["schemas"]["AssignmentInput"];
 export type AssignmentStatus = components["schemas"]["AssignmentStatus"];
+/** AssignmentMode is strict (a time limit from Start) or flexible (until the close, with breaks). */
+export type AssignmentMode = components["schemas"]["AssignmentMode"];
 export type ReviewPolicy = components["schemas"]["ReviewPolicy"];
 export type IntegrityPolicy = components["schemas"]["IntegrityPolicy"];
 

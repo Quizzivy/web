@@ -326,7 +326,9 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
           retryDelayMs: Math.min(current.retryDelayMs * 2, RETRY_CEILING_MS),
         }));
         if (get().lock === null) {
-          scheduleFlush(get().retryDelayMs);
+          // A failed report is retried as a report, so the retry sends the
+          // time still waiting and, once it lands, ends the backoff.
+          scheduleFlush(get().retryDelayMs, report);
           armReport();
         }
         return false;
@@ -547,11 +549,11 @@ function writeFlags(attemptId: string, flags: ReadonlySet<string>): void {
  */
 let pendingFlush: ReturnType<typeof setTimeout> | undefined;
 
-export function scheduleFlush(delayMs: number = FLUSH_DEBOUNCE_MS) {
+export function scheduleFlush(delayMs: number = FLUSH_DEBOUNCE_MS, report = false) {
   cancelScheduledFlush();
   pendingFlush = setTimeout(() => {
     pendingFlush = undefined;
-    void useTakeTestStore.getState().flush();
+    void useTakeTestStore.getState().flush(report);
   }, delayMs);
 }
 

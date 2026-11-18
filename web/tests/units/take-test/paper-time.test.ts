@@ -18,6 +18,7 @@ import {
   type LockReason,
   type SubmitState,
 } from "@/features/take-test/store";
+import { useSaveStatus } from "@/features/take-test/saveStatus";
 import { useAppState } from "@/stores/appState";
 import { session, text } from "./support";
 
@@ -252,9 +253,27 @@ describe("reporting the time on the paper", () => {
     saved.mockRejectedValueOnce(new Error("offline"));
     await pass(REPORT_EVERY_MS);
     expect(saved).toHaveBeenCalledTimes(1);
-    await pass(REPORT_EVERY_MS);
+    await pass(2_000); // the retry, itself a report
     expect(saved).toHaveBeenCalledTimes(2);
+    await pass(REPORT_EVERY_MS);
+    expect(saved).toHaveBeenCalledTimes(3);
     expect(paperTime()).toBe(0);
+  });
+
+  it("retries a failed report as a report, which ends the backoff", async () => {
+    start();
+    startPaperTime(NOW.getTime());
+    saved.mockRejectedValueOnce(new Error("offline"));
+    await pass(REPORT_EVERY_MS);
+    expect(saved).toHaveBeenCalledTimes(1);
+    await pass(store().retryDelayMs);
+    expect(saved).toHaveBeenCalledTimes(2);
+    expect(saved.mock.calls[1]?.[1]).toMatchObject({ answers: {}, activeMs: 62_000 });
+    expect(store().retryDelayMs).toBe(useTakeTestStore.getInitialState().retryDelayMs);
+
+    const status = renderHook(() => useSaveStatus());
+    act(() => store().setAnswer("q1", text("parks")));
+    expect(status.result.current).toBe("saving");
   });
 
   it("reports it before a hand-in by the student, even with nothing else unsaved", async () => {

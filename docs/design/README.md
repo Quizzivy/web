@@ -699,14 +699,14 @@ To view one, start the server above and open, for example,
   with the close as the deadline and breaks until then. The page draws the Mode as the first row
   of the wizard's "Thời gian và số lượt" and of the Settings dialog, locked with "Đề và thời
   gian"; under Flexible no time-limit row, and in Rules the two switches with "Rời khỏi bài" as
-  one fixed sentence; a "Linh hoạt" chip in the list and the heading; the intro's sentences; the
-  engine's header with the close as a date and the countdown in the last hour; the leave dialog as
-  "Tạm nghỉ?"; "Bạn vừa rời trang làm bài" with no allowance; Home's card; the monitor's and the
-  attempt sheet's two times; and a timeline with the day on each day's first event and a break in
-  the neutral dot. Each of its eight screens opens on the deck's and the product's own frame, so
-  what changes sits beside it. Thirty-two states, at 1280 and 360, light and dark, Vietnamese and
-  English. No operation beyond T-F1.1. Its seven questions for Thuong are on the page; the first
-  is the Vietnamese words.
+  one fixed sentence and "Bỏ qua lần rời ngắn" as today (plan Q6); a "Linh hoạt" chip in the list
+  and the heading; the intro's sentences; the engine's header with the close as a date and the
+  countdown in the last hour; the leave dialog as "Tạm nghỉ?"; "Bạn vừa rời trang làm bài" with no
+  allowance; Home's card; the monitor's and the attempt sheet's two times; and a timeline with the
+  day on each day's first event and a break in the neutral dot. Each of its eight screens opens on
+  the deck's and the product's own frame, so what changes sits beside it. Thirty-two states, at
+  1280 and 360, light and dark, Vietnamese and English. No operation beyond T-F1.1. Its seven
+  questions for Thuong are on the page; the first is the Vietnamese words.
 
 ## The brand
 

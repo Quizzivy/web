@@ -320,7 +320,7 @@ describe("the ✕ under flexible", () => {
 describe("leaving the open paper under flexible", () => {
   const strict = { maxFocusLoss: 1, onLimitExceeded: "auto_submit" as const };
   const LEFT =
-    "Lần rời trang này đã được ghi lại, và giáo viên sẽ được báo. Câu trả lời của bạn vẫn an toàn. Nếu cần nghỉ, hãy bấm nút ✕ Tạm nghỉ ở góc trên bên trái: bài được lưu để bạn làm tiếp sau.";
+    "Lần rời trang này đã được ghi lại, và giáo viên sẽ được báo. Câu trả lời của bạn vẫn an toàn. Nếu cần nghỉ, hãy bấm nút × Tạm nghỉ ở góc trên bên trái: bài được lưu để bạn làm tiếp sau.";
 
   it("says nothing in the header before an absence is counted", async () => {
     await open({ integrity: strict });

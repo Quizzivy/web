@@ -221,7 +221,7 @@
       "title": "Bạn vừa rời trang làm bài",
       "back": "Quay lại bài làm",
       "recorded": "Mỗi lần rời trang làm bài đều được ghi lại. Hãy ở lại trang này cho đến khi nộp bài.",
-      "flexible": "Lần rời trang này đã được ghi lại, và giáo viên sẽ được báo. Câu trả lời của bạn vẫn an toàn. Nếu cần nghỉ, hãy bấm nút ✕ {{breakName}} ở góc trên bên trái: bài được lưu để bạn làm tiếp sau.",
+      "flexible": "Lần rời trang này đã được ghi lại, và giáo viên sẽ được báo. Câu trả lời của bạn vẫn an toàn. Nếu cần nghỉ, hãy bấm nút × {{breakName}} ở góc trên bên trái: bài được lưu để bạn làm tiếp sau.",
       "counted_other": "Lần này được tính là lần {{n}} trong {{count}} lần được phép. Hãy ở lại trang này cho đến khi nộp bài.",
       "countedSubmit_other": "Lần này được tính là lần {{n}} trong {{count}} lần được phép. Sau đó, bài sẽ được nộp ngay.",
       "lastSubmit_other": "Lần này được tính là lần {{n}} trong {{count}} lần được phép. Nếu bạn rời trang lần nữa, bài sẽ được nộp ngay.",

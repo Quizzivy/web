@@ -514,11 +514,11 @@ describe("a flexible assignment (F1)", () => {
   const FLEXIBLE = {
     vi: [
       "Bài không tính giờ. Bạn có thể dừng giữa chừng rồi quay lại làm tiếp, kể cả trên thiết bị khác, trước khi bài đóng. Bài chưa nộp sẽ được nộp tự động lúc đóng.",
-      "Khi bài đang mở, mỗi lần bạn chuyển sang tab hay ứng dụng khác đều được ghi lại và giáo viên được báo. Tạm nghỉ bằng nút ✕ hay đóng trang thì không tính.",
+      "Khi bài đang mở, mỗi lần bạn chuyển sang tab hay ứng dụng khác đều được ghi lại và giáo viên được báo. Tạm nghỉ bằng nút × hay đóng trang thì không tính.",
     ],
     en: [
       "There is no timer. You can stop partway and come back, on another device too, before the test closes. A test not yet submitted is submitted when it closes.",
-      "While the test is open, switching to another tab or app is recorded and your teacher is told. Taking a break with the ✕ button, or closing the page, does not count.",
+      "While the test is open, switching to another tab or app is recorded and your teacher is told. Taking a break with the × button, or closing the page, does not count.",
     ],
   };
 

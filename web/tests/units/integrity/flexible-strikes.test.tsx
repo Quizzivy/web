@@ -62,7 +62,7 @@ describe("the strike dialog and the header's line under flexible", () => {
   it("says the absence is recorded and the teacher told, and points to the break", () => {
     render(<StrikeDialog state={strikeState(policy, 3, "flexible")} strikes={1} />);
     expect(screen.getByRole("alertdialog")).toHaveTextContent(
-      "Lần rời trang này đã được ghi lại, và giáo viên sẽ được báo. Câu trả lời của bạn vẫn an toàn. Nếu cần nghỉ, hãy bấm nút ✕ Tạm nghỉ ở góc trên bên trái: bài được lưu để bạn làm tiếp sau.",
+      "Lần rời trang này đã được ghi lại, và giáo viên sẽ được báo. Câu trả lời của bạn vẫn an toàn. Nếu cần nghỉ, hãy bấm nút × Tạm nghỉ ở góc trên bên trái: bài được lưu để bạn làm tiếp sau.",
     );
   });
 
@@ -76,7 +76,7 @@ describe("the strike dialog and the header's line under flexible", () => {
     await act(() => i18n.changeLanguage("en"));
     render(<StrikeDialog state={strikeState(policy, 1, "flexible")} strikes={1} />);
     expect(screen.getByRole("alertdialog")).toHaveTextContent(
-      "This time away is recorded, and your teacher is told. Your answers are safe. If you need a break, press ✕ Take a break at the top left: your test is saved for later.",
+      "This time away is recorded, and your teacher is told. Your answers are safe. If you need a break, press × Take a break at the top left: your test is saved for later.",
     );
   });
 

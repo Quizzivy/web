@@ -225,7 +225,7 @@
       "noCopyPaste": "Copy and paste are turned off.",
       "leaving": {
         "recorded": "Leaving the test is recorded.",
-        "flexible": "While the test is open, switching to another tab or app is recorded and your teacher is told. Taking a break with the ✕ button, or closing the page, does not count.",
+        "flexible": "While the test is open, switching to another tab or app is recorded and your teacher is told. Taking a break with the × button, or closing the page, does not count.",
         "limit": {
           "flag_one": "You can leave the test {{count}} time. After that, your teacher is told.",
           "flag_other": "You can leave the test {{count}} times. After that, your teacher is told.",

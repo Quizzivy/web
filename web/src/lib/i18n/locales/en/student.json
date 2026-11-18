@@ -230,7 +230,7 @@
       "title": "You left the test",
       "back": "Back to the test",
       "recorded": "Leaving the test is recorded. Stay on this page until you submit.",
-      "flexible": "This time away is recorded, and your teacher is told. Your answers are safe. If you need a break, press ✕ {{breakName}} at the top left: your test is saved for later.",
+      "flexible": "This time away is recorded, and your teacher is told. Your answers are safe. If you need a break, press × {{breakName}} at the top left: your test is saved for later.",
       "counted_one": "That counts as {{n}} of {{count}} time allowed. Stay on this page until you submit.",
       "counted_other": "That counts as {{n}} of {{count}} times allowed. Stay on this page until you submit.",
       "countedSubmit_one": "That counts as {{n}} of {{count}} time allowed. After that, your test is submitted.",

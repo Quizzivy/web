@@ -25,14 +25,15 @@ import {
 } from "@/components/ui/select";
 import type { Assignment } from "@/features/assignments/api";
 import {
-  elapsedMinutes,
   orderedRoster,
+  paperTime,
   pendingAnswers,
   rosterFilter,
   rosterMatches,
 } from "@/features/assignments/pages/teacher/assignmentDetail";
 import { assignmentDetailLocation } from "@/features/assignments/pages/teacher/assignmentDetailUrl";
 import { useCan } from "@/features/auth/permissions";
+import { longSpan, minutesLabel } from "@/features/integrity/timeline";
 import { FLAGGED } from "@/features/integrity/tones";
 import { trimmed, useDebouncedInput } from "@/hooks/useDebouncedInput";
 import { usePage, usePageSize } from "@/hooks/usePage";
@@ -121,6 +122,9 @@ export function Monitor({
         .map((row) => ({ ...row, id: row.studentId })),
     [data.rows, filter, query],
   );
+  // The time column reads time on the paper once any attempt reports it (F1);
+  // until then it is the elapsed time, named as before.
+  const onPaper = data.rows.some((row) => row.activeSeconds != null);
   const range = pageRange(page, size, rows.length);
   const shown = rows.slice((range.page - 1) * size, range.page * size);
   const columns = useMemo<readonly DataColumn<StudentRow>[]>(
@@ -208,18 +212,22 @@ export function Monitor({
       {
         id: "time",
         header: t("assignmentDetail.time"),
-        track: "80px",
+        ...(onPaper ? { headerName: t("assignmentDetail.timeName") } : {}),
+        track: "120px",
         showFrom: 820,
         cell: (row) => {
-          const spent = elapsedMinutes(row);
-          let spentLabel = "—";
-          if (spent !== null) {
-            spentLabel =
-              spent < 1
-                ? t("papers.tookUnderMinute")
-                : t("papers.tookMinutes", { count: spent });
-          }
-          return <span className="text-muted-fg tabular-nums">{spentLabel}</span>;
+          const time = paperTime(row);
+          const spentLabel = minutesLabel(time.minutes, t);
+          if (time.spanMs === null)
+            return <span className="text-muted-fg tabular-nums">{spentLabel}</span>;
+          return (
+            <span className="text-muted-fg flex min-w-0 flex-col tabular-nums">
+              <span>{spentLabel}</span>
+              <span className="text-xs leading-4">
+                {t("assignmentDetail.over", { span: longSpan(time.spanMs, t) })}
+              </span>
+            </span>
+          );
         },
       },
       {
@@ -243,7 +251,7 @@ export function Monitor({
         ),
       },
     ],
-    [t, locale, zone],
+    [t, locale, zone, onPaper],
   );
   const change = (key: string, value: string) =>
     navigate(assignmentDetailLocation(location, { [key]: value, page: null }), {

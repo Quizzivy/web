@@ -32,7 +32,7 @@ const LOCKED = "Đã có học viên làm bài, nên không đổi được ki�
 const READS_FLEXIBLE =
   "Bài không tính giờ. Bạn có thể dừng giữa chừng rồi quay lại làm tiếp, kể cả trên thiết bị khác, trước khi bài đóng. Bài chưa nộp sẽ được nộp tự động lúc đóng.";
 const READS_LEAVING =
-  "Khi bài đang mở, mỗi lần bạn chuyển sang tab hay ứng dụng khác đều được ghi lại và giáo viên được báo. Tạm nghỉ bằng nút × hay đóng trang thì không tính.";
+  "Khi bài đang mở, mỗi lần bạn chuyển sang tab hay ứng dụng khác đều được ghi lại và giáo viên được báo. Tạm nghỉ bằng nút ✕ hay đóng trang thì không tính.";
 
 globalThis.ResizeObserver ??= class {
   observe() {}

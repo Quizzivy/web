@@ -223,7 +223,7 @@
       "noCopyPaste": "Sao chép và dán bị tắt.",
       "leaving": {
         "recorded": "Mỗi lần rời trang làm bài đều được ghi lại.",
-        "flexible": "Khi bài đang mở, mỗi lần bạn chuyển sang tab hay ứng dụng khác đều được ghi lại và giáo viên được báo. Tạm nghỉ bằng nút × hay đóng trang thì không tính.",
+        "flexible": "Khi bài đang mở, mỗi lần bạn chuyển sang tab hay ứng dụng khác đều được ghi lại và giáo viên được báo. Tạm nghỉ bằng nút ✕ hay đóng trang thì không tính.",
         "limit": {
           "flag_other": "Bạn được rời trang làm bài {{count}} lần. Sau đó, giáo viên sẽ được báo.",
           "warn_other": "Bạn được rời trang làm bài {{count}} lần. Sau đó, bạn sẽ được nhắc.",

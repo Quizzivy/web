@@ -2,9 +2,11 @@ import { beforeEach, describe, expect, it } from "vitest";
 import {
   beginSession,
   clearSession,
+  closeBreak,
   MAX_EVENTS_PER_REQUEST,
   drain,
   inBatches,
+  openBreak,
   pending,
   record,
   restore,
@@ -227,5 +229,37 @@ describe("the contract's cap on the events of one request", () => {
 
     expect(slices.map((slice) => slice.length)).toEqual([500, 500, 100]);
     expect(slices.flat()).toEqual(pending());
+  });
+});
+
+describe("a break (F1)", () => {
+  it("is ended once by the same session begun again, after the engine let go", () => {
+    beginSession(ATTEMPT, "ses-1");
+    record(ATTEMPT, "paper_left");
+    openBreak(ATTEMPT);
+    drain(ATTEMPT);
+    suspendSession();
+
+    beginSession(ATTEMPT, "ses-1");
+    expect(closeBreak(ATTEMPT)).toBe(true);
+    expect(closeBreak(ATTEMPT)).toBe(false);
+    suspendSession();
+    beginSession(ATTEMPT, "ses-1");
+    expect(closeBreak(ATTEMPT)).toBe(false);
+  });
+
+  it("is dropped by a buffer begun for another session", () => {
+    beginSession(ATTEMPT, "ses-1");
+    openBreak(ATTEMPT);
+    suspendSession();
+
+    beginSession(ATTEMPT, "ses-2");
+    expect(closeBreak(ATTEMPT)).toBe(false);
+  });
+
+  it("is none until one is opened, and none before a session has begun", () => {
+    openBreak(ATTEMPT);
+    beginSession(ATTEMPT, "ses-1");
+    expect(closeBreak(ATTEMPT)).toBe(false);
   });
 });

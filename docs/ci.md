@@ -90,8 +90,9 @@ which the browser would not send it.
 ## The slow tail
 
 `.github/workflows/slow-tail.yml` runs the specs of the `slow` Playwright
-project, which holds one spec today: E2E 5, `timer-expiry.live.spec.ts`, which
-waits out a real one-minute deadline. It runs every night at 19:00 UTC against
+project, which holds two specs today: E2E 5, `timer-expiry.live.spec.ts`, which
+waits out a real one-minute deadline, and F1's `flexible-long-break.live.spec.ts`,
+which holds a flexible paper on a break for more than a minute. It runs every night at 19:00 UTC against
 `develop` and by hand; it no longer runs on pull requests. Before merging a
 release, read its latest nightly run (**E2E (waits on real time)**), or start it
 by hand on the release branch. It is not part of **CI result**. GitHub starts a schedule only from the default branch's copy of the

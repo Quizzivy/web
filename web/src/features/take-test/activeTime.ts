@@ -13,6 +13,8 @@ export const ACTIVE_MS_MAX = 600_000;
  */
 let banked = 0;
 let since: number | null = null;
+/** Bumped by every settle, so a save can tell a beacon settled its time first. */
+let settles = 0;
 
 /** startPaperTime starts a visible stretch, unless one is already running. */
 export function startPaperTime(now = Date.now()): void {
@@ -38,14 +40,25 @@ export function reportablePaperTime(now = Date.now()): number {
 
 /**
  * settlePaperTime takes `sent` off the accumulator once the server has
- * acknowledged a save that carried it. What accrued while the save was out
- * stays, so nothing is reported twice and nothing is lost.
+ * acknowledged a save that carried it, or the browser has taken a beacon that
+ * did. What accrued meanwhile stays, so nothing is reported twice.
  */
 export function settlePaperTime(sent: number, now = Date.now()): void {
   if (sent <= 0) return;
   const total = paperTime(now);
   banked = Math.max(0, total - sent);
   if (since !== null) since = now;
+  settles += 1;
+}
+
+/**
+ * paperTimeSettles counts the settles so far. A save reads it as it sends and
+ * settles on its acknowledgment only if nothing settled in between: a beacon
+ * that went meanwhile carried the same time, and taking it off twice would
+ * drop time accrued since.
+ */
+export function paperTimeSettles(): number {
+  return settles;
 }
 
 /** resetPaperTime forgets everything, for an engine that lets go of its attempt. */

@@ -275,6 +275,24 @@ describe("reporting the time on the paper", () => {
     expect(submitted).toHaveBeenCalledWith("att-1", { reason: "timer_expired" });
   });
 
+  it("does not take the time off twice when a beacon went while the save was out", async () => {
+    start();
+    startPaperTime(NOW.getTime());
+    let answer!: (value: ReturnType<typeof reply>) => void;
+    saved.mockImplementationOnce(() => new Promise((resolve) => (answer = resolve)));
+    vi.setSystemTime(NOW.getTime() + 20_000);
+    store().setAnswer("q1", text("parks"));
+    await pass(FLUSH_DEBOUNCE_MS);
+    expect(reported()).toEqual([21_500]);
+
+    // The beacon carries the same time and settles it; the paper goes on.
+    vi.setSystemTime(NOW.getTime() + 22_000);
+    settlePaperTime(reportablePaperTime());
+    vi.setSystemTime(NOW.getTime() + 27_000);
+    await act(async () => answer(reply()));
+    expect(paperTime()).toBe(5_000);
+  });
+
   it("forgets the time when the engine lets go of the attempt", () => {
     start();
     startPaperTime(NOW.getTime());

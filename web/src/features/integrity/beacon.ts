@@ -1,6 +1,6 @@
 import { BASE_URL } from "@/lib/api/client";
 import type { IntegrityEventInput } from "@/features/take-test/api";
-import { reportablePaperTime } from "@/features/take-test/activeTime";
+import { reportablePaperTime, settlePaperTime } from "@/features/take-test/activeTime";
 import { drain, MAX_EVENTS_PER_REQUEST, pending } from "./buffer";
 
 /**
@@ -50,10 +50,11 @@ export function sendBeaconFlush(input: {
  * beacon body: at most MAX_EVENTS_PER_REQUEST of them and BEACON_BODY_LIMIT
  * bytes, and always the first, with the time on the paper not yet
  * acknowledged. They leave the buffer only when the browser took them; the
- * rest stays for the session's next request. The time stays counted until a
- * save is acknowledged: the server credits no more than the time since the
- * session's previous report. It reports whether nothing was left unsent by a
- * refusal.
+ * rest stays for the session's next request. The time is settled once the
+ * browser took it too: the server credits the beacon, so a page restored from
+ * the back-forward cache must not report it again. A beacon lost on the way
+ * under-reports, which the plan accepts. It reports whether nothing was left
+ * unsent by a refusal.
  */
 export function flushByBeacon(input: {
   attemptId: string;
@@ -70,6 +71,7 @@ export function flushByBeacon(input: {
   if (!sendBeaconFlush({ attemptId, sessionId, beaconToken, events, activeMs }))
     return false;
   drain(attemptId, events.length);
+  settlePaperTime(activeMs);
   return true;
 }
 

@@ -12,6 +12,7 @@ import { useIntegrityMonitor } from "@/features/integrity/useIntegrityMonitor";
 import {
   ACTIVE_MS_MAX,
   paperTime,
+  reportablePaperTime,
   resetPaperTime,
   startPaperTime,
   stopPaperTime,
@@ -121,12 +122,43 @@ describe("time on the paper in the beacon's body", () => {
     expect(body?.["activeMs"]).toBe(ACTIVE_MS_MAX);
   });
 
-  it("stays counted after the beacon, since only an acknowledged save settles it", () => {
+  it("is settled once the browser takes the beacon, which the server credits", () => {
     beginSession(ATTEMPT, "ses-1");
     startPaperTime(NOW);
     stopPaperTime(NOW + 5_000);
     flushByBeacon({ attemptId: ATTEMPT, sessionId: "ses-1", beaconToken: "b" });
+    expect(paperTime()).toBe(0);
+  });
+
+  it("stays counted when the browser refuses the beacon", () => {
+    beginSession(ATTEMPT, "ses-1");
+    startPaperTime(NOW);
+    stopPaperTime(NOW + 5_000);
+    accept = false;
+    flushByBeacon({ attemptId: ATTEMPT, sessionId: "ses-1", beaconToken: "b" });
     expect(paperTime()).toBe(5_000);
+  });
+
+  it("is not reported again by a page the back-forward cache restores", async () => {
+    renderHook(() =>
+      useIntegrityMonitor({
+        attemptId: ATTEMPT,
+        sessionId: "ses-1",
+        beaconToken: "b",
+        policy,
+      }),
+    );
+    startPaperTime(NOW);
+    stopPaperTime(NOW + 50_000);
+    act(() => {
+      window.dispatchEvent(new PageTransitionEvent("pagehide", { persisted: true }));
+    });
+    const [body] = await bodies();
+    expect(body?.["activeMs"]).toBe(50_000);
+
+    // Ten minutes in the cache, then Back and a minute on the paper.
+    startPaperTime(NOW + 650_000);
+    expect(reportablePaperTime(NOW + 710_000)).toBe(60_000);
   });
 
   it("keeps the events buffered when the browser refuses the beacon", () => {

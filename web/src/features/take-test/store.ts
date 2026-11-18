@@ -9,7 +9,12 @@ import {
 import { abandonSession } from "@/features/integrity/sendHeld";
 import { ApiError } from "@/lib/api/errors";
 import { releaseSession } from "./heldSession";
-import { reportablePaperTime, resetPaperTime, settlePaperTime } from "./activeTime";
+import {
+  paperTimeSettles,
+  reportablePaperTime,
+  resetPaperTime,
+  settlePaperTime,
+} from "./activeTime";
 import { remainingMs } from "./timeLeft";
 import {
   getAttempt,
@@ -268,6 +273,7 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
     const { attemptId, sessionId } = state;
     if (attemptId === null || sessionId === null || state.lock !== null) return false;
     const activeMs = reportablePaperTime();
+    const settles = paperTimeSettles();
     if (
       state.dirty.size === 0 &&
       pendingEvents().length === 0 &&
@@ -292,7 +298,7 @@ export const useTakeTestStore = create<TakeTestState>((set, get) => ({
           ...(activeMs > 0 ? { activeMs } : {}),
         });
         if (generation !== epoch) return false;
-        settlePaperTime(activeMs);
+        if (paperTimeSettles() === settles) settlePaperTime(activeMs);
         set((current) => {
           const dirty = new Set(current.dirty);
           for (const [id, answer] of Object.entries(answers)) {

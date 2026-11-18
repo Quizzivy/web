@@ -207,6 +207,20 @@ async function noticesAfterTheThird(
   return counts;
 }
 
+/** attemptEvents is the attempt's timeline as the teacher's API orders it. */
+async function attemptEvents(
+  api: APIRequestContext,
+  admin: Record<string, string>,
+  attemptId: string,
+): Promise<{ kind: string; occurredAt: string }[]> {
+  const response = await api.get(`${API}/teacher/attempts/${attemptId}/events`, {
+    headers: admin,
+  });
+  expect(response.status()).toBe(200);
+  return ((await response.json()) as { events: { kind: string; occurredAt: string }[] })
+    .events;
+}
+
 /** spokenSpan words a span as the timeline's compact rows do: "6 giây", "1 phút 5 giây". */
 function spokenSpan(ms: number): string {
   const total = Math.round(ms / 1000);
@@ -260,15 +274,7 @@ test("F1: a flexible paper takes a break, resumes on another device, leaves the 
     await takeBreak(one);
     // The break reaches the server by the beacon the engine sends as it
     // unmounts; the resume waits for it, as a student back from a break does.
-    const events = async () => {
-      const response = await api.get(`${API}/teacher/attempts/${attemptId}/events`, {
-        headers: admin,
-      });
-      expect(response.status()).toBe(200);
-      return (
-        (await response.json()) as { events: { kind: string; occurredAt: string }[] }
-      ).events;
-    };
+    const events = () => attemptEvents(api, admin, attemptId);
     await expect
       .poll(async () => (await events()).map((event) => event.kind), {
         message: "paper_left on the server",
@@ -398,6 +404,81 @@ test("F1: a flexible paper takes a break, resumes on another device, leaves the 
   } finally {
     await first.close();
     await second.close();
+    await staff.close();
+    await api.dispose();
+  }
+});
+
+/** How long the same-tab break lasts: long enough to read in seconds on the sheet. */
+const SAME_TAB_BREAK_MS = 5_000;
+
+test("F1: a break returned to in the same tab ends on the teacher's timeline with its length, and writes no resume", async ({
+  page,
+  browser,
+  playwright,
+}) => {
+  test.setTimeout(150_000);
+  const api = await playwright.request.newContext();
+  const staff = await browser.newContext();
+  try {
+    const admin = await sharedApiAuth(api, ADMIN);
+    const assignmentId = await createFlexibleAssignment(api, admin, {
+      closesAt: new Date(Date.now() + 60 * 60_000),
+    });
+
+    await signInAsStudent(page);
+    const attemptId = await startAttempt(page, assignmentId);
+    const events = () => attemptEvents(api, admin, attemptId);
+    const kinds = async () => (await events()).map((event) => event.kind);
+    await chooseOption(page, "went");
+    await expect(page.getByText(/^Đã lưu /)).toBeVisible({ timeout: 30_000 });
+    await takeBreak(page);
+    await expect
+      .poll(kinds, { message: "paper_left on the server", timeout: 30_000 })
+      .toContain("paper_left");
+    await waitUntil(page, Date.now() + SAME_TAB_BREAK_MS);
+
+    // Back in the same tab by the intro's "Tiếp tục làm bài": the tab still
+    // holds its session, so the server resumes nothing, and the engine says
+    // the paper is open again with the next save.
+    expect(await startAttempt(page, assignmentId)).toBe(attemptId);
+    await expect(page.getByRole("radio", { name: "went" })).toBeChecked();
+    await chooseOption(page, "gone");
+    await expect
+      .poll(kinds, { message: "paper_returned on the server", timeout: 30_000 })
+      .toContain("paper_returned");
+    await submitAttempt(page);
+
+    const recorded = await events();
+    const leftAt = recorded.findIndex((event) => event.kind === "paper_left");
+    const after = recorded.slice(leftAt + 1).map((event) => event.kind);
+    expect(after, "no resume and no takeover after the break").not.toContain("resume");
+    expect(after).not.toContain("session_takeover");
+    const returned = recorded
+      .slice(leftAt + 1)
+      .find((event) => event.kind === "paper_returned");
+    const breakMs =
+      new Date(returned!.occurredAt).getTime() -
+      new Date(recorded[leftAt]!.occurredAt).getTime();
+    expect(breakMs).toBeGreaterThanOrEqual(SAME_TAB_BREAK_MS);
+
+    const teacher = await staff.newPage();
+    await signInAsAdmin(teacher);
+    await teacher.goto(`/teacher/assignments/${assignmentId}?attempt=${attemptId}`);
+    const sheet = teacher.getByRole("dialog", { name: STUDENT_NAME });
+    await expect(sheet).toBeVisible({ timeout: 30_000 });
+    const timeline = sheet.getByRole("list").filter({ hasText: "Tạm nghỉ" });
+    await expect(
+      timeline
+        .getByRole("listitem")
+        .filter({ hasText: `Tạm nghỉ · ${spokenSpan(breakMs)}` }),
+    ).toHaveCount(1);
+    // The return draws no row, and nothing reads as a resume elsewhere.
+    await expect(
+      timeline.getByRole("listitem").filter({ hasText: /^Vào lại bài/ }),
+    ).toHaveCount(0);
+    await expect(timeline.getByText("paper_returned")).toHaveCount(0);
+  } finally {
     await staff.close();
     await api.dispose();
   }

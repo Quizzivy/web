@@ -13,6 +13,7 @@ const choice = (question: number, texts: string[]) =>
 
 export function deckSession(now: Date, leftMs = DECK_LEFT_MS): AttemptSession {
   return {
+    mode: "strict",
     attempt: {
       id: DECK_ATTEMPT,
       assignmentId: id("00d1"),
@@ -204,6 +205,7 @@ function paperOf(
 ): AttemptSession {
   const deadlineAt = new Date(now.getTime() + minutes * 60_000).toISOString();
   return {
+    mode: "strict",
     attempt: {
       id: id(`0${tail}`),
       assignmentId: id(`d${tail}`),

@@ -25,7 +25,7 @@ import { ASSIGNMENT_ID, ATTEMPT_ID, BASE, assignment, monitor } from "./fixtures
 let fetches = 0;
 let voided: unknown = null;
 
-function serve(live = true) {
+function serve(live = true, mode: "strict" | "flexible" = "strict") {
   server.use(
     http.get(`${BASE}/teacher/assignments/${ASSIGNMENT_ID}`, () =>
       contractJson(
@@ -34,7 +34,7 @@ function serve(live = true) {
         200,
         assignment(
           live
-            ? {}
+            ? { mode }
             : {
                 status: "closed",
                 window: {
@@ -69,9 +69,9 @@ function serve(live = true) {
   );
 }
 
-function renderMonitor(live: boolean) {
+function renderMonitor(live: boolean, mode: "strict" | "flexible" = "strict") {
   const client = new QueryClient({ defaultOptions: { queries: { retry: false } } });
-  serve(live);
+  serve(live, mode);
   const router = createMemoryRouter(
     [{ path: "/teacher/assignments/:id", element: <AssignmentDetailPage /> }],
     { initialEntries: [`/teacher/assignments/${ASSIGNMENT_ID}`] },
@@ -292,4 +292,47 @@ describe("the monitor", () => {
       );
     },
   );
+});
+
+/**
+ * The extension under each mode: strict adds to the clock the student sees;
+ * flexible moves the deadline, which can go past the close, and the paper shows
+ * no clock until its last hour.
+ */
+describe("extending one student", () => {
+  beforeEach(() => useAuthStore.getState().setSession("token", teacherUser));
+  afterEach(() => {
+    cleanup();
+    useAuthStore.getState().clearSession();
+  });
+
+  async function openExtend(mode: "strict" | "flexible") {
+    const user = userEvent.setup();
+    renderMonitor(true, mode);
+    const row = (await screen.findByText("Phạm Gia Hân")).closest<HTMLElement>(
+      '[role="row"]',
+    )!;
+    await user.click(within(row).getByRole("button", { name: "Thao tác" }));
+    await user.click(
+      await screen.findByRole("menuitem", { name: "Gia hạn thời gian" }),
+    );
+    return screen.findByRole("dialog");
+  }
+
+  it("says the clock grows under strict", async () => {
+    const dialog = await openExtend("strict");
+    expect(
+      within(dialog).getByText("Học viên sẽ thấy đồng hồ cộng thêm ngay lập tức."),
+    ).toBeInTheDocument();
+  });
+
+  it("says the deadline moves, past the close if need be, under flexible", async () => {
+    const dialog = await openExtend("flexible");
+    expect(
+      within(dialog).getByText(
+        "Hạn nộp của học viên được dời ngay, có thể đến sau giờ đóng của bài.",
+      ),
+    ).toBeInTheDocument();
+    expect(within(dialog).queryByText(/đồng hồ/)).not.toBeInTheDocument();
+  });
 });

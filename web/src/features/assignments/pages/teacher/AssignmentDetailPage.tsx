@@ -72,6 +72,7 @@ import { AiInsightsAction, AiInsightsPanel } from "../../components/AiInsightsPa
 import { CloseEarlyDialog } from "../../components/CloseEarlyDialog";
 import { ItemAnalysis } from "../../components/ItemAnalysis";
 import { ReopenStudentDialog } from "../../components/ReopenStudentDialog";
+import { ModeChip } from "../../components/ModeChip";
 import { SettingsGroups } from "../../components/SettingsGroups";
 import { keepsTimeAfter, overridesKey } from "../../overrides";
 import { toInput } from "../../input";
@@ -245,7 +246,12 @@ export default function AssignmentDetailPage() {
       <PageHead
         title={a.testTitle}
         headingRef={headingRef}
-        status={<StatusBadge kind="assignment" status={status} />}
+        status={
+          <>
+            <StatusBadge kind="assignment" status={status} />
+            <ModeChip mode={a.mode} />
+          </>
+        }
         className="items-start! [&_h1]:text-balance"
         actions={
           <>
@@ -327,7 +333,12 @@ export default function AssignmentDetailPage() {
           </ItemAnalysis>
         </TabsContent>
         <TabsContent value="settings" className="pt-4.5">
-          <SettingsGroups a={a} version={version} status={status} />
+          <SettingsGroups
+            a={a}
+            version={version}
+            status={status}
+            started={hasAttempts(a, monitor.data?.rows)}
+          />
         </TabsContent>
       </Tabs>
       <StateDialogs
@@ -400,6 +411,16 @@ function useAssignmentReads(id: string, workspace: boolean) {
   return { assignment, a, now, status, monitor, version };
 }
 
+/**
+ * hasAttempts reports whether any student has started the assignment: a row
+ * of the monitor with an attempt, or a hand-in the assignment counts while
+ * the monitor is still loading. The server refuses a mode change either way.
+ */
+function hasAttempts(a: Assignment, rows: readonly MonitorRow[] | undefined) {
+  if ((a.submittedCount ?? 0) > 0) return true;
+  return rows?.some((row) => row.attemptId != null) ?? false;
+}
+
 function AssignmentMeta({
   a,
   status,
@@ -414,8 +435,10 @@ function AssignmentMeta({
           ? a.window.opensAt
           : (a.window.closedAt ?? a.window.closesAt),
         locale,
-      )}{" "}
-      · {t("assignments.minutes", { count: a.durationMinutes })}
+      )}
+      {a.mode === "flexible"
+        ? null
+        : ` · ${t("assignments.minutes", { count: a.durationMinutes })}`}
     </p>
   );
 }

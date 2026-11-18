@@ -1,4 +1,4 @@
-import type { IntegrityPolicy } from "@/features/take-test/api";
+import type { AssignmentMode, IntegrityPolicy } from "@/features/take-test/api";
 
 /**
  * Where a student stands against §10.2's focus-loss limit, in one shape that
@@ -15,9 +15,33 @@ export interface StrikeState {
   exceeded: boolean;
   // What exceeding does.
   consequence: IntegrityPolicy["onLimitExceeded"];
+  /**
+   * A flexible assignment (F1): every counted absence is recorded and the
+   * teacher told, with no allowance and nothing done to the paper, whatever
+   * the stored limit and action say.
+   */
+  flexible: boolean;
 }
 
-export function strikeState(policy: IntegrityPolicy, count: number): StrikeState {
+/**
+ * strikeState is where `count` counted absences leave the student under
+ * `policy`. Under a flexible `mode` there is no limit and nothing is
+ * exceeded, so no count is shown and nothing is submitted.
+ */
+export function strikeState(
+  policy: IntegrityPolicy,
+  count: number,
+  mode: AssignmentMode = "strict",
+): StrikeState {
+  if (mode === "flexible")
+    return {
+      count,
+      limit: null,
+      remaining: null,
+      exceeded: false,
+      consequence: policy.onLimitExceeded,
+      flexible: true,
+    };
   const limit = policy.maxFocusLoss === 0 ? null : Math.max(0, policy.maxFocusLoss);
   return {
     count,
@@ -25,5 +49,6 @@ export function strikeState(policy: IntegrityPolicy, count: number): StrikeState
     remaining: limit === null ? null : Math.max(0, limit - count),
     exceeded: limit !== null && count > limit,
     consequence: policy.onLimitExceeded,
+    flexible: false,
   };
 }

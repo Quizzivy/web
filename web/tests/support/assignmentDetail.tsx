@@ -48,6 +48,7 @@ export function detailOverride(
 /** detailAssignment is an open assignment with `over` applied. */
 export function detailAssignment(over: Partial<Assignment> = {}): Assignment {
   return {
+    mode: "strict",
     id: DETAIL_ID,
     testId: DETAIL_TEST_ID,
     testVersionId: DETAIL_VERSION_ID,

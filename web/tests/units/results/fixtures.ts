@@ -146,6 +146,7 @@ export function scored(
 
 export function assignmentCard(over: Partial<Card> = {}): Card {
   return {
+    mode: "strict",
     id: ASSIGNMENT_ID,
     testTitle: "Unit 4 — Passive voice",
     className: "IELTS Foundation A",

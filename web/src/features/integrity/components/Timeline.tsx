@@ -24,14 +24,19 @@ import { TeacherNoteCard } from "@/features/attempts/components/TeacherNoteCard"
 import { useIdlePolling, useRefetchOnResume } from "@/hooks/useIdlePolling";
 import { useOverflowsX } from "@/hooks/useOverflowsX";
 import { formatInTimeZone } from "date-fns-tz";
-import { getDisplayTimeZone, useDisplayTimeZone } from "@/lib/i18n/datetime";
+import { dayDate, getDisplayTimeZone, useDisplayTimeZone } from "@/lib/i18n/datetime";
+import { useLocale } from "@/lib/i18n/useLocale";
 import { cn } from "@/lib/utils";
 import {
   clockSpan,
+  datedRows,
+  dayClockSpan,
   hasOpenEpisode,
   hasRecordedEvents,
+  longSpan,
   timelineRows,
   type TimelineFilter,
+  type TimelineRow,
 } from "../timeline";
 import { TIMELINE_DOT, timelineMark, type TimelineMark } from "../tones";
 
@@ -64,8 +69,9 @@ export function Timeline({
   submittedAt?: string | null;
   presentation?: "full" | "compact";
 }>) {
-  useDisplayTimeZone();
+  const zone = useDisplayTimeZone();
   const { t } = useTranslation();
+  const locale = useLocale();
   const [filter, setFilter] = useState<TimelineFilter>("all");
   const [scroller, scrolls] = useOverflowsX<HTMLDivElement>();
   const refetchInterval = useIdlePolling(POLL_MS, live);
@@ -99,6 +105,26 @@ export function Timeline({
   const open = hasOpenEpisode(data.events);
   const rows = timelineRows(data.events, filter);
   const numberOf = new Map(questions.map((q, i) => [q.id, i + 1]));
+  const handedIn = presentation === "compact" ? submittedAt : null;
+  const shown = [
+    data.startedAt,
+    ...rows.map((row) => row.event.occurredAt),
+    ...(handedIn === null ? [] : [handedIn]),
+  ];
+  const dated = datedRows(
+    shown,
+    [
+      data.startedAt,
+      ...data.events.map((event) => event.occurredAt),
+      ...(submittedAt === null ? [] : [submittedAt]),
+    ],
+    zone,
+  );
+  // "Thứ 2, 22/09 · 19:02:10" on the first moment of each day once the attempt spans days (F1).
+  const at = (moment: string, index: number) =>
+    dated[index] === true
+      ? `${dayDate(moment, locale)} · ${clockTime(moment)}`
+      : clockTime(moment);
 
   if (presentation === "compact") {
     return (
@@ -107,7 +133,7 @@ export function Timeline({
           {t("assignmentDetail.sheet.timeline")}
         </h2>
         <ol className="text-sm">
-          <CompactRow mark="start" when={clockTime(data.startedAt)}>
+          <CompactRow mark="start" when={at(data.startedAt, 0)}>
             {t("timeline.kind.started")}
           </CompactRow>
           {rows.length === 0 && (
@@ -115,14 +141,14 @@ export function Timeline({
               {t("timeline.autosaved")}
             </CompactRow>
           )}
-          {rows.map(({ event, ongoing, playNo }) => (
+          {rows.map(({ event, ongoing, playNo, breakMs }, index) => (
             <CompactRow
               key={event.id}
               mark={timelineMark(event.kind)}
               when={
                 event.questionId && numberOf.has(event.questionId)
-                  ? `${clockTime(event.occurredAt)} · ${t("timeline.columns.question")} ${numberOf.get(event.questionId)}`
-                  : clockTime(event.occurredAt)
+                  ? `${at(event.occurredAt, index + 1)} · ${t("timeline.columns.question")} ${numberOf.get(event.questionId)}`
+                  : at(event.occurredAt, index + 1)
               }
             >
               <EventLabel
@@ -134,10 +160,11 @@ export function Timeline({
               {!ongoing && event.durationMs != null && (
                 <> · {spokenSpan(event.durationMs, t)}</>
               )}
+              {breakMs !== null && <> · {breakSpan(breakMs, t)}</>}
             </CompactRow>
           ))}
           {submittedAt !== null && (
-            <CompactRow mark="submitted" when={clockTime(submittedAt)}>
+            <CompactRow mark="submitted" when={at(submittedAt, rows.length + 1)}>
               {t("timeline.kind.submitted")}
             </CompactRow>
           )}
@@ -249,10 +276,10 @@ export function Timeline({
                     </TableHeader>
                     <TableBody>
                       <TableRow>
-                        <TableCell className="text-muted-foreground tabular-nums">
-                          {clockTime(data.startedAt)}
+                        <TableCell className="text-muted-foreground whitespace-nowrap tabular-nums">
+                          {at(data.startedAt, 0)}
                         </TableCell>
-                        <TableCell className="text-muted-foreground tabular-nums">
+                        <TableCell className="text-muted-foreground whitespace-nowrap tabular-nums">
                           {clockSpan(0)}
                         </TableCell>
                         <TableCell>{t("timeline.kind.started")}</TableCell>
@@ -263,28 +290,29 @@ export function Timeline({
                           {1}
                         </TableCell>
                       </TableRow>
-                      {rows.map(({ event, ongoing, playNo }) => (
-                        <TableRow key={event.id}>
-                          <TableCell className="text-muted-foreground tabular-nums">
-                            {clockTime(event.occurredAt)}
+                      {rows.map((row, index) => (
+                        <TableRow key={row.event.id}>
+                          <TableCell className="text-muted-foreground whitespace-nowrap tabular-nums">
+                            {at(row.event.occurredAt, index + 1)}
                           </TableCell>
-                          <TableCell className="text-muted-foreground tabular-nums">
-                            {clockSpan(event.offsetMs)}
+                          <TableCell className="text-muted-foreground whitespace-nowrap tabular-nums">
+                            {daySpan(row.event.offsetMs, t)}
                           </TableCell>
                           <TableCell>
                             <EventLabel
-                              event={event}
-                              playNo={playNo}
-                              ongoing={ongoing}
+                              event={row.event}
+                              playNo={row.playNo}
+                              ongoing={row.ongoing}
                               questions={questions}
                             />
                           </TableCell>
-                          <TableCell className="text-right tabular-nums">
-                            <DurationCell event={event} ongoing={ongoing} />
+                          <TableCell className="text-right whitespace-nowrap tabular-nums">
+                            <DurationCell row={row} />
                           </TableCell>
                           <TableCell className="text-right tabular-nums">
-                            {event.questionId && numberOf.has(event.questionId) ? (
-                              numberOf.get(event.questionId)
+                            {row.event.questionId &&
+                            numberOf.has(row.event.questionId) ? (
+                              numberOf.get(row.event.questionId)
                             ) : (
                               <span className="text-muted-foreground">—</span>
                             )}
@@ -391,6 +419,20 @@ function CompactRow({
   );
 }
 
+/**
+ * breakSpan words a break (F1): seconds and minutes under an hour, as an
+ * absence reads, then hours, then days and hours.
+ */
+function breakSpan(ms: number, t: TFunction): string {
+  return ms < 3_600_000 ? spokenSpan(ms, t) : longSpan(ms, t);
+}
+
+/** daySpan is the review table's "Từ đầu" and "Kéo dài": "1 ngày 01:29:30" past a day (F1). */
+function daySpan(ms: number, t: TFunction): string {
+  const { days, clock } = dayClockSpan(ms);
+  return days === 0 ? clock : t("timeline.offsetDays", { count: days, clock });
+}
+
 function spokenSpan(ms: number, t: TFunction): string {
   const total = Math.max(0, Math.round(ms / 1000));
   const minutes = Math.floor(total / 60);
@@ -466,18 +508,20 @@ function clockTime(utc: string | Date): string {
   return formatInTimeZone(utc, getDisplayTimeZone(), "HH:mm:ss");
 }
 
-/** G-05's "Kéo dài": still open, nothing to pair, or the span it lasted. */
-function DurationCell({
-  event,
-  ongoing,
-}: Readonly<{ event: IntegrityEvent; ongoing: boolean }>) {
+/**
+ * G-05's "Kéo dài": still open, nothing to pair, or the span it lasted. A
+ * break runs to its resume and reads in the neutral weight (F1).
+ */
+function DurationCell({ row }: Readonly<{ row: TimelineRow }>) {
   const { t } = useTranslation();
+  const { event, ongoing, breakMs } = row;
   if (ongoing)
     return <span className="text-muted-foreground">{t("timeline.ongoing")}</span>;
+  if (breakMs !== null) return <span>{daySpan(breakMs, t)}</span>;
   if (event.durationMs == null) return <span className="text-muted-foreground">—</span>;
   return (
     <span className={cn(event.kind !== "audio_play" && "font-medium")}>
-      {clockSpan(event.durationMs)}
+      {daySpan(event.durationMs, t)}
     </span>
   );
 }

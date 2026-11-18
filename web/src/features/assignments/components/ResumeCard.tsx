@@ -21,6 +21,9 @@ import { continueAttempt, type StudentAssignmentCard } from "../api";
 import { minutesLeft } from "../studentHome";
 import { HOME_PILL } from "./homeStyles";
 
+/** A flexible attempt's pill counts minutes only in the last hour before its close. */
+const FLEXIBLE_COUNTDOWN_MS = 60 * 60_000;
+
 /**
  * ResumeCard is Home's way back into the attempt in progress. It says how
  * long is left, how much is answered and when the attempt closes, and its
@@ -28,7 +31,9 @@ import { HOME_PILL } from "./homeStyles";
  * began. The minutes repaint as they pass; nothing is fetched to do so. When
  * the attempt has ended or the server refuses to resume, the lists are read
  * again, so a card for an attempt that has ended does not stay; the reason is
- * a toast, because it has to outlive the card.
+ * a toast, because it has to outlive the card. Under a flexible assignment
+ * (F1) the deadline is the close, often days away, so the pill says the test
+ * is in progress with no minutes until the last hour.
  */
 export function ResumeCard({ card }: Readonly<{ card: StudentAssignmentCard }>) {
   useDisplayTimeZone();
@@ -41,6 +46,10 @@ export function ResumeCard({ card }: Readonly<{ card: StudentAssignmentCard }>) 
   const now = new Date();
   const closes = deadline ?? card.closesAt;
   const answered = card.liveAnsweredCount ?? 0;
+  const counting =
+    deadline !== null &&
+    (card.mode !== "flexible" ||
+      Date.parse(deadline) - now.getTime() <= FLEXIBLE_COUNTDOWN_MS);
   const share =
     card.questionCount > 0 ? Math.round((answered / card.questionCount) * 100) : 0;
   const meta = [
@@ -80,9 +89,9 @@ export function ResumeCard({ card }: Readonly<{ card: StudentAssignmentCard }>) 
       <div className="flex min-w-0 flex-[1_1_280px] flex-col gap-1.5">
         <Badge variant="info" className={`${HOME_PILL} self-start`}>
           <Timer aria-hidden="true" className="size-[13px]" />
-          {deadline === null
-            ? t("student.home.inProgress")
-            : t("student.home.inProgressLeft", { count: minutesLeft(deadline, now) })}
+          {counting
+            ? t("student.home.inProgressLeft", { count: minutesLeft(deadline, now) })
+            : t("student.home.inProgress")}
         </Badge>
         <h2 className="text-[1.1875rem] leading-[1.3] font-semibold tracking-[-0.01em] break-words">
           {card.testTitle}

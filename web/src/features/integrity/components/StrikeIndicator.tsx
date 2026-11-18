@@ -9,10 +9,16 @@ import type { StrikeState } from "../strikes";
  * allowance reads in the full ink, and past it the warning ink says what the
  * dialog said: under `flag` that the teacher has been told, otherwise that the
  * limit is passed. It reads the same `StrikeState` as the dialog, so the two
- * never disagree, and it renders nothing when there is no limit.
+ * never disagree, and it renders nothing when there is no limit. Under a
+ * flexible assignment (F1) it never counts: once an absence has been counted
+ * it says the teacher has been told, in the warning ink, and nothing before.
  */
 export function StrikeIndicator({ state }: Readonly<{ state: StrikeState }>) {
   const { t } = useTranslation();
+  if (state.flexible)
+    return state.count > 0 ? (
+      <span className="text-warning-ink font-medium">{t("integrity.flagged")}</span>
+    ) : null;
   if (state.limit === null || state.remaining === null) return null;
 
   if (state.exceeded) {

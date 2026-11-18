@@ -15,6 +15,7 @@ export type Session = components["schemas"]["AttemptSession"];
 export function paper(): Session {
   const now = new Date().toISOString();
   return {
+    mode: "strict",
     attempt: {
       id: "paper",
       assignmentId: "assignment",
@@ -111,6 +112,7 @@ export async function startGroupPaper(
   let loseFirstResponse = true;
   const now = new Date().toISOString();
   const payload: Session = {
+    mode: "strict",
     attempt: {
       id: groupAttemptId,
       assignmentId: groupAttemptId,

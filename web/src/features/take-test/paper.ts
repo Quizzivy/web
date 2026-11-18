@@ -1,5 +1,11 @@
 import { createContext, useContext } from "react";
-import type { Answer, StudentGroup, StudentQuestion, StudentSection } from "./api";
+import type {
+  Answer,
+  AssignmentMode,
+  StudentGroup,
+  StudentQuestion,
+  StudentSection,
+} from "./api";
 import type { SaveStatus } from "./saveStatus";
 import type { LockReason, SubmitState } from "./store";
 
@@ -11,7 +17,9 @@ import type { LockReason, SubmitState } from "./store";
  * every component under it read it through usePaper and never import a
  * store, so a host other than the live engine can fill it. `timeLeft` reads
  * the time left at the moment it is called, for a tick that must not use a
- * value captured at render.
+ * value captured at render. `mode` is the assignment's, strict when left out:
+ * under flexible the header shows the close until its last hour and the ✕ is
+ * a break (F1).
  */
 export interface PaperSource {
   title: string;
@@ -28,6 +36,7 @@ export interface PaperSource {
   deadlineAt: number;
   offsetMs: number;
   timeLeft: () => number;
+  mode?: AssignmentMode;
   questionPlays: Readonly<Record<string, number>>;
   onAudioPlay: (questionId: string) => void;
   onAudioEnded: (questionId: string) => void;

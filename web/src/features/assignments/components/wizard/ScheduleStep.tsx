@@ -1,6 +1,6 @@
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
-import { Timer } from "lucide-react";
+import { Timer, TimerOff } from "lucide-react";
 import { DateTimeField } from "@/components/shared/DateTimeField";
 import { NumberStepper } from "@/components/shared/form/NumberStepper";
 import { Segmented } from "@/components/ui/segmented";
@@ -13,7 +13,10 @@ const CUSTOM = "custom";
 
 /** SchedulePatch is the part of a draft the Schedule step changes. */
 export type SchedulePatch = Partial<
-  Pick<AssignmentDraft, "opensAt" | "closesAt" | "durationMinutes" | "maxAttempts">
+  Pick<
+    AssignmentDraft,
+    "opensAt" | "closesAt" | "mode" | "durationMinutes" | "maxAttempts"
+  >
 >;
 
 type Props = Readonly<{
@@ -23,8 +26,9 @@ type Props = Readonly<{
 
 /**
  * ScheduleStep is the wizard's "When can they take it?": the window in the
- * teacher's zone, the time limit as 30, 45 or 60 minutes or a custom value
- * from 1 to 600 in steps of 5, and the attempts per student from 1 to 99.
+ * teacher's zone, the mode, the time limit as 30, 45 or 60 minutes or a
+ * custom value from 1 to 600 in steps of 5, and the attempts per student
+ * from 1 to 99.
  */
 export function ScheduleStep({ draft, onChange }: Props) {
   const { t } = useTranslation();
@@ -81,66 +85,83 @@ export function WindowFields({ draft, onChange }: Props) {
   );
 }
 
-/** TimingRules is the time limit, as a preset or a custom value, and the attempts per student. */
-export function TimingRules({ draft, onChange }: Props) {
+/**
+ * TimingRules is the mode, the time limit, as a preset or a custom value,
+ * and the attempts per student. Under flexible the time limit is not asked
+ * and the draft keeps its minutes, so a switch back to strict finds them
+ * (F1). `modeLocked`, once the assignment has attempts, rests the mode and
+ * its line says why.
+ */
+export function TimingRules({
+  draft,
+  onChange,
+  modeLocked = false,
+}: Props & Readonly<{ modeLocked?: boolean }>) {
   const { t } = useTranslation();
   const [custom, setCustom] = useState(!PRESETS.includes(draft.durationMinutes));
   const minutes = (count: number) => t("assignments.wizard.minutes", { count });
+  const modeHintId = useId();
+  const flexible = draft.mode === "flexible";
+  const modeHint = () => {
+    if (modeLocked) return t("assignments.wizard.modeLockedAttempts");
+    return t(
+      flexible
+        ? "assignments.wizard.modeFlexibleHint"
+        : "assignments.wizard.modeStrictHint",
+    );
+  };
+  const attemptsHint = () => {
+    if (draft.maxAttempts <= 1) return t("assignments.wizard.attemptsOne");
+    return t(
+      flexible
+        ? "assignments.wizard.attemptsManyFlexible"
+        : "assignments.wizard.attemptsMany",
+    );
+  };
   return (
     <RuleGroup icon={Timer} title={t("assignments.wizard.timeAndAttempts")}>
       <RuleRow
-        label={t("assignments.wizard.timeLimit")}
-        hint={t("assignments.wizard.timeLimitHint")}
+        label={t("assignments.wizard.mode")}
+        hint={modeHint()}
+        hintId={modeHintId}
+        locked={modeLocked}
       >
-        <span className="flex flex-col gap-2">
-          <Segmented
-            fill
-            size="lg"
-            label={t("assignments.wizard.timeLimit")}
-            value={custom ? CUSTOM : String(draft.durationMinutes)}
-            options={[
-              ...PRESETS.map((value) => ({
-                value: String(value),
-                label: minutes(value),
-              })),
-              { value: CUSTOM, label: t("assignments.wizard.custom") },
-            ]}
-            onChange={(value) => {
-              if (value === CUSTOM) {
-                setCustom(true);
-                return;
-              }
-              setCustom(false);
-              onChange({ durationMinutes: Number(value) });
-            }}
-          />
-          {custom && (
-            <span className="flex flex-wrap items-center gap-2.5">
-              <NumberStepper
-                label={t("assignments.wizard.timeLimit")}
-                value={draft.durationMinutes}
-                min={1}
-                max={600}
-                step={5}
-                format={minutes}
-                onChange={(durationMinutes) => onChange({ durationMinutes })}
-              />
-              <span className="text-muted-fg text-meta">
-                {t("assignments.wizard.customRange")}
-              </span>
-            </span>
-          )}
-        </span>
+        <Segmented
+          fill
+          size="lg"
+          label={t("assignments.wizard.mode")}
+          value={draft.mode}
+          options={[
+            {
+              value: "strict",
+              label: t("assignments.wizard.modeStrict"),
+              icon: Timer,
+              disabled: modeLocked,
+              describedBy: modeHintId,
+            },
+            {
+              value: "flexible",
+              label: t("assignments.wizard.modeFlexible"),
+              icon: TimerOff,
+              disabled: modeLocked,
+              describedBy: modeHintId,
+            },
+          ]}
+          onChange={(value) =>
+            onChange({ mode: value === "flexible" ? "flexible" : "strict" })
+          }
+        />
       </RuleRow>
-      <RuleRow
-        inline
-        label={t("assignments.wizard.attempts")}
-        hint={t(
-          draft.maxAttempts > 1
-            ? "assignments.wizard.attemptsMany"
-            : "assignments.wizard.attemptsOne",
-        )}
-      >
+      {!flexible && (
+        <TimeLimitRow
+          draft={draft}
+          onChange={onChange}
+          custom={custom}
+          onCustom={setCustom}
+          minutes={minutes}
+        />
+      )}
+      <RuleRow inline label={t("assignments.wizard.attempts")} hint={attemptsHint()}>
         <NumberStepper
           label={t("assignments.wizard.attempts")}
           value={draft.maxAttempts}
@@ -150,5 +171,67 @@ export function TimingRules({ draft, onChange }: Props) {
         />
       </RuleRow>
     </RuleGroup>
+  );
+}
+
+/** TimeLimitRow is the strict time limit: a preset, or a custom value from 1 to 600 minutes. */
+function TimeLimitRow({
+  draft,
+  onChange,
+  custom,
+  onCustom,
+  minutes,
+}: Props &
+  Readonly<{
+    custom: boolean;
+    onCustom: (custom: boolean) => void;
+    minutes: (count: number) => string;
+  }>) {
+  const { t } = useTranslation();
+  return (
+    <RuleRow
+      label={t("assignments.wizard.timeLimit")}
+      hint={t("assignments.wizard.timeLimitHint")}
+    >
+      <span className="flex flex-col gap-2">
+        <Segmented
+          fill
+          size="lg"
+          label={t("assignments.wizard.timeLimit")}
+          value={custom ? CUSTOM : String(draft.durationMinutes)}
+          options={[
+            ...PRESETS.map((value) => ({
+              value: String(value),
+              label: minutes(value),
+            })),
+            { value: CUSTOM, label: t("assignments.wizard.custom") },
+          ]}
+          onChange={(value) => {
+            if (value === CUSTOM) {
+              onCustom(true);
+              return;
+            }
+            onCustom(false);
+            onChange({ durationMinutes: Number(value) });
+          }}
+        />
+        {custom && (
+          <span className="flex flex-wrap items-center gap-2.5">
+            <NumberStepper
+              label={t("assignments.wizard.timeLimit")}
+              value={draft.durationMinutes}
+              min={1}
+              max={600}
+              step={5}
+              format={minutes}
+              onChange={(durationMinutes) => onChange({ durationMinutes })}
+            />
+            <span className="text-muted-fg text-meta">
+              {t("assignments.wizard.customRange")}
+            </span>
+          </span>
+        )}
+      </span>
+    </RuleRow>
   );
 }

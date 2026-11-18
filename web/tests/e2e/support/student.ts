@@ -24,6 +24,7 @@ export const classes = [
 /** assignment is one open paper of the evening class, with or without an attempt in progress. */
 export function assignment(index: number, live: boolean): Assignment {
   return {
+    mode: "strict",
     id: `assignment-${index}`,
     testTitle: `Bài luyện tập ${index}`,
     classId,

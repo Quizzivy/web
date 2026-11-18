@@ -9,7 +9,8 @@ import { useLocale } from "@/lib/i18n/useLocale";
 
 /**
  * CloseEarlyDialog is "Close early": the deck's title and button, and the
- * true promise that students mid-test keep their time (DG-161), in the
+ * true promise that students mid-test keep their time (DG-161) -- under
+ * flexible, that they carry on until the planned close -- in the
  * reader's language, with one tick to confirm. `keepTime`, given where the
  * roster is known, counts the students whose own extension reaches past now;
  * they keep it, and none draws no sentence. Focus returns to `returnFocus` when it closes.
@@ -37,6 +38,10 @@ export function CloseEarlyDialog({
   const { t } = useTranslation();
   const locale = useLocale();
   const [understood, setUnderstood] = useState(false);
+  const planned = formatMoment(assignment.window.closesAt, locale);
+  // Under flexible no time limit applies: students mid-test carry on until the
+  // planned close, which closing now never moves earlier (77f Q6).
+  const flexible = assignment.mode === "flexible";
 
   return (
     <ConfirmDialog
@@ -48,7 +53,7 @@ export function CloseEarlyDialog({
       title={t("assignments.detail.closeNowTitle", { title: assignment.testTitle })}
       description={t("assignments.detail.closeNowBody", {
         now: formatTime(new Date()),
-        planned: formatMoment(assignment.window.closesAt, locale),
+        planned,
       })}
       confirmLabel={t("assignments.detail.closeNow")}
       disabled={!understood}
@@ -63,9 +68,11 @@ export function CloseEarlyDialog({
           aria-hidden="true"
         />
         <p className="text-xs leading-relaxed">
-          {t("assignments.detail.closeNowNote", {
-            minutes: assignment.durationMinutes,
-          })}
+          {flexible
+            ? t("assignments.detail.closeNowNoteFlexible", { planned })
+            : t("assignments.detail.closeNowNote", {
+                minutes: assignment.durationMinutes,
+              })}
           {keepTime > 0 &&
             ` ${t("assignments.detail.closeNowKeepTime", { count: keepTime })}`}
         </p>
@@ -76,7 +83,11 @@ export function CloseEarlyDialog({
           checked={understood}
           onChange={(event) => setUnderstood(event.target.checked)}
         />
-        {t("assignments.detail.closeNowAck")}
+        {t(
+          flexible
+            ? "assignments.detail.closeNowAckFlexible"
+            : "assignments.detail.closeNowAck",
+        )}
       </label>
     </ConfirmDialog>
   );

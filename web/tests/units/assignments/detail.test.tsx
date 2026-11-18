@@ -23,6 +23,7 @@ type Assignment = components["schemas"]["Assignment"];
 
 function assignment(over: Partial<Assignment> = {}): Assignment {
   return {
+    mode: "strict",
     id: ID,
     testId: TEST_ID,
     testVersionId: VERSION_ID,

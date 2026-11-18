@@ -509,3 +509,55 @@ describe("the timer, fullscreen and audio", () => {
     );
   });
 });
+
+describe("a flexible assignment (F1)", () => {
+  const FLEXIBLE = {
+    vi: [
+      "Bài không tính giờ. Bạn có thể dừng giữa chừng rồi quay lại làm tiếp, kể cả trên thiết bị khác, trước khi bài đóng. Bài chưa nộp sẽ được nộp tự động lúc đóng.",
+      "Khi bài đang mở, mỗi lần bạn chuyển sang tab hay ứng dụng khác đều được ghi lại và giáo viên được báo. Tạm nghỉ bằng nút × hay đóng trang thì không tính.",
+    ],
+    en: [
+      "There is no timer. You can stop partway and come back, on another device too, before the test closes. A test not yet submitted is submitted when it closes.",
+      "While the test is open, switching to another tab or app is recorded and your teacher is told. Taking a break with the × button, or closing the page, does not count.",
+    ],
+  };
+
+  it("says the student may stop and come back, and what is recorded, whatever the stored limit", () => {
+    for (const language of LANGUAGES)
+      for (const [maxFocusLoss, onLimitExceeded] of [
+        [0, "flag"],
+        [-1, "auto_submit"],
+        [3, "warn"],
+      ] as const) {
+        const integrity = { ...INTEGRITY, maxFocusLoss, onLimitExceeded };
+        for (const running of [false, true]) {
+          const input = { mode: "flexible", integrity, running } as const;
+          expect(only("timer", input, language)).toEqual([FLEXIBLE[language][0]]);
+          expect(only("leaving", input, language)).toEqual([FLEXIBLE[language][1]]);
+        }
+      }
+  });
+
+  it("never says the clock does not stop, nor names an allowance or a submit for leaving", () => {
+    for (const language of LANGUAGES) {
+      const said = texts(
+        {
+          mode: "flexible",
+          integrity: { ...INTEGRITY, maxFocusLoss: 2, onLimitExceeded: "auto_submit" },
+        },
+        language,
+      ).join(" ");
+      expect(said).not.toMatch(
+        /không dừng|does not pause|vi phạm|gian lận|violation|cheat/i,
+      );
+      expect(said).not.toMatch(
+        /được rời trang làm bài \d|can leave the test \d|nộp ngay|will be submitted|your test is submitted/i,
+      );
+    }
+  });
+
+  it("leaves the strict sentences as they are", () => {
+    expect(texts({ mode: "strict" })).toEqual(texts());
+    expect(texts({ mode: "strict" }, "en")).toEqual(texts({}, "en"));
+  });
+});

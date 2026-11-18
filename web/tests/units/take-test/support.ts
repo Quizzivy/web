@@ -12,6 +12,7 @@ export function session(over: {
   status?: AttemptSession["attempt"]["status"];
 }): AttemptSession {
   return {
+    mode: "strict",
     attempt: {
       id: "att-1",
       assignmentId: "asg-1",

@@ -59,6 +59,14 @@ that needs it. Locally: run the API from a `Quizzivy/api` checkout (`make up`,
 `make migrate seed`, `make dev`), set `EMAIL_SINK_DIR` to the same directory
 for both, and run `make e2e-live` here.
 
+The API lets one account sign in twenty times an hour (`POST /auth/login`),
+and holds that count in memory. One live run signs the seeded student in
+about fifteen times through `/login`, so a second local run within the hour,
+or a `--repeat-each`, meets 429 on the student, and every spec after the
+first refusal fails for that reason. Restart the API before it, which empties
+the count. In CI each run starts its own API, but a run whose retries sign the
+student in again can still reach the limit.
+
 ### Three origins, one build
 
 Playwright builds once and serves the build on three ports
@@ -90,8 +98,9 @@ which the browser would not send it.
 ## The slow tail
 
 `.github/workflows/slow-tail.yml` runs the specs of the `slow` Playwright
-project, which holds one spec today: E2E 5, `timer-expiry.live.spec.ts`, which
-waits out a real one-minute deadline. It runs every night at 19:00 UTC against
+project, which holds two specs today: E2E 5, `timer-expiry.live.spec.ts`, which
+waits out a real one-minute deadline, and F1's `flexible-long-break.live.spec.ts`,
+which holds a flexible paper on a break for more than a minute. It runs every night at 19:00 UTC against
 `develop` and by hand; it no longer runs on pull requests. Before merging a
 release, read its latest nightly run (**E2E (waits on real time)**), or start it
 by hand on the release branch. It is not part of **CI result**. GitHub starts a schedule only from the default branch's copy of the

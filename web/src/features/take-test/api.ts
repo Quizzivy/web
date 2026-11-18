@@ -4,6 +4,7 @@ import type { components } from "@/lib/api/schema";
 import { heldSession, holdSession } from "./heldSession";
 
 export type AttemptSession = components["schemas"]["AttemptSession"];
+export type AssignmentMode = components["schemas"]["AssignmentMode"];
 export type StudentQuestion = components["schemas"]["StudentQuestion"];
 export type StudentSection = components["schemas"]["StudentSection"];
 export type StudentGroup = components["schemas"]["StudentGroup"];
@@ -53,6 +54,7 @@ export function saveAnswers(
     sessionId: string;
     answers?: Record<string, Answer>;
     events?: IntegrityEventInput[];
+    activeMs?: number;
   },
   signal?: AbortSignal,
 ) {

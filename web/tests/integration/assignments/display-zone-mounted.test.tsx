@@ -36,6 +36,7 @@ const TEST_ID = "018f0000-0000-7000-8000-0000000000a1";
 const VERSION_ID = "018f0000-0000-7000-8000-0000000000f1";
 const CLASS_ID = "018f0000-0000-7000-8000-0000000000c1";
 const saved: components["schemas"]["Assignment"] = {
+  mode: "strict",
   id: ID,
   testId: TEST_ID,
   testVersionId: VERSION_ID,

@@ -118,6 +118,40 @@ export function elapsedMinutes(
   );
 }
 
+/**
+ * PaperTime is the time the monitor and the attempt sheet show (F1). With
+ * `activeSeconds` reported, `minutes` is the time on the paper, so far while
+ * the attempt is in progress, and `spanMs` the time from start to hand-in when
+ * it comes to a different number of minutes, else null. Without it (an
+ * attempt from before F1), `minutes` is the elapsed figure as before and
+ * `onPaper` is false.
+ */
+export type PaperTime = Readonly<{
+  onPaper: boolean;
+  minutes: number | null;
+  spanMs: number | null;
+}>;
+
+/** paperTime reads a row's or a review's time on the paper and its span (F1, Q5). */
+export function paperTime(
+  row: Pick<MonitorRow, "startedAt" | "submittedAt" | "activeSeconds">,
+): PaperTime {
+  if (row.activeSeconds == null)
+    return { onPaper: false, minutes: elapsedMinutes(row), spanMs: null };
+  const minutes = Math.round(row.activeSeconds / 60);
+  if (!row.startedAt || !row.submittedAt)
+    return { onPaper: true, minutes, spanMs: null };
+  const spanMs = Math.max(
+    0,
+    new Date(row.submittedAt).getTime() - new Date(row.startedAt).getTime(),
+  );
+  return {
+    onPaper: true,
+    minutes,
+    spanMs: Math.round(spanMs / 60_000) === minutes ? null : spanMs,
+  };
+}
+
 /** reviewMatches binds a review to the requested assignment, attempt and student before any private presentation. */
 export function reviewMatches(
   data: AttemptReview | undefined,

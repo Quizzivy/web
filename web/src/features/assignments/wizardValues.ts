@@ -42,7 +42,9 @@ export function firstGap(draft: AssignmentDraft): { step: number; key: string } 
 
 /**
  * stepValues is the line under each step's name in the stepper: the test,
- * who takes it, the window and time limit, and the rules that are on.
+ * who takes it, the window and time limit, and the rules that are on. Under
+ * flexible the schedule names the mode where it named the minutes, and the
+ * rules leave the leaving count out, since no limit applies (F1).
  */
 export function stepValues(
   draft: AssignmentDraft,
@@ -55,7 +57,8 @@ export function stepValues(
       ? [t("assignments.wizard.value.individuals", { count: draft.students.length })]
       : []),
   ];
-  const leaving = draft.integrity.maxFocusLoss;
+  const flexible = draft.mode === "flexible";
+  const leaving = flexible ? 0 : draft.integrity.maxFocusLoss;
   const rules = [
     draft.integrity.requireFullscreen && t("assignments.wizard.value.fullscreen"),
     draft.integrity.blockCopyPaste && t("assignments.wizard.value.noCopy"),
@@ -64,16 +67,26 @@ export function stepValues(
     draft.review.showScore && t("assignments.wizard.value.scoreShown"),
   ].filter((part): part is string => typeof part === "string");
   const dated = windowIsValid(draft);
+  const schedule = () => {
+    if (!dated)
+      return flexible
+        ? t("assignments.wizard.modeFlexible")
+        : t("assignments.wizard.minutes", { count: draft.durationMinutes });
+    const window = {
+      opens: dayDate(windowInstant(draft.opensAt), locale, WINDOW_ZONE),
+      closes: dayDate(windowInstant(draft.closesAt), locale, WINDOW_ZONE),
+    };
+    return flexible
+      ? t("assignments.wizard.value.scheduleFlexible", window)
+      : t("assignments.wizard.value.schedule", {
+          ...window,
+          minutes: draft.durationMinutes,
+        });
+  };
   return [
     draft.picked?.testTitle ?? t("assignments.wizard.value.noTest"),
     targets.length > 0 ? targets.join(", ") : t("assignments.wizard.value.noOne"),
-    dated
-      ? t("assignments.wizard.value.schedule", {
-          opens: dayDate(windowInstant(draft.opensAt), locale, WINDOW_ZONE),
-          closes: dayDate(windowInstant(draft.closesAt), locale, WINDOW_ZONE),
-          minutes: draft.durationMinutes,
-        })
-      : t("assignments.wizard.minutes", { count: draft.durationMinutes }),
+    schedule(),
     rules.length > 0 ? rules.join(" · ") : t("assignments.wizard.value.defaultRules"),
   ];
 }

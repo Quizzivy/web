@@ -26,6 +26,7 @@ function backend(): Backend {
 
 function card(data: Session): components["schemas"]["StudentAssignmentCard"] {
   return {
+    mode: "strict",
     id: data.attempt.assignmentId,
     testTitle: data.testTitle,
     status: "open",

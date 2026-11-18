@@ -250,6 +250,7 @@ export function installWizardServer() {
 export function stored(body: Record<string, unknown>, id = CREATED): Assignment {
   const input = body as unknown as components["schemas"]["AssignmentInput"];
   return {
+    mode: input.mode ?? "strict",
     id,
     testId: TEST_ID,
     testVersionId: input.testVersionId,

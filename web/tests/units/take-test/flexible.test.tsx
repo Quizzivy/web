@@ -1,4 +1,12 @@
-import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
+import {
+  afterEach,
+  beforeEach,
+  describe,
+  expect,
+  it,
+  onTestFinished,
+  vi,
+} from "vitest";
 import {
   act,
   fireEvent,
@@ -19,6 +27,7 @@ import {
 } from "@/features/take-test/api";
 import { FLUSH_DEBOUNCE_MS, useTakeTestStore } from "@/features/take-test/store";
 import { pending } from "@/features/integrity/useIntegrityMonitor";
+import { clearSession } from "@/features/integrity/buffer";
 import { session, text, viewport } from "./support";
 import i18n from "@/lib/i18n";
 
@@ -359,6 +368,24 @@ describe("coming back from a break in the same tab (F1)", () => {
     expect(Date.parse(pending()[0]!.occurredAt) - NOW.getTime()).toBeGreaterThanOrEqual(
       5 * MINUTE,
     );
+  });
+
+  it("records it too when the storage throws, as with site data blocked", async () => {
+    onTestFinished(() => clearSession("att-1"));
+    for (const method of ["getItem", "setItem", "removeItem"] as const)
+      vi.spyOn(Storage.prototype, method).mockImplementation(() => {
+        throw new DOMException("denied", "SecurityError");
+      });
+    const router = await open();
+    await leaveByTheX();
+    expect(router.state.location.pathname).toBe("/");
+    expect((await beacons())[0]?.events.map((event) => event.kind)).toEqual([
+      "paper_left",
+    ]);
+    await reopen(router);
+    expect(router.state.location.pathname).toBe("/attempts/att-1");
+    expect(store().sessionId).toBe("ses-1");
+    expect(pending().map((event) => event.kind)).toEqual(["paper_returned"]);
   });
 
   it("records it once: the paper opened again after the return records none", async () => {

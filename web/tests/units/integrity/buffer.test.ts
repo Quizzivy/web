@@ -1,4 +1,4 @@
-import { beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import {
   beginSession,
   clearSession,
@@ -260,6 +260,70 @@ describe("a break (F1)", () => {
   it("is none until one is opened, and none before a session has begun", () => {
     openBreak(ATTEMPT);
     beginSession(ATTEMPT, "ses-1");
+    expect(closeBreak(ATTEMPT)).toBe(false);
+  });
+});
+
+/** Private mode and "block site data" make every access to sessionStorage throw. */
+describe("when the storage throws", () => {
+  beforeEach(() => {
+    for (const method of ["getItem", "setItem", "removeItem"] as const)
+      vi.spyOn(Storage.prototype, method).mockImplementation(() => {
+        throw new DOMException("denied", "SecurityError");
+      });
+  });
+
+  afterEach(() => {
+    vi.restoreAllMocks();
+  });
+
+  it("keeps a break's mark across the engine letting go, for the same session", () => {
+    beginSession(ATTEMPT, "ses-1");
+    record(ATTEMPT, "paper_left");
+    openBreak(ATTEMPT);
+    drain(ATTEMPT);
+    suspendSession();
+
+    beginSession(ATTEMPT, "ses-1");
+    expect(closeBreak(ATTEMPT)).toBe(true);
+    expect(closeBreak(ATTEMPT)).toBe(false);
+  });
+
+  it("numbers on, and keeps the events no beacon took, when the same session begins again", () => {
+    beginSession(ATTEMPT, "ses-1");
+    record(ATTEMPT, "copy");
+    record(ATTEMPT, "cut");
+    suspendSession();
+
+    expect(beginSession(ATTEMPT, "ses-1")).toBeNull();
+    record(ATTEMPT, "paste");
+    expect(pending().map((e) => [e.kind, e.clientSeq])).toEqual([
+      ["copy", 0],
+      ["cut", 1],
+      ["paste", 2],
+    ]);
+  });
+
+  it("hands another session the events left, and drops the mark", () => {
+    beginSession(ATTEMPT, "ses-1");
+    record(ATTEMPT, "paper_left");
+    openBreak(ATTEMPT);
+    suspendSession();
+
+    const stranded = beginSession(ATTEMPT, "ses-2");
+    expect(stranded?.sessionId).toBe("ses-1");
+    expect(stranded?.events.map((e) => e.kind)).toEqual(["paper_left"]);
+    expect(closeBreak(ATTEMPT)).toBe(false);
+  });
+
+  it("forgets it all once the attempt has ended", () => {
+    beginSession(ATTEMPT, "ses-1");
+    record(ATTEMPT, "copy");
+    openBreak(ATTEMPT);
+    clearSession(ATTEMPT);
+
+    beginSession(ATTEMPT, "ses-1");
+    expect(pending()).toEqual([]);
     expect(closeBreak(ATTEMPT)).toBe(false);
   });
 });

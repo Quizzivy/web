@@ -59,6 +59,14 @@ that needs it. Locally: run the API from a `Quizzivy/api` checkout (`make up`,
 `make migrate seed`, `make dev`), set `EMAIL_SINK_DIR` to the same directory
 for both, and run `make e2e-live` here.
 
+The API lets one account sign in twenty times an hour (`POST /auth/login`),
+and holds that count in memory. One live run signs the seeded student in
+about fifteen times through `/login`, so a second local run within the hour,
+or a `--repeat-each`, meets 429 on the student, and every spec after the
+first refusal fails for that reason. Restart the API before it, which empties
+the count. In CI each run starts its own API, but a run whose retries sign the
+student in again can still reach the limit.
+
 ### Three origins, one build
 
 Playwright builds once and serves the build on three ports

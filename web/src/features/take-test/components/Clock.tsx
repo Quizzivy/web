@@ -1,6 +1,7 @@
 import { useEffect, useEffectEvent, useReducer, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { CalendarClock, Timer } from "lucide-react";
+import { closeMoment } from "@/features/assignments/studentRules";
 import type { Locale } from "@/lib/i18n";
 import { clockTime, countdown, sameAppDay } from "@/lib/i18n/datetime";
 import { cn } from "@/lib/utils";
@@ -114,7 +115,8 @@ export function Clock({ wide = true }: Readonly<{ wide?: boolean }>) {
  * ClosesPill is the flexible paper's header pill while the close is more than
  * an hour away: "Đóng 22:00, 26/09", or "Đóng 22:00 hôm nay" on the day, read
  * on the server's clock. Below 768px the word goes and the icon says it. It
- * is an image named "Bài đóng lúc …", not a timer: nothing in it ticks.
+ * is an image named "Bài đóng lúc 22:00, Thứ 6, 26/09" (the time alone on the
+ * day), not a timer: nothing in it ticks.
  */
 function ClosesPill({
   deadlineAt,
@@ -131,7 +133,11 @@ function ClosesPill({
     shown = sameAppDay(closes, now)
       ? t("takeTest.closesToday", { time: when })
       : t("takeTest.closes", { when });
-  const label = t("takeTest.closesName", { when });
+  // The name reads the long form the rules and the leave dialog use; only the
+  // pill's own text is short.
+  const label = t("takeTest.closesName", {
+    when: closeMoment(closes, now, t, locale),
+  });
   return (
     <span
       role="img"

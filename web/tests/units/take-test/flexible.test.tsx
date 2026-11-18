@@ -157,7 +157,9 @@ afterEach(async () => {
 describe("the header under flexible", () => {
   it("shows when the test closes, with no timer, while the close is more than an hour away", async () => {
     await open();
-    const pill = banner().getByRole("img", { name: "Bài đóng lúc 22:00, 26/09" });
+    const pill = banner().getByRole("img", {
+      name: "Bài đóng lúc 22:00, Thứ 7, 26/09",
+    });
     expect(pill).toHaveTextContent("Đóng 22:00, 26/09");
     expect(pill).toHaveClass("bg-muted", "text-fg");
     expect(screen.queryByRole("timer")).toBeNull();
@@ -173,8 +175,18 @@ describe("the header under flexible", () => {
   it("drops the word below 768 and keeps the date", async () => {
     viewport("phone");
     await open();
-    const pill = banner().getByRole("img", { name: "Bài đóng lúc 22:00, 26/09" });
+    const pill = banner().getByRole("img", {
+      name: "Bài đóng lúc 22:00, Thứ 7, 26/09",
+    });
     expect(pill).toHaveTextContent(/^22:00, 26\/09$/);
+  });
+
+  it("names a close on another day with the weekday, in English too", async () => {
+    await act(() => i18n.changeLanguage("en"));
+    await open();
+    expect(
+      banner().getByRole("img", { name: "The test closes Sat 26 Sep, 22:00" }),
+    ).toHaveTextContent("Closes 22:00, 26 Sep");
   });
 
   it("says it in English too", async () => {

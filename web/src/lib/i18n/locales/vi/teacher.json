@@ -1750,6 +1750,8 @@
       "closeNowBody": "Đóng lúc {{now}} hôm nay thay vì {{planned}}. Học viên chưa bắt đầu sẽ không vào được nữa.",
       "closeNowNote": "Học viên đang làm vẫn được làm hết {{minutes}} phút của mình.",
       "closeNowAck": "Tôi hiểu học viên đang làm vẫn được làm hết giờ",
+      "closeNowNoteFlexible": "Học viên đang làm vẫn được làm tiếp đến {{planned}}.",
+      "closeNowAckFlexible": "Tôi hiểu học viên đang làm vẫn được làm tiếp đến hạn",
       "closeNow": "Đóng ngay",
       "closeFailed": "Không đóng được bài giao.",
       "closeTable": "Đóng bảng học viên",
@@ -2239,6 +2241,7 @@
     "extend": {
       "title": "Gia hạn cho {{name}}",
       "body": "Học viên sẽ thấy đồng hồ cộng thêm ngay lập tức.",
+      "bodyFlexible": "Hạn nộp của học viên được dời ngay, có thể đến sau giờ đóng của bài.",
       "confirm": "Gia hạn",
       "minutes": "Cộng thêm",
       "placeholder": "Ví dụ: Mất mạng 8 phút, đã xác nhận"

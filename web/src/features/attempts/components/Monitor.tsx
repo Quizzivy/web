@@ -392,6 +392,7 @@ export function Monitor({
           returnFocus={returnFocus}
           kind={dialog?.kind ?? null}
           row={dialog?.row ?? null}
+          mode={assignment.mode}
           onOpenChange={(open) => {
             if (!open) setDialog(null);
           }}

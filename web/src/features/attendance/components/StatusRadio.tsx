@@ -10,6 +10,13 @@ const TONES: Record<AttendanceStatus, string> = {
   absent: "bg-danger-soft text-danger-ink",
 };
 
+/** PAUSED_TONES are the tones faded for a register that reads only (D-029: colours, never the element). */
+const PAUSED_TONES: Record<AttendanceStatus, string> = {
+  present: "bg-success-soft/45 text-success-ink/45",
+  late: "bg-warning-soft/45 text-warning-ink/45",
+  absent: "bg-danger-soft/45 text-danger-ink/45",
+};
+
 const STEP: Record<string, number> = {
   ArrowRight: 1,
   ArrowDown: 1,
@@ -23,7 +30,7 @@ const STEP: Record<string, number> = {
  * tone with a ring of `border`. Choosing the chosen one again clears it, so
  * a student goes back to unmarked. The arrow keys move along the track and
  * choose, as a radio group does; one option takes Tab, the chosen one or the
- * first. While `disabled` the track is faded and takes no press.
+ * first. While `disabled` its colours fade and it takes no press.
  */
 export function StatusRadio({
   value,
@@ -55,10 +62,7 @@ export function StatusRadio({
       aria-label={t("attendance.radioLabel")}
       aria-describedby={describedBy}
       aria-disabled={disabled || undefined}
-      className={cn(
-        "bg-muted rounded-ctl flex flex-none gap-0.5 p-[0.1875rem]",
-        disabled && "opacity-45",
-      )}
+      className={cn("bg-muted rounded-ctl flex flex-none gap-0.5 p-[0.1875rem]")}
     >
       {STATUSES.map((status, index) => {
         const on = value === status;
@@ -77,9 +81,12 @@ export function StatusRadio({
             onKeyDown={(event) => onKeyDown(event, index)}
             className={cn(
               "rounded-seg text-meta h-7.5 w-17 border-0 font-medium whitespace-nowrap transition-colors",
-              on
-                ? `${TONES[status]} ring-border ring-1`
-                : "text-muted-fg bg-transparent",
+              on &&
+                `${disabled ? PAUSED_TONES[status] : TONES[status]} ring-border ring-1`,
+              !on &&
+                (disabled
+                  ? "text-muted-fg/45 bg-transparent"
+                  : "text-muted-fg bg-transparent"),
               disabled ? "cursor-default" : "cursor-pointer",
             )}
           >

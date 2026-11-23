@@ -4,7 +4,9 @@ import { CalendarCheck } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { SessionChip } from "@/features/attendance/components/SessionChip";
 import { registerHref, type AttendanceSessionRow } from "@/features/attendance/api";
-import { clock, dayLabel, isToday } from "@/features/attendance/dates";
+import { isToday } from "@/features/attendance/dates";
+import { getDisplayTimeZone } from "@/lib/i18n/datetime";
+import { formatClock, formatDayLabel, wallClock } from "@/lib/i18n/schedule";
 import { useLocale } from "@/lib/i18n/useLocale";
 
 /**
@@ -21,6 +23,8 @@ export function SessionRow({
   const { t } = useTranslation();
   const locale = useLocale();
   const today = isToday(session.startsAt, now);
+  const start = wallClock(session.startsAt, getDisplayTimeZone());
+  const time = formatClock(start.minutes);
   const counts = session.marked ? session.counts : null;
   const roster = t("attendance.students", { count: session.studentCount });
   let meta = roster;
@@ -38,11 +42,9 @@ export function SessionRow({
   return (
     <li className="hover:bg-muted relative flex flex-wrap items-center gap-x-4 gap-y-2.5 border-t px-4 py-3">
       <span className="flex w-24 flex-none flex-col leading-[1.3]">
-        <span className="text-ui font-semibold tabular-nums">
-          {clock(session.startsAt)}
-        </span>
+        <span className="text-ui font-semibold tabular-nums">{time}</span>
         <span className="text-muted-fg text-xs whitespace-nowrap">
-          {today ? t("attendance.today") : dayLabel(session.startsAt, locale)}
+          {today ? t("attendance.today") : formatDayLabel(start.date, locale)}
         </span>
       </span>
       <span className="min-w-0 flex-[1_1_220px]">
@@ -62,7 +64,7 @@ export function SessionRow({
           to={registerHref(session.classId, session.id)}
           aria-label={t(session.marked ? "attendance.openFor" : "attendance.takeFor", {
             name: session.className,
-            time: clock(session.startsAt),
+            time,
           })}
         >
           {session.marked ? null : <CalendarCheck aria-hidden="true" />}

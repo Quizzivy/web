@@ -9,7 +9,7 @@ import {
   withNote,
   type Edits,
 } from "@/features/attendance/register";
-import { dayLabel, notOpenYet, startOfDay } from "@/features/attendance/dates";
+import { notOpenYet, sessionLabel, startOfDay } from "@/features/attendance/dates";
 import { ANH, BAO, HA, NAM, roster } from "./support";
 
 const NONE: Edits = new Map();
@@ -105,9 +105,9 @@ describe("the register's marks", () => {
 
 describe("the register's dates", () => {
   it("names a day as the schedule does, and finds the day's start in the display zone", () => {
-    expect(dayLabel("2026-09-24T11:00:00Z", "vi")).toBe("Th 5, 24 thg 9");
-    expect(dayLabel("2026-09-20T02:00:00Z", "vi")).toBe("CN, 20 thg 9");
-    expect(dayLabel("2026-09-24T11:00:00Z", "en")).toBe("Thu 24 Sep");
+    expect(sessionLabel("2026-09-24T11:00:00Z", "vi")).toBe("Th 5, 24 thg 9 · 18:00");
+    expect(sessionLabel("2026-09-20T02:00:00Z", "vi")).toBe("CN, 20 thg 9 · 09:00");
+    expect(sessionLabel("2026-09-24T11:00:00Z", "en")).toBe("Thu 24 Sep · 18:00");
     expect(startOfDay(new Date("2026-09-24T13:15:00Z")).toISOString()).toBe(
       "2026-09-23T17:00:00.000Z",
     );

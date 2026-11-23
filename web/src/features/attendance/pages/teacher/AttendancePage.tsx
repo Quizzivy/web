@@ -6,9 +6,10 @@ import { LoadError } from "@/components/shared/ListState";
 import { LoadMoreSentinel } from "@/components/shared/LoadMoreSentinel";
 import { SessionRow } from "@/features/attendance/components/SessionRow";
 import { useSessionPages } from "@/features/attendance/api";
-import { dayLabel, startOfDay, weekBefore } from "@/features/attendance/dates";
+import { startOfDay, weekBefore } from "@/features/attendance/dates";
 import { PageHead } from "@/layouts/shell/PageHead";
-import { useDisplayTimeZone } from "@/lib/i18n/datetime";
+import { getDisplayTimeZone, useDisplayTimeZone } from "@/lib/i18n/datetime";
+import { formatDayLabel, wallClock } from "@/lib/i18n/schedule";
 import { useLocale } from "@/lib/i18n/useLocale";
 
 type Pages = ReturnType<typeof useSessionPages>;
@@ -42,7 +43,9 @@ export default function AttendancePage() {
       {failed === undefined ? (
         <>
           <SessionCard
-            title={t("attendance.todayTitle", { date: dayLabel(now, locale) })}
+            title={t("attendance.todayTitle", {
+              date: formatDayLabel(wallClock(now, getDisplayTimeZone()).date, locale),
+            })}
             sub={
               today.isPending
                 ? ""

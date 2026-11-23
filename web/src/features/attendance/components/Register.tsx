@@ -38,7 +38,7 @@ import {
   type AttendanceStudent,
   type SessionAttendance,
 } from "@/features/attendance/api";
-import { clock, isToday, notOpenYet, sessionLabel } from "@/features/attendance/dates";
+import { isToday, notOpenYet, sessionLabel } from "@/features/attendance/dates";
 import {
   changedStudents,
   countsOf,
@@ -54,6 +54,8 @@ import {
 import { useBulkSelection } from "@/hooks/useBulkSelection";
 import { useContentWidthAtLeast } from "@/layouts/shell/contentWidth";
 import { ApiError } from "@/lib/api/errors";
+import { getDisplayTimeZone } from "@/lib/i18n/datetime";
+import { formatClock, wallClock } from "@/lib/i18n/schedule";
 import { useLocale } from "@/lib/i18n/useLocale";
 import { cn } from "@/lib/utils";
 
@@ -231,7 +233,7 @@ function useRegisterSave({
     save.mutate(marksToSave(students, edits), {
       onSuccess: (saved) => {
         onSaved();
-        setSavedAt(clock(new Date()));
+        setSavedAt(formatClock(wallClock(new Date(), getDisplayTimeZone()).minutes));
         toast(
           t("attendance.savedToast", { a: saved.counts.absent, l: saved.counts.late }),
         );

@@ -40,6 +40,7 @@ const LIVE = /^Bài giao\s*3 bài giao đang mở$/;
 const TO_GRADE = /^Chấm bài\s*6 câu trả lời chờ chấm$/;
 const NAMES = [
   /^Tổng quan$/,
+  /^Lịch$/,
   /^Tin nhắn$/,
   LIVE,
   TO_GRADE,
@@ -53,6 +54,7 @@ const NAMES = [
 ];
 const LABELS = [
   "Tổng quan",
+  "Lịch",
   "Tin nhắn",
   "Bài giao",
   "Chấm bài",
@@ -144,7 +146,7 @@ describe("the teacher shell from 768", () => {
     );
   });
 
-  it("lists the eleven destinations under their groups, the current one lit", async () => {
+  it("lists the twelve destinations under their groups, the current one lit", async () => {
     serveSummary(QUIET);
     renderShell("/teacher/classes", [home(), { ...CLASSES, element: <p>các lớp</p> }]);
     await screen.findByText("các lớp");
@@ -153,6 +155,7 @@ describe("the teacher shell from 768", () => {
       links().map((link) => [link.textContent, link.getAttribute("href")]),
     ).toEqual([
       ["Tổng quan", "/teacher"],
+      ["Lịch", "/teacher/calendar"],
       ["Tin nhắn", "/teacher/messages"],
       ["Bài giao", "/teacher/assignments"],
       ["Chấm bài", "/teacher/grading"],
@@ -168,7 +171,7 @@ describe("the teacher shell from 768", () => {
       within(nav())
         .getAllByRole("list")
         .map((list) => within(list).getAllByRole("link").length),
-    ).toEqual([2, 5, 4]);
+    ).toEqual([3, 5, 4]);
     expect(within(nav()).getByText("Giảng dạy")).toBeInTheDocument();
     expect(within(nav()).getByText("Nội dung")).toBeInTheDocument();
     expect(

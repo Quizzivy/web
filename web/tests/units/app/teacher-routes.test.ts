@@ -17,6 +17,7 @@ const TEACHER_TREE = [
   ["/teacher/tests", "features/tests/pages/teacher/TestsListPage"],
   ["/teacher/tests/:id", "features/tests/pages/teacher/TestDetailPage"],
   ["/teacher/tests/:id/edit", "features/tests/pages/teacher/TestBuilderPage"],
+  ["/teacher/calendar", "features/calendar/pages/teacher/CalendarPage"],
   ["/teacher/messages", "features/messages/pages/teacher/TeacherMessagesPage"],
   [
     "/teacher/messages/class/:classId",

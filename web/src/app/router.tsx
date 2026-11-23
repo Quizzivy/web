@@ -124,6 +124,11 @@ const teacherTree: RouteObject = {
           lazy: page(() => import("@/features/tests/pages/teacher/TestBuilderPage")),
         },
         {
+          path: "calendar",
+          handle: { crumb: [{ key: "teacherShell.nav.calendar" }] },
+          lazy: page(() => import("@/features/calendar/pages/teacher/CalendarPage")),
+        },
+        {
           path: "messages",
           handle: { crumb: [{ key: "messages.title" }] },
           lazy: page(

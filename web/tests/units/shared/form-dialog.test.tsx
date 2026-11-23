@@ -766,3 +766,29 @@ it("rejects a callback retained by a removed file field after the form locks", a
     file: null,
   });
 });
+it("works out the values after a change through derive, and submits what it worked out", async () => {
+  const user = userEvent.setup();
+  const submit = vi.fn();
+  render(
+    <FormDialog
+      {...base}
+      onSubmit={submit}
+      derive={(next, previous) =>
+        next.flag !== previous.flag
+          ? { ...next, title: next.flag ? "Bật" : "Tắt" }
+          : next
+      }
+    />,
+  );
+  await user.click(screen.getByRole("switch", { name: "Hiện" }));
+  expect(screen.getByRole("textbox", { name: "Tên" })).toHaveValue("Bật");
+  await user.type(screen.getByRole("textbox", { name: "Ẩn" }), "x");
+  expect(screen.getByRole("textbox", { name: "Tên" })).toHaveValue("Bật");
+  await user.click(screen.getByRole("button", { name: "Lưu" }));
+  expect(submit).toHaveBeenCalledWith({
+    ...initial,
+    title: "Bật",
+    hidden: "x",
+    flag: true,
+  });
+});

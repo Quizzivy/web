@@ -1,11 +1,10 @@
-import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
-import { enUS, vi } from "date-fns/locale";
+import { fromZonedTime } from "date-fns-tz";
 import { getDisplayTimeZone, sameAppDay } from "@/lib/i18n/datetime";
 import type { Locale } from "@/lib/i18n";
+import { formatClock, formatDayLabel, wallClock } from "@/lib/i18n/schedule";
 
-// These labels stay with Attendance until R8's schedule formatter
-// (`@/lib/i18n/schedule`, T-R8.10) is on the branch; `dayLabel` is its
-// `formatDayLabel` read from an instant, and moves there then.
+// Day and time labels come from the schedule formatter (`@/lib/i18n/schedule`,
+// T-R8.10); only what it lacks lives here.
 
 /** GRACE_MS is how early the server takes a register: 15 minutes before the start. */
 export const GRACE_MS = 15 * 60 * 1000;
@@ -13,27 +12,16 @@ export const GRACE_MS = 15 * 60 * 1000;
 const WEEK_MS = 7 * 24 * 60 * 60 * 1000;
 
 /**
- * dayLabel names the day of `instant` as a session's row and picker do:
- * "Th 4, 24 thg 9" in Vietnamese and "Wed 24 Sep" in English.
+ * sessionLabel names a session in its picker, its day and start in the
+ * display zone as the schedule writes them: "Th 4, 24 thg 9 · 18:00".
  */
-export function dayLabel(
-  instant: string | Date,
+export function sessionLabel(
+  startsAt: string,
   locale: Locale,
   zone = getDisplayTimeZone(),
 ): string {
-  return locale === "vi"
-    ? formatInTimeZone(instant, zone, "EEEEEE, d 'thg' M", { locale: vi })
-    : formatInTimeZone(instant, zone, "EEE d MMM", { locale: enUS });
-}
-
-/** clock is a session's start on the 24-hour clock: "18:00". */
-export function clock(instant: string | Date, zone = getDisplayTimeZone()): string {
-  return formatInTimeZone(instant, zone, "HH:mm");
-}
-
-/** sessionLabel names a session in its picker: "Th 4, 24 thg 9 · 18:00". */
-export function sessionLabel(startsAt: string, locale: Locale): string {
-  return `${dayLabel(startsAt, locale)} · ${clock(startsAt)}`;
+  const start = wallClock(startsAt, zone);
+  return `${formatDayLabel(start.date, locale)} · ${formatClock(start.minutes)}`;
 }
 
 /** isToday says `instant` falls on the day of `now` in the display zone. */
@@ -43,7 +31,7 @@ export function isToday(instant: string | Date, now: Date): boolean {
 
 /** startOfDay is the instant the day of `now` began in the display zone. */
 export function startOfDay(now: Date, zone = getDisplayTimeZone()): Date {
-  return fromZonedTime(`${formatInTimeZone(now, zone, "yyyy-MM-dd")}T00:00:00`, zone);
+  return fromZonedTime(`${wallClock(now, zone).date}T00:00:00`, zone);
 }
 
 /** weekBefore is the instant seven days before `instant`. */

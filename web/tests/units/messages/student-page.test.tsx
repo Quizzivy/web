@@ -2,12 +2,14 @@ import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { act, fireEvent, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { notificationKeys } from "@/features/notifications/api";
+import i18n from "@/lib/i18n";
 import { useAuthStore } from "@/stores/auth";
 import {
   installIntersectionObserver,
   scrollAllIntoView,
 } from "@tests/support/intersection";
 import { viewport } from "@tests/support/viewport";
+import { uid } from "./support";
 import {
   C1,
   TEACHER,
@@ -71,22 +73,76 @@ describe("the list (T-R7.21)", () => {
     );
   });
 
-  it("reads plainly “Giáo viên của bạn” for a staff member who never taught the student", async () => {
-    // The one who created the account and wrote first: no class, not former
-    // (the owner, 2026-11-17). No " · " and nothing after it.
+  it("reads “Giáo viên của trung tâm” for a staff member who does not teach the student", async () => {
+    // F2 (Q2, the owner, 2026-11-23): any teacher or admin may write first,
+    // so a staff member with no class with the student and not former is
+    // "of the centre", with no role. R7 wrote "Giáo viên của bạn" alone here.
     state.threads = [teacherRow({ former: false, classNames: [] })];
     state.teacher = { ...state.teacher, former: false, classNames: [] };
     renderStudentPage(TEACHER_PATH);
     const list = await screen.findByRole("complementary", { name: LIST });
     const row = await within(list).findByRole("link", { name: /Giàu Bùi/ });
-    // getByText matches an element's whole text: "Giáo viên của bạn · "
-    // would not match.
-    expect(within(row).getByText("Giáo viên của bạn")).toBeInTheDocument();
+    // getByText matches an element's whole text, so nothing follows it.
+    expect(within(row).getByText("Giáo viên của trung tâm")).toBeInTheDocument();
     expect(row).not.toHaveTextContent("·");
+    expect(row).not.toHaveTextContent("Giáo viên của bạn");
     expect(row).not.toHaveTextContent("Giáo viên cũ");
     const header = await screen.findByRole("region", { name: "Giàu Bùi" });
-    expect(await within(header).findByText("Giáo viên của bạn")).toBeInTheDocument();
+    expect(
+      await within(header).findByText("Giáo viên của trung tâm"),
+    ).toBeInTheDocument();
+    expect(header).not.toHaveTextContent("Giáo viên của bạn");
   });
+
+  it.each([
+    [
+      "vi",
+      "Giáo viên của bạn · IELTS 6.5 Evening",
+      "Giáo viên cũ",
+      "Giáo viên của trung tâm",
+    ],
+    [
+      "en",
+      "Your teacher · IELTS 6.5 Evening",
+      "Former teacher",
+      "Teacher at the centre",
+    ],
+  ])(
+    "gives each staff member one of the three sub-lines: classes, former, the centre (%s)",
+    async (language, classes, former, centre) => {
+      await i18n.changeLanguage(language);
+      try {
+        state.threads = [
+          teacherRow({ classNames: ["IELTS 6.5 Evening"] }),
+          teacherRow({
+            thread: { kind: "direct", classId: null, teacherId: uid(22, "0192") },
+            title: "Lan Trần",
+            classNames: [],
+            former: true,
+          }),
+          teacherRow({
+            thread: { kind: "direct", classId: null, teacherId: uid(23, "0192") },
+            title: "Minh Phạm",
+            classNames: [],
+            former: false,
+          }),
+        ];
+        renderStudentPage("/messages");
+        const list = await screen.findByRole("complementary", {
+          name: language === "vi" ? LIST : "Conversations",
+        });
+        const line = async (name: RegExp) =>
+          (await within(list).findByRole("link", { name })).textContent;
+        expect(await line(/Giàu Bùi/)).toContain(classes);
+        expect(await line(/Lan Trần/)).toContain(former);
+        expect(await line(/Lan Trần/)).not.toContain(centre);
+        expect(await line(/Minh Phạm/)).toContain(centre);
+        expect(await line(/Minh Phạm/)).not.toContain(former);
+      } finally {
+        await i18n.changeLanguage("vi");
+      }
+    },
+  );
 
   it("says where announcements will appear when there is nothing yet", async () => {
     state.threads = [];

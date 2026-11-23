@@ -401,6 +401,19 @@ describe("a colleague thread (T-F2.7)", () => {
     ).toBeInTheDocument();
   });
 
+  it("decides the composer by canPost: a colleague who lost the workspace is not disabled but takes no post", async () => {
+    contentWidth(1000);
+    peers.threads = [colleague(DUC, "Phan Minh Đức")];
+    peers.peer = { ...peers.peer, disabled: false, canPost: false };
+    renderPage(DUC_PATH);
+    expect(
+      await screen.findByText(
+        "Tài khoản của Phan Minh Đức đã bị vô hiệu hoá nên không nhắn được.",
+      ),
+    ).toBeInTheDocument();
+    expect(screen.queryByRole("textbox", { name: /Nhắn cho/ })).toBeNull();
+  });
+
   it("gives the composer's place to the sentence on 409 MESSAGING_NOT_ALLOWED", async () => {
     contentWidth(1000);
     peers.postStatus = 409;

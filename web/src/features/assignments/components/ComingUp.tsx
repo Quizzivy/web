@@ -60,7 +60,9 @@ export function ComingUp({
           const urgent = pill === "dueToday" || pill === "dueTomorrow";
           const meta = [
             card.className,
-            t("student.home.minutes", { count: card.durationMinutes }),
+            card.mode === "flexible"
+              ? t("student.noTimer")
+              : t("student.home.minutes", { count: card.durationMinutes }),
             t("student.questions", { count: card.questionCount }),
           ]
             .filter((part) => part != null && part !== "")

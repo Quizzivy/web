@@ -47,6 +47,7 @@ export function card(over: Record<string, unknown> = {}) {
     status: "open",
     opensAt: "2026-08-29T01:00:00Z",
     closesAt: "2026-08-29T14:00:00Z",
+    mode: "strict",
     durationMinutes: 45,
     questionCount: 24,
     totalPoints: 30,
@@ -90,6 +91,7 @@ export function attemptSession() {
     audioPlays: {},
     answers: {},
     integrity: POLICY,
+    mode: "strict",
   };
 }
 

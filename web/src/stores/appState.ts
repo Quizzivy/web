@@ -17,6 +17,15 @@ export type Overlay =
   | { kind: "expired" }
   | { kind: "update" };
 
+/**
+ * coversPaper says whether `overlay` stands over a test paper so that the
+ * student cannot work on it: the maintenance and "sign in again" overlays.
+ * The update prompt leaves the paper usable.
+ */
+export function coversPaper(overlay: Overlay): boolean {
+  return overlay.kind === "maintenance" || overlay.kind === "expired";
+}
+
 interface AppState {
   bootPhase: BootPhase;
   bootError: Error | null;

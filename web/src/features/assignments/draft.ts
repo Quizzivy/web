@@ -1,6 +1,10 @@
 import type { PickedVersion } from "@/features/assignments/components/TestVersionPicker";
 import type { Token } from "@/features/assignments/components/TokenField";
-import type { Assignment, AssignmentInput } from "@/features/assignments/api";
+import type {
+  Assignment,
+  AssignmentInput,
+  AssignmentMode,
+} from "@/features/assignments/api";
 import type { components } from "@/lib/api/schema";
 import type { TestVersion } from "@/features/tests/api";
 import { formatInTimeZone, fromZonedTime } from "date-fns-tz";
@@ -9,9 +13,11 @@ import { APP_TIME_ZONE } from "@/lib/i18n/datetime";
 /**
  * AssignmentDraft is every field of an assignment as the form and the wizard
  * hold it: the picked version, the class and student targets as tokens, the
- * window as `datetime-local` values in WINDOW_ZONE, the timing, order,
- * review and integrity choices, and the note to students, empty for none.
- * Saving a draft sends all of it (DG-65).
+ * window as `datetime-local` values in WINDOW_ZONE, the mode, the timing,
+ * order, review and integrity choices, and the note to students, empty for
+ * none. Saving a draft sends all of it (DG-65): under flexible the time limit
+ * and the leaving rule are kept and sent as they are, unapplied, so a switch
+ * back to strict finds them (F1).
  */
 export interface AssignmentDraft {
   picked: PickedVersion | null;
@@ -19,6 +25,7 @@ export interface AssignmentDraft {
   students: Token[];
   opensAt: string;
   closesAt: string;
+  mode: AssignmentMode;
   durationMinutes: number;
   maxAttempts: number;
   shuffleQuestions: boolean;
@@ -71,10 +78,10 @@ export type AssignmentDefaults = NonNullable<
  * emptyDraft is a new assignment: a window from the current hour for three
  * days, one attempt, options in their order, no correct answers or
  * explanations, results on submitting without the class average, no limit
- * on leaving, flag, 3 s of grace and no note. The time limit, question
- * shuffling, the score, copy and paste and fullscreen come from `defaults`
- * where the teacher stored them, and otherwise are §10.3's: 45 minutes, not
- * shuffled, shown, blocked and off.
+ * on leaving, flag, 3 s of grace and no note. The mode, the time limit,
+ * question shuffling, the score, copy and paste and fullscreen come from
+ * `defaults` where the teacher stored them, and otherwise are strict and
+ * §10.3's: 45 minutes, not shuffled, shown, blocked and off.
  */
 export function emptyDraft(
   now = new Date(),
@@ -89,6 +96,7 @@ export function emptyDraft(
     students: [],
     opensAt: windowInput(opens),
     closesAt: windowInput(closes),
+    mode: defaults.mode ?? "strict",
     durationMinutes: defaults.durationMinutes ?? 45,
     maxAttempts: 1,
     shuffleQuestions: defaults.shuffleQuestions ?? false,
@@ -132,6 +140,7 @@ export function draftBody(
       opensAt: windowMoment(draft.opensAt, stored?.opensAt),
       closesAt: windowMoment(draft.closesAt, stored?.closesAt),
     },
+    mode: draft.mode,
     durationMinutes: draft.durationMinutes,
     maxAttempts: draft.maxAttempts,
     shuffleQuestions: draft.shuffleQuestions,
@@ -155,6 +164,7 @@ export function draftOf(a: Assignment, versions: TestVersion[]): AssignmentDraft
     students: a.targets.students.map((s) => ({ id: s.id, label: s.name })),
     opensAt: windowInput(a.window.opensAt),
     closesAt: windowInput(a.window.closesAt),
+    mode: a.mode,
     durationMinutes: a.durationMinutes,
     maxAttempts: a.maxAttempts,
     shuffleQuestions: a.shuffleQuestions,

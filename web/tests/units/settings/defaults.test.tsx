@@ -1,5 +1,12 @@
 import { afterEach, beforeEach, describe, expect, it } from "vitest";
-import { act, fireEvent, render, screen, waitFor } from "@testing-library/react";
+import {
+  act,
+  fireEvent,
+  render,
+  screen,
+  waitFor,
+  within,
+} from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { http, HttpResponse } from "msw";
 import { Toaster } from "@/components/ui/sonner";
@@ -70,7 +77,7 @@ describe("the Assignment defaults card", () => {
     ).toEqual(["30 phút", "45 phút", "60 phút", "90 phút"]);
   });
 
-  it("saves all five, and a new assignment then starts from them", async () => {
+  it("saves all six, and a new assignment then starts from them", async () => {
     const user = renderSection();
 
     await user.click(screen.getByRole("button", { name: "60 phút" }));
@@ -82,6 +89,7 @@ describe("the Assignment defaults card", () => {
       expect(bodies).toEqual([
         {
           assignmentDefaults: {
+            mode: "strict",
             durationMinutes: 60,
             shuffleQuestions: false,
             showScore: true,
@@ -180,5 +188,79 @@ describe("the Assignment defaults card", () => {
     );
     expect(shuffle).toBeChecked();
     expect(screen.queryByText("Bạn có thay đổi chưa lưu.")).toBeNull();
+  });
+});
+
+describe("the Assignment defaults card's mode (F1)", () => {
+  const STRICT_HINT =
+    "Có thời gian làm bài, tính từ lúc học viên bấm Bắt đầu. Bạn chọn điều xảy ra khi học viên rời bài.";
+  const FLEXIBLE_HINT =
+    "Không giới hạn thời gian. Học viên được nghỉ giữa chừng và làm tiếp đến giờ đóng, trên thiết bị nào cũng được. Chuyển tab hay ứng dụng khi đang mở bài vẫn được ghi lại và bạn được báo; tạm nghỉ thì không tính.";
+
+  function modes() {
+    return within(screen.getByRole("group", { name: "Kiểu làm bài" }));
+  }
+
+  it("is the first row, strict when nothing is stored, with the wizard's line", () => {
+    renderSection();
+    const strict = modes().getByRole("button", { name: "Nghiêm ngặt" });
+    expect(strict).toHaveAttribute("aria-pressed", "true");
+    expect(strict).toHaveAccessibleDescription(STRICT_HINT);
+    const groups = screen
+      .getAllByRole("group")
+      .map((group) => group.getAttribute("aria-label"));
+    expect(groups.slice(0, 2)).toEqual(["Kiểu làm bài", "Thời gian làm bài"]);
+    expect(screen.getByText("Dùng cho bài Nghiêm ngặt.")).toBeVisible();
+  });
+
+  it("saves Flexible, keeps the time limit on show, and seeds a new draft with it", async () => {
+    const user = renderSection();
+
+    await user.click(modes().getByRole("button", { name: "Linh hoạt" }));
+    expect(
+      modes().getByRole("button", { name: "Linh hoạt" }),
+    ).toHaveAccessibleDescription(FLEXIBLE_HINT);
+    expect(screen.getByRole("group", { name: "Thời gian làm bài" })).toBeVisible();
+    expect(screen.getByText("Bạn có thay đổi chưa lưu.")).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Lưu thay đổi" }));
+
+    await waitFor(() =>
+      expect(bodies).toEqual([
+        {
+          assignmentDefaults: {
+            mode: "flexible",
+            durationMinutes: 45,
+            shuffleQuestions: false,
+            showScore: true,
+            blockCopyPaste: true,
+            requireFullscreen: false,
+          },
+        },
+      ]),
+    );
+    const stored = useAuthStore.getState().user?.preferences?.assignmentDefaults;
+    expect(emptyDraft(new Date("2026-10-10T09:00:00Z"), stored ?? {}).mode).toBe(
+      "flexible",
+    );
+  });
+
+  it("reads a stored Flexible, and choosing Strict again is a change Discard undoes", async () => {
+    signIn({
+      ...teacherUser,
+      preferences: { assignmentDefaults: { mode: "flexible" } },
+    });
+    const user = renderSection();
+    expect(modes().getByRole("button", { name: "Linh hoạt" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await user.click(modes().getByRole("button", { name: "Nghiêm ngặt" }));
+    expect(screen.getByText("Bạn có thay đổi chưa lưu.")).toBeVisible();
+    await user.click(screen.getByRole("button", { name: "Bỏ thay đổi" }));
+    expect(modes().getByRole("button", { name: "Linh hoạt" })).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    expect(bodies).toEqual([]);
   });
 });

@@ -9,6 +9,7 @@ const attemptId = "018f0000-0000-7000-8000-0000000000e1";
 
 function liveCard(): components["schemas"]["StudentAssignmentCard"] {
   return {
+    mode: "strict",
     id: assignmentId,
     testTitle: "Bài luyện tập buổi tối",
     classId,
@@ -29,6 +30,7 @@ function liveCard(): components["schemas"]["StudentAssignmentCard"] {
 function session(): components["schemas"]["AttemptSession"] {
   const now = new Date().toISOString();
   return {
+    mode: "strict",
     attempt: {
       id: attemptId,
       assignmentId,

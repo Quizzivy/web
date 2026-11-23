@@ -29,6 +29,7 @@ export function useLivePaperSource(): PaperSource {
   const submitState = useTakeTestStore((s) => s.submitState);
   const deadlineAt = useTakeTestStore((s) => s.deadlineAt);
   const offsetMs = useTakeTestStore((s) => s.offsetMs);
+  const mode = useTakeTestStore((s) => s.mode);
   const questionPlays = useTakeTestStore((s) => s.audioPlays);
   const notePlay = useTakeTestStore((s) => s.notePlay);
   const saveStatus = useSaveStatus();
@@ -97,6 +98,7 @@ export function useLivePaperSource(): PaperSource {
       deadlineAt,
       offsetMs,
       timeLeft: readTimeLeft,
+      mode,
       questionPlays,
       recordingPlays,
       pendingRecordings,
@@ -119,6 +121,7 @@ export function useLivePaperSource(): PaperSource {
       deadlineAt,
       offsetMs,
       readTimeLeft,
+      mode,
       questionPlays,
       recordingPlays,
       pendingRecordings,

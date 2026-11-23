@@ -1,5 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { useBlocker, useNavigate } from "react-router";
+import { recordPaperLeft } from "@/features/integrity/useIntegrityMonitor";
+import { readOpenQuestion } from "./openQuestion";
 import { useTakeTestStore } from "./store";
 
 /**
@@ -29,6 +31,17 @@ async function savePending(): Promise<boolean> {
   return store().lock !== null || store().dirty.size === 0;
 }
 
+/**
+ * noteBreak records `paper_left` for a flexible paper left by its ✕ (F1), on
+ * the question open at the time. The engine's beacon carries it as the page
+ * unmounts.
+ */
+function noteBreak(): void {
+  const { attemptId, mode, lock } = useTakeTestStore.getState();
+  if (attemptId === null || mode !== "flexible" || lock !== null) return;
+  recordPaperLeft(attemptId, readOpenQuestion(attemptId));
+}
+
 function phaseOf(
   step: LeavePhase,
   blocked: boolean,
@@ -56,7 +69,9 @@ function phaseOf(
  * save and says why in its own strip, so the ✕ leaves without asking, and a
  * dialog that is open when the lock arrives closes for good rather than say
  * that answers the lock rejected are saved. Closing the tab with an unsaved
- * answer raises the browser's own prompt.
+ * answer raises the browser's own prompt. Under a flexible assignment the ✕
+ * is a break, and its Leave records `paper_left` once the answers are saved,
+ * just before it goes.
  */
 export function useLeave(): Leave {
   const navigate = useNavigate();
@@ -117,8 +132,10 @@ export function useLeave(): Leave {
         return;
       }
       setStep("idle");
-      if (proceed === undefined) void navigate("/");
-      else proceed();
+      if (proceed === undefined) {
+        noteBreak();
+        void navigate("/");
+      } else proceed();
     });
   }, [navigate, proceed]);
 

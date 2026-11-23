@@ -8,7 +8,8 @@ import type { Locale } from "@/lib/i18n";
 
 /**
  * WizardAside is the deck's column beside the wizard: the summary lines,
- * what students will read on the Test intro (the same sentences, from
+ * with "Until the close" for the time limit under flexible, what students
+ * will read on the Test intro (the same sentences, from
  * `previewRules`), and how much grading by hand the assignment will make.
  * `students` is the roster's count, or null while it is being counted.
  * Beside the step from 794px of the wizard's container, it sticks as the
@@ -32,7 +33,9 @@ export function WizardAside({
     ],
     [
       t("assignments.wizard.aside.timeLimit"),
-      t("assignments.wizard.minutes", { count: draft.durationMinutes }),
+      draft.mode === "flexible"
+        ? t("assignments.wizard.aside.untilClose")
+        : t("assignments.wizard.minutes", { count: draft.durationMinutes }),
     ],
     [t("assignments.wizard.aside.attempts"), String(draft.maxAttempts)],
     [

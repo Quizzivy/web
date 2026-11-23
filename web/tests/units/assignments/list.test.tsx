@@ -41,6 +41,7 @@ function assignment(over: Record<string, unknown> = {}) {
       closesAt: "2026-08-31T14:00:00Z",
       closedAt: null,
     },
+    mode: "strict",
     durationMinutes: 45,
     maxAttempts: 1,
     shuffleQuestions: false,
@@ -867,6 +868,33 @@ describe("the assignments list on a phone", () => {
     expect(within(list).getByText(/IELTS Foundation · /)).toBeVisible();
     expect(screen.queryByRole("checkbox")).toBeNull();
     expect(screen.queryByRole("button", { name: /^Thao tác/ })).toBeNull();
+  });
+});
+
+describe("the mode chip (F1)", () => {
+  it("marks a flexible assignment and leaves a strict one as it was", async () => {
+    viewport("desktop");
+    items = [
+      assignment({ mode: "flexible" }),
+      assignment({ id: A2, testTitle: "Unit 6" }),
+    ];
+    renderList();
+    const rows = await table();
+    const [flexible, strict] = ["Unit 5", "Unit 6"].map((title) =>
+      rows.getAllByRole("row").find((row) => within(row).queryByText(title) !== null)!,
+    );
+    expect(within(flexible!).getByText("Linh hoạt")).toBeVisible();
+    expect(within(strict!).queryByText("Linh hoạt")).toBeNull();
+  });
+
+  it("starts the second line of a phone card", async () => {
+    viewport("phone");
+    items = [assignment({ mode: "flexible" })];
+    renderList();
+    const list = await screen.findByRole("list", { name: "Bài giao" });
+    const chip = within(list).getByText("Linh hoạt");
+    expect(chip.parentElement?.firstElementChild).toBe(chip);
+    expect(chip.parentElement).toHaveTextContent(/^Linh hoạtIELTS Foundation · /);
   });
 });
 

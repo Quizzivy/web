@@ -9,6 +9,11 @@ export function remainingMs(state: { deadlineAt: number; offsetMs: number }): nu
   return Math.max(0, state.deadlineAt - (Date.now() + state.offsetMs));
 }
 
+/** serverNow is the moment on the server's clock: the device's time corrected by `offsetMs`. */
+export function serverNow(offsetMs: number): Date {
+  return new Date(Date.now() + offsetMs);
+}
+
 /**
  * timeLeft is the time the student still has, in milliseconds on the server's
  * clock: zero once the server has refused a save because the time is up,

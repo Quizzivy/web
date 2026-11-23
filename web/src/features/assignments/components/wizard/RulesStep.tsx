@@ -140,15 +140,18 @@ export function ResultRules({
   );
 }
 
-/** IntegrityRules is the integrity policy (D8) with the honest limits of spec §10.5; the action on passing the limit waits for a limit. */
+/**
+ * IntegrityRules is the integrity policy (D8) with the honest limits of spec
+ * §10.5; the action on passing the limit waits for a limit. Under flexible,
+ * leaving is one fixed sentence in place of the limit and the action, which
+ * stay in the draft unchanged and unapplied (F1).
+ */
 export function IntegrityRules({
   draft,
   onChange,
 }: Readonly<{ draft: AssignmentDraft; onChange: (patch: RulesPatch) => void }>) {
   const { t } = useTranslation();
   const { integrity } = draft;
-  const mode = leavingMode(integrity.maxFocusLoss);
-  const unlimited = mode === "unlimited";
   return (
     <RuleGroup icon={ShieldCheck} title={t("assignments.wizard.integrity")}>
       <SwitchRow
@@ -163,6 +166,52 @@ export function IntegrityRules({
         checked={integrity.blockCopyPaste}
         onChange={(blockCopyPaste) => onChange({ integrity: { blockCopyPaste } })}
       />
+      {draft.mode === "flexible" ? (
+        <div className="flex flex-col gap-0.5 px-3.5 py-3">
+          <span className="text-ui leading-normal font-medium">
+            {t("assignments.wizard.leaving")}
+          </span>
+          <p className="max-w-[72ch] text-sm text-pretty">
+            {t("assignments.wizard.leavingFlexible", {
+              seconds: Math.round(integrity.minAwayMs / 1000),
+            })}
+          </p>
+        </div>
+      ) : (
+        <LeavingRules integrity={integrity} onChange={onChange} />
+      )}
+      <RuleRow
+        inline
+        label={t("assignments.wizard.away")}
+        hint={t("assignments.wizard.awayHint")}
+      >
+        <NumberStepper
+          label={t("assignments.wizard.away")}
+          value={Math.round(integrity.minAwayMs / 1000)}
+          min={0}
+          max={30}
+          format={(count) => t("assignments.wizard.seconds", { count })}
+          onChange={(seconds) => onChange({ integrity: { minAwayMs: seconds * 1000 } })}
+        />
+      </RuleRow>
+      <HonestyNote />
+    </RuleGroup>
+  );
+}
+
+/** LeavingRules is the strict leaving rule: no limit, not allowed or a limit, and the action on passing it, which waits for a limit. */
+function LeavingRules({
+  integrity,
+  onChange,
+}: Readonly<{
+  integrity: AssignmentDraft["integrity"];
+  onChange: (patch: RulesPatch) => void;
+}>) {
+  const { t } = useTranslation();
+  const mode = leavingMode(integrity.maxFocusLoss);
+  const unlimited = mode === "unlimited";
+  return (
+    <>
       <RuleRow
         label={t("assignments.wizard.leaving")}
         hint={t("assignments.wizard.leavingHint")}
@@ -247,35 +296,28 @@ export function IntegrityRules({
           }
         />
       </RuleRow>
-      <RuleRow
-        inline
-        label={t("assignments.wizard.away")}
-        hint={t("assignments.wizard.awayHint")}
-      >
-        <NumberStepper
-          label={t("assignments.wizard.away")}
-          value={Math.round(integrity.minAwayMs / 1000)}
-          min={0}
-          max={30}
-          format={(count) => t("assignments.wizard.seconds", { count })}
-          onChange={(seconds) => onChange({ integrity: { minAwayMs: seconds * 1000 } })}
-        />
-      </RuleRow>
-      <div className="bg-sidebar text-muted-fg text-meta flex gap-2 px-3.5 py-2.5 leading-normal">
-        <Info aria-hidden="true" className="mt-0.5 size-3.5 flex-none" />
-        <div className="min-w-0 flex-1">
-          <p>{t("assignments.wizard.honesty")}</p>
-          <details className="mt-1.5">
-            <summary className="text-fg w-fit cursor-pointer rounded-sm font-medium">
-              {t("assignments.wizard.limits.title")}
-            </summary>
-            <p className="mt-1.5">{t("assignments.wizard.limits.detects")}</p>
-            <p className="mt-1.5">{t("assignments.wizard.limits.cannotSee")}</p>
-            <p className="mt-1.5">{t("assignments.wizard.limits.conversation")}</p>
-          </details>
-        </div>
+    </>
+  );
+}
+
+/** HonestyNote is spec §10.5's honest limits: what a browser can record and what it cannot see. */
+function HonestyNote() {
+  const { t } = useTranslation();
+  return (
+    <div className="bg-sidebar text-muted-fg text-meta flex gap-2 px-3.5 py-2.5 leading-normal">
+      <Info aria-hidden="true" className="mt-0.5 size-3.5 flex-none" />
+      <div className="min-w-0 flex-1">
+        <p>{t("assignments.wizard.honesty")}</p>
+        <details className="mt-1.5">
+          <summary className="text-fg w-fit cursor-pointer rounded-sm font-medium">
+            {t("assignments.wizard.limits.title")}
+          </summary>
+          <p className="mt-1.5">{t("assignments.wizard.limits.detects")}</p>
+          <p className="mt-1.5">{t("assignments.wizard.limits.cannotSee")}</p>
+          <p className="mt-1.5">{t("assignments.wizard.limits.conversation")}</p>
+        </details>
       </div>
-    </RuleGroup>
+    </div>
   );
 }
 

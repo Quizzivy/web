@@ -5,6 +5,11 @@ export interface Buffered {
   sessionId: string;
   nextSeq: number;
   events: IntegrityEventInput[];
+  /**
+   * onBreak says the session's paper was left by its × under flexible (F1)
+   * and has not been opened again in this tab since.
+   */
+  onBreak?: boolean;
 }
 
 /** MAX_EVENTS_PER_REQUEST is the contract's `maxItems` for the events of one request. */
@@ -15,6 +20,15 @@ const SEQUENCE_BOUND = 2_000_000_000;
 
 let state: Buffered | null = null;
 let anchor: { attemptId: string; startedAt: number } | null = null;
+
+/**
+ * unstored holds, by attempt, a buffer the storage refused to keep, and is read
+ * when the storage cannot be read. A tab whose sessionStorage throws still
+ * holds its session in memory (heldSession), so the buffer outlasts the
+ * engine's unmount the same way: its numbering, the events no beacon took,
+ * and a break's mark (F1). A reload forgets it, as it forgets the session.
+ */
+const unstored = new Map<string, Buffered>();
 
 function storageKey(attemptId: string): string {
   return KEY_PREFIX + attemptId;
@@ -49,7 +63,7 @@ function read(attemptId: string): Buffered | null {
     const raw = sessionStorage.getItem(storageKey(attemptId));
     return raw === null ? null : (JSON.parse(raw) as Buffered);
   } catch {
-    return null;
+    return unstored.get(attemptId) ?? null;
   }
 }
 
@@ -57,8 +71,10 @@ function write(attemptId: string, next: Buffered): void {
   state = next;
   try {
     sessionStorage.setItem(storageKey(attemptId), JSON.stringify(next));
+    unstored.delete(attemptId);
   } catch {
     // In memory only. Worse on a reload, and no reason to stop.
+    unstored.set(attemptId, next);
   }
 }
 
@@ -100,6 +116,27 @@ export function record(
     nextSeq: clientSeq + 1,
     events: [...state.events, event],
   });
+}
+
+/**
+ * openBreak marks the session as on a break: its paper was left by the × (F1).
+ * The mark is stored with the buffer, so it outlasts the engine's unmount and
+ * a reload of the tab (only the unmount when the storage throws), and a
+ * buffer begun for another session drops it.
+ */
+export function openBreak(attemptId: string): void {
+  if (state === null) return;
+  write(attemptId, { ...state, onBreak: true });
+}
+
+/**
+ * closeBreak ends the session's break, once the session has begun again in
+ * this tab, and says whether there was one to end.
+ */
+export function closeBreak(attemptId: string): boolean {
+  if (state?.onBreak !== true) return false;
+  write(attemptId, { ...state, onBreak: false });
+  return true;
 }
 
 /** Everything waiting, without removing it. */
@@ -175,6 +212,7 @@ export function surrender(attemptId: string, sessionId: string): IntegrityEventI
  */
 export function clearSession(attemptId: string): void {
   state = null;
+  unstored.delete(attemptId);
   try {
     sessionStorage.removeItem(storageKey(attemptId));
   } catch {

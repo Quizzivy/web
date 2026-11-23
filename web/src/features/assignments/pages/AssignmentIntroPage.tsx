@@ -15,6 +15,7 @@ import {
   Maximize,
   MessageSquareText,
   Timer,
+  TimerOff,
   type LucideIcon,
 } from "lucide-react";
 import {
@@ -47,7 +48,7 @@ import {
 } from "@/lib/i18n/datetime";
 import { cn } from "@/lib/utils";
 import { continueAttempt, getMyAssignment, type StudentAssignmentDetail } from "../api";
-import { studentRules, type RuleKind } from "../studentRules";
+import { closeMoment, studentRules, type RuleKind } from "../studentRules";
 
 const COLUMN = "mx-auto flex w-full max-w-180 flex-col gap-4.5";
 const ACTION =
@@ -80,6 +81,16 @@ function refusal(cause: unknown, t: TFunction): string {
   return cause.message;
 }
 
+function resumeHint(a: Detail, now: Date, locale: Locale, t: TFunction): string {
+  if (a.mode === "flexible")
+    return t("student.intro.resumeHintFlexible", {
+      when: closeMoment(a.liveDeadlineAt ?? a.closesAt, now, t, locale),
+    });
+  return a.liveDeadlineAt == null
+    ? t("student.intro.startHint")
+    : t("student.intro.resumeHint", { time: clockTime(a.liveDeadlineAt, now, locale) });
+}
+
 function rereadIn(a: Detail, readAt: number): number {
   const away = Math.abs(Date.parse(a.opensAt) - readAt);
   return Math.min(Math.max(away, 5_000), 60_000);
@@ -94,6 +105,10 @@ function opensLabel(a: Detail, now: Date, locale: Locale, t: TFunction): string 
 }
 
 function startBody(a: Detail, now: Date, locale: Locale, t: TFunction): string {
+  if (a.mode === "flexible")
+    return t("student.intro.startBodyFlexible", {
+      when: closeMoment(a.closesAt, now, t, locale),
+    });
   const left = Math.floor((Date.parse(a.closesAt) - now.getTime()) / 60_000);
   return left < a.durationMinutes
     ? t("student.intro.startBodyShort", {
@@ -114,7 +129,10 @@ function startBody(a: Detail, now: Date, locale: Locale, t: TFunction): string {
  * a closed or used-up test says so in words. The page reads the assignment
  * afresh each time it opens and each time its tab is returned to; while it
  * waits to open, every minute and at the opening; and once more when an open
- * test's close passes. The server decides what the test's state is.
+ * test's close passes. The server decides what the test's state is. Under a
+ * flexible assignment (F1) there is no time limit: the duration reads "No
+ * timer", the rules say the student may stop and come back until the close,
+ * and the start dialog and the resume line name the close.
  */
 export default function AssignmentIntroPage() {
   useDisplayTimeZone();
@@ -183,8 +201,10 @@ export default function AssignmentIntroPage() {
   const a = detail.data;
   const live = a.hasLiveAttempt === true;
   const used = Math.min(a.attemptsUsed + (live ? 1 : 0), a.maxAttempts);
+  const flexible = a.mode === "flexible";
   const rules = studentRules(
     {
+      mode: a.mode,
       review: a.review,
       integrity: a.integrity,
       running: live,
@@ -214,7 +234,9 @@ export default function AssignmentIntroPage() {
   const facts = [
     {
       label: t("student.intro.duration"),
-      value: t("student.home.minutes", { count: a.durationMinutes }),
+      value: flexible
+        ? t("student.noTimer")
+        : t("student.home.minutes", { count: a.durationMinutes }),
     },
     { label: t("student.intro.questions"), value: String(a.questionCount) },
     {
@@ -255,7 +277,7 @@ export default function AssignmentIntroPage() {
         </h2>
         <ul>
           {rules.map((rule) => {
-            const Icon = ICON[rule.kind];
+            const Icon = flexible && rule.kind === "timer" ? TimerOff : ICON[rule.kind];
             return (
               <li
                 key={rule.id}
@@ -423,13 +445,7 @@ function Action({
           {t("student.resume")}
           <ArrowRight aria-hidden="true" className="size-[18px]" />
         </Button>
-        <span className={HINT}>
-          {a.liveDeadlineAt == null
-            ? t("student.intro.startHint")
-            : t("student.intro.resumeHint", {
-                time: clockTime(a.liveDeadlineAt, now, locale),
-              })}
-        </span>
+        <span className={HINT}>{resumeHint(a, now, locale, t)}</span>
       </div>
     );
 

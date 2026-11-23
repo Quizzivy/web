@@ -100,6 +100,22 @@ export function hourRange(
   return { first: Math.max(0, first), last: Math.min(24, last) };
 }
 
+/**
+ * openingHour is the hour the grid opens on, at the top of its card: the
+ * deck's 08:00, or the hour of the week's first session when one starts
+ * earlier. A test that opens or closes before then grows the grid upward
+ * without moving that window, so the week's sessions stay in view and the
+ * earlier hours are a scroll up.
+ */
+export function openingHour(
+  sessions: readonly Span[],
+  range: Readonly<{ first: number; last: number }>,
+): number {
+  let hour = FIRST_HOUR;
+  for (const span of sessions) hour = Math.min(hour, Math.floor(span.start / 60));
+  return Math.max(range.first, hour);
+}
+
 /** Box is an event's place in its day column, in pixels from the first hour's line. */
 export type Box = Readonly<{ top: number; height: number }>;
 

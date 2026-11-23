@@ -231,6 +231,44 @@ describe("Calendar: the week grid", () => {
     expect(evening.style.top).toBe(`${11 * 44 + 1}px`);
   });
 
+  it("opens on 08:00 when a test before it grows the grid, and on an earlier first session", async () => {
+    const early = (from: string, hours: number) => ({
+      kind: "closes" as const,
+      at: new Date(Date.parse(`${from}T00:00:00+07:00`) + (2 * 24 + hours) * 3_600_000)
+        .toISOString()
+        .replace(".000Z", "Z"),
+      assignmentId: DECK_ASSIGNMENTS.reading,
+      title: "Reading Mock",
+      classNames: ["IELTS 6.5 Evening"],
+    });
+    serveWeeks((from) => {
+      const week = deckWeek(from);
+      return {
+        ...week,
+        assignmentEvents: [...week.assignmentEvents, early(from, 2.75)],
+      };
+    });
+    const { router } = renderPage();
+    const wednesday = await day("Th 4, 24 thg 9");
+    expect(wednesday.style.height).toBe(`${20 * 44}px`);
+    const scroller = document.querySelector<HTMLElement>(
+      "[data-slot='week-scroller']",
+    )!;
+    expect(scroller.scrollTop).toBe(6 * 44);
+
+    serveWeeks((from) => {
+      const week = deckWeek(from, { grown: true });
+      return { ...week, assignmentEvents: [...week.assignmentEvents, early(from, 5)] };
+    });
+    await act(() => router.navigate("/teacher/calendar?week=2025-W40"));
+    await waitFor(() =>
+      expect(screen.getByRole("group", { name: "Th 2, 29 thg 9" }).style.height).toBe(
+        `${17 * 44}px`,
+      ),
+    );
+    expect(scroller.scrollTop).toBe(2 * 44);
+  });
+
   it("opens the assignment from a test's opening or closing", async () => {
     serveWeeks((from) => deckWeek(from));
     renderPage();

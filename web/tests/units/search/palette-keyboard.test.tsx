@@ -310,6 +310,7 @@ describe("the command palette as it opens", () => {
       "Lớp học",
       "Tin nhắn",
       "Thư viện media",
+      "Lịch",
       "Cài đặt",
     ]);
     expect(asked.some(({ path }) => path === "/teacher/tests")).toBe(false);
@@ -329,6 +330,19 @@ describe("the command palette as it opens", () => {
     await waitFor(() => expect(pages()).toEqual(["Tin nhắn"]));
     await user.keyboard("{Enter}");
     expect(await screen.findByText("/teacher/messages")).toBeVisible();
+  });
+
+  it("offers Calendar to every teacher, opening it", async () => {
+    grant([]);
+    const user = renderPalette();
+    const pages = () =>
+      within(list().getByRole("group", { name: "Trang" }))
+        .getAllByRole("option")
+        .map((option) => option.textContent);
+    await user.type(screen.getByRole("combobox"), "lich");
+    await waitFor(() => expect(pages()).toEqual(["Lịch"]));
+    await user.keyboard("{Enter}");
+    expect(await screen.findByText("/teacher/calendar")).toBeVisible();
   });
 
   it("leaves out a page and a group the user cannot open", async () => {

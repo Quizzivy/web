@@ -385,6 +385,7 @@
     },
     "nav": {
       "dashboard": "Dashboard",
+      "calendar": "Calendar",
       "assignments": "Assignments",
       "grading": "Grading",
       "classes": "Classes",
@@ -4261,6 +4262,49 @@
       "dimensions": "The image is larger than 10000 × 10000 pixels. Choose a smaller one.",
       "limit": "Too many uploads in an hour. Try again later.",
       "failed": "The file could not be uploaded. Try again."
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "weekNav": "Week",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "today": "Today",
+    "addSession": "Session",
+    "legend": {
+      "label": "Legend",
+      "session": "Class session",
+      "closes": "Test closes",
+      "opens": "Test opens"
+    },
+    "event": {
+      "opens": "{{title}} opens",
+      "closes": "{{title}} closes",
+      "cancelled": "Cancelled"
+    },
+    "testWindow": "Test window",
+    "agendaToday": "Today · {{day}}",
+    "empty": "No sessions this week.",
+    "failed": "Could not load the calendar.",
+    "new": {
+      "title": "New session",
+      "class": "Class",
+      "classPlaceholder": "Choose a class",
+      "date": "Date",
+      "starts": "Starts",
+      "length": "Length",
+      "minutes": "{{n}} min",
+      "room": "Room",
+      "roomPlaceholder": "Room 2",
+      "repeat": "Repeat every week",
+      "untilTerm": "Until {{date}}",
+      "untilStopped": "Until you stop it",
+      "submit": "Add session",
+      "added": "Session added · {{class}}, {{time}}",
+      "failed": "Could not add the session. Please try again.",
+      "archived": "This class is archived, so it takes no new session.",
+      "dateTooFar": "Choose a date within the next two years.",
+      "noClasses": "You have no class yet. Create one before adding a session."
     }
   }
 }

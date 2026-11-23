@@ -24,8 +24,8 @@ importers:
         specifier: ^5.9.1
         version: 5.9.1(@standard-schema/spec@1.1.0)(ajv-formats@3.0.1(ajv@8.20.0))(ajv@8.20.0)(react-hook-form@7.86.0(react@19.2.8))(zod@4.4.3)
       '@quizzivy/sdk':
-        specifier: 0.14.1-dev.202611180258.g7aa52cc
-        version: 0.14.1-dev.202611180258.g7aa52cc
+        specifier: 0.14.2-dev.202611230156.g512db48
+        version: 0.14.2-dev.202611230156.g512db48
       '@radix-ui/react-dialog':
         specifier: ^1.1.15
         version: 1.1.23(@types/react-dom@19.2.5(@types/react@19.2.18))(@types/react@19.2.18)(react-dom@19.2.8(react@19.2.8))(react@19.2.8)
@@ -787,8 +787,8 @@ packages:
     engines: {node: '>=20'}
     hasBin: true
 
-  '@quizzivy/sdk@0.14.1-dev.202611180258.g7aa52cc':
-    resolution: {integrity: sha512-B70PXRZ2m7oWCED9Gj6G1rKDC5Esk6G1+n3VjosoMckO/yyBWX0dKCg1B9RGKKM9Y3AX6nMiopbJOHDwgcTCQA==, tarball: https://npm.pkg.github.com/download/@quizzivy/sdk/0.14.1-dev.202611180258.g7aa52cc/736392f6be98fd27db841a2e1ac25f13b09fb93c}
+  '@quizzivy/sdk@0.14.2-dev.202611230156.g512db48':
+    resolution: {integrity: sha512-AEu+OUMxGmfR2DdRc6zb6F/aC+9+KBNq17mXh7+XaG1cUGZ8JsPffMWm3hWFdvURnGmERMvgfU4PgMb50eNZaQ==, tarball: https://npm.pkg.github.com/download/@quizzivy/sdk/0.14.2-dev.202611230156.g512db48/68cf4f02558f8b61afde7b32dfa5b9db8c6748e2}
 
   '@radix-ui/number@1.1.3':
     resolution: {integrity: sha512-Road2bidD0uu/1BGDOWNdPI06g0lIRy6IF9GZcIrDK2KGItfor8IQwQa+yM2ERgHM1MmHxaxpTzk0/Jp42lNfA==}
@@ -4661,7 +4661,7 @@ snapshots:
     dependencies:
       playwright: 1.62.1
 
-  '@quizzivy/sdk@0.14.1-dev.202611180258.g7aa52cc': {}
+  '@quizzivy/sdk@0.14.2-dev.202611230156.g512db48': {}
 
   '@radix-ui/number@1.1.3': {}
 

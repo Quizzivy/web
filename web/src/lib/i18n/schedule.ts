@@ -211,3 +211,74 @@ export function wallClock(instant: string | Date, zone: string): WallClock {
   ).split(" ");
   return { date, minutes: minutesOf(time) };
 }
+
+/**
+ * ClassScheduleLike is the contract's `ClassSchedule`: the weekly slots the
+ * class's repeating sessions give it, and the free-text label its teacher
+ * typed (R4's `scheduleLabel`), `null` for none.
+ */
+export type ClassScheduleLike = Readonly<{
+  slots: readonly ScheduleSlot[];
+  label: string | null;
+}>;
+
+const NO_SCHEDULE: Record<Locale, string> = {
+  vi: "Chưa có lịch học",
+  en: "No schedule yet",
+};
+
+/**
+ * formatSchedule is a class's schedule without its room: the slots as
+ * `formatSlots` writes them, else the label, else "" (as for `null`, a join
+ * preview whose class has neither).
+ */
+export function formatSchedule(
+  schedule: ClassScheduleLike | null | undefined,
+  locale: Locale,
+): string {
+  if (!schedule) return "";
+  const slots = formatSlots(schedule.slots, locale);
+  if (slots !== "") return slots;
+  return schedule.label?.trim() ?? "";
+}
+
+/**
+ * formatScheduleLine is the line every class surface shows under a class's
+ * name (T-R8.14): the schedule, then the room after " · " ("T2 · T4 · T6,
+ * 18:00 · Phòng 2"). A class with neither slots nor a label reads "Chưa có
+ * lịch học" ("No schedule yet"), its room still following; with `fallback`
+ * false, as on the public join preview, it reads only its room, or "".
+ */
+export function formatScheduleLine(
+  schedule: ClassScheduleLike | null | undefined,
+  room: string | null | undefined,
+  locale: Locale,
+  options: Readonly<{ fallback?: boolean }> = {},
+): string {
+  const { fallback = true } = options;
+  const when =
+    formatSchedule(schedule, locale) || (fallback ? NO_SCHEDULE[locale] : "");
+  return [when, room?.trim() ?? ""].filter((part) => part !== "").join(" · ");
+}
+
+/**
+ * nextSlotDate is the date of a class's next weekly meeting, from `today` at
+ * `minutes` after midnight on the same wall clock: today's own slot counts
+ * until it has ended. No slot gives null.
+ */
+export function nextSlotDate(
+  slots: readonly ScheduleSlot[],
+  today: string,
+  minutes: number,
+): string | null {
+  const weekday = weekdayOf(today);
+  let soonest: number | null = null;
+  for (const { weekday: day, startTime, durationMinutes = 0 } of slots) {
+    let ahead = (slot(day) + 1 - weekday + 7) % 7;
+    if (ahead === 0 && minutesOf(startTime) + durationMinutes <= minutes) ahead = 7;
+    if (soonest === null || ahead < soonest) soonest = ahead;
+  }
+  if (soonest === null) return null;
+  const [year, month, day] = parts(today);
+  return new Date(Date.UTC(year, month - 1, day + soonest)).toISOString().slice(0, 10);
+}

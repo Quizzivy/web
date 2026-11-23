@@ -20,6 +20,7 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import type { ClassListItem } from "@/features/classes/api";
+import { formatScheduleLine } from "@/lib/i18n/schedule";
 import { useLocale } from "@/lib/i18n/useLocale";
 import { cn } from "@/lib/utils";
 
@@ -46,7 +47,8 @@ const FOOTER_BUTTON =
 
 /**
  * ClassCard is one class of the Classes list, as the deck draws it: the
- * name, which opens the class, over "{schedule} · {room}"; its students,
+ * name, which opens the class, over "{schedule} · {room}", the schedule
+ * worked out from its repeating sessions where it has any; its students,
  * live tests and average; and a footer with the join code in full, mono,
  * with Copy join link and Show QR code. A code that cannot be read shows its
  * last four characters and, for a teacher who may change the class, New
@@ -77,7 +79,6 @@ export function ClassCard({
   const { t } = useTranslation();
   const locale = useLocale();
   const archived = klass.archivedAt !== null;
-  const where = [klass.scheduleLabel, klass.room].filter(Boolean).join(" · ");
   const percent =
     klass.averageScore && klass.averageScore.total > 0
       ? Math.round((klass.averageScore.earned / klass.averageScore.total) * 100)
@@ -97,7 +98,7 @@ export function ClassCard({
               </Link>
             </h2>
             <p className="text-muted-fg text-meta leading-4 [overflow-wrap:anywhere]">
-              {where === "" ? t("classes.noSchedule") : where}
+              {formatScheduleLine(klass.schedule, klass.room, locale)}
             </p>
           </div>
           {canWrite ? <CardMenu klass={klass} joinOff={joinOff} {...actions} /> : null}

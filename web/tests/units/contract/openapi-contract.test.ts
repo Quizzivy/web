@@ -241,3 +241,48 @@ describe("a student's Messages carry nothing of the staff side (T-R7.10b, T-R7.2
     expect(reached).toContain("ContextEvent");
   });
 });
+
+describe("the public join preview says what a flyer says, and nothing more (T-R8.7, DG-02)", () => {
+  // The Go pin is server/internal/core/router/tests/join_preview_test.go's
+  // TestTheSuccessBodyHasExactlyFiveKeys: both list these five keys.
+  const FIVE = ["classId", "className", "teacherName", "schedule", "room"];
+  const preview = ops.find((o) => o.op["operationId"] === "previewJoinCode");
+
+  it("is the public POST /join/preview", () => {
+    expect(preview?.path).toBe("/join/preview");
+    expect(preview?.method).toBe("post");
+    expect(preview && isPublic(preview.op)).toBe(true);
+  });
+
+  it("answers exactly five properties, all required, and no others allowed", () => {
+    const body = preview && jsonResponseSchema(preview.op, 200);
+    const keys = Object.keys(body?.properties ?? {});
+    const required: string[] = body?.required ?? [];
+    expect(keys).toHaveLength(FIVE.length);
+    expect(new Set(keys)).toEqual(new Set(FIVE));
+    expect(required).toHaveLength(FIVE.length);
+    expect(new Set(required)).toEqual(new Set(FIVE));
+    expect(body?.additionalProperties).toBe(false);
+  });
+
+  it("carries the weekly pattern only: slots and a label, no date, note or count", () => {
+    const schedule = resolveRef(doc, "#/components/schemas/ClassSchedule") as Json;
+    expect(new Set(Object.keys(schedule.properties))).toEqual(
+      new Set(["label", "slots"]),
+    );
+    const slot = resolveRef(doc, "#/components/schemas/ScheduleSlot") as Json;
+    expect(new Set(Object.keys(slot.properties))).toEqual(
+      new Set(["durationMinutes", "startTime", "weekday"]),
+    );
+    const names = preview ? successNames(preview.op) : new Set<string>();
+    for (const key of [
+      "studentCount",
+      "memberCount",
+      "count",
+      "date",
+      "note",
+      "cancelled",
+    ])
+      expect(names, `the preview answers ${key}`).not.toContain(key);
+  });
+});

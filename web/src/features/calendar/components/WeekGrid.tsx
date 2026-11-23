@@ -1,4 +1,4 @@
-import type { ReactNode } from "react";
+import { useLayoutEffect, useRef, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Skeleton } from "@/components/ui/skeleton";
 import {
@@ -15,6 +15,7 @@ import {
   hourRange,
   lanes,
   nowTop,
+  openingHour,
   type CalendarItem,
 } from "../week";
 import type { OpenSession } from "../items";
@@ -39,6 +40,9 @@ const COLUMNS = "grid grid-cols-[56px_repeat(7,minmax(0,1fr))]";
  * day names and dates. The body starts 10px under the header, so the 08:00
  * label is never under it (drawing 5). Hour rows are 44px from 08:00 to
  * 22:00, grown to whole hours for any event the week holds outside them.
+ * The card opens scrolled to `openingHour`, the deck's 08:00 or the week's
+ * first session before it, once the week has arrived and again for another
+ * week; a read that changes nothing leaves the reader's scroll alone.
  * Today's header is tinted and its date in the accent's ink; the weekend's
  * columns are on the sidebar's ground; today's column carries the red
  * now-line with its dot, which moves without a transition for a reader who
@@ -79,6 +83,16 @@ export function WeekGrid({
   );
   const height = hours.length * HOUR_PX;
   const line = nowTop(nowMinutes, range);
+  const opening = openingHour(
+    items.flat().flatMap((item) => (item.kind === "session" ? [item.span] : [])),
+    range,
+  );
+  const scroller = useRef<HTMLDivElement>(null);
+  const week = days[0];
+  useLayoutEffect(() => {
+    if (loading || scroller.current === null) return;
+    scroller.current.scrollTop = (opening - range.first) * HOUR_PX;
+  }, [week, loading, opening, range.first]);
   return (
     <section
       aria-label={label}
@@ -86,6 +100,7 @@ export function WeekGrid({
       className="bg-card shadow-card overflow-hidden rounded-xl border"
     >
       <div
+        ref={scroller}
         data-slot="week-scroller"
         className="relative max-h-[600px] [scrollbar-gutter:stable] overflow-x-hidden overflow-y-auto"
       >

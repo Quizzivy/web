@@ -9,6 +9,7 @@ import {
   mondayOf,
   mondayOfIsoWeek,
   nowTop,
+  openingHour,
   weekDays,
 } from "@/features/calendar/week";
 import type { Calendar, ClassSession } from "@/features/calendar/api";
@@ -94,6 +95,20 @@ describe("the week grid's geometry", () => {
   it("grows for a test that closes at 21:30, whose least height reaches past 22:00", () => {
     expect(hourRange([{ start: 21 * 60 + 30, minutes: 45 }]).last).toBe(23);
     expect(hourRange([{ start: 21 * 60, minutes: 45 }]).last).toBe(22);
+  });
+
+  it("opens on 08:00, or on an earlier first session, never above the grid's first hour", () => {
+    const evening = { start: 18 * 60, minutes: 90 };
+    expect(openingHour([evening], { first: 8, last: 22 })).toBe(8);
+    expect(openingHour([], { first: 8, last: 22 })).toBe(8);
+    // A test closing at 02:45 grows the grid to 02:00; the card still opens on 08:00.
+    expect(openingHour([evening], { first: 2, last: 22 })).toBe(8);
+    expect(
+      openingHour([{ start: 7 * 60, minutes: 90 }, evening], { first: 2, last: 22 }),
+    ).toBe(7);
+    expect(
+      openingHour([{ start: 6 * 60 + 30, minutes: 60 }], { first: 6, last: 22 }),
+    ).toBe(6);
   });
 
   it("puts the now-line where the minute falls, and nowhere outside the hours", () => {

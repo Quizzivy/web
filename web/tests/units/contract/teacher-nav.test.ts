@@ -54,7 +54,7 @@ function teacherPaths(): Set<string> {
 
 describe("the teacher sidebar against the contract", () => {
   it("opens, with each destination, a list the contract has, under the permission it declares", () => {
-    expect(ITEMS).toHaveLength(11);
+    expect(ITEMS).toHaveLength(12);
     expect(disagreements(ITEMS)).toEqual([]);
   });
 

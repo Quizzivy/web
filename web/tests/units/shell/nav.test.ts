@@ -5,7 +5,7 @@ import { adminUser, assistantUser, teacherUser } from "@tests/support/fixtures";
 
 const WHOLE = [
   ["home", ["dashboard", "calendar", "messages"]],
-  ["teaching", ["assignments", "grading", "classes", "students"]],
+  ["teaching", ["assignments", "grading", "classes", "students", "attendance"]],
   ["content", ["tests", "shared", "bank", "media"]],
 ];
 
@@ -18,7 +18,7 @@ function shown(user: Parameters<typeof navFor>[0]) {
 }
 
 describe("the teacher sidebar's destinations", () => {
-  it("are the deck's eleven for R8, in its order, under its three groups", () => {
+  it("are the deck's twelve for R8, Calendar after Dashboard and Attendance after Students, in its order, under its three groups", () => {
     expect(
       TEACHER_NAV.map((group) => [
         group.label,
@@ -40,6 +40,7 @@ describe("the teacher sidebar's destinations", () => {
           ["teacherShell.nav.grading", "/teacher/grading"],
           ["teacherShell.nav.classes", "/teacher/classes"],
           ["teacherShell.nav.students", "/teacher/students"],
+          ["teacherShell.nav.attendance", "/teacher/attendance"],
         ],
       ],
       [
@@ -98,6 +99,17 @@ describe("the sidebar a user sees", () => {
     ["an assistant", assistantUser],
   ])("is whole for %s", (_who, user) => {
     expect(shown(user)).toEqual(WHOLE);
+  });
+
+  it("has Attendance only for a role holding teaching.attendance, as listAttendanceSessions declares", () => {
+    expect(shown(role(["teaching.attendance"]))[1]).toEqual([
+      "teaching",
+      ["assignments", "classes", "attendance"],
+    ]);
+    expect(shown(role(["people.students.read"]))[1]).toEqual([
+      "teaching",
+      ["assignments", "classes", "students"],
+    ]);
   });
 
   it("has no Students for a role without people.students.read", () => {

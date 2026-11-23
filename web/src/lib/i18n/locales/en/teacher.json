@@ -390,6 +390,7 @@
       "grading": "Grading",
       "classes": "Classes",
       "students": "Students",
+      "attendance": "Attendance",
       "tests": "Tests",
       "sharedWithMe": "Shared with me",
       "questionBank": "Question bank",
@@ -417,7 +418,119 @@
   "changePassword": {
     "hint": "At least 8 characters, with a number or symbol."
   },
+  "attendance": {
+    "title": "Attendance",
+    "lead": "Take the register for today’s classes, or catch up on sessions you missed.",
+    "todayTitle": "Today · {{date}}",
+    "classes_one": "{{count}} class",
+    "classes_other": "{{count}} classes",
+    "owedTitle": "Needs a register",
+    "owedSub": "Past sessions with no attendance taken",
+    "recentTitle": "Recent",
+    "recentSub": "Last 7 days",
+    "today": "Today",
+    "students_one": "{{count}} student",
+    "students_other": "{{count}} students",
+    "savedCounts": "{{p}} present · {{l}} late · {{a}} absent",
+    "chip": {
+      "today": "Not taken yet",
+      "missing": "Not taken",
+      "saved": "Saved",
+      "savedAt": "Saved {{time}}",
+      "notStarted": "Not started",
+      "cancelled": "Cancelled"
+    },
+    "take": "Take attendance",
+    "takeFor": "Take attendance for {{name}}, {{time}}",
+    "open": "Open",
+    "openFor": "Open {{name}}, {{time}}",
+    "empty": {
+      "today": "No classes have started today.",
+      "owed": "All caught up.",
+      "recent": "Nothing yet."
+    },
+    "pageFailed": "Could not load the sessions.",
+    "picker": {
+      "button": "Choose a session: {{label}}",
+      "title": "Sessions",
+      "saved": "Saved",
+      "missing": "Not taken",
+      "more": "Load more"
+    },
+    "search": "Search students",
+    "markAll": "Mark all present",
+    "markRest": "Mark the rest present",
+    "progress": "{{k}} of {{n}} marked",
+    "progressAll": "All {{n}} marked",
+    "filterLabel": "Filter by status",
+    "status": {
+      "present": "Present",
+      "late": "Late",
+      "absent": "Absent",
+      "none": "Not marked"
+    },
+    "mark": {
+      "present": "Mark present",
+      "late": "Mark late",
+      "absent": "Mark absent"
+    },
+    "col": {
+      "student": "Student",
+      "term": "This term",
+      "overall": "Overall",
+      "status": "Status",
+      "note": "Note"
+    },
+    "registerLabel": "Register",
+    "rosterLabel": "Students",
+    "radioLabel": "Attendance",
+    "note": {
+      "add": "Note",
+      "addFor": "Note for {{name}}",
+      "of": "Note for {{name}}:",
+      "title": "Note for {{name}}",
+      "description": "Only you and co-teachers see it.",
+      "label": "Note",
+      "placeholder": "e.g. Left early for a doctor’s appointment",
+      "save": "Save note"
+    },
+    "noMatch": "No student matches “{{q}}”",
+    "nobody": "Nobody here yet.",
+    "footer": "Late counts as present in the attendance rate.",
+    "dirty_one": "{{count}} change not saved",
+    "dirty_other": "{{count}} changes not saved",
+    "dirtyUnmarked_one": "{{count}} not marked yet",
+    "dirtyUnmarked_other": "{{count}} not marked yet",
+    "save": "Save attendance",
+    "savedToast": "Attendance saved · {{a}} absent, {{l}} late",
+    "saveFailed": "Could not save the register. Please try again.",
+    "unmarked": {
+      "title_one": "Save with {{count}} not marked?",
+      "title_other": "Save with {{count}} not marked?",
+      "body": "Students you have not marked stay unmarked and are left out of the attendance rate.",
+      "confirm": "Save anyway"
+    },
+    "leave": {
+      "title": "Discard the unsaved register?",
+      "body": "The marks you have not saved on this session will be lost.",
+      "confirm": "Discard",
+      "stay": "Stay"
+    },
+    "noSessions": "No sessions yet.",
+    "addInCalendar": "Add one in Calendar",
+    "notStarted": "This session has not started. Attendance opens 15 minutes before it.",
+    "cancelled": "This session was cancelled, so no attendance is taken.",
+    "registerFailed": "Could not load the register.",
+    "sessionMissing": "This session is not one of this class’s."
+  },
   "classDetail": {
+    "tabs": {
+      "label": "Class sections",
+      "overview": "Overview",
+      "attendance": "Attendance",
+      "attendanceNotMarked_one": "Attendance, {{count}} session not taken",
+      "attendanceNotMarked_other": "Attendance, {{count}} sessions not taken"
+    },
     "joinCode": "Join code",
     "codeCopied": "Code copied",
     "copyCode": "Copy code",

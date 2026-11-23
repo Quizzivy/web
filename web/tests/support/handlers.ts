@@ -5,6 +5,7 @@ import {
   myClass,
   notificationDefaults,
   sampleClass,
+  sampleTerms,
   studentUser,
 } from "./fixtures";
 
@@ -111,6 +112,22 @@ export const handlers = [
       classId: sampleClass.id,
       className: sampleClass.name,
       teacherName: "Thuong",
+      schedule: null,
+      room: null,
+    }),
+  ),
+
+  http.get(`${BASE}/admin/settings/terms`, () =>
+    contractJson("/admin/settings/terms", "get", 200, { items: sampleTerms }),
+  ),
+
+  // A class's Attendance tab reads its latest session for the badge; no
+  // session has started unless a test says so.
+  http.get(`${BASE}/teacher/attendance/sessions`, () =>
+    contractJson("/teacher/attendance/sessions", "get", 200, {
+      items: [],
+      nextBefore: null,
+      notMarked: 0,
     }),
   ),
 

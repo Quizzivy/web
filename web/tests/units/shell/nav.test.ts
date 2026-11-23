@@ -4,8 +4,8 @@ import type { PermissionKey, Workspace } from "@/features/auth/permissions";
 import { adminUser, assistantUser, teacherUser } from "@tests/support/fixtures";
 
 const WHOLE = [
-  ["home", ["dashboard", "messages"]],
-  ["teaching", ["assignments", "grading", "classes", "students"]],
+  ["home", ["dashboard", "calendar", "messages"]],
+  ["teaching", ["assignments", "grading", "classes", "students", "attendance"]],
   ["content", ["tests", "shared", "bank", "media"]],
 ];
 
@@ -18,7 +18,7 @@ function shown(user: Parameters<typeof navFor>[0]) {
 }
 
 describe("the teacher sidebar's destinations", () => {
-  it("are the deck's ten for R7, in its order, under its three groups", () => {
+  it("are the deck's twelve for R8, Calendar after Dashboard and Attendance after Students, in its order, under its three groups", () => {
     expect(
       TEACHER_NAV.map((group) => [
         group.label,
@@ -29,6 +29,7 @@ describe("the teacher sidebar's destinations", () => {
         undefined,
         [
           ["teacherShell.nav.dashboard", "/teacher"],
+          ["teacherShell.nav.calendar", "/teacher/calendar"],
           ["messages.title", "/teacher/messages"],
         ],
       ],
@@ -39,6 +40,7 @@ describe("the teacher sidebar's destinations", () => {
           ["teacherShell.nav.grading", "/teacher/grading"],
           ["teacherShell.nav.classes", "/teacher/classes"],
           ["teacherShell.nav.students", "/teacher/students"],
+          ["teacherShell.nav.attendance", "/teacher/attendance"],
         ],
       ],
       [
@@ -99,9 +101,20 @@ describe("the sidebar a user sees", () => {
     expect(shown(user)).toEqual(WHOLE);
   });
 
+  it("has Attendance only for a role holding teaching.attendance, as listAttendanceSessions declares", () => {
+    expect(shown(role(["teaching.attendance"]))[1]).toEqual([
+      "teaching",
+      ["assignments", "classes", "attendance"],
+    ]);
+    expect(shown(role(["people.students.read"]))[1]).toEqual([
+      "teaching",
+      ["assignments", "classes", "students"],
+    ]);
+  });
+
   it("has no Students for a role without people.students.read", () => {
     expect(shown(role(["teaching.grading", "content.tests.write"]))).toEqual([
-      ["home", ["dashboard", "messages"]],
+      ["home", ["dashboard", "calendar", "messages"]],
       ["teaching", ["assignments", "grading", "classes"]],
       ["content", ["tests", "shared", "bank", "media"]],
     ]);
@@ -110,7 +123,7 @@ describe("the sidebar a user sees", () => {
   it("has no Grading for a role with neither grading key", () => {
     expect(shown(role(["people.students.read", "teaching.assignments.write"]))).toEqual(
       [
-        ["home", ["dashboard", "messages"]],
+        ["home", ["dashboard", "calendar", "messages"]],
         ["teaching", ["assignments", "classes", "students"]],
         ["content", ["tests", "shared", "bank", "media"]],
       ],
@@ -127,9 +140,9 @@ describe("the sidebar a user sees", () => {
     },
   );
 
-  it("is the eight workspace destinations, in order, for a role with no key at all", () => {
+  it("is the nine workspace destinations, in order, for a role with no key at all", () => {
     expect(shown(role([]))).toEqual([
-      ["home", ["dashboard", "messages"]],
+      ["home", ["dashboard", "calendar", "messages"]],
       ["teaching", ["assignments", "classes"]],
       ["content", ["tests", "shared", "bank", "media"]],
     ]);

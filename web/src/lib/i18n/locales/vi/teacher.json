@@ -361,10 +361,12 @@
     },
     "nav": {
       "dashboard": "Tổng quan",
+      "calendar": "Lịch",
       "assignments": "Bài giao",
       "grading": "Chấm bài",
       "classes": "Lớp học",
       "students": "Học viên",
+      "attendance": "Điểm danh",
       "tests": "Đề thi",
       "sharedWithMe": "Được chia sẻ với tôi",
       "questionBank": "Ngân hàng câu hỏi",
@@ -388,7 +390,113 @@
   "changePassword": {
     "hint": "Ít nhất 8 ký tự, có số hoặc ký hiệu."
   },
+  "attendance": {
+    "title": "Điểm danh",
+    "lead": "Điểm danh cho các lớp hôm nay, hoặc bổ sung cho những buổi bạn bỏ sót.",
+    "todayTitle": "Hôm nay · {{date}}",
+    "classes_other": "{{count}} lớp",
+    "owedTitle": "Cần điểm danh",
+    "owedSub": "Buổi đã qua mà chưa điểm danh",
+    "recentTitle": "Gần đây",
+    "recentSub": "7 ngày qua",
+    "today": "Hôm nay",
+    "students_other": "{{count}} học viên",
+    "savedCounts": "{{p}} có mặt · {{l}} muộn · {{a}} vắng",
+    "chip": {
+      "today": "Chưa điểm danh",
+      "missing": "Bỏ sót",
+      "saved": "Đã lưu",
+      "savedAt": "Đã lưu {{time}}",
+      "notStarted": "Chưa bắt đầu",
+      "cancelled": "Đã huỷ"
+    },
+    "take": "Điểm danh",
+    "takeFor": "Điểm danh {{name}}, {{time}}",
+    "open": "Mở",
+    "openFor": "Mở {{name}}, {{time}}",
+    "empty": {
+      "today": "Hôm nay chưa có lớp nào bắt đầu.",
+      "owed": "Đã điểm danh đủ.",
+      "recent": "Chưa có gì."
+    },
+    "pageFailed": "Không tải được danh sách buổi học.",
+    "picker": {
+      "button": "Chọn buổi học: {{label}}",
+      "title": "Buổi học",
+      "saved": "Đã lưu",
+      "missing": "Bỏ sót",
+      "more": "Tải thêm"
+    },
+    "search": "Tìm học viên",
+    "markAll": "Đánh dấu tất cả có mặt",
+    "markRest": "Đánh dấu còn lại có mặt",
+    "progress": "{{k}}/{{n}} đã đánh dấu",
+    "progressAll": "Đã đánh dấu đủ {{n}}",
+    "filterLabel": "Lọc theo trạng thái",
+    "status": {
+      "present": "Có mặt",
+      "late": "Muộn",
+      "absent": "Vắng",
+      "none": "Chưa đánh dấu"
+    },
+    "mark": {
+      "present": "Đánh dấu có mặt",
+      "late": "Đánh dấu muộn",
+      "absent": "Đánh dấu vắng"
+    },
+    "col": {
+      "student": "Học viên",
+      "term": "Học kỳ này",
+      "overall": "Toàn bộ",
+      "status": "Trạng thái",
+      "note": "Ghi chú"
+    },
+    "registerLabel": "Bảng điểm danh",
+    "rosterLabel": "Học viên",
+    "radioLabel": "Điểm danh",
+    "note": {
+      "add": "Ghi chú",
+      "addFor": "Ghi chú cho {{name}}",
+      "of": "Ghi chú cho {{name}}:",
+      "title": "Ghi chú cho {{name}}",
+      "description": "Chỉ bạn và giáo viên cùng lớp xem được.",
+      "label": "Ghi chú",
+      "placeholder": "VD: Về sớm vì có hẹn khám bệnh",
+      "save": "Lưu ghi chú"
+    },
+    "noMatch": "Không có học viên nào khớp “{{q}}”",
+    "nobody": "Lớp chưa có học viên nào.",
+    "footer": "Đi muộn vẫn tính là có mặt trong tỉ lệ điểm danh.",
+    "dirty_other": "{{count}} thay đổi chưa lưu",
+    "dirtyUnmarked_other": "{{count}} học viên chưa đánh dấu",
+    "save": "Lưu điểm danh",
+    "savedToast": "Đã lưu điểm danh · {{a}} vắng, {{l}} muộn",
+    "saveFailed": "Không lưu được điểm danh. Vui lòng thử lại.",
+    "unmarked": {
+      "title_other": "Lưu khi còn {{count}} học viên chưa đánh dấu?",
+      "body": "Học viên bạn chưa đánh dấu vẫn để trống và không được tính vào tỉ lệ điểm danh.",
+      "confirm": "Vẫn lưu"
+    },
+    "leave": {
+      "title": "Bỏ điểm danh chưa lưu?",
+      "body": "Những gì bạn đã đánh dấu ở buổi này mà chưa lưu sẽ mất.",
+      "confirm": "Bỏ thay đổi",
+      "stay": "Ở lại"
+    },
+    "noSessions": "Lớp này chưa có buổi học nào.",
+    "addInCalendar": "Thêm buổi học trong Lịch",
+    "notStarted": "Buổi học này chưa bắt đầu. Điểm danh mở trước giờ học 15 phút.",
+    "cancelled": "Buổi học này đã bị huỷ nên không điểm danh.",
+    "registerFailed": "Không tải được bảng điểm danh.",
+    "sessionMissing": "Không tìm thấy buổi học này trong lớp."
+  },
   "classDetail": {
+    "tabs": {
+      "label": "Các phần của lớp",
+      "overview": "Tổng quan",
+      "attendance": "Điểm danh",
+      "attendanceNotMarked_other": "Điểm danh, {{count}} buổi chưa điểm danh"
+    },
     "joinCode": "Mã tham gia",
     "codeCopied": "Đã sao chép mã",
     "copyCode": "Chép mã",
@@ -540,13 +648,15 @@
     "schedulePlaceholder": "T2 · T4, 09:00",
     "room": "Phòng",
     "roomPlaceholder": "Phòng 3",
+    "changeInCalendar": "Đổi trong Lịch",
+    "fromSessions": "Lịch này lấy từ các buổi học lặp lại của lớp.",
+    "roomForNewSessions": "Dùng cho buổi học mới. Phòng của buổi đã có được đổi trong Lịch.",
     "createdWithCode": "Đã tạo lớp · mã tham gia {{code}}",
     "createdNoCode": "Đã tạo lớp, nhưng chưa tạo được mã tham gia. Hãy tạo mã từ thẻ của lớp.",
     "createdJoinOff": "Đã tạo lớp. Trung tâm đang tắt tham gia bằng mã nên lớp chưa có mã.",
     "edit": "Sửa lớp",
     "updated": "Đã cập nhật lớp",
     "updateFailed": "Không lưu được thay đổi của lớp.",
-    "noSchedule": "Chưa có lịch học",
     "stats": {
       "students": "Học viên",
       "live": "Bài đang mở",
@@ -1641,7 +1751,7 @@
       "activityFlag": "Bị gắn cờ",
       "empty": "Chưa có bài giao nào.",
       "noLive": "Chưa có bài đang mở.",
-      "noToday": "Hôm nay chưa có lịch mở hoặc đóng bài.",
+      "noToday": "Hôm nay không có buổi học, bài mở hay bài đóng nào.",
       "noActivity": "Chưa có hoạt động nào.",
       "waitingHint_other": "{{count}} học viên · lâu nhất {{age}}",
       "across_other": "Trong {{count}} bài giao",
@@ -4043,6 +4153,114 @@
       "dimensions": "Ảnh lớn hơn 10000 × 10000 điểm ảnh. Hãy chọn ảnh nhỏ hơn.",
       "limit": "Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.",
       "failed": "Chưa tải lên được tệp. Hãy thử lại."
+    }
+  },
+  "calendar": {
+    "title": "Lịch",
+    "weekNav": "Chọn tuần",
+    "previousWeek": "Tuần trước",
+    "nextWeek": "Tuần sau",
+    "today": "Hôm nay",
+    "addSession": "Buổi học",
+    "legend": {
+      "label": "Chú giải",
+      "session": "Buổi học",
+      "closes": "Bài giao đóng",
+      "opens": "Bài giao mở"
+    },
+    "event": {
+      "opens": "{{title}} mở",
+      "closes": "{{title}} đóng",
+      "cancelled": "Đã huỷ"
+    },
+    "testWindow": "Khung làm bài",
+    "agendaToday": "Hôm nay · {{day}}",
+    "empty": "Tuần này chưa có buổi học nào.",
+    "failed": "Không tải được lịch.",
+    "new": {
+      "title": "Buổi học mới",
+      "class": "Lớp",
+      "classPlaceholder": "Chọn lớp",
+      "date": "Ngày",
+      "starts": "Bắt đầu",
+      "length": "Thời lượng",
+      "minutes": "{{n}} phút",
+      "room": "Phòng",
+      "roomPlaceholder": "Phòng 2",
+      "repeat": "Lặp lại mỗi tuần",
+      "untilTerm": "Đến hết {{date}}",
+      "untilStopped": "Đến khi bạn dừng lặp lại",
+      "submit": "Thêm buổi học",
+      "added": "Đã thêm buổi học · {{class}}, {{time}}",
+      "failed": "Không thêm được buổi học. Vui lòng thử lại.",
+      "archived": "Lớp này đã được lưu trữ nên không nhận buổi học mới.",
+      "dateTooFar": "Chọn một ngày trong vòng hai năm tới.",
+      "noClasses": "Bạn chưa có lớp nào. Hãy tạo lớp trước khi thêm buổi học."
+    },
+    "session": {
+      "close": "Đóng",
+      "actions": "Thao tác với buổi học",
+      "every": "Mỗi {{weekday}}",
+      "oneOff": "Không lặp lại",
+      "cancelled": "Đã huỷ",
+      "changed": "Đã đổi so với lịch lặp lại",
+      "act": {
+        "attendance": "Điểm danh",
+        "editDate": "Sửa buổi này",
+        "cancel": "Huỷ buổi này",
+        "restore": "Khôi phục buổi này",
+        "editSeries": "Sửa lịch lặp lại",
+        "stop": "Dừng lặp lại",
+        "delete": "Xoá buổi này"
+      },
+      "edit": {
+        "title": "Sửa buổi ngày {{date}}",
+        "desc": "Chỉ buổi này thay đổi. Lịch lặp lại giữ nguyên.",
+        "date": "Ngày",
+        "start": "Bắt đầu",
+        "length": "Thời lượng",
+        "room": "Phòng",
+        "note": "Ghi chú",
+        "notePlaceholder": "Ví dụ: mang tai nghe",
+        "save": "Lưu"
+      },
+      "cancelConfirm": {
+        "title": "Huỷ buổi ngày {{date}}?",
+        "body": "Học viên sẽ thấy buổi này là đã huỷ trong Tuần này.",
+        "keep": "Giữ buổi này",
+        "confirm": "Huỷ buổi"
+      },
+      "series": {
+        "title": "Sửa lịch lặp lại",
+        "from": "Áp dụng từ",
+        "fromHint": "Các buổi trước ngày {{date}} giữ nguyên.",
+        "fromTomorrow": "Buổi hôm nay đã điểm danh, nên thay đổi bắt đầu từ ngày mai.",
+        "fromPast": "Chọn một ngày từ hôm nay trở đi.",
+        "weekday": "Thứ",
+        "warn": "Những buổi bạn đã sửa hoặc huỷ riêng từ ngày này sẽ theo lịch mới.",
+        "save": "Lưu thay đổi"
+      },
+      "stop": {
+        "title": "Dừng lặp lại",
+        "last": "Buổi cuối cùng",
+        "lastHint": "Các buổi sau ngày này sẽ không còn trên lịch. Buổi đã điểm danh vẫn được giữ.",
+        "lastPast": "Chọn một ngày từ hôm qua trở đi.",
+        "hasAttendance": "Một buổi sau ngày này đã điểm danh, nên lịch không thể dừng trước buổi đó."
+      },
+      "delete": {
+        "title": "Xoá buổi ngày {{date}}?",
+        "body": "Buổi này sẽ không còn trên lịch của bạn và của học viên.",
+        "confirm": "Xoá buổi",
+        "hasAttendance": "Buổi này đã điểm danh nên chỉ có thể huỷ."
+      },
+      "toast": {
+        "cancelled": "Đã huỷ buổi ngày {{date}}",
+        "restored": "Đã khôi phục buổi ngày {{date}}",
+        "series": "Đã cập nhật lịch lặp lại.",
+        "cleared_other": "Đã cập nhật lịch lặp lại. {{count}} thay đổi riêng lẻ đã bị xoá.",
+        "stopped": "Lịch lặp lại kết thúc sau ngày {{date}}"
+      },
+      "failed": "Không lưu được thay đổi. Vui lòng thử lại."
     }
   }
 }

@@ -56,6 +56,19 @@
       "nextOpens": "{{title}} · opens {{date}}",
       "nextUnknown": "Could not load this class's tests"
     },
+    "week": {
+      "title": "This week",
+      "lead": "Classes and test deadlines, {{range}}.",
+      "minutes": "{{minutes}} min",
+      "cancelled": "Cancelled",
+      "due": "Due",
+      "closesToday": "Closes today",
+      "inProgress": "in progress",
+      "testMinutes": "{{minutes}} min test",
+      "dayEmpty": "Nothing scheduled",
+      "empty": "Nothing scheduled this week.",
+      "failed": "Could not load this week."
+    },
     "myClasses": "Classes",
     "dueToday_one": "You have {{count}} test due today.",
     "dueToday_other": "You have {{count}} tests due today.",

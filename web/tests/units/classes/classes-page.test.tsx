@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -22,6 +22,8 @@ const EVENING: ClassListItem = {
   description: null,
   scheduleLabel: "Mon · Wed · Fri, 18:00",
   room: "Room 2",
+  ownRoom: "Room 2",
+  schedule: { slots: [], label: "Mon · Wed · Fri, 18:00" },
   studentCount: 24,
   openAssignmentCount: 1,
   selfJoinEnabled: true,
@@ -43,6 +45,8 @@ const LEGACY: ClassListItem = {
   name: "Kids Starters B",
   scheduleLabel: null,
   room: null,
+  ownRoom: null,
+  schedule: { slots: [], label: null },
   studentCount: 12,
   openAssignmentCount: 0,
   joinCode: { ...EVENING.joinCode!, code: null, hint: "7HQM", legacy: true },
@@ -127,6 +131,7 @@ beforeEach(() => {
 });
 
 afterEach(() => {
+  vi.useRealTimers();
   useAuthStore.setState({ user: null });
 });
 
@@ -400,6 +405,79 @@ describe("the classes list", () => {
       ]),
     );
     expect(await screen.findByText("Đã cập nhật lớp")).toBeInTheDocument();
+  });
+
+  it("reads a class's schedule from its repeating sessions, on the card and in Edit class (T-R8.14)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+    // Wednesday 23 September 2026, 16:00 in Ho Chi Minh City: tonight's class is next.
+    vi.setSystemTime(new Date("2026-09-23T09:00:00Z"));
+    const WEEKLY: ClassListItem = {
+      ...EVENING,
+      scheduleLabel: "Tối 2-4",
+      room: "Phòng 2",
+      ownRoom: null,
+      schedule: {
+        slots: [
+          { weekday: 6, startTime: "09:00", durationMinutes: 90 },
+          { weekday: 1, startTime: "18:00", durationMinutes: 90 },
+          { weekday: 3, startTime: "18:00", durationMinutes: 90 },
+        ],
+        label: "Tối 2-4",
+      },
+    };
+    serveList([WEEKLY]);
+    const { user } = renderPage();
+    const evening = await card("IELTS 6.5 Evening");
+    expect(
+      within(evening).getByText("T2 · T4, 18:00; T7, 09:00 · Phòng 2"),
+    ).toBeVisible();
+    await user.click(
+      within(evening).getByRole("button", {
+        name: "Thao tác với lớp IELTS 6.5 Evening",
+      }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "Sửa lớp" }));
+    const dialog = await screen.findByRole("dialog", { name: "Sửa lớp" });
+    const schedule = within(dialog).getByLabelText("Lịch học");
+    expect(schedule).toHaveValue("T2 · T4, 18:00; T7, 09:00");
+    expect(schedule).toHaveAttribute("readonly");
+    expect(schedule).toHaveAccessibleDescription(
+      "Lịch này lấy từ các buổi học lặp lại của lớp.",
+    );
+    expect(
+      within(dialog).getByRole("link", { name: "Đổi trong Lịch" }),
+    ).toHaveAttribute("href", "/teacher/calendar?week=2026-W39");
+    // Room is the class's own room, empty here, never the derived "Phòng 2".
+    const room = within(dialog).getByLabelText(/Phòng/);
+    expect(room).toHaveValue("");
+    expect(room).toHaveAccessibleDescription(
+      "Dùng cho buổi học mới. Phòng của buổi đã có được đổi trong Lịch.",
+    );
+    await user.type(room, "Phòng 4");
+    await user.click(within(dialog).getByRole("button", { name: "Lưu thay đổi" }));
+    await waitFor(() =>
+      expect(patches).toEqual([
+        { id: EVENING.id, body: { name: "IELTS 6.5 Evening", room: "Phòng 4" } },
+      ]),
+    );
+  });
+
+  it("prefills Edit class's room from the class's own room (T-R8.14)", async () => {
+    serveList([{ ...EVENING, room: "Phòng 9", ownRoom: "Phòng 9 (B)" }]);
+    const { user } = renderPage();
+    const evening = await card("IELTS 6.5 Evening");
+    await user.click(
+      within(evening).getByRole("button", {
+        name: "Thao tác với lớp IELTS 6.5 Evening",
+      }),
+    );
+    await user.click(screen.getByRole("menuitem", { name: "Sửa lớp" }));
+    const dialog = await screen.findByRole("dialog", { name: "Sửa lớp" });
+    expect(within(dialog).getByLabelText(/Phòng/)).toHaveValue("Phòng 9 (B)");
+    const schedule = within(dialog).getByLabelText(/Lịch học/);
+    expect(schedule).toHaveValue("Mon · Wed · Fri, 18:00");
+    expect(schedule).not.toHaveAttribute("readonly");
+    expect(within(dialog).queryByRole("link", { name: "Đổi trong Lịch" })).toBeNull();
   });
 
   it("creates a class with its schedule and room, then issues its first code and names it", async () => {

@@ -60,18 +60,19 @@ export function createQuestion(body: QuestionValues, { forTestId }: ForTest = {}
 /**
  * QuestionWriteContext is what an edit sends beside the question: the
  * `updatedAt` the editor last read, which the server compares to refuse a
- * stale write (T-R7.5), and the set it is edited in, for an edit grantee
- * (T-R7.6). A set edit may answer with a copy, whose `id` differs.
+ * stale write (T-R7.5) and requires since R8 (T-R8.1), and the set it is
+ * edited in, for an edit grantee (T-R7.6). A set edit may answer with a copy,
+ * whose `id` differs.
  */
 export type QuestionWriteContext = Readonly<{
-  expectedUpdatedAt?: string | undefined;
+  expectedUpdatedAt: string;
   setId?: string | undefined;
 }>;
 
 export function updateQuestion(
   id: string,
   body: QuestionValues,
-  { expectedUpdatedAt, setId }: QuestionWriteContext = {},
+  { expectedUpdatedAt, setId }: QuestionWriteContext,
 ) {
   return api("patch", "/teacher/questions/{id}", {
     path: { id },
@@ -80,7 +81,7 @@ export function updateQuestion(
       ...body,
       level: body.level ?? null,
       skill: body.skill ?? null,
-      ...(expectedUpdatedAt === undefined ? {} : { expectedUpdatedAt }),
+      expectedUpdatedAt,
     },
   });
 }

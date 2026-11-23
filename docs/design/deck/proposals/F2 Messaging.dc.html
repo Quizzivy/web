@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<script src="../support.js"></script>
+</head>
+<body>
+<x-dc>
+<helmet>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700&amp;display=swap">
+<link rel="stylesheet" href="https://unpkg.com/lucide-static@0.469.0/font/lucide.css">
+<style>
+html,body{-webkit-text-size-adjust:100%;text-size-adjust:100%}
+body{margin:0;-webkit-font-smoothing:antialiased}
+[data-qz]{--bg:#ffffff;--sidebar:#f7f8f8;--card:#ffffff;--muted:#f2f4f4;--hover:#eceff0;--fg:#1b2123;--muted-fg:#646c6e;--border:#e4e7e8;--primary:#252c2e;--primary-fg:#fafbfb;--ring:#9aa3a5;--shadow:0 1px 2px rgba(20,28,30,.05);--shadow-lg:0 12px 32px -8px rgba(20,28,30,.18),0 2px 6px rgba(20,28,30,.06);--overlay:rgba(15,20,22,.4);--accent-c:#a4ca3e;--accent-soft:#f1f7e0;--accent-ink:#4f6c12;--success:oklch(.62 .14 155);--success-soft:oklch(.96 .03 155);--success-ink:oklch(.42 .1 155);--warning:oklch(.74 .15 70);--warning-soft:oklch(.96 .04 80);--warning-ink:oklch(.48 .11 60);--danger:oklch(.59 .2 27);--danger-soft:oklch(.96 .03 27);--danger-ink:oklch(.48 .17 27);--info-soft:oklch(.94 .03 230);--info-ink:oklch(.45 .09 235);--focus:var(--muted-fg);--anno:oklch(.6 .19 330);color-scheme:light}
+[data-qz="dark"]{--bg:#0e1213;--sidebar:#0a0d0e;--card:#131819;--muted:#1a2022;--hover:#20282a;--fg:#ecefef;--muted-fg:#98a0a2;--border:#252d2f;--primary:#ecefef;--primary-fg:#141a1b;--ring:#5d6769;--shadow:0 1px 2px rgba(0,0,0,.3);--shadow-lg:0 16px 40px -8px rgba(0,0,0,.6);--overlay:rgba(0,0,0,.6);--accent-soft:rgba(164,202,62,.13);--accent-ink:#c2e070;--success-soft:oklch(.3 .05 155);--success-ink:oklch(.8 .12 155);--warning-soft:oklch(.32 .06 70);--warning-ink:oklch(.85 .12 80);--danger-soft:oklch(.3 .08 27);--danger-ink:oklch(.78 .13 27);--info-soft:oklch(.34 .06 235);--info-ink:oklch(.8 .08 230);--anno:oklch(.74 .17 330);color-scheme:dark}
+[data-qz] *{box-sizing:border-box}
+[data-qz] :focus-visible{outline:2px solid var(--focus);outline-offset:2px}
+[data-qz] button{font:inherit;color:inherit}
+[data-qz] [class^="icon-"]{line-height:1;display:inline-block}
+</style>
+</helmet>
+<div data-qz="{{ theme }}" style="min-height:100vh;background:var(--sidebar);color:var(--fg);font-family:'Be Vietnam Pro',ui-sans-serif,system-ui,sans-serif;font-size:14px;line-height:1.5">
+<div style="max-width:1440px;margin:0 auto;padding:40px clamp(16px,3vw,40px) 80px;display:flex;flex-direction:column;gap:52px">
+
+<header data-screen-label="Cover" style="display:flex;flex-direction:column;gap:16px;max-width:920px">
+  <div style="display:flex;align-items:center;gap:12px">
+    <span style="display:grid;place-items:center;width:40px;height:40px;flex:none;border-radius:10px;background:var(--card);border:1px solid var(--border)"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if></span>
+    <span style="font-size:13px;color:var(--muted-fg)">Quizzivy · F2 Messaging changes · DG-233 · Proposal · 23 Nov 2026</span>
+  </div>
+  <h1 style="margin:0;font-size:40px;line-height:1.1;font-weight:600;letter-spacing:-0.025em;text-wrap:balance">Messages for everyone at the centre</h1>
+  <p style="margin:0;font-size:17px;line-height:1.55;color:var(--muted-fg);text-wrap:pretty">R7 let a staff member write first only to a student who is or was in their class. At a centre this small that was too narrow: the admin could not reach a student in a teacher’s class, and nobody could reach a student in no class. The owner decided on 23 Nov 2026 that every teacher and admin may write to any student, that a student still writes first only to a teacher of their own class, and that teachers may write to each other, to share material and experience. This page draws what that changes on R7’s Messages: a “Tin nhắn mới” button and the dialog it opens, a fourth tab for colleagues, a search that finds anyone, a thread with a student the caller does not teach, a thread between two colleagues, and what the student reads. Every screen opens on its R7 frame, “As today”, so the change sits beside it. The plan is <span style="font-family:ui-monospace,Menlo,monospace;font-size:14px">docs/plan/77g-f2-messaging.md</span> in Quizzivy/docs.</p>
+  <div style="display:flex;flex-wrap:wrap;gap:8px">
+    <sc-for list="{{ chips }}" as="c" hint-placeholder-count="4"><span style="display:inline-flex;align-items:center;height:26px;padding:0 10px;border-radius:999px;background:var(--card);border:1px solid var(--border);font-size:12px;color:var(--muted-fg);white-space:nowrap">{{ c }}</span></sc-for>
+  </div>
+</header>
+
+<section data-screen-label="Decisions" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+  <sc-for list="{{ decisions }}" as="d" hint-placeholder-count="3"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:18px 20px;display:flex;flex-direction:column;gap:10px">
+    <span style="font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ d.kicker }}</span>
+    <strong style="font-size:17px;font-weight:600;line-height:1.35">{{ d.head }}</strong>
+    <ul style="margin:0;padding:0 0 0 18px;display:flex;flex-direction:column;gap:7px;color:var(--muted-fg);text-wrap:pretty">
+      <sc-for list="{{ d.items }}" as="di" hint-placeholder-count="3"><li>{{ di }}</li></sc-for>
+    </ul>
+  </div></sc-for>
+</section>
+
+<div style="position:sticky;top:12px;z-index:30;display:flex;flex-wrap:wrap;gap:8px 14px;align-items:center;padding:10px 14px;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg)">
+  <sc-for list="{{ ctl }}" as="cg" hint-placeholder-count="5"><div style="display:flex;align-items:center;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg);white-space:nowrap">{{ cg.label }}</span><div role="group" aria-label="{{ cg.label }}" style="display:inline-flex;flex-wrap:wrap;gap:2px;padding:3px;background:var(--muted);border-radius:9px"><sc-for list="{{ cg.opts }}" as="o" hint-placeholder-count="2"><button type="button" aria-pressed="{{ o.on }}" onClick="{{ o.pick }}" style="height:28px;padding:0 10px;border:0;border-radius:7px;font-size:12.5px;font-weight:500;cursor:pointer;white-space:nowrap;background:{{ o.bg }};color:{{ o.fg }};box-shadow:{{ o.ring }}">{{ o.label }}</button></sc-for></div></div></sc-for>
+  <div style="display:flex;gap:8px;margin-left:auto">
+    <button type="button" onClick="{{ reset }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><i class="icon-rotate-ccw" style="font-size:14px"></i>Reset</button>
+    <button type="button" aria-pressed="{{ anno }}" onClick="{{ toggleAnno }}" style="height:32px;padding:0 12px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13px;cursor:pointer;display:inline-flex;align-items:center;gap:6px;white-space:nowrap"><span style="width:10px;height:10px;border-radius:50%;background:var(--anno)"></span>{{ annoLabel }}</button>
+  </div>
+</div>
+
+<section data-screen-label="Frames" style="display:flex;flex-direction:column;gap:16px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The screens at 1280 and 360</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The two frames share one state. Pick the screen and its state in the bar above. Each screen’s first state, “As today (R7)”, is R7’s own frame from <span style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">R7 Messages.dc.html</span> as the product built it, so what F2 changes sits beside it. The layout, the sizes and the parts are R7’s: a list and a thread side by side from 760px of content, one pane at a time below. The teacher’s frames follow the page-width rule (DG-205): at most 1600 wide, the title at the left edge. What is new carries a number.</p>
+  </div>
+  <div ref="{{ stageRef }}" style="width:100%;display:flex;flex-wrap:wrap;gap:20px;align-items:flex-start">
+    <sc-for list="{{ frames }}" as="f" hint-placeholder-count="2">
+      <figure style="margin:0;display:flex;flex-direction:column;gap:8px;width:{{ f.ow }}px;max-width:100%">
+        <figcaption style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12.5px;color:var(--muted-fg)"><span><strong style="color:var(--fg);font-weight:600">{{ f.title }}</strong> · {{ f.sub }}</span><sc-if value="{{ f.isToday }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;height:22px;padding:0 8px;border-radius:999px;background:var(--muted);color:var(--muted-fg);font-size:11.5px;font-weight:600">As today (R7)</span></sc-if></figcaption>
+        <div style="width:{{ f.ow }}px;overflow:hidden;border-radius:12px;border:1px solid var(--border);box-shadow:var(--shadow-lg);background:var(--bg)">
+          <div data-screen-label="{{ f.screen }}" style="width:{{ f.w }}px;height:{{ f.h }}px;zoom:{{ f.s }};display:flex;position:relative;overflow:hidden;background:var(--bg);color:var(--fg);font-size:14px">
+
+            <sc-if value="{{ f.sidebar }}" hint-placeholder-val="{{ true }}">
+              <aside aria-hidden="true" style="width:248px;flex:none;border-right:1px solid var(--border);background:var(--sidebar);display:flex;flex-direction:column;gap:14px;padding:14px 10px">
+                <div style="display:flex;align-items:center;gap:9px;padding:2px 8px 4px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></div>
+                <sc-for list="{{ nav }}" as="g" hint-placeholder-count="3"><div style="display:flex;flex-direction:column;gap:2px"><sc-if value="{{ g.hasLabel }}" hint-placeholder-val="{{ false }}"><div style="padding:0 10px 4px;font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ g.label }}</div></sc-if><sc-for list="{{ g.items }}" as="n" hint-placeholder-count="3"><span style="display:flex;align-items:center;gap:10px;height:34px;padding:0 10px;border-radius:8px;font-size:13.5px;background:{{ n.bg }};color:{{ n.fg }};font-weight:{{ n.weight }}"><i class="icon-{{ n.icon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ n.label }}</span><sc-if value="{{ n.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:{{ n.countBg }};color:{{ n.countFg }};font-size:11px;font-weight:600;display:grid;place-items:center;font-variant-numeric:tabular-nums">{{ n.count }}</span></sc-if><sc-if value="{{ n.pin }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.nav.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.nav.n }}</span></sc-if></sc-if></sc-if></span></sc-for></div></sc-for>
+              </aside>
+            </sc-if>
+
+            <div style="flex:1;min-width:0;display:flex;flex-direction:column">
+
+              <sc-if value="{{ f.tBar }}" hint-placeholder-val="{{ true }}">
+                <div style="height:56px;flex:none;display:flex;align-items:center;gap:8px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin-left:-8px;display:grid;place-items:center;border-radius:8px"><i class="icon-menu" style="font-size:20px"></i></span></sc-if>
+                  <span style="font-size:13px;font-weight:500;white-space:nowrap">{{ tx.title }}</span>
+                  <span style="flex:1"></span>
+                  <span style="width:36px;height:36px;flex:none;display:grid;place-items:center;border-radius:8px;color:var(--muted-fg)"><i class="icon-bell" style="font-size:18px"></i></span>
+                  <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);display:grid;place-items:center;font-size:11.5px;font-weight:600">GB</span>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ f.sBar }}" hint-placeholder-val="{{ false }}">
+                <div style="height:60px;flex:none;display:flex;align-items:center;gap:14px;padding:{{ f.barPad }};border-bottom:1px solid var(--border);background:var(--bg)">
+                  <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span style="width:44px;height:44px;flex:none;margin:0 -10px 0 -8px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:18px"></i></span><span style="font-size:15px;font-weight:600;white-space:nowrap">{{ tx.title }}</span></sc-if>
+                  <sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;gap:8px"><sc-if value="{{ isLight }}" hint-placeholder-val="{{ true }}"><img src="../quizzivy-mark-color.svg" alt="" style="height:24px;width:auto"></sc-if><sc-if value="{{ isDark }}" hint-placeholder-val="{{ false }}"><img src="../quizzivy-mark-on-dark.svg" alt="" style="height:24px;width:auto"></sc-if><span style="font-weight:700;font-size:16px;letter-spacing:-0.01em">Quizzivy</span></span><span style="display:flex;align-items:center;gap:2px;margin-left:14px"><sc-for list="{{ sNav }}" as="n" hint-placeholder-count="4"><span style="display:flex;align-items:center;gap:7px;height:36px;padding:0 12px;border-radius:8px;font-size:14px;white-space:nowrap;color:var(--muted-fg)"><i class="icon-{{ n.icon }}" style="font-size:16px"></i>{{ n.label }}</span></sc-for></span></sc-if>
+                  <span style="margin-left:auto;display:flex;align-items:center;gap:4px">
+                    <span role="img" aria-label="{{ tx.title }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};display:grid;place-items:center;border-radius:8px;background:var(--hover);position:relative"><i class="icon-message-square" style="font-size:18px"></i><sc-if value="{{ m.sUnread }}" hint-placeholder-val="{{ false }}"><span style="position:absolute;top:4px;right:3px;min-width:16px;height:16px;padding:0 4px;border-radius:999px;background:var(--accent-c);color:#1b2123;font-size:10px;font-weight:700;line-height:1;display:inline-flex;align-items:center;justify-content:center">{{ m.sUnread }}</span></sc-if></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.msgBtn.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.msgBtn.n }}</span></sc-if></sc-if>
+                    <span style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};display:grid;place-items:center;border-radius:8px"><i class="icon-bell" style="font-size:18px"></i></span>
+                    <span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--accent-soft);color:var(--accent-ink);display:grid;place-items:center;font-size:12px;font-weight:600">BN</span>
+                  </span>
+                </div>
+              </sc-if>
+
+              <div style="flex:1;min-height:0;padding:{{ f.pad }};display:flex;flex-direction:column">
+                <div style="width:100%;max-width:{{ m.maxW }};margin:{{ m.mx }};flex:1;min-height:0;display:flex;flex-direction:column;gap:{{ f.gap }}">
+
+                  <sc-if value="{{ f.tHead }}" hint-placeholder-val="{{ true }}">
+                    <div style="display:flex;flex-wrap:wrap;align-items:flex-end;justify-content:space-between;gap:12px">
+                      <div style="min-width:0"><div style="font-size:{{ f.h1 }};font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.title }}</div><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><div style="margin-top:2px;color:var(--muted-fg);font-size:14px">{{ tx.lead }}</div></sc-if></div>
+                      <span style="display:flex;align-items:center;gap:8px;flex:none;flex-wrap:wrap"><sc-if value="{{ m.hasNewMsg }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.newMsg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.newMsg.n }}</span></sc-if></sc-if><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:{{ m.newMsgBg }};box-shadow:var(--shadow);font-size:13.5px;font-weight:500;white-space:nowrap"><i class="icon-message-square-plus" style="font-size:15px"></i>{{ tx.newMsg }}</span></sc-if><sc-if value="{{ m.newAnnOff }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.desk }}" hint-placeholder-val="{{ true }}"><span style="font-size:12.5px;color:var(--muted-fg);white-space:nowrap">{{ tx.newAnnOff }}</span></sc-if></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.newAnn.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.newAnn.n }}</span></sc-if></sc-if><span aria-disabled="{{ m.newAnnOff }}" title="{{ m.newAnnTitle }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;white-space:nowrap;opacity:{{ m.newAnnOp }}"><i class="icon-megaphone" style="font-size:15px"></i>{{ tx.newAnn }}</span></span>
+                    </div>
+                  </sc-if>
+                  <sc-if value="{{ f.sHead }}" hint-placeholder-val="{{ false }}"><div style="font-size:24px;font-weight:600;letter-spacing:-0.02em;line-height:1.25">{{ tx.title }}</div></sc-if>
+
+                  <div style="flex:1;min-height:0;display:flex;background:var(--card);border:1px solid var(--border);border-radius:{{ m.cardR }};box-shadow:var(--shadow);overflow:hidden;position:relative">
+
+                    <sc-if value="{{ f.showList }}" hint-placeholder-val="{{ true }}">
+                      <aside style="width:{{ f.listW }};flex:none;border-right:{{ f.listBorder }};display:flex;flex-direction:column;min-height:0">
+                        <sc-if value="{{ m.hasTools }}" hint-placeholder-val="{{ true }}">
+                          <div style="padding:12px;display:flex;flex-direction:column;gap:10px;border-bottom:1px solid var(--border)">
+                            <div style="display:flex;align-items:center;gap:6px"><span style="flex:1;min-width:0;display:flex;align-items:center;gap:8px;height:{{ f.fieldH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg)"><i class="icon-search" style="font-size:15px;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;font-size:13px;color:{{ m.qFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.q }}</span></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.tabs.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.tabs.n }}</span></sc-if></sc-if></div>
+                            <div style="display:flex;align-items:center;gap:6px"><div style="flex:1;min-width:0;display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ m.tabs }}" as="tb" hint-placeholder-count="3"><span style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:{{ f.tabH }};padding:{{ m.tabPad }};border-radius:7px;font-size:13px;font-weight:500;white-space:nowrap;background:{{ tb.bg }};color:{{ tb.fg }};box-shadow:{{ tb.ring }}">{{ tb.label }}<sc-if value="{{ tb.hasCount }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--primary);color:var(--primary-fg);font-size:11px;font-weight:600;line-height:1;display:inline-flex;align-items:center;justify-content:center">{{ tb.count }}</span></sc-if></span></sc-for></div></div>
+                          </div>
+                        </sc-if>
+                        <div style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column">
+                          <sc-if value="{{ m.listRows }}" hint-placeholder-val="{{ true }}">
+                            <sc-for list="{{ m.rows }}" as="cv" hint-placeholder-count="6"><sc-if value="{{ cv.isLabel }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;padding:14px 12px 6px;border-bottom:1px solid var(--border)"><span style="font-size:11.5px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ cv.label }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ cv.pinOn }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ cv.pinN }}</span></sc-if></sc-if></div></sc-if><sc-if value="{{ cv.isRow }}" hint-placeholder-val="{{ true }}"><div style="display:flex;gap:10px;padding:{{ m.rowPad }};border-bottom:1px solid var(--border);background:{{ cv.bg }}"><span style="width:{{ m.avSize }};height:{{ m.avSize }};flex:none;border-radius:{{ cv.radius }};background:{{ cv.avBg }};color:{{ cv.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ cv.hasIcon }}" hint-placeholder-val="{{ false }}"><i class="icon-{{ cv.icon }}" style="font-size:16px"></i></sc-if><sc-if value="{{ cv.hasInitials }}" hint-placeholder-val="{{ true }}">{{ cv.initials }}</sc-if></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:2px"><span style="display:flex;align-items:baseline;gap:8px"><span style="flex:1;min-width:0;font-size:13.5px;font-weight:{{ cv.weight }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cv.name }}</span><span style="font-size:11.5px;color:var(--muted-fg);white-space:nowrap">{{ cv.time }}</span></span><span style="display:flex;align-items:center;gap:8px"><span style="flex:1;min-width:0;font-size:12.5px;color:{{ cv.previewFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ cv.preview }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ cv.pinOn }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ cv.pinN }}</span></sc-if></sc-if><sc-if value="{{ cv.hasUnread }}" hint-placeholder-val="{{ false }}"><span style="min-width:18px;height:18px;padding:0 5px;border-radius:999px;background:var(--accent-c);color:#1b2123;font-size:11px;font-weight:600;display:grid;place-items:center">{{ cv.unread }}</span></sc-if></span></span></div></sc-if></sc-for>
+                          </sc-if>
+                          <sc-if value="{{ m.listSkeleton }}" hint-placeholder-val="{{ false }}">
+                            <div role="status" aria-label="{{ tx.loading }}"><sc-for list="{{ m.skel }}" as="sk" hint-placeholder-count="6"><div style="display:flex;gap:10px;padding:{{ m.rowPad }};border-bottom:1px solid var(--border)"><span style="width:{{ m.avSize }};height:{{ m.avSize }};flex:none;border-radius:{{ sk.radius }};background:var(--muted)"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:8px;padding-top:3px"><span style="height:11px;width:{{ sk.w1 }};border-radius:6px;background:var(--muted)"></span><span style="height:10px;width:{{ sk.w2 }};border-radius:6px;background:var(--muted)"></span></span></div></sc-for></div><div style="display:flex;justify-content:center;padding:10px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.skeleton.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.skeleton.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                          <sc-if value="{{ m.listMsg }}" hint-placeholder-val="{{ false }}">
+                            <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px 20px"><span style="width:40px;height:40px;border-radius:11px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ m.listIcon }}" style="font-size:19px"></i></span><span style="max-width:30ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.listText }}</span><sc-if value="{{ m.listRetry }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.listMsg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.listMsg.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                        </div>
+                      </aside>
+                    </sc-if>
+
+                    <sc-if value="{{ f.showThread }}" hint-placeholder-val="{{ true }}">
+                      <section style="flex:1;min-width:0;display:flex;flex-direction:column;min-height:0">
+                        <sc-if value="{{ m.noThread }}" hint-placeholder-val="{{ false }}">
+                          <div style="flex:1;background:var(--sidebar);display:flex;flex-direction:column;gap:12px;padding:18px 16px;justify-content:flex-end"><sc-for list="{{ m.threadSkel }}" as="sk" hint-placeholder-count="3"><span style="align-self:{{ sk.align }};width:{{ sk.w }};height:{{ sk.h }};border-radius:14px;background:var(--muted)"></span></sc-for></div>
+                        </sc-if>
+                        <sc-if value="{{ m.hasThread }}" hint-placeholder-val="{{ true }}">
+                          <div style="display:flex;align-items:center;gap:10px;padding:10px 14px;border-bottom:1px solid var(--border);min-height:60px;flex:none">
+                            <sc-if value="{{ f.phone }}" hint-placeholder-val="{{ false }}"><span role="img" aria-label="{{ tx.back }}" style="width:44px;height:44px;flex:none;margin:0 -6px 0 -8px;display:grid;place-items:center;border-radius:8px"><i class="icon-arrow-left" style="font-size:17px"></i></span></sc-if>
+                            <sc-if value="{{ m.th.hasAvatar }}" hint-placeholder-val="{{ true }}"><span style="width:34px;height:34px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span></sc-if>
+                            <span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.th.name }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.th.sub }}</span></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.head.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.head.n }}</span></sc-if></sc-if>
+                            <sc-if value="{{ m.th.hasDetails }}" hint-placeholder-val="{{ true }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.details.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.details.n }}</span></sc-if></sc-if><span role="img" aria-label="{{ tx.details }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;display:grid;place-items:center;border-radius:7px;background:{{ m.det.btnBg }}"><i class="icon-info" style="font-size:17px"></i></span></sc-if>
+                          </div>
+
+                          <div style="flex:1;min-height:0;overflow:hidden;padding:18px 16px;display:flex;flex-direction:column;justify-content:{{ m.streamJustify }};gap:12px;background:var(--sidebar)">
+                            <sc-for list="{{ m.items }}" as="it" hint-placeholder-count="5">
+                              <sc-if value="{{ it.isCenter }}" hint-placeholder-val="{{ false }}"><div style="align-self:center;display:flex;flex-direction:column;align-items:center;text-align:center;gap:10px"><span style="width:40px;height:40px;border-radius:11px;background:var(--card);border:1px solid var(--border);display:grid;place-items:center"><i class="icon-{{ it.icon }}" style="font-size:19px"></i></span><span style="max-width:32ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ it.text }}</span><sc-if value="{{ it.retry }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.empty.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.empty.n }}</span></sc-if></sc-if></div></sc-if>
+                              <sc-if value="{{ it.isLoad }}" hint-placeholder-val="{{ false }}"><span style="align-self:center;display:inline-flex;align-items:center;gap:6px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.smH }};padding:0 12px;border-radius:999px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500"><i class="icon-arrow-up" style="font-size:13px"></i>{{ tx.loadEarlier }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.load.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.load.n }}</span></sc-if></sc-if></span></sc-if>
+                              <sc-if value="{{ it.isDay }}" hint-placeholder-val="{{ false }}"><div style="align-self:center;font-size:11.5px;color:var(--muted-fg);background:var(--card);border:1px solid var(--border);border-radius:999px;padding:1px 10px">{{ it.text }}</div></sc-if>
+                              <sc-if value="{{ it.isPost }}" hint-placeholder-val="{{ false }}"><div style="max-width:620px;width:100%;align-self:center;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:14px 16px;display:flex;flex-direction:column;gap:8px"><div style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg)"><i class="icon-megaphone" style="font-size:13px"></i>{{ it.label }}</div><div style="font-size:14px;line-height:1.6;white-space:pre-wrap;text-wrap:pretty">{{ it.text }}</div><sc-if value="{{ it.hasChip }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px"><div style="flex:1;min-width:0;max-width:340px;display:flex;align-items:center;gap:10px;padding:8px 8px 8px 10px;border-radius:10px;border:1px solid var(--border);background:var(--bg)"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ it.chipIcon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.chipName }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ it.chipMeta }}</span></span><span role="img" aria-label="{{ tx.download }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px"><i class="icon-download" style="font-size:16px"></i></span></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.chip.n }}</span></sc-if></sc-if></div></sc-if><sc-if value="{{ it.hasSeen }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--muted-fg);border-top:1px solid var(--border);padding-top:8px"><i class="icon-eye" style="font-size:13px"></i>{{ it.seen }}</div></sc-if></div></sc-if>
+                              <sc-if value="{{ it.isAttempt }}" hint-placeholder-val="{{ false }}"><div style="align-self:flex-start;width:min(440px,92%);flex-wrap:wrap;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:10px 12px;display:flex;align-items:center;gap:10px"><span style="width:30px;height:30px;flex:none;border-radius:8px;background:var(--danger-soft);color:var(--danger-ink);display:grid;place-items:center"><i class="icon-flag" style="font-size:15px"></i></span><span style="flex:1 1 180px;min-width:0"><span style="display:block;font-size:13px;font-weight:500;text-wrap:pretty">{{ it.text }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ it.time }}</span></span><span style="display:inline-flex;align-items:center;height:{{ f.smH }};padding:0 10px;border-radius:7px;border:1px solid var(--border);background:var(--card);font-size:12.5px;font-weight:500;white-space:nowrap">{{ tx.openAttempt }}</span></div></sc-if>
+                              <sc-if value="{{ it.isBubble }}" hint-placeholder-val="{{ true }}"><div style="align-self:{{ it.align }};max-width:min(520px,86%);display:flex;flex-direction:column;gap:3px;align-items:{{ it.align }}"><div style="display:flex;align-items:center;gap:8px;flex-direction:{{ it.dir }}"><div style="min-width:0;padding:{{ it.pad }};border-radius:14px;font-size:14px;line-height:1.5;text-wrap:pretty;background:{{ it.bg }};color:{{ it.fg }};border:{{ it.border }};opacity:{{ it.op }};display:flex;flex-direction:column;gap:8px"><sc-if value="{{ it.hasText }}" hint-placeholder-val="{{ true }}"><span style="overflow-wrap:anywhere"><sc-for list="{{ it.parts }}" as="pt" hint-placeholder-count="1"><sc-if value="{{ pt.isText }}" hint-placeholder-val="{{ true }}">{{ pt.text }}</sc-if><sc-if value="{{ pt.isLink }}" hint-placeholder-val="{{ false }}"><span style="text-decoration:underline;text-underline-offset:2px">{{ pt.text }}</span></sc-if></sc-for></span></sc-if><sc-if value="{{ it.hasChip }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:10px;min-width:0;padding:8px 8px 8px 10px;border-radius:10px;background:{{ it.chipBg }};border:{{ it.chipBorder }}"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:{{ it.chipTile }};display:grid;place-items:center"><i class="icon-{{ it.chipIcon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ it.chipName }}</span><span style="display:block;font-size:12px;opacity:.72">{{ it.chipMeta }}</span></span><span role="img" aria-label="{{ tx.download }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px"><i class="icon-download" style="font-size:16px"></i></span></div></sc-if></div><sc-if value="{{ it.pinChip }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.chip.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.chip.n }}</span></sc-if></sc-if></sc-if><sc-if value="{{ it.pinLink }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.link.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.link.n }}</span></sc-if></sc-if></sc-if></div><sc-if value="{{ it.isSent }}" hint-placeholder-val="{{ true }}"><span style="font-size:11.5px;color:var(--muted-fg);padding:0 4px">{{ it.time }}</span></sc-if><sc-if value="{{ it.isSending }}" hint-placeholder-val="{{ false }}"><span style="font-size:11.5px;color:var(--muted-fg);padding:0 4px">{{ tx.sending }}</span></sc-if><sc-if value="{{ it.isFailed }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:center;gap:6px;font-size:12px;color:var(--danger-ink);padding:0 4px"><i class="icon-circle-alert" style="font-size:13px"></i>{{ tx.failed }}<span style="font-weight:600;text-decoration:underline;text-underline-offset:2px;color:var(--fg);display:inline-flex;align-items:center;min-height:{{ f.linkH }}">{{ tx.retry }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.status.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.status.n }}</span></sc-if></sc-if></span></sc-if></div></sc-if>
+                            </sc-for>
+                          </div>
+
+                          <sc-if value="{{ m.hasComposer }}" hint-placeholder-val="{{ true }}">
+                            <div style="padding:10px 12px;border-top:1px solid var(--border);display:flex;flex-direction:column;gap:6px;flex:none">
+                              <div style="display:flex;flex-direction:column;gap:8px;border:1px solid {{ m.compBorder }};border-radius:10px;padding:6px 6px 6px 12px;background:var(--bg)">
+                                <sc-if value="{{ m.staged }}" hint-placeholder-val="{{ false }}"><div style="display:flex;align-items:center;gap:8px;padding-top:4px"><div style="flex:0 1 340px;min-width:0;display:flex;align-items:center;gap:10px;padding:6px 6px 6px 8px;border-radius:9px;border:1px solid var(--border);background:var(--card)"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ m.stIcon }}" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.stName }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ m.stMeta }}</span></span><span role="img" aria-label="{{ tx.attachRemove }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.staged.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.staged.n }}</span></sc-if></sc-if></div></sc-if>
+                                <div style="display:flex;align-items:flex-end;gap:8px">
+                                  <span style="flex:1;min-width:0;font-size:14px;line-height:1.5;padding:5px 0;color:{{ m.draftFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.draftText }}</span>
+                                  <sc-if value="{{ m.canAttach }}" hint-placeholder-val="{{ true }}"><span role="img" aria-label="{{ tx.attachBtn }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg);background:{{ m.attachBg }}"><i class="icon-paperclip" style="font-size:16px"></i></span></sc-if>
+                                  <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.send.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.send.n }}</span></sc-if></sc-if><span role="img" aria-label="{{ tx.send }}" style="width:{{ f.sendBtn }};height:{{ f.sendBtn }};flex:none;display:grid;place-items:center;border-radius:8px;background:var(--primary);color:var(--primary-fg);opacity:{{ m.sendOp }}"><i class="icon-arrow-up" style="font-size:16px"></i></span>
+                                </div>
+                              </div>
+                              <sc-if value="{{ m.hasHint }}" hint-placeholder-val="{{ false }}"><span style="display:flex;align-items:center;gap:8px;font-size:12px;color:var(--muted-fg);padding:0 4px"><span style="min-width:0;text-wrap:pretty">{{ m.hint }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.hint.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.hint.n }}</span></sc-if></sc-if></span></sc-if>
+                            </div>
+                          </sc-if>
+                          <sc-if value="{{ m.hasNotice }}" hint-placeholder-val="{{ false }}">
+                            <div role="status" style="padding:14px 16px;border-top:1px solid var(--border);display:flex;align-items:center;gap:10px;font-size:13px;color:var(--muted-fg);flex:none"><i class="icon-{{ m.noticeIcon }}" style="font-size:16px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ m.noticeText }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.blocked.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.blocked.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                          <sc-if value="{{ m.readOnly }}" hint-placeholder-val="{{ false }}">
+                            <div style="padding:12px 16px;border-top:1px solid var(--border);font-size:12.5px;color:var(--muted-fg);text-align:center;flex:none"><span>{{ m.roText }} </span><span style="font-weight:600;color:var(--fg);text-decoration:underline;text-underline-offset:2px;display:inline-flex;align-items:center;min-height:{{ f.linkH }}">{{ m.roLink }}</span> <sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.readonly.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.readonly.n }}</span></sc-if></sc-if></div>
+                          </sc-if>
+                        </sc-if>
+                      </section>
+                    </sc-if>
+
+                    <sc-if value="{{ f.popover }}" hint-placeholder-val="{{ false }}">
+                      <div role="dialog" aria-label="{{ tx.details }}" style="position:absolute;top:56px;right:12px;width:292px;z-index:5;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);padding:14px;display:flex;flex-direction:column;gap:12px">
+                        <div style="display:flex;align-items:center;gap:10px"><span style="width:36px;height:36px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span><span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.th.name }}</span><span style="display:block;font-size:12.5px;color:var(--muted-fg)">{{ m.det.sub }}</span></span></div>
+                        <sc-if value="{{ m.det.hasList }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:6px"><span style="font-size:12px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:13px"><i class="icon-{{ dr.icon }}" style="font-size:14px;color:var(--muted-fg);flex:none"></i><span style="min-width:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ dr.text }}</span></span></sc-for></div></sc-if><sc-if value="{{ m.det.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:13px;color:var(--muted-fg);text-wrap:pretty">{{ m.det.note }}</span></sc-if>
+                        <sc-if value="{{ m.det.hasLink }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;justify-content:center;gap:6px;height:36px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:14px"></i></span></sc-if>
+                      </div>
+                    </sc-if>
+                  </div>
+                </div>
+              </div>
+
+              <sc-if value="{{ f.sheet }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:var(--overlay);z-index:6"></div>
+                <div role="dialog" aria-label="{{ tx.details }}" style="position:absolute;left:0;right:0;bottom:0;z-index:7;background:var(--card);border-radius:16px 16px 0 0;box-shadow:var(--shadow-lg);padding:8px 16px 18px;display:flex;flex-direction:column;gap:14px">
+                  <div aria-hidden="true" style="width:36px;height:4px;border-radius:4px;background:var(--border);margin:2px auto 0"></div>
+                  <div style="display:flex;align-items:center;gap:10px"><span style="width:38px;height:38px;flex:none;border-radius:{{ m.th.radius }};background:{{ m.th.avBg }};color:{{ m.th.avFg }};display:grid;place-items:center;font-size:12px;font-weight:600"><sc-if value="{{ m.th.isClass }}" hint-placeholder-val="{{ false }}"><i class="icon-megaphone" style="font-size:16px"></i></sc-if><sc-if value="{{ m.th.isDirect }}" hint-placeholder-val="{{ true }}">{{ m.th.initials }}</sc-if></span><span style="flex:1;min-width:0"><span style="display:block;font-weight:600;font-size:15px">{{ m.th.name }}</span><span style="display:block;font-size:13px;color:var(--muted-fg)">{{ m.det.sub }}</span></span></div>
+                  <sc-if value="{{ m.det.hasList }}" hint-placeholder-val="{{ true }}"><div style="display:flex;flex-direction:column;gap:8px"><span style="font-size:12.5px;font-weight:500;color:var(--muted-fg)">{{ m.det.label }}</span><sc-for list="{{ m.det.rows }}" as="dr" hint-placeholder-count="2"><span style="display:flex;align-items:center;gap:8px;font-size:14px"><i class="icon-{{ dr.icon }}" style="font-size:15px;color:var(--muted-fg);flex:none"></i>{{ dr.text }}</span></sc-for></div></sc-if><sc-if value="{{ m.det.hasNote }}" hint-placeholder-val="{{ false }}"><span style="font-size:14px;color:var(--muted-fg);text-wrap:pretty">{{ m.det.note }}</span></sc-if>
+                  <sc-if value="{{ m.det.hasLink }}" hint-placeholder-val="{{ true }}"><span style="display:flex;align-items:center;justify-content:center;gap:6px;height:44px;border-radius:9px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:14px;font-weight:500">{{ m.det.link }}<i class="icon-arrow-right" style="font-size:15px"></i></span></sc-if>
+                </div>
+              </sc-if>
+
+              <sc-if value="{{ m.dlg.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:var(--overlay);z-index:6"></div>
+                <div role="dialog" aria-label="{{ tx.attachTitle }}" style="position:absolute;left:{{ f.dlgLeft }};right:{{ f.dlgRight }};top:{{ f.dlgTop }};bottom:{{ f.dlgBottom }};transform:{{ f.dlgMove }};width:{{ f.dlgW }};z-index:7;background:var(--card);border:1px solid var(--border);border-radius:{{ f.dlgR }};box-shadow:var(--shadow-lg);display:flex;flex-direction:column">
+                  <div style="display:flex;align-items:center;gap:12px;padding:18px 20px 0"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-paperclip" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:16px;font-weight:600;line-height:1.3">{{ tx.attachTitle }}</span></span><span role="img" aria-label="{{ tx.close }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;margin:0 -8px 0 0;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:17px"></i></span></div>
+                  <div style="padding:16px 20px;display:flex;flex-direction:column;gap:14px">
+                    <sc-if value="{{ m.dlg.pick }}" hint-placeholder-val="{{ true }}">
+                      <div style="border:1px dashed {{ m.dlg.dropBorder }};border-radius:10px;padding:22px 16px;display:flex;flex-direction:column;align-items:center;text-align:center;gap:8px"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-upload" style="font-size:15px"></i>{{ tx.chooseFile }}</span><span style="font-size:12.5px;color:var(--muted-fg)">{{ tx.attachAccept }}</span></div>
+                    </sc-if>
+                    <sc-if value="{{ m.dlg.hasFile }}" hint-placeholder-val="{{ false }}">
+                      <div style="border:1px solid var(--border);border-radius:10px;padding:10px 10px 10px 12px;display:flex;flex-direction:column;gap:10px"><div style="display:flex;align-items:center;gap:10px"><span style="width:32px;height:32px;flex:none;border-radius:8px;background:var(--muted);display:grid;place-items:center"><i class="icon-file-text" style="font-size:16px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:13.5px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.dlg.name }}</span><span style="display:block;font-size:12px;color:var(--muted-fg)">{{ m.dlg.meta }}</span></span><span role="img" aria-label="{{ tx.attachRemove }}" style="width:{{ f.smH }};height:{{ f.smH }};flex:none;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:15px"></i></span></div><sc-if value="{{ m.dlg.uploading }}" hint-placeholder-val="{{ false }}"><div role="progressbar" aria-valuenow="{{ m.dlg.pct }}" aria-valuemin="0" aria-valuemax="100" style="height:4px;border-radius:4px;background:var(--muted);overflow:hidden"><span style="display:block;height:100%;width:{{ m.dlg.pctW }};background:var(--accent-c)"></span></div></sc-if></div>
+                    </sc-if>
+                    <sc-if value="{{ m.dlg.hasErr }}" hint-placeholder-val="{{ false }}"><span role="alert" style="display:flex;align-items:flex-start;gap:6px;font-size:12.5px;color:var(--danger-ink)"><i class="icon-circle-alert" style="font-size:14px;margin-top:2px;flex:none"></i><span style="flex:1;min-width:0;text-wrap:pretty">{{ m.dlg.err }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogErr.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogErr.n }}</span></sc-if></sc-if></span></sc-if>
+                  </div>
+                  <div style="display:flex;justify-content:flex-end;align-items:center;gap:8px;padding:0 20px 18px"><span style="display:inline-flex;align-items:center;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);font-size:13.5px;font-weight:500">{{ tx.cancel }}</span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.dialogDo.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.dialogDo.n }}</span></sc-if></sc-if><span aria-disabled="{{ m.dlg.sendOff }}" style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 16px;border-radius:8px;background:var(--primary);color:var(--primary-fg);font-size:13.5px;font-weight:500;opacity:{{ m.dlg.sendOp }}"><i class="icon-paperclip" style="font-size:15px"></i>{{ tx.attachDo }}</span></div>
+                </div>
+              </sc-if>
+              <sc-if value="{{ m.pk.open }}" hint-placeholder-val="{{ false }}">
+                <div style="position:absolute;inset:0;background:var(--overlay);z-index:6"></div>
+                <div role="dialog" aria-label="{{ tx.newMsg }}" style="position:absolute;left:50%;top:{{ f.pkTop }};transform:translateX(-50%);width:{{ f.pkW }};max-height:{{ f.pkH }};z-index:7;background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow-lg);display:flex;flex-direction:column;overflow:hidden">
+                  <div style="display:flex;align-items:center;gap:12px;padding:18px 14px 4px 18px;flex:none"><span style="width:36px;height:36px;flex:none;border-radius:9px;background:var(--muted);display:grid;place-items:center"><i class="icon-message-square-plus" style="font-size:17px"></i></span><span style="flex:1;min-width:0"><span style="display:block;font-size:16px;font-weight:600;line-height:1.35">{{ tx.newMsg }}</span><span style="display:block;margin-top:3px;font-size:13px;color:var(--muted-fg);line-height:1.5;text-wrap:pretty">{{ tx.pickDesc }}</span></span><span role="img" aria-label="{{ tx.close }}" style="width:{{ f.iconBtn }};height:{{ f.iconBtn }};flex:none;align-self:flex-start;display:grid;place-items:center;border-radius:7px;color:var(--muted-fg)"><i class="icon-x" style="font-size:17px"></i></span></div>
+                  <div style="padding:12px 18px 0;display:flex;flex-direction:column;gap:10px;flex:none">
+                    <div style="display:flex;align-items:center;gap:8px"><div role="tablist" aria-label="{{ tx.newMsg }}" style="flex:1;display:flex;padding:3px;background:var(--muted);border-radius:9px;gap:2px"><sc-for list="{{ m.pk.segs }}" as="sg" hint-placeholder-count="2"><span role="tab" aria-selected="{{ sg.on }}" style="flex:1;display:flex;align-items:center;justify-content:center;gap:6px;height:{{ f.tabH }};padding:0 10px;border-radius:7px;font-size:13px;font-weight:500;white-space:nowrap;background:{{ sg.bg }};color:{{ sg.fg }};box-shadow:{{ sg.ring }}"><i class="icon-{{ sg.icon }}" style="font-size:14px"></i>{{ sg.label }}</span></sc-for></div><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.seg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.seg.n }}</span></sc-if></sc-if></div>
+                    <div style="display:flex;flex-wrap:wrap;align-items:center;gap:8px">
+                      <span style="flex:1 1 180px;min-width:0;display:flex;align-items:center;gap:8px;height:{{ f.fieldH }};padding:0 10px;border:1px solid {{ m.pk.qBorder }};border-radius:8px;background:var(--bg)"><i class="icon-search" style="font-size:15px;color:var(--muted-fg)"></i><span style="flex:1;min-width:0;font-size:13px;color:{{ m.pk.qFg }};white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ m.pk.q }}</span></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pkSearch.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.pkSearch.n }}</span></sc-if></sc-if>
+                      <sc-if value="{{ m.pk.hasFilter }}" hint-placeholder-val="{{ true }}"><span aria-label="{{ tx.filterLabel }}" style="flex:{{ f.pkSelFlex }};min-width:0;display:inline-flex;align-items:center;justify-content:space-between;gap:10px;height:{{ f.fieldH }};padding:0 10px;border:1px solid var(--border);border-radius:8px;background:var(--bg);font-size:13px;white-space:nowrap"><span style="min-width:0;overflow:hidden;text-overflow:ellipsis">{{ m.pk.filter }}</span><i class="icon-chevrons-up-down" style="font-size:14px;color:var(--muted-fg);flex:none"></i></span><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.filter.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.filter.n }}</span></sc-if></sc-if></sc-if>
+                    </div>
+                  </div>
+                  <div style="flex:1;min-height:0;position:relative;display:flex;flex-direction:column;padding:8px 12px 12px">
+                    <sc-if value="{{ m.pk.showRows }}" hint-placeholder-val="{{ true }}">
+                      <div role="listbox" aria-label="{{ tx.newMsg }}" style="flex:1;min-height:0;overflow:hidden;display:flex;flex-direction:column;gap:1px">
+                        <sc-for list="{{ m.pk.rows }}" as="pr" hint-placeholder-count="6"><div role="option" aria-selected="{{ pr.on }}" style="display:flex;align-items:center;gap:10px;padding:{{ f.pkRowPad }};border-radius:8px;background:{{ pr.bg }}"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted);color:var(--fg);display:grid;place-items:center;font-size:12px;font-weight:600">{{ pr.initials }}</span><span style="flex:1;min-width:0"><span style="display:block;font-size:14px;font-weight:500;white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ pr.name }}</span><span style="display:block;font-size:12px;color:var(--muted-fg);white-space:nowrap;overflow:hidden;text-overflow:ellipsis">{{ pr.sub }}</span></span><sc-if value="{{ pr.hasThread }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;flex:none;font-size:11.5px;color:var(--muted-fg);white-space:nowrap"><i class="icon-message-square" style="font-size:13px"></i>{{ pr.threadLabel }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pr.pinOn }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pr.pinN }}</span></sc-if></sc-if></div></sc-for>
+                      </div>
+                    </sc-if>
+                    <sc-if value="{{ m.pk.skeleton }}" hint-placeholder-val="{{ false }}">
+                      <div role="status" aria-label="{{ tx.loading }}" style="display:flex;flex-direction:column;gap:1px"><sc-for list="{{ m.pk.skel }}" as="ps" hint-placeholder-count="6"><div style="display:flex;align-items:center;gap:10px;padding:{{ f.pkRowPad }}"><span style="width:32px;height:32px;flex:none;border-radius:50%;background:var(--muted)"></span><span style="flex:1;min-width:0;display:flex;flex-direction:column;gap:7px"><span style="height:11px;width:{{ ps.w1 }};border-radius:6px;background:var(--muted)"></span><span style="height:10px;width:{{ ps.w2 }};border-radius:6px;background:var(--muted)"></span></span></div></sc-for><div style="display:flex;justify-content:center;padding:6px"><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pkMsg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.pkMsg.n }}</span></sc-if></sc-if></div></div>
+                    </sc-if>
+                    <sc-if value="{{ m.pk.hasMsg }}" hint-placeholder-val="{{ false }}">
+                      <div style="flex:1;display:flex;flex-direction:column;align-items:center;justify-content:center;text-align:center;gap:10px;padding:24px 20px"><span style="width:40px;height:40px;border-radius:11px;background:var(--muted);display:grid;place-items:center"><i class="icon-{{ m.pk.msgIcon }}" style="font-size:19px"></i></span><span style="max-width:32ch;font-size:13.5px;color:var(--muted-fg);text-wrap:pretty">{{ m.pk.msgText }}</span><sc-if value="{{ m.pk.retry }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:6px;height:{{ f.btnH }};padding:0 14px;border-radius:8px;border:1px solid var(--border);background:var(--card);box-shadow:var(--shadow);font-size:13.5px;font-weight:500"><i class="icon-rotate-cw" style="font-size:14px"></i>{{ tx.retry }}</span></sc-if><sc-if value="{{ f.pins }}" hint-placeholder-val="{{ false }}"><sc-if value="{{ pin.pkMsg.on }}" hint-placeholder-val="{{ false }}"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ pin.pkMsg.n }}</span></sc-if></sc-if></div>
+                    </sc-if>
+                  </div>
+                </div>
+              </sc-if>
+
+            </div>
+          </div>
+        </div>
+      </figure>
+    </sc-for>
+    <aside data-screen-label="Notes" style="flex:1 1 320px;min-width:0;display:flex;flex-direction:column;gap:12px;padding-top:26px">
+      <h3 style="margin:0;font-size:16px;font-weight:600;letter-spacing:-0.01em">{{ notesTitle }}</h3>
+      <ol style="margin:0;padding:0;list-style:none;display:flex;flex-direction:column;gap:10px">
+        <sc-for list="{{ notes }}" as="n" hint-placeholder-count="4"><li style="display:flex;gap:10px;align-items:flex-start"><span style="display:inline-grid;place-items:center;width:20px;height:20px;flex:none;margin-top:1px;border-radius:50%;background:var(--anno);color:#fff;font-size:11px;font-weight:700">{{ n.n }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ n.text }}</span></li></sc-for>
+      </ol>
+      <p style="margin:0;font-size:12.5px;color:var(--muted-fg);text-wrap:pretty">The numbers are on the 1280 frame. Everything without a number is drawn as R7 draws it, and as the product has it at v0.14.1.</p>
+    </aside>
+  </div>
+</section>
+
+<section data-screen-label="Adds" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">What R7 draws, and what F2 changes</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The middle column is R7’s Messages as the proposal drew it and the product built it, which is each screen’s “As today (R7)” state above. The right is this page. Nothing else on Messages changes: the class channels, announcements, the attach flow’s states and the student’s list stay as they are.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Part</span><span>R7</span><span>F2</span></div>
+      <sc-for list="{{ adds }}" as="r" hint-placeholder-count="10"><div style="display:grid;grid-template-columns:minmax(0,.7fr) minmax(0,1.2fr) minmax(0,1.8fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.part }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.deck }}</span><span style="text-wrap:pretty">{{ r.page }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="States" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Which state shows</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">For staff and for students alike, unless a row says otherwise. The last column is the rule behind it, in the plan or in the owner’s decision of 23 Nov 2026.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:820px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>When</span><span>What shows</span><span>Cause</span></div>
+      <sc-for list="{{ whens }}" as="r" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.6fr) minmax(0,1fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-weight:600;text-wrap:pretty">{{ r.when }}</span><span style="text-wrap:pretty">{{ r.what }}</span><span style="color:var(--muted-fg);text-wrap:pretty">{{ r.cause }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Copy" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">The words, Vietnamese first</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">The frames use these exact strings. “R7” says both strings are in the locale files now (keys in <span style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">web/src/lib/i18n/locales/*/teacher.json</span>, <span style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">student.json</span> and <span style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">common.json</span>); “Changed” that the key exists and its words change; “New” that both are proposed here. New and changed strings come first.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:860px">
+      <div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Where</span><span>Tiếng Việt</span><span>English</span><span>Status</span></div>
+      <sc-for list="{{ copyRows }}" as="c" hint-placeholder-count="12"><div style="display:grid;grid-template-columns:110px minmax(0,1.5fr) minmax(0,1.5fr) 76px;gap:14px;padding:9px 16px;border-top:1px solid var(--border);font-size:13px;align-items:baseline"><span style="color:var(--muted-fg)">{{ c.where }}</span><span lang="vi" style="text-wrap:pretty">{{ c.vi }}</span><span style="text-wrap:pretty">{{ c.en }}</span><span style="font-size:12px;font-weight:500;color:{{ c.tone }}">{{ c.status }}</span></div></sc-for>
+    </div>
+  </div>
+</section>
+
+<section data-screen-label="Open questions" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">Questions for the owner</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">{{ qIntro }}</p>
+  </div>
+  <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(min(400px,100%),1fr));gap:16px;align-items:start">
+    <sc-for list="{{ questions }}" as="q" hint-placeholder-count="6"><div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);padding:16px 18px;display:flex;flex-direction:column;gap:8px"><span style="display:flex;align-items:center;gap:8px;flex-wrap:wrap;font-size:12px;font-weight:600;color:var(--muted-fg);letter-spacing:.04em;text-transform:uppercase">{{ q.id }}<sc-if value="{{ q.decided }}" hint-placeholder-val="{{ false }}"><span style="display:inline-flex;align-items:center;gap:5px;height:22px;padding:0 8px;border-radius:999px;background:var(--success-soft);color:var(--success-ink);letter-spacing:0;text-transform:none"><i class="icon-check" style="font-size:13px"></i>Decided</span></sc-if></span><strong style="font-size:15px;font-weight:600;line-height:1.4;text-wrap:pretty">{{ q.q }}</strong><span style="color:var(--muted-fg);text-wrap:pretty">{{ q.why }}</span><span style="text-wrap:pretty"><b style="font-weight:600">{{ q.label }}</b> {{ q.def }}</span></div></sc-for>
+  </div>
+</section>
+
+<section data-screen-label="Handoff" style="display:flex;flex-direction:column;gap:14px">
+  <div style="display:flex;flex-direction:column;gap:6px;max-width:800px">
+    <h2 style="margin:0;font-size:22px;font-weight:600;letter-spacing:-0.015em">For the F2 build</h2>
+    <p style="margin:0;color:var(--muted-fg);text-wrap:pretty">What each part of the web takes from this page. The server’s rules (who may write first, the colleague read, the picker’s read) are the plan’s, in Quizzivy/docs <span style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">docs/plan/77g-f2-messaging.md</span>, and change the sdk contract first. Build only with <span style="font-family:ui-monospace,Menlo,monospace;font-size:12.5px">components/ui</span> and the named tokens; the last rows say what the design system lacks.</p>
+  </div>
+  <div style="background:var(--card);border:1px solid var(--border);border-radius:12px;box-shadow:var(--shadow);overflow-x:auto">
+    <div style="min-width:720px">
+      <div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:10px 16px;background:var(--muted);font-size:12px;font-weight:500;color:var(--muted-fg)"><span>Web file</span><span>From this page</span></div>
+      <sc-for list="{{ handoff }}" as="h" hint-placeholder-count="8"><div style="display:grid;grid-template-columns:minmax(0,1fr) minmax(0,2.4fr);gap:16px;padding:11px 16px;border-top:1px solid var(--border);font-size:13.5px;align-items:baseline"><span style="font-family:ui-monospace,Menlo,monospace;font-size:12px;overflow-wrap:anywhere">{{ h.what }}</span><span style="text-wrap:pretty">{{ h.takes }}</span></div></sc-for>
+    </div>
+  </div>
+  <div style="max-width:920px;display:flex;flex-direction:column;gap:8px">
+    <sc-for list="{{ method }}" as="mm" hint-placeholder-count="3"><p style="margin:0;font-size:13px;color:var(--muted-fg);text-wrap:pretty"><b style="font-weight:600;color:var(--fg)">{{ mm.head }}</b> {{ mm.text }}</p></sc-for>
+  </div>
+</section>
+
+</div>
+</div>
+</x-dc>
+<script type="text/x-dc" data-dc-script data-props="{&quot;theme&quot;:{&quot;editor&quot;:&quot;enum&quot;,&quot;options&quot;:[&quot;light&quot;,&quot;dark&quot;],&quot;default&quot;:&quot;light&quot;,&quot;tsType&quot;:&quot;'light' | 'dark'&quot;}}">
+// F2 Messaging (DG-233). Built from R7 Messages.dc.html's script: R7's frames are each screen's "today" state.
+// [key, where, Tiếng Việt, English, status]: R7 = in the locale files since R7; Changed = the key exists, the words change; New = proposed here
+const STR = [
+  ['newMsg', 'Page, dialog', 'Tin nhắn mới', 'New message', 'New'],
+  ['lead', 'Page', 'Thông báo tới lớp và tin nhắn riêng với học viên và đồng nghiệp.', 'Announcements to classes, and direct messages with students and colleagues.', 'Changed'],
+  ['tabColleagues', 'List', 'Đồng nghiệp', 'Colleagues', 'New'],
+  ['collEmpty', 'List', 'Chưa có tin nhắn với đồng nghiệp. Bấm “Tin nhắn mới” để nhắn cho một đồng nghiệp.', 'No messages with colleagues yet. Press “New message” to write to one.', 'New'],
+  ['candColl', 'List', 'Đồng nghiệp chưa nhắn tin', 'Colleagues not messaged yet', 'New'],
+  ['noClass', 'List, dialog, thread', 'Chưa vào lớp nào', 'In no class', 'New'],
+  ['pickDesc', 'Dialog', 'Chọn một học viên hoặc một đồng nghiệp. Chỉ hai người trong cuộc trò chuyện đọc được tin nhắn.', 'Choose a student or a colleague. Only the two of you can read the conversation.', 'New'],
+  ['segStudents', 'Dialog', 'Học viên', 'Students', 'New'],
+  ['segColleagues', 'Dialog', 'Đồng nghiệp', 'Colleagues', 'New'],
+  ['pickSearch', 'Dialog', 'Tìm theo tên', 'Search by name', 'New'],
+  ['filterLabel', 'Dialog', 'Lọc học viên', 'Filter students', 'New'],
+  ['fAll', 'Dialog', 'Tất cả học viên', 'All students', 'New'],
+  ['fMine', 'Dialog', 'Học viên lớp của tôi', 'Students in my classes', 'New'],
+  ['hasThread', 'Dialog', 'Đã có cuộc trò chuyện', 'Already talking', 'New'],
+  ['pickNoStudent', 'Dialog', 'Không có học viên nào khớp với “{q}”.', 'No student matches “{q}”.', 'New'],
+  ['pickNoColleague', 'Dialog', 'Không có đồng nghiệp nào khớp với “{q}”.', 'No colleague matches “{q}”.', 'New'],
+  ['pickError', 'Dialog', 'Không tải được danh sách.', 'The list could not be loaded.', 'New'],
+  ['detNotTaught', 'Details', 'Không học lớp nào của bạn.', 'Not in any of your classes.', 'New'],
+  ['detTheirClasses', 'Details', 'Lớp đang học', 'Classes', 'New'],
+  ['detNoClass', 'Details', 'Chưa vào lớp nào của trung tâm.', 'Not in any class at the centre.', 'New'],
+  ['detFiles', 'Details', 'Tệp đã chia sẻ', 'Shared files', 'New'],
+  ['collThreadEmpty', 'Stream', 'Chưa có tin nhắn. Chỉ bạn và {name} đọc được cuộc trò chuyện này.', 'No messages yet. Only you and {name} can read this conversation.', 'New'],
+  ['roleTeacher', 'List, thread, dialog', 'Giáo viên', 'Teacher', 'R7'],
+  ['roleAdmin', 'List, thread, dialog', 'Quản trị viên', 'Admin', 'R7'],
+  ['sCentre', 'Student', 'Giáo viên của trung tâm', 'Teacher at the centre', 'New'],
+  ['notifHint', 'Settings › Thông báo', 'Tin nhắn riêng từ học viên và đồng nghiệp', 'Direct messages from students and colleagues', 'Changed'],
+  ['title', 'Page', 'Tin nhắn', 'Messages', 'R7'],
+  ['newAnn', 'Page', 'Thông báo mới', 'New announcement', 'R7'],
+  ['newAnnOff', 'Page', 'Bạn chưa dạy lớp nào.', 'You teach no class yet.', 'R7'],
+  ['search', 'List', 'Tìm người và lớp', 'Search people and classes', 'R7'],
+  ['tabAll', 'List', 'Tất cả', 'All', 'R7'],
+  ['tabDirect', 'List', 'Riêng', 'Direct', 'R7'],
+  ['tabClasses', 'List', 'Lớp', 'Classes', 'R7'],
+  ['you', 'List', 'Bạn: ', 'You: ', 'R7'],
+  ['attachPreview', 'List', 'Tệp đính kèm · {name}', 'Attachment · {name}', 'R7'],
+  ['listEmpty', 'List', 'Chưa có tin nhắn. Nhắn cho một học viên từ trang Học viên, hoặc đăng thông báo tới một lớp.', 'No messages yet. Message a student from Students or post to a class.', 'R7'],
+  ['listError', 'List', 'Không tải được tin nhắn.', 'Messages could not be loaded.', 'R7'],
+  ['noMatch', 'List', 'Không có người hay lớp nào khớp với “{q}”.', 'No person or class matches “{q}”.', 'R7'],
+  ['candLabel', 'List', 'Học viên chưa nhắn tin', 'Students not messaged yet', 'R7'],
+  ['former', 'List, thread, Details', 'Học viên cũ', 'Former student', 'R7'],
+  ['loading', 'List', 'Đang tải…', 'Loading…', 'R7'],
+  ['retry', 'List', 'Thử lại', 'Retry', 'R7'],
+  ['back', 'Thread', 'Về danh sách', 'Back to conversations', 'R7'],
+  ['details', 'Thread', 'Chi tiết', 'Details', 'R7'],
+  ['subClass', 'Thread', '{count} học viên · thông báo lớp', '{count} students · announcements', 'R7'],
+  ['roleStudent', 'Details', 'Học viên', 'Student', 'R7'],
+  ['roleClass', 'Details', 'Lớp', 'Class', 'R7'],
+  ['detClasses', 'Details', 'Lớp đang học với bạn', 'Classes with you', 'R7'],
+  ['detOpenStudent', 'Details', 'Mở trong Học viên', 'Open in Students', 'R7'],
+  ['detMembers', 'Details', 'Thành viên', 'Members', 'R7'],
+  ['detCount', 'Details', '{count} học viên', '{count} students', 'R7'],
+  ['detFormer', 'Details', 'Không còn học lớp nào của bạn.', 'No longer in any of your classes.', 'R7'],
+  ['detOpenClass', 'Details', 'Mở trang lớp', 'Open the class', 'R7'],
+  ['today', 'Stream', 'Hôm nay', 'Today', 'R7'],
+  ['monday', 'Stream', 'Thứ Hai', 'Monday', 'R7'],
+  ['loadEarlier', 'Stream', 'Xem tin nhắn cũ hơn', 'Load earlier', 'R7'],
+  ['annLabel', 'Stream', 'Thông báo · {time}', 'Announcement · {time}', 'R7'],
+  ['seenBy', 'Stream', '{seen}/{of} học viên đã xem', 'Seen by {seen} of {of}', 'R7'],
+  ['attemptCard', 'Stream', '{title} · rời khỏi bài thi {count} lần', '{title} · left the test {count} times', 'R7'],
+  ['openAttempt', 'Stream', 'Mở lượt làm bài', 'Open attempt', 'R7'],
+  ['threadEmpty', 'Stream', 'Chưa có tin nhắn.', 'No messages yet.', 'R7'],
+  ['channelEmpty', 'Stream', 'Chưa có thông báo nào.', 'No announcements yet.', 'R7'],
+  ['threadError', 'Stream', 'Không tải được cuộc trò chuyện này.', 'This conversation could not be loaded.', 'R7'],
+  ['sending', 'Stream', 'Đang gửi…', 'Sending…', 'R7'],
+  ['failed', 'Stream', 'Chưa gửi được.', 'Not sent.', 'R7'],
+  ['download', 'Stream', 'Tải xuống', 'Download', 'R7'],
+  ['phDirect', 'Composer', 'Nhắn cho {name}…', 'Message {name}…', 'R7'],
+  ['phClass', 'Composer', 'Viết thông báo tới lớp {name}…', 'Write an announcement to {name}…', 'R7'],
+  ['attachBtn', 'Composer', 'Đính kèm tệp', 'Attach file', 'R7'],
+  ['send', 'Composer', 'Gửi', 'Send', 'R7'],
+  ['classHint', 'Composer', 'Gửi tới cả {count} học viên. Học viên trả lời bằng tin nhắn riêng cho bạn.', 'Sent to all {count} students. Replies come to you as direct messages.', 'R7'],
+  ['accountOff', 'Composer', 'Tài khoản của {name} đã bị vô hiệu hoá nên không nhắn được.', '{name}’s account is disabled, so no message can be sent.', 'R7'],
+  ['archived', 'Composer', 'Lớp này đã được lưu trữ nên không đăng thêm thông báo được.', 'This class is archived, so nothing more can be posted.', 'R7'],
+  ['attachTitle', 'Attach', 'Đính kèm tệp', 'Attach a file', 'R7'],
+  ['attachDo', 'Attach', 'Đính kèm', 'Attach', 'R7'],
+  ['chooseFile', 'Attach', 'Chọn tệp', 'Choose file', 'R7'],
+  ['attachAccept', 'Attach', 'PDF, Word, ảnh hoặc âm thanh · tối đa 20 MB', 'PDF, Word, image or audio · up to 20 MB', 'R7'],
+  ['attachRemove', 'Attach, composer', 'Bỏ tệp', 'Remove file', 'R7'],
+  ['cancel', 'Attach', 'Huỷ', 'Cancel', 'R7'],
+  ['close', 'Dialog', 'Đóng', 'Close', 'R7'],
+  ['sTeacherSub', 'Student', 'Giáo viên của bạn · {classes}', 'Your teacher · {classes}', 'R7'],
+  ['sFormer', 'Student', 'Giáo viên cũ', 'Former teacher', 'R7'],
+  ['sChannelSub', 'Student', 'Thông báo lớp', 'Class announcements', 'R7'],
+  ['sReadOnly', 'Student', 'Chỉ giáo viên đăng được ở đây.', 'Only your teacher can post here.', 'R7'],
+  ['sReplyLink', 'Student', 'Nhắn riêng cho {name}', 'Reply to {name} directly', 'R7'],
+  ['sListEmpty', 'Student', 'Chưa có tin nhắn. Thông báo của giáo viên sẽ hiện ở đây.', 'No messages yet. Your teachers’ announcements appear here.', 'R7']
+];
+const fmt = (str, p) => String(str).replace(/\{(\w+)\}/g, (m, k) => (p && p[k] != null ? p[k] : m));
+
+// ---- people and classes: R7's, the deck's Admin › Users, and one new student in no class
+const TEACHER = 'Giàu Bùi';                    // the caller in every teacher frame, and the teacher of R7's student frames
+const MY_CLASSES = ['IELTS 6.5 Evening', 'IELTS Foundation A', 'Speaking Club Saturday', 'TOEIC 600 Weekend'];
+const NAM = { name: 'Lê Hoàng Nam', short: 'Nam', initials: 'NL', classes: ['IELTS 6.5 Evening', 'Speaking Club Saturday'] };
+const CLS = { name: 'IELTS 6.5 Evening', count: 24 };
+const TRANG = { name: 'Vũ Thu Trang', initials: 'TV', cls: 'IELTS Foundation A' };
+const THU = { name: 'Trần Minh Thư', short: 'Thư', initials: 'TT', former: true };
+// colleagues: the deck's Admin › Users (Thường Võ is the admin; Lý Thanh Vân's account is disabled) and the share dialog's Nguyễn Thu Trang
+const DUC = { name: 'Phan Minh Đức', short: 'Đức', initials: 'ĐP', role: 'teacher' };
+const TTRANG = { name: 'Nguyễn Thu Trang', short: 'Trang', initials: 'TN', role: 'teacher' };
+const THUONG = { name: 'Thường Võ', short: 'Thường', initials: 'VT', role: 'admin' };
+const VAN = { name: 'Lý Thanh Vân', short: 'Vân', initials: 'VL', role: 'teacher' };
+// students for the picker: [name, initials, classes (the caller's first), has a thread with the caller]
+// Kids Starters B is Phan Minh Đức's class on this page; Lâm Minh Châu is new here: an account in no class
+const STUDENTS = [
+  ['Trần Minh Anh', 'AT', ['IELTS 6.5 Evening'], false],
+  ['Nguyễn Gia Bảo', 'BN', ['IELTS Foundation A', 'Kids Starters B'], false],
+  ['Lâm Minh Châu', 'CL', [], false],
+  ['Phạm Thu Hà', 'HP', ['IELTS Foundation A'], true],
+  ['Đặng Quốc Huy', 'HĐ', ['IELTS 6.5 Evening'], false],
+  ['Võ Khánh Linh', 'LV', ['TOEIC 600 Weekend'], false],
+  ['Bùi Ngọc Mai', 'MB', ['IELTS 6.5 Evening'], false],
+  ['Hoàng Đức Minh', 'MH', ['Kids Starters B'], false],
+  ['Lê Hoàng Nam', 'NL', ['IELTS 6.5 Evening', 'Speaking Club Saturday'], true],
+  ['Đỗ Phương Thảo', 'TĐ', ['IELTS Foundation A'], true]
+];
+const MINH = { name: 'Hoàng Đức Minh', short: 'Minh', initials: 'MH', classes: ['Kids Starters B'] };
+const CHAU = { name: 'Lâm Minh Châu', short: 'Châu', initials: 'CL', classes: [] };
+// [Vietnamese, English] throughout
+const CONVS = [
+  { id: 'd1', kind: 'direct', name: 'Lê Hoàng Nam', initials: 'NL', time: ['20:32', '20:32'], unread: 0, file: true },
+  { id: 'c1', kind: 'class', name: 'IELTS 6.5 Evening', time: ['17:42', '17:42'], unread: 0, mine: true, pv: ['Đáp án Unit 4, các em xem trước buổi thứ Năm.', 'The Unit 4 answer key, for Thursday.'] },
+  { id: 'd2', kind: 'direct', name: 'Phạm Thu Hà', initials: 'HP', time: ['18:02', '18:02'], unread: 1, pv: ['Em cảm ơn thầy cô nhiều ạ!', 'Thank you so much!'] },
+  { id: 'c2', kind: 'class', name: 'IELTS Foundation A', time: ['Hôm qua', 'Yesterday'], unread: 0, mine: true, pv: ['Bài nghe Unit 4 mở đến 22:00 thứ Năm.', 'Unit 4 listening is open until Thursday 22:00.'] },
+  { id: 'd3', kind: 'direct', name: 'Đỗ Phương Thảo', initials: 'TĐ', time: ['Th 2', 'Mon'], unread: 0, pv: ['Em cảm ơn ạ!', 'Thank you!'] },
+  { id: 'c3', kind: 'class', name: 'TOEIC 600 Weekend', time: ['CN', 'Sun'], unread: 0, mine: true, pv: ['Chủ nhật này lớp nghỉ, học bù chiều thứ Bảy.', 'No class this Sunday. We make it up on Saturday afternoon.'] }
+];
+// F2's colleague threads, newest first
+const COLL = [
+  { id: 'k1', who: DUC, time: ['20:10', '20:10'], unread: 1, pv: ['Cảm ơn chị, tuần sau em thử với lớp Kids Starters B.', 'Thanks, I will try it with Kids Starters B next week.'] },
+  { id: 'k2', who: THUONG, time: ['Hôm qua', 'Yesterday'], unread: 0, mine: true, pv: ['Dạ em gửi lịch thi thử tháng 12 cho anh rồi ạ.', 'I have sent you the December mock test dates.'] },
+  { id: 'k3', who: VAN, time: ['12/11', '12 Nov'], unread: 0, pv: ['Chị gửi lại em bộ đề Reading cũ nhé.', 'Here is the old Reading set again.'] }
+];
+const FILE_GUIDE = { icon: 'file-text', name: ['Hướng dẫn thi thử.pdf', 'Mock test guide.pdf'], meta: ['PDF · 1,2 MB', 'PDF · 1.2 MB'] };
+const FILE_KEY = { icon: 'file-type', name: ['Đáp án Unit 4.docx', 'Unit 4 answer key.docx'], meta: ['Word · 340 KB', 'Word · 340 KB'] };
+const FILE_VOCAB = { icon: 'file-text', name: ['Từ vựng Unit 4.pdf', 'Unit 4 vocabulary.pdf'], meta: ['PDF · 280 KB', 'PDF · 280 KB'] };
+const FILE_CUE = { icon: 'file-text', name: ['Thẻ gợi ý Speaking Part 2.pdf', 'Speaking Part 2 cue cards.pdf'], meta: ['PDF · 860 KB', 'PDF · 860 KB'] };
+const FILE_PLAN = { icon: 'file-type', name: ['Kế hoạch nói thử tháng 12.docx', 'December speaking mock plan.docx'], meta: ['Word · 96 KB', 'Word · 96 KB'] };
+const FILE_RUBRIC = { icon: 'file-type', name: ['Tiêu chí chấm Writing Task 2.docx', 'Writing Task 2 marking criteria.docx'], meta: ['Word · 120 KB', 'Word · 120 KB'] };
+const FILE_SAMPLE = { icon: 'file-text', name: ['Bài mẫu Task 2 band 7.pdf', 'Task 2 band 7 samples.pdf'], meta: ['PDF · 410 KB', 'PDF · 410 KB'] };
+const LINK = 'https://example.edu.vn/thi-thu';
+const SAY = {
+  nam1: ['Dạ, lúc làm bài thi thử wifi nhà em bị rớt nên hệ thống tính là em rời khỏi bài ạ.', 'Hi teacher, my wifi dropped during the mock and it counted as leaving the test.'],
+  nam2: ['Nhờ thầy cô xem lại lượt làm bài giúp em. Em không mở gì khác ạ.', 'Can you check my attempt? I did not open anything else.'],
+  me1: [['Đã xem rồi, không sao nhé. Lần sau em xem cách chuẩn bị ở ', { link: LINK }, '.'], ['Checked, all fine. Next time, see how to prepare at ', { link: LINK }, '.']],
+  me2: ['Hướng dẫn làm bài thi thử, em đọc trước nhé.', 'The mock test guide. Read it before the next one.'],
+  t1: ['Chào Bảo, tuần này phần ngữ pháp của em tiến bộ rõ.', 'Hi Bảo, great progress on the grammar check this week.'],
+  t2: ['Thứ Năm học Unit 4, em nhớ mang tai nghe. Audio phát hai lần.', 'For Unit 4 on Thursday, please bring headphones. The audio plays twice.'],
+  t3: ['Từ vựng Unit 4, em xem trước nhé.', 'Unit 4 vocabulary. Have a look first.'],
+  s1: ['Dạ em cảm ơn ạ. Em sẽ mang tai nghe.', 'Thank you! I will bring headphones.'],
+  // F2: a student the caller does not teach
+  mi1: ['Chào Minh, cô là cô Giàu. Thầy Đức nhờ cô gửi em bài nghe luyện thêm cho kỳ thi Starters.', 'Hi Minh, I am Ms Giàu. Mr Đức asked me to send you extra listening for the Starters exam.'],
+  mi2: ['Dạ em cảm ơn cô ạ!', 'Thank you!'],
+  ch1: ['Chào Châu, trung tâm đã nhận đăng ký của em. Tuần sau em vào lớp IELTS Foundation A nhé.', 'Hi Châu, the centre has your registration. You join IELTS Foundation A next week.'],
+  // F2: two colleagues
+  du1: ['Chị Giàu ơi, em gửi chị bộ thẻ gợi ý em dùng cho lớp tối thứ Bảy.', 'Hi Giàu, here are the cue cards I use for the Saturday evening class.'],
+  me5: ['Cảm ơn em. Chị gửi lại tiêu chí chấm Writing Task 2 chị đang dùng.', 'Thank you. Here are the Writing Task 2 criteria I mark with.'],
+  du3: ['Cảm ơn chị, tuần sau em thử với lớp Kids Starters B.', 'Thanks, I will try it with Kids Starters B next week.'],
+  va1: ['Chị gửi lại em bộ đề Reading cũ nhé.', 'Here is the old Reading set again.'],
+  va2: ['Dạ em cảm ơn chị.', 'Thanks a lot.'],
+  // F2: the student's side, a teacher who does not teach Bảo
+  sd1: ['Chào Bảo, thầy là thầy Đức. Cô Giàu nhờ thầy nghe giúp phần Speaking Part 2 của em.', 'Hi Bảo, I am Mr Đức. Ms Giàu asked me to listen to your Speaking Part 2.'],
+  sd2: ['Thứ Bảy em lên sớm 15 phút, thầy nghe em nói thử nhé.', 'Come 15 minutes early on Saturday and I will listen to a try.'],
+  ss1: ['Dạ em cảm ơn thầy ạ. Thứ Bảy em lên sớm ạ.', 'Thank you! I will come early on Saturday.']
+};
+
+const PARTS = [['list', 'The list'], ['picker', 'Tin nhắn mới · students'], ['pickerColl', 'Tin nhắn mới · colleagues'], ['search', 'The list’s search'], ['notTaught', 'A student you do not teach'], ['colleague', 'A colleague’s thread'], ['student', 'The student’s side']];
+const STATES = {
+  list: [['today', 'As today (R7)'], ['all', 'Tất cả'], ['colleagues', 'Tab Đồng nghiệp'], ['collEmpty', 'Đồng nghiệp, none yet']],
+  picker: [['today', 'As today (R7)'], ['default', 'All students'], ['class', 'One class'], ['search', 'Searching “minh”'], ['existing', 'A conversation exists'], ['noMatch', 'No match'], ['loading', 'Loading'], ['error', 'Could not load']],
+  pickerColl: [['today', 'As today (R7)'], ['default', 'All colleagues'], ['search', 'Searching “thu”'], ['noMatch', 'No match']],
+  search: [['today', 'As today (R7)'], ['found', 'Search finds anyone']],
+  notTaught: [['today', 'As today (R7)'], ['empty', 'Just opened'], ['normal', 'A reply'], ['details', 'Details open'], ['noClass', 'In no class']],
+  colleague: [['today', 'As today (R7)'], ['empty', 'First message'], ['normal', 'Files both ways'], ['details', 'Details open'], ['blocked', 'Account disabled']],
+  student: [['today', 'As today (R7)'], ['normal', 'A teacher at the centre'], ['blocked', 'Account disabled']]
+};
+const START = { list: 'all', picker: 'default', pickerColl: 'default', search: 'found', notTaught: 'normal', colleague: 'normal', student: 'normal' };
+// the R7 frame each part opens on: [who, R7 screen, R7 state]
+const TODAY = { list: ['teacher', 'direct', 'normal'], picker: ['teacher', 'list', 'found'], pickerColl: ['teacher', 'list', 'search'], search: ['teacher', 'list', 'found'], notTaught: ['teacher', 'direct', 'details'], colleague: ['teacher', 'direct', 'normal'], student: ['student', 'direct', 'normal'] };
+
+// notes by part and state: [the pin's place, the note]
+const NOTES = {
+  'list:today': [['newAnn', 'R7: one action at the head, “Thông báo mới”. A first direct message starts from a student’s row in Học viên, a class’s member menu, or the list’s search.'], ['tabs', 'R7: three tabs, and “Riêng” holds every direct thread, all of them with students.']],
+  'list:all': [['newMsg', '“Tin nhắn mới” comes before “Thông báo mới”, as the outline button beside the primary one, and opens the dialog of Q5. It is there for every staff member who opens Tin nhắn.'], ['tabs', 'A fourth tab, “Đồng nghiệp”, after R7’s three (Q12). “Riêng” stays the threads with students; its count is theirs. The nav count is every unread direct message, a colleague’s included.'], ['row', 'A colleague’s thread sits in “Tất cả” among the rest, by its last message, as a person’s row: the photo or the initials, the name, the last message. No attempt card and no “Seen by” come with it.']],
+  'list:colleagues': [['tabs', '“Đồng nghiệp” lists the colleague threads only, newest first, with their own unread count on the tab.'], ['row', 'Lý Thanh Vân’s account is disabled. Her thread stays in the list, as a student’s does (R7).'], ['head', 'The thread’s sub-line is the colleague’s role name (Q9): “Giáo viên”, “Quản trị viên”, or a custom staff role’s name.']],
+  'list:collEmpty': [['listMsg', 'The tab’s own sentence when the caller has written to no colleague yet. It names the button that starts one.']],
+  'picker:today': [['cand', 'R7: the only way to find someone new is the list’s search, and it finds only a student who is or was in one of the caller’s classes. One the caller never taught is not found.']],
+  'picker:default': [['seg', 'The dialog opens on “Học viên”. Its choice of two is the product’s Segmented, as the list’s tabs are.'], ['filter', 'The filter is the product’s Select: “Tất cả học viên”, “Học viên lớp của tôi”, each of the caller’s classes, and “Chưa vào lớp nào”. It opens on “Tất cả học viên” (Q5).'], ['row', 'A row is the share dialog’s option row (PeoplePicker): the photo or the initials, the name, and under it every current class that is not archived, the caller’s own first, or “Chưa vào lớp nào” (Q4). No email and no username. A disabled account is not listed (Q3).'], ['existing', 'A student the caller already has a thread with is marked “Đã có cuộc trò chuyện”. Choosing that row opens the thread.']],
+  'picker:class': [['filter', 'One of the caller’s classes chosen. The rows are its students, by name; the sub-line still lists every class each one is in.']],
+  'picker:search': [['row', 'Under “Tất cả học viên” a search runs over every enabled student, in a class or in none (Q3). Here the caller’s own student comes first, then one in Phan Minh Đức’s class and one in no class.'], ['pkSearch', 'The match is on the name, without accents, as the list’s search is.']],
+  'picker:existing': [['row', '“Học viên lớp của tôi” with the keyboard on Lê Hoàng Nam. Choosing a row closes the dialog and opens the thread: his existing one, or an empty one for a student never written to, with the composer focused.']],
+  'picker:noMatch': [['pkMsg', 'One sentence that repeats what was typed, in the list’s place. The search field and the filter stay.']],
+  'picker:loading': [['pkMsg', 'Six rows of the option’s own shape while the first read is on its way.']],
+  'picker:error': [['pkMsg', 'One sentence and “Thử lại”, in the list’s place. The segment, the search and the filter stay.']],
+  'pickerColl:today': [['listMsg', 'R7: a colleague cannot be found or written to. A search for one finds nothing.']],
+  'pickerColl:default': [['seg', '“Đồng nghiệp” chosen. There is no filter: the centre’s staff is a short list.'], ['row', 'Every enabled account that opens the teacher workspace, never a student and never the caller (Q8): the name, the photo and the role name (Q9). No email.'], ['existing', 'A colleague the caller already writes to is marked as a student is.']],
+  'pickerColl:search': [['pkSearch', '“thu” finds Nguyễn Thu Trang and, without accents, Thường Võ.']],
+  'pickerColl:noMatch': [['pkMsg', 'The colleagues’ own sentence. Lý Thanh Vân is not offered at all, as her account is disabled (Q8).']],
+  'search:today': [['cand', 'R7: the search finds the students the caller may write to and has no thread with yet, under “Học viên chưa nhắn tin”: only those who are or were in the caller’s classes.']],
+  'search:found': [['cand', 'The same label, now over every enabled student: a student in another teacher’s class comes back with that class as the sub-line (Q4, Q5).'], ['row', 'A student in no class reads “Chưa vào lớp nào”. “Học viên cũ” stays for a former student of the caller.'], ['coll', 'A second label, “Đồng nghiệp chưa nhắn tin”, for the colleagues the search matches, with the role name as the sub-line. In the “Riêng” and “Lớp” tabs neither label shows; in “Đồng nghiệp” only this one does.']],
+  'notTaught:today': [['details', 'R7: Details lists the classes the student takes with the caller and links to Học viên. A student the caller never taught could not be reached at all.']],
+  'notTaught:empty': [['head', 'Opened from the dialog. The sub-line is the student’s classes, here another teacher’s: Kids Starters B.'], ['empty', 'R7’s empty sentence. The thread exists from its first message, so opening it and leaving creates nothing.'], ['send', 'The composer has the focus, with the paperclip, as in any staff thread.']],
+  'notTaught:normal': [['head', 'The sub-line stays the student’s classes. There is no attempt card here: those come only from the caller’s own assignments, as in R7.'], ['send', 'The student may reply, and has here (Q1). Nothing on the caller’s side changes.']],
+  'notTaught:details': [['details', 'Details keeps R7’s shape: the student’s classes under “Lớp đang học”, then one sentence of its own, “Không học lớp nào của bạn.”, and no link, since Học viên and the class pages are the caller’s own. The class’s teacher is not told of this thread (Q6).']],
+  'notTaught:noClass': [['head', 'A student in no class: the sub-line reads “Chưa vào lớp nào”.'], ['details', 'Details has no list and says “Chưa vào lớp nào của trung tâm.”']],
+  'colleague:today': [['send', 'R7: the thread’s form, which a colleague’s thread takes as it is: bubbles, chips, the composer with the paperclip.']],
+  'colleague:empty': [['head', 'The colleague’s name, photo or initials, and role name as the sub-line (Q9).'], ['empty', 'An empty sentence of its own that names the colleague and says who can read it (D17, Q6).'], ['send', 'Opened from the dialog with the composer focused.']],
+  'colleague:normal': [['chip', 'Both sides attach, by R7’s flow: the paperclip, the Attach dialog, the file waiting in the composer (Q10). Each side here sent a PDF and a Word file; PowerPoint and Excel are not in F2.'], ['send', 'Enter sends, as in any direct thread. No attempt card and no “Seen by” (Q12).'], ['nav', 'The nav count takes a colleague’s unread messages too. The bell’s item is R7’s message.received, “Phan Minh Đức: “…””, and the email waits as R7’s does (Q11).']],
+  'colleague:details': [['details', 'Details keeps R7’s form: the name and role, then a short list. For a colleague the list is “Tệp đã chia sẻ”, the files in the thread, newest first, as R7’s rows are: an icon and a name, not links. There is no link out: a teacher has no page of colleagues.']],
+  'colleague:blocked': [['blocked', 'Lý Thanh Vân’s account is disabled. The thread stays readable and the composer gives its place to R7’s sentence. She is no longer offered in the dialog.']],
+  'student:today': [['head', 'R7: a student’s threads are with their own teachers, “Giáo viên của bạn · {classes}”.']],
+  'student:normal': [['row', 'A staff member who does not teach the student wrote first. The row and the header read “Giáo viên của trung tâm”, for a teacher and for an admin alike, with no role (Q2).'], ['send', 'The student replies with the composer as usual (Q1): text only, no paperclip, as in R7.'], ['msgBtn', 'The top bar’s count and the bell’s message.received item are R7’s.']],
+  'student:blocked': [['blocked', 'The staff account is disabled: R7’s sentence in the composer’s place. The student cannot write first to this teacher again, as they never had a class together.']]
+};
+const PIN_KEYS = ['nav', 'msgBtn', 'newAnn', 'newMsg', 'tabs', 'row', 'head', 'cand', 'coll', 'listMsg', 'details', 'empty', 'chip', 'send', 'blocked', 'seg', 'filter', 'existing', 'pkSearch', 'pkMsg',
+  // R7's pins that this page's states never light: the template keeps R7's parts
+  'skeleton', 'load', 'link', 'status', 'staged', 'hint', 'readonly', 'dialogErr', 'dialogDo'];
+
+// [part, R7, F2]
+const ADDS = [
+  ['Who staff may write to', 'A student who is or was in one of the caller’s classes, or one the caller created, or one already in a thread with the caller.', 'Any enabled student account, in a class or in none, for every staff member who opens the teacher workspace (Q3).'],
+  ['Who a student may write to', 'A teacher of a class they are in now, not archived; and anyone already in a thread with them.', 'Unchanged. A thread a staff member started is open to the student’s reply (Q1).'],
+  ['Colleagues', 'No thread between two staff members.', 'Direct threads between two colleagues, 1:1 (Q7), with files both ways (Q10), unread counts, the bell and the email (Q11).'],
+  ['The page’s head', '“Thông báo mới”.', '“Tin nhắn mới” before it, an outline button that opens the dialog (Q5).'],
+  ['The list’s tabs', '“Tất cả”, “Riêng”, “Lớp”.', 'A fourth, “Đồng nghiệp”, with its own count and its own empty sentence. Colleague threads also sit in “Tất cả” (Q12).'],
+  ['The list’s search', 'Finds the caller’s students and former students under “Học viên chưa nhắn tin”.', 'Finds any enabled student under that label, and colleagues under “Đồng nghiệp chưa nhắn tin” (Q5).'],
+  ['A student’s sub-line', 'The classes the student takes with the caller, or “Học viên cũ”.', 'In the dialog and the search, every current class, the caller’s first, or “Chưa vào lớp nào” (Q4). In the thread’s header, the same for a student the caller does not teach.'],
+  ['Details', 'A student’s classes with the caller and “Mở trong Học viên”; a former student’s one sentence.', 'For a student the caller does not teach: their classes and “Không học lớp nào của bạn.”, no link. For a colleague: the role and “Tệp đã chia sẻ”, no link.'],
+  ['The student’s side', '“Giáo viên của bạn · {classes}”, or “Giáo viên cũ”.', '“Giáo viên của trung tâm” for a staff member who never taught the student (Q2).'],
+  ['Settings › Thông báo', '“Tin nhắn mới”, hint “Tin nhắn riêng từ học viên”.', 'The same switch, and its hint says “và đồng nghiệp” (Q11).']
+];
+// [when, what shows, rule]
+const WHENS = [
+  ['Staff press “Tin nhắn mới”', 'The dialog on “Học viên”, every enabled student by name, the filter on “Tất cả học viên”.', 'Q5. Staff are everyone who opens the teacher workspace.'],
+  ['The dialog’s list is loading', 'Six skeleton rows of the option’s shape.', 'The first read of the students or the colleagues.'],
+  ['The dialog’s list cannot load', '“Không tải được danh sách.” and “Thử lại” in the list’s place.', 'The server did not answer, or the device is offline.'],
+  ['A search in the dialog matches nothing', 'One sentence that repeats the query, for students or for colleagues.', 'The name is matched without accents.'],
+  ['A row already has a thread', '“Đã có cuộc trò chuyện” at its end. Choosing it opens that thread.', 'Q5.'],
+  ['A row is chosen', 'The dialog closes and the thread opens, empty if it is new, with the composer focused.', 'A direct thread exists from its first message (R7).'],
+  ['A student’s account is disabled', 'Not offered in the dialog or the search. An existing thread stays, with R7’s sentence in the composer’s place.', 'Q3; R7’s 409 MESSAGING_NOT_ALLOWED.'],
+  ['A colleague’s account is disabled', 'The same: not offered, and an existing thread is read only.', 'Q8.'],
+  ['The list’s search matches people', 'Threads first, then “Học viên chưa nhắn tin” and “Đồng nghiệp chưa nhắn tin”, each only while a search is typed.', 'Q5. “Riêng” shows the students’ label only, “Đồng nghiệp” the colleagues’, “Lớp” neither.'],
+  ['The caller has no colleague thread', '“Chưa có tin nhắn với đồng nghiệp…” in “Đồng nghiệp”.', 'Q12.'],
+  ['Staff write to a student they do not teach', 'The header’s sub-line is the student’s classes or “Chưa vào lớp nào”. No attempt card. Details has no link.', 'Q3, Q4. Attempt cards come from the caller’s own assignments (R7).'],
+  ['That student replies', 'As in any thread; the student’s composer is R7’s.', 'Q1. R7 already opens an existing thread to both sides.'],
+  ['The class’s own teacher', 'Is not told, and cannot read the thread.', 'Q6; threads stay private to their two participants (D17).'],
+  ['A student reads a staff member who never taught them', '“Giáo viên của trung tâm” in the row and the header, for an admin too.', 'Q2. “Giáo viên cũ” stays for a former teacher.'],
+  ['A colleague writes', 'The nav count, the tab’s count, the bell’s message.received item, and the email after 10 minutes if still unread, at most once per thread per 30 minutes, without the body.', 'Q11, R7’s timing, under the same “Tin nhắn mới” switch.'],
+  ['A file between colleagues', 'R7’s attach flow on both sides: PDF, Word without macros, PNG, JPEG, MP3, M4A, 20 MB, one file per message.', 'Q10.']
+];
+// [id, question, why it matters, what is drawn]
+const QUESTIONS = [
+  ['Q1 · A student’s reply', 'May a student reply in a thread that a staff member who does not teach them started?', 'R7’s code already opens an existing thread to both sides, so this is about whether F2 should close it. Closing it would leave a student unable to answer a question put to them.', 'Yes. The student’s composer is there as usual, text only.'],
+  ['Q2 · What the student reads', 'What does the student read for a staff member who does not teach them, in the list’s sub-line and the thread’s header?', 'R7 wrote plain “Giáo viên của bạn” for the account’s creator, which is not true of every staff member now. A role would tell a student who runs the centre, which is not theirs to need.', '“Giáo viên của trung tâm”, the same for an admin, with no role. “Giáo viên cũ” stays for a former teacher, and “Giáo viên của bạn · {classes}” for their own.'],
+  ['Q3 · Whom staff may start a thread with', 'Which students may a staff member write to first?', 'The owner said any student. A disabled account cannot sign in to read it, and R7 already refuses a post to one.', 'Every enabled student account, in a class or not. A disabled one is not offered in the dialog or the search.'],
+  ['Q4 · A student’s row', 'What does a student’s row show in the dialog and the list’s search?', 'A teacher who writes to a student of another class needs to be sure it is the right one; two students can share a name. An email is personal data a teacher does not need to see.', 'The name, the photo, and the names of every current class that is not archived, the caller’s own first, or “Chưa vào lớp nào”. No email, no username. “Học viên cũ” stays for a former student of the caller.'],
+  ['Q5 · How staff find someone to write to', 'Where does a first message to anyone start?', 'R7 starts one from Học viên, a class’s members or the list’s search. None of those reaches a colleague, and Học viên lists only a teacher’s own students.', 'Both: the list’s search, as in R7, now finds any student and any colleague, under “Học viên chưa nhắn tin” and “Đồng nghiệp chưa nhắn tin”; and a “Tin nhắn mới” button opens a dialog with “Học viên | Đồng nghiệp”, a search and, for students, a filter. A row with a thread is marked “Đã có cuộc trò chuyện” and opens it; choosing a row opens the thread with the composer focused.'],
+  ['Q6 · The class’s teacher', 'Is the teacher of a class told when another staff member writes to one of its students?', 'A teacher may want to know who talks to their students. But a thread is private to its two participants (D17), and a notice would be a new kind of message about a thread one cannot read.', 'No. Nothing tells the class’s teacher, and nothing shows them the thread.'],
+  ['Q7 · Groups of colleagues', 'Are colleague threads 1:1, or may several staff talk in one?', 'Groups need a name, members, leaving and adding, and their own unread rules: a release of their own.', '1:1 only in F2. Group threads would be a later release.'],
+  ['Q8 · Who is a colleague', 'Who appears under “Đồng nghiệp”?', 'The centre has teachers, admins and may add custom staff roles. A student never belongs there.', 'Every enabled account that opens the teacher workspace: teachers, admins, and custom staff roles with the workspace. Never a student, never the caller.'],
+  ['Q9 · A colleague’s row', 'What does a colleague’s row show?', 'The share dialog shows an email under a teacher’s name; in Messages the role says more and the email is not needed.', 'The name, the photo, and the role’s name (“Giáo viên”, “Quản trị viên”, or the custom role’s name). No email.'],
+  ['Q10 · Files between colleagues', 'What may colleagues attach?', 'Sharing material is the reason for the feature. R7’s rules cover what a student may download; colleagues ask for slides and sheets too.', 'The same as staff to student: PDF, Word without macros, PNG, JPEG, MP3, M4A, 20 MB, one file per message, from both sides. PowerPoint and Excel are not in F2.'],
+  ['Q11 · Email for a colleague’s message', 'Does a colleague’s message send an email, and under which switch?', 'A second switch would split one habit in two. The body never leaves the app by email in R7.', 'The same “Tin nhắn mới” switch in Settings › Thông báo, in-app and email, its hint now “Tin nhắn riêng từ học viên và đồng nghiệp”; R7’s timing: 10 minutes, only if still unread, at most once per thread per 30 minutes, never the body.'],
+  ['Q12 · Where colleague threads sit', 'Where are colleague threads listed, and how does a row read?', 'In “Tất cả” a colleague’s row should be told from a student’s; a tab of its own keeps them apart.', 'A fourth tab “Đồng nghiệp” after R7’s, and also in “Tất cả”. “Riêng” stays the students’ threads. No attempt cards and no “Seen by”. A colleague’s row shows its last message as every row in the list does, as the product words a row; the role name is the sub-line where there is no message yet (the search, the dialog) and in the thread’s header. The other choice is the role name in place of the last message, or before it (“Giáo viên · …”), so a colleague stands out in “Tất cả”.'],
+  ['Q13 · Release', 'When does F2 ship?', 'R8’s contract must be on develop first, so the two contracts never sit side by side unmerged.', 'As v0.15.1, after R8 (v0.15.0).']
+];
+// [web file, what it takes]
+const HANDOFF = [
+  ['features/messages/pages/teacher/TeacherMessagesPage.tsx', '“Tin nhắn mới” in PageHead’s actions, before “Thông báo mới”, as Button variant outline with MessageSquarePlus (both wrap under the title on a phone, as PageHead does). Tab “colleagues” in TABS and inTab(); its count from the colleague threads; “Riêng” keeps the students’ threads. rowSub() and paneView() for a colleague (role name) and for a student the caller does not teach (every class, or “Chưa vào lớp nào”). candidates split into students and colleagues, each under its label. A colleague thread’s source: no contextEvents. StaffDetails: the not-taught and colleague forms. blockedBy() unchanged.'],
+  ['features/messages/components/ThreadList.tsx', 'A second candidates group: `candidates` becomes a list of groups, each with its label (“Học viên chưa nhắn tin”, “Đồng nghiệp chưa nhắn tin”). ListRow.kind gains nothing: a colleague is a “direct” row with an avatar. The empty sentence is the caller’s, so “Đồng nghiệp” passes its own.'],
+  ['New: features/messages/components/NewMessageDialog.tsx', 'DialogShell (width 520, top 8% as ShareDialog), DialogShellHeader with MessageSquarePlus, the title and the description; Segmented (fill) “Học viên | Đồng nghiệp”; SearchInput; Select of the filter for students only; a listbox of option rows taken from PeoplePicker’s (Avatar 28, name, sub-line, a caption at the end, `hover:bg-hover`, `bg-hover` on the active one); Skeleton rows, the IconTile message and Retry from ThreadList. Arrow keys move through the rows, Enter opens, and the dialog closes onto the thread with the composer focused (the `compose` location state New announcement already uses).'],
+  ['features/messages/components/ThreadView.tsx', 'Nothing new: the header’s title and sub come from the page. The empty sentence for a colleague names them.'],
+  ['features/messages/components/ThreadDetails.tsx', 'Unchanged in shape: rows and note together for a student the caller does not teach (the component already renders both), rows of files for a colleague. A row is text, not a link, as today.'],
+  ['features/messages/pages/student/StudentMessagesPage.tsx', 'teacherLine(): a staff member with no class with the student and not former reads “Giáo viên của trung tâm” (messages.student.centre) in place of “Giáo viên của bạn”. Nothing else: the composer stays text only.'],
+  ['features/messages/api.ts, studentApi.ts', 'The sdk’s new reads: the dialog’s students (with q, a class or “mine” or “none”) and colleagues, a colleague thread and its post. The thread ref gains a colleague kind (/teacher/messages/colleagues/:userId).'],
+  ['features/settings (Notifications)', 'settings.notifications.events.messageHint changes; the switch and its key stay.'],
+  ['lib/i18n/locales/vi and en: teacher.json, student.json, common.json', 'The copy table’s New and Changed rows, Vietnamese first. Q2’s string is student.json’s messages.student.centre.'],
+  ['What the design system lacks', 'No people picker list: the option row exists only inside features/sharing/components/PeoplePicker.tsx, so NewMessageDialog should lift it into a shared part (say components/shared/PersonOption) rather than copy it. SearchInput and DialogShell are in components/shared, not among the system’s 25 components, and the canvas’s design system has no copy of them. Avatar has no stacked sub-line form, so the row composes Avatar with text as PeoplePicker does. ThreadDetails’ rows cannot be links or downloads; “Tệp đã chia sẻ” is drawn as text for that reason.']
+];
+const METHOD = [
+  ['What this was drawn from.', 'R7 Messages.dc.html (template, script, every state and its copy), the product as it is on develop at v0.14.1 (features/messages: TeacherMessagesPage, ThreadList, ThreadDetails, Composer, AttachDialog, StudentMessagesPage; features/sharing: ShareDialog and PeoplePicker; components/shared: DialogShell, SearchInput), the vi and en locale files, and the deck’s Admin › Users for the colleagues.'],
+  ['People and classes.', 'R7’s fixtures and the deck’s users. On this page Giàu Bùi teaches IELTS 6.5 Evening, IELTS Foundation A, Speaking Club Saturday and TOEIC 600 Weekend, and Kids Starters B is Phan Minh Đức’s class. Lâm Minh Châu is new here, as the deck has no student in no class.'],
+  ['The phone.', 'The dialog at 360 is the product’s DialogShell: 12px from each edge and at most 86% of the screen high, not a full-height sheet, because no dialog in the web is one (only Details below 768 is a sheet from the bottom).'],
+  ['What is not drawn.', 'Settings › Thông báo (one hint changes), the bell (its item is R7’s message.received), the email (R7’s), and the server’s reads.']
+];
+const DECISIONS = [
+  ['Who may write first', 'Staff write to any student; a student writes first only to their own teacher.', ['Every teacher and admin who opens Tin nhắn may start a thread with any enabled student, in a class or in none (Q3).', 'A student keeps R7’s rule for a first message, and may reply in any thread a staff member started (Q1).', 'The student reads “Giáo viên của trung tâm” for someone who never taught them (Q2). The class’s teacher is not told (Q6).']],
+  ['Colleagues', 'Two staff members can talk 1:1, files included.', ['A fourth tab, “Đồng nghiệp”, and the threads in “Tất cả” too (Q12). 1:1 only (Q7).', 'Both sides attach, by R7’s flow, with R7’s kinds and size (Q10).', 'Unread counts, the bell and the email work as for a student (Q11).']],
+  ['Finding someone', 'A “Tin nhắn mới” dialog, and a search that finds anyone.', ['The dialog has “Học viên | Đồng nghiệp”, a search and a filter by class; rows show classes or the role, never an email (Q4, Q9).', 'A row with a thread is marked and opens it; choosing a row opens the thread with the composer focused (Q5).', 'The list’s search finds any student and any colleague, under two labels.']]
+];
+
+class Component extends DCLogic {
+  state = { theme: null, lang: 'vi', part: 'list', st: { ...START }, anno: true, width: 'both', stageW: 1280 };
+  stageRef = React.createRef();
+
+  componentDidMount() {
+    const el = this.stageRef.current;
+    if (!el || typeof ResizeObserver === 'undefined') return;
+    this.ro = new ResizeObserver(es => { const w = Math.round(es[0].contentRect.width); if (w && w !== this.state.stageW) this.setState({ stageW: w }); });
+    this.ro.observe(el);
+  }
+  componentWillUnmount() { if (this.ro) this.ro.disconnect(); }
+
+  seg(opts, cur, set) {
+    return opts.map(([v, label]) => { const on = v === cur; return { label, on, pick: () => set(v), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none' }; });
+  }
+
+  renderVals() {
+    const s = this.state, p = this.props || {};
+    const theme = s.theme ?? p.theme ?? 'light';
+    const vi = s.lang !== 'en', li = vi ? 0 : 1;
+    const tx = {}; STR.forEach(r => { tx[r[0]] = r[vi ? 2 : 3]; });
+    const part = s.part, pst = s.st[part], isToday = pst === 'today';
+    const noteList = NOTES[part + ':' + pst] || [];
+    const pin = {}; PIN_KEYS.forEach(k => { pin[k] = { on: false, n: '' }; });
+    noteList.forEach((x, i) => { pin[x[0]] = { on: true, n: String(i + 1) }; });
+    const pinned = k => pin[k].on;
+    // the R7 coordinates the frame starts from
+    const base = isToday ? TODAY[part] : part === 'student' ? ['student', 'direct', 'normal'] : ['teacher', 'direct', 'normal'];
+    const role = base[0], teacher = role === 'teacher', scr = base[1], st = base[2];
+    const f2 = !isToday;
+    const roleName = w => (w.role === 'admin' ? tx.roleAdmin : tx.roleTeacher);
+    const classLine = c => (c.length ? c.join(', ') : tx.noClass);
+
+    // ---- the pieces of a stream (R7's)
+    const fileOf = f => ({ icon: f.icon, name: f.name[li], meta: f.meta[li] });
+    const day = text => ({ isDay: true, text });
+    const bubble = (mine, text, time, o = {}) => {
+      const parts = Array.isArray(text) ? text.map(x => (typeof x === 'string' ? { isText: true, isLink: false, text: x } : { isText: false, isLink: true, text: x.link })) : text ? [{ isText: true, isLink: false, text }] : [];
+      const chip = o.file ? fileOf(o.file) : null;
+      return { isBubble: true, align: mine ? 'flex-end' : 'flex-start', dir: mine ? 'row-reverse' : 'row', hasText: parts.length > 0, parts, pad: chip ? '10px' : '9px 13px',
+        bg: mine ? 'var(--primary)' : 'var(--card)', fg: mine ? 'var(--primary-fg)' : 'var(--fg)', border: mine ? '1px solid var(--primary)' : '1px solid var(--border)', op: o.status === 'sending' ? 0.6 : 1,
+        hasChip: !!chip, chipIcon: chip ? chip.icon : '', chipName: chip ? chip.name : '', chipMeta: chip ? chip.meta : '',
+        chipBg: mine ? 'color-mix(in oklab, currentColor 12%, transparent)' : 'var(--bg)', chipBorder: mine ? '1px solid transparent' : '1px solid var(--border)', chipTile: mine ? 'color-mix(in oklab, currentColor 14%, transparent)' : 'var(--muted)',
+        pinChip: !!o.pinChip && pinned('chip'), pinLink: false, isSent: !o.status, isSending: o.status === 'sending', isFailed: o.status === 'failed', time };
+    };
+    const center = (icon, text, retry) => ({ isCenter: true, icon, text, retry: !!retry });
+    const monTime = t => (vi ? 'Th 2 ' : 'Mon ') + t;
+    const ITEM = { isCenter: false, isLoad: false, isDay: false, isPost: false, isAttempt: false, isBubble: false, icon: '', text: '', retry: false, label: '', hasChip: false, chipIcon: '', chipName: '', chipMeta: '', hasSeen: false, seen: '', time: '',
+      align: 'flex-start', dir: 'row', hasText: false, parts: [], pad: '', bg: '', fg: '', border: '', op: 1, chipBg: '', chipBorder: '', chipTile: '', pinChip: false, pinLink: false, isSent: false, isSending: false, isFailed: false };
+
+    // ---- the open thread
+    let th = {}, items = [], foot = { hasComposer: true, placeholder: '', draft: '', staged: false, stIcon: '', stName: '', stMeta: '', canAttach: teacher, hasHint: false, hint: '', hasNotice: false, noticeIcon: 'ban', noticeText: '', readOnly: false, roText: '', roLink: '', focus: false };
+    let det = { open: false, btnBg: 'transparent', sub: '', label: '', rows: [], link: '', hasList: true, hasLink: true, hasNote: false, note: '' };
+    const directHead = (w, sub) => ({ hasAvatar: true, radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)', isClass: false, isDirect: true, initials: w.initials, name: w.name, sub, hasDetails: true });
+    const namThread = variant => {
+      th = directHead(NAM, NAM.classes[0]);
+      det = { ...det, sub: tx.roleStudent, label: tx.detClasses, rows: NAM.classes.map(c => ({ icon: 'graduation-cap', text: c })), link: tx.detOpenStudent };
+      foot.placeholder = fmt(tx.phDirect, { name: NAM.short });
+      items = [{ isLoad: true }, day(tx.today), { isAttempt: true, text: fmt(tx.attemptCard, { title: 'Mid-term Reading Mock', count: 3 }), time: '20:14' }, bubble(false, SAY.nam1[li], '20:16'), bubble(false, SAY.nam2[li], '20:20'), bubble(true, SAY.me1[li], '20:31'), bubble(true, SAY.me2[li], '20:32', { file: FILE_GUIDE, pinChip: f2 })];
+      if (variant === 'details') det = { ...det, open: true, btnBg: 'var(--hover)' };
+    };
+    const formerThread = () => {
+      th = directHead(THU, tx.former);
+      foot.placeholder = fmt(tx.phDirect, { name: THU.short });
+      items = [center('message-square', tx.threadEmpty)];
+    };
+    const teacherThread = () => {
+      th = { hasAvatar: false, radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)', isClass: false, isDirect: true, initials: 'GB', name: TEACHER, sub: fmt(tx.sTeacherSub, { classes: 'IELTS 6.5 Evening, IELTS Foundation A' }), hasDetails: false };
+      foot.placeholder = fmt(tx.phDirect, { name: TEACHER });
+      items = [day(tx.monday), bubble(false, SAY.t1[li], monTime('10:02')), bubble(false, SAY.t2[li], monTime('10:03')), bubble(false, SAY.t3[li], monTime('10:04'), { file: FILE_VOCAB }), day(tx.today), bubble(true, SAY.s1[li], '19:40')];
+    };
+    // F2: a student the caller does not teach
+    const notTaughtThread = variant => {
+      const w = variant === 'noClass' ? CHAU : MINH;
+      th = directHead(w, classLine(w.classes));
+      foot.placeholder = fmt(tx.phDirect, { name: w.short });
+      det = { ...det, sub: tx.roleStudent, label: tx.detTheirClasses, rows: w.classes.map(c => ({ icon: 'graduation-cap', text: c })), hasList: w.classes.length > 0, hasLink: false, hasNote: true, note: w.classes.length ? tx.detNotTaught : tx.detNoClass };
+      if (variant === 'empty') { items = [center('message-square', tx.threadEmpty)]; foot.focus = true; }
+      else if (variant === 'noClass') items = [day(tx.today), bubble(true, SAY.ch1[li], '16:05')];
+      else items = [day(tx.today), bubble(true, SAY.mi1[li], '16:40', { file: { icon: 'file-audio', name: ['Starters Listening 3.mp3', 'Starters Listening 3.mp3'], meta: ['Âm thanh · 4,8 MB', 'Audio · 4.8 MB'] } }), bubble(false, SAY.mi2[li], '17:02')];
+      if (variant === 'details' || variant === 'noClass') det = { ...det, open: true, btnBg: 'var(--hover)' };
+    };
+    // F2: a colleague
+    const collThread = variant => {
+      const w = variant === 'blocked' ? VAN : variant === 'empty' ? TTRANG : DUC;
+      th = directHead(w, roleName(w));
+      foot.placeholder = fmt(tx.phDirect, { name: w.short });
+      const files = [FILE_SAMPLE, FILE_RUBRIC, FILE_PLAN, FILE_CUE];
+      det = { ...det, sub: roleName(w), label: tx.detFiles, rows: files.map(f => ({ icon: f.icon, text: f.name[li] })), hasLink: false };
+      if (variant === 'empty') { items = [center('message-square', fmt(tx.collThreadEmpty, { name: w.name }))]; foot.focus = true; }
+      else if (variant === 'blocked') { items = [day('12/11'), bubble(false, SAY.va1[li], '12/11 09:40', { file: { icon: 'file-text', name: ['Đề Reading tháng 10.pdf', 'October Reading set.pdf'], meta: ['PDF · 2,1 MB', 'PDF · 2.1 MB'] } }), bubble(true, SAY.va2[li], '12/11 09:52')]; foot = { ...foot, hasComposer: false, hasNotice: true, noticeIcon: 'ban', noticeText: fmt(tx.accountOff, { name: w.name }) }; }
+      else items = [day(tx.monday), bubble(false, SAY.du1[li], monTime('21:05'), { file: FILE_CUE, pinChip: true }), bubble(false, '', monTime('21:06'), { file: FILE_PLAN }), day(tx.today), bubble(true, SAY.me5[li], '19:48', { file: FILE_RUBRIC }), bubble(true, '', '19:49', { file: FILE_SAMPLE }), bubble(false, SAY.du3[li], '20:10')];
+      if (variant === 'details') det = { ...det, open: true, btnBg: 'var(--hover)' };
+    };
+    // F2: the student's side, a teacher at the centre
+    const centreThread = variant => {
+      th = { hasAvatar: false, radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)', isClass: false, isDirect: true, initials: DUC.initials, name: DUC.name, sub: tx.sCentre, hasDetails: false };
+      foot.placeholder = fmt(tx.phDirect, { name: DUC.name });
+      items = [day(tx.today), bubble(false, SAY.sd1[li], '18:20'), bubble(false, SAY.sd2[li], '18:21')];
+      if (variant === 'blocked') foot = { ...foot, hasComposer: false, hasNotice: true, noticeIcon: 'ban', noticeText: fmt(tx.accountOff, { name: DUC.name }) };
+      else items = items.concat([bubble(true, SAY.ss1[li], '18:34')]);
+    };
+
+    // ---- the list (R7's rows, and F2's)
+    const avOf = kind => (kind === 'class' ? { radius: '9px', avBg: 'var(--accent-soft)', avFg: 'var(--accent-ink)' } : { radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)' });
+    const ROW = { isRow: true, isLabel: false, label: '', pinOn: false, pinN: '', hasIcon: false, icon: '', hasInitials: true, initials: '', name: '', time: '', preview: '', hasUnread: false, unread: '', weight: 500, previewFg: 'var(--muted-fg)', bg: 'transparent', radius: '50%', avBg: 'var(--muted)', avFg: 'var(--fg)' };
+    const pinRow = k => ({ pinOn: pinned(k), pinN: pin[k].n });
+    const convRow = (c, active) => ({ ...ROW, ...avOf(c.kind), hasIcon: c.kind === 'class', icon: 'megaphone', hasInitials: c.kind !== 'class', initials: c.initials || '', name: c.name, time: c.time[li],
+      preview: c.file ? tx.you + fmt(tx.attachPreview, { name: FILE_GUIDE.name[li] }) : (c.mine ? tx.you : '') + c.pv[li],
+      hasUnread: c.unread > 0, unread: String(c.unread), weight: c.unread ? 600 : 500, previewFg: c.unread ? 'var(--fg)' : 'var(--muted-fg)', bg: active ? 'var(--muted)' : 'transparent' });
+    const collRow = (k, active, o = {}) => ({ ...convRow({ id: k.id, kind: 'direct', name: k.who.name, initials: k.who.initials, time: k.time, unread: o.read ? 0 : k.unread, mine: k.mine, pv: k.pv }, active), ...(o.pin ? pinRow(o.pin) : {}) });
+    const candRow = (w, sub, o = {}) => ({ ...ROW, initials: w.initials, name: w.name, preview: sub, bg: o.active ? 'var(--muted)' : 'transparent', ...(o.pin ? pinRow(o.pin) : {}) });
+    const labelRow = (label, k) => ({ ...ROW, isRow: false, isLabel: true, label, ...(k ? pinRow(k) : {}) });
+
+    let listState = 'rows', rows = [], tab = 'all', q = '', listMsg = null, hasThread = true, threadSkel = [];
+    const openTeacherDirect = () => {
+      if (part === 'notTaught') notTaughtThread(pst);
+      else if (part === 'colleague') collThread(pst);
+      else if (part === 'list' && (pst === 'colleagues')) collThread('normal');
+      else namThread(st);
+    };
+    if (teacher && isToday) {
+      // R7's frames, as R7 Messages.dc.html draws them
+      if (scr === 'direct') { namThread(st); rows = CONVS.map(c => convRow(c, c.id === 'd1')); }
+      if (scr === 'list' && st === 'found') {
+        listState = 'found'; q = 'thu'; formerThread();
+        rows = [convRow(CONVS[2], false), labelRow(tx.candLabel, 'cand'), candRow(TRANG, TRANG.cls), candRow(THU, tx.former, { active: true })];
+      }
+      if (scr === 'list' && st === 'search') { listState = 'search'; q = vi ? 'Phan Minh Đức' : 'Phan Minh Đức'; listMsg = ['search-x', fmt(tx.noMatch, { q }), false, 'listMsg']; namThread('normal'); rows = []; }
+    } else if (teacher) {
+      openTeacherDirect();
+      const collActive = part === 'colleague' || (part === 'list' && pst === 'colleagues');
+      const allRows = [convRow(CONVS[0], !collActive && part !== 'notTaught'), collRow(COLL[0], collActive && pst !== 'blocked' && pst !== 'empty', { pin: part === 'list' && pst === 'all' ? 'row' : null, read: part === 'colleague' }), ...CONVS.slice(1, 3).map(c => convRow(c, false)), collRow(COLL[1], false), ...CONVS.slice(3).map(c => convRow(c, false))];
+      rows = allRows;
+      if (part === 'notTaught') {
+        const w = pst === 'noClass' ? CHAU : MINH;
+        const first = pst === 'empty' ? candRow(w, classLine(w.classes), { active: true })
+          : pst === 'noClass' ? { ...candRow(w, tx.you + SAY.ch1[li], { active: true }), time: '16:05' }
+          : { ...candRow(w, SAY.mi2[li], { active: true }), time: '17:02' };
+        rows = [first].concat(allRows.map(r => ({ ...r, bg: 'transparent' })));
+      }
+      if (part === 'list' && pst === 'colleagues') { tab = 'colleagues'; rows = [collRow(COLL[0], true), collRow(COLL[1], false), { ...collRow(COLL[2], false), ...pinRow('row') }]; }
+      if (part === 'colleague') {
+        tab = 'colleagues';
+        rows = [collRow(COLL[0], pst === 'normal' || pst === 'details', { read: true }), collRow(COLL[1], false), collRow(COLL[2], pst === 'blocked')];
+        if (pst === 'empty') rows = [candRow(TTRANG, roleName(TTRANG), { active: true })].concat(rows);
+      }
+      if (part === 'list' && pst === 'collEmpty') { tab = 'colleagues'; rows = []; listMsg = ['users', tx.collEmpty, false, 'listMsg']; hasThread = false; }
+      if (part === 'search') {
+        listState = 'found'; q = 'minh';
+        // the threads that match, then the students and the colleagues who match and have none
+        rows = [labelRow(tx.candLabel, 'cand'), candRow(STU('Trần Minh Anh'), classLine(STU('Trần Minh Anh').classes)), candRow(MINH, classLine(MINH.classes), { active: true }), candRow(CHAU, tx.noClass, { pin: 'row' }), candRow(THU, tx.former), labelRow(tx.candColl, 'coll'), candRow(DUC, roleName(DUC))];
+        th = directHead(MINH, classLine(MINH.classes)); items = [center('message-square', tx.threadEmpty)]; foot.placeholder = fmt(tx.phDirect, { name: MINH.short });
+      }
+    } else if (isToday) {
+      teacherThread();
+      rows = [
+        { ...ROW, ...avOf('direct'), hasIcon: true, icon: 'user', hasInitials: false, name: TEACHER, time: '19:40', preview: fmt(tx.sTeacherSub, { classes: 'IELTS 6.5 Evening, IELTS Foundation A' }), bg: 'var(--muted)' },
+        { ...ROW, ...avOf('class'), hasIcon: true, icon: 'megaphone', hasInitials: false, name: 'IELTS 6.5 Evening', time: '17:42', preview: tx.sChannelSub },
+        { ...ROW, ...avOf('class'), hasIcon: true, icon: 'megaphone', hasInitials: false, name: 'IELTS Foundation A', time: vi ? 'Hôm qua' : 'Yesterday', preview: tx.sChannelSub }
+      ];
+    } else {
+      centreThread(pst);
+      rows = [
+        { ...ROW, ...avOf('direct'), hasIcon: true, icon: 'user', hasInitials: false, name: DUC.name, time: pst === 'blocked' ? '18:21' : '18:34', preview: tx.sCentre, bg: 'var(--muted)', ...pinRow('row') },
+        { ...ROW, ...avOf('direct'), hasIcon: true, icon: 'user', hasInitials: false, name: TEACHER, time: '19:40', preview: fmt(tx.sTeacherSub, { classes: 'IELTS 6.5 Evening, IELTS Foundation A' }) },
+        { ...ROW, ...avOf('class'), hasIcon: true, icon: 'megaphone', hasInitials: false, name: 'IELTS 6.5 Evening', time: '17:42', preview: tx.sChannelSub },
+        { ...ROW, ...avOf('class'), hasIcon: true, icon: 'megaphone', hasInitials: false, name: 'IELTS Foundation A', time: vi ? 'Hôm qua' : 'Yesterday', preview: tx.sChannelSub }
+      ];
+    }
+    function STU(n) { const r = STUDENTS.find(x => x[0] === n); return { name: r[0], initials: r[1], classes: r[2], has: r[3] }; }
+    const searching = listState === 'found' || listState === 'search';
+
+    // ---- the dialog: Tin nhắn mới
+    const pk = { open: false, segs: [], q: tx.pickSearch, qFg: 'var(--muted-fg)', qBorder: 'var(--border)', hasFilter: true, filter: tx.fAll, showRows: true, rows: [], skeleton: false, skel: [], hasMsg: false, msgIcon: '', msgText: '', retry: false };
+    if (f2 && (part === 'picker' || part === 'pickerColl')) {
+      const coll = part === 'pickerColl';
+      pk.open = true;
+      pk.segs = this.seg([['s', tx.segStudents], ['c', tx.segColleagues]], coll ? 'c' : 's', () => {}).map((x, i) => ({ ...x, icon: i ? 'users-round' : 'graduation-cap' }));
+      pk.hasFilter = !coll;
+      const PR = { initials: '', name: '', sub: '', hasThread: false, threadLabel: tx.hasThread, bg: 'transparent', on: false, pinOn: false, pinN: '' };
+      const sRow = (r, o = {}) => ({ ...PR, initials: r[1], name: r[0], sub: classLine(r[2]), hasThread: r[3], bg: o.on ? 'var(--hover)' : 'transparent', on: !!o.on, ...(o.pin ? pinRow(o.pin) : {}) });
+      const cRow = (w, has, o = {}) => ({ ...PR, initials: w.initials, name: w.name, sub: roleName(w), hasThread: has, bg: o.on ? 'var(--hover)' : 'transparent', on: !!o.on, ...(o.pin ? pinRow(o.pin) : {}) });
+      const typed = x => { pk.q = x; pk.qFg = 'var(--fg)'; pk.qBorder = 'var(--ring)'; };
+      if (!coll) {
+        if (pst === 'default') pk.rows = STUDENTS.slice(0, 9).map((r, i) => sRow(r, { pin: i === 0 ? 'row' : r[0] === 'Phạm Thu Hà' ? 'existing' : null }));
+        if (pst === 'class') { pk.filter = 'IELTS 6.5 Evening'; pk.rows = STUDENTS.filter(r => r[2].includes('IELTS 6.5 Evening')).map(r => sRow(r)); }
+        if (pst === 'search') { typed('minh'); const rank = r => (r[2].some(c => MY_CLASSES.includes(c)) ? 0 : r[2].length ? 1 : 2); pk.rows = STUDENTS.filter(r => /minh/i.test(r[0])).sort((a, b) => rank(a) - rank(b)).map((r, i) => sRow(r, { pin: i === 1 ? 'row' : null })); }
+        if (pst === 'existing') { pk.filter = tx.fMine; pk.rows = STUDENTS.filter(r => r[2].some(c => MY_CLASSES.includes(c))).map(r => sRow(r, { on: r[0] === 'Lê Hoàng Nam', pin: r[0] === 'Lê Hoàng Nam' ? 'row' : null })); }
+        if (pst === 'noMatch') { typed('khoa'); pk.showRows = false; pk.hasMsg = true; pk.msgIcon = 'search-x'; pk.msgText = fmt(tx.pickNoStudent, { q: 'khoa' }); }
+      } else {
+        const all = [[DUC, true], [TTRANG, false], [THUONG, true]];
+        if (pst === 'default') pk.rows = all.map(([w, has], i) => cRow(w, has, { pin: i === 1 ? 'row' : i === 0 ? 'existing' : null }));
+        if (pst === 'search') { typed('thu'); pk.rows = [cRow(TTRANG, false, { on: true }), cRow(THUONG, true)]; }
+        if (pst === 'noMatch') { typed('vân'); pk.showRows = false; pk.hasMsg = true; pk.msgIcon = 'search-x'; pk.msgText = fmt(tx.pickNoColleague, { q: 'vân' }); }
+      }
+      if (pst === 'loading') { pk.showRows = false; pk.skeleton = true; pk.skel = [0, 1, 2, 3, 4, 5].map(i => ({ w1: ['44%', '56%', '38%', '50%', '46%', '58%'][i], w2: ['62%', '48%', '70%', '54%', '66%', '40%'][i] })); }
+      if (pst === 'error') { pk.showRows = false; pk.hasMsg = true; pk.msgIcon = 'cloud-off'; pk.msgText = tx.pickError; pk.retry = true; }
+    }
+
+    // ---- normalise
+    items = items.map(x => ({ ...ITEM, ...x }));
+    det.rows = det.rows.map(r => ({ icon: '', text: '', ...r }));
+    if (!hasThread && listState === 'loading') threadSkel = [];
+    const centered = items.length === 1 && items[0].isCenter;
+    const studentUnread = CONVS.filter(c => c.kind === 'direct').reduce((a, c) => a + c.unread, 0);
+    const collUnread = part === 'colleague' || (part === 'list' && pst === 'collEmpty') ? 0 : COLL[0].unread;
+    const tabDefs = [['all', tx.tabAll, 0], ['direct', tx.tabDirect, studentUnread], ['classes', tx.tabClasses, 0]].concat(f2 ? [['colleagues', tx.tabColleagues, collUnread]] : []);
+    const tabs = tabDefs.map(x => { const on = x[0] === tab; return { label: x[1], hasCount: x[2] > 0, count: String(x[2]), bg: on ? 'var(--card)' : 'transparent', fg: on ? 'var(--fg)' : 'var(--muted-fg)', ring: on ? 'var(--shadow), 0 0 0 1px var(--border)' : 'none', }; });
+    const LM = listMsg;
+
+    const m = {
+      maxW: teacher ? '1600px' : '960px', mx: teacher ? '0' : '0 auto', cardR: teacher ? '12px' : '14px', rowPad: teacher ? '12px' : '14px', avSize: teacher ? '36px' : '38px',
+      hasTools: teacher, tabPad: f2 ? '0 6px' : '0 10px', q: q || tx.search, qFg: q ? 'var(--fg)' : 'var(--muted-fg)', tabs,
+      listRows: !LM && rows.length > 0, rows, listSkeleton: false, skel: [],
+      listMsg: !!LM, listIcon: LM ? LM[0] : '', listText: LM ? LM[1] : '', listRetry: LM ? LM[2] : false,
+      hasThread, noThread: !hasThread, threadSkel, th, items, streamJustify: centered ? 'center' : 'flex-end', ...foot, attachBg: 'transparent', det, dlg: { open: false, pick: false, dropBorder: '', hasFile: false, uploading: false, pct: 0, pctW: '0%', name: '', meta: '', hasErr: false, err: '', sendOff: true, sendOp: 0.45 }, pk,
+      draftText: foot.draft || foot.placeholder, draftFg: foot.draft ? 'var(--fg)' : 'var(--muted-fg)', sendOp: foot.staged || foot.draft ? 1 : 0.45, compBorder: foot.focus ? 'var(--ring)' : 'var(--border)',
+      hasNewMsg: teacher && f2, newMsgBg: pk.open ? 'var(--hover)' : 'var(--card)', newAnnOff: false, newAnnOp: 1, newAnnTitle: '',
+      sUnread: ''
+    };
+
+    // ---- the shell
+    const navOn = 'messages';
+    const navCount = studentUnread + collUnread * (f2 ? 1 : 0);
+    const item = (id, icon, label, count, lime) => ({ icon, label, bg: id === navOn ? 'var(--hover)' : 'transparent', fg: id === navOn ? 'var(--fg)' : 'var(--muted-fg)', weight: id === navOn ? 600 : 500, hasCount: !!count, count: String(count || ''), countBg: lime ? 'var(--accent-c)' : 'var(--muted)', countFg: lime ? '#1b2123' : 'var(--muted-fg)', pin: id === navOn && pinned('nav') });
+    const nav = [
+      { hasLabel: false, label: '', items: [item('dashboard', 'layout-dashboard', vi ? 'Tổng quan' : 'Dashboard'), item('messages', 'message-square', tx.title, navCount, true)] },
+      { hasLabel: true, label: vi ? 'Giảng dạy' : 'Teaching', items: [item('assignments', 'clipboard-list', vi ? 'Bài giao' : 'Assignments'), item('grading', 'square-pen', vi ? 'Chấm bài' : 'Grading'), item('classes', 'graduation-cap', vi ? 'Lớp học' : 'Classes'), item('students', 'users', vi ? 'Học viên' : 'Students')] },
+      { hasLabel: true, label: vi ? 'Nội dung' : 'Content', items: [item('tests', 'file-text', vi ? 'Đề thi' : 'Tests'), item('shared', 'users-round', vi ? 'Được chia sẻ với tôi' : 'Shared with me', 2, false), item('bank', 'library', vi ? 'Ngân hàng câu hỏi' : 'Question bank'), item('media', 'audio-lines', vi ? 'Thư viện media' : 'Media')] }
+    ];
+    const sNav = [['house', vi ? 'Trang chủ' : 'Home'], ['graduation-cap', vi ? 'Lớp' : 'Classes'], ['book-open', vi ? 'Học tập' : 'Learn'], ['chart-column', vi ? 'Điểm số' : 'Grades']].map(x => ({ icon: x[0], label: x[1] }));
+
+    const W = s.stageW || 1280;
+    const partName = (PARTS.find(x => x[0] === part) || ['', ''])[1];
+    const phoneList = part === 'list' || part === 'search' || part === 'picker' || part === 'pickerColl';
+    const mk = (w, h, sc, phone, sub) => ({
+      w, h, s: sc, ow: Math.floor(w * sc), title: String(w), sub, screen: (teacher ? 'Teacher' : 'Student') + ' · ' + partName + ' · ' + w, isToday,
+      desk: !phone, phone, pins: s.anno && !phone, sidebar: teacher && !phone, tBar: teacher, sBar: !teacher, tHead: teacher, sHead: !teacher && !phone,
+      showList: phone ? phoneList : true, showThread: phone ? !phoneList : true,
+      listW: phone ? '100%' : teacher ? '320px' : '300px', listBorder: phone ? '0' : '1px solid var(--border)', popover: !phone && det.open, sheet: phone && det.open,
+      barPad: phone ? '0 14px' : teacher ? '0 28px' : '0 32px', pad: phone ? '14px' : teacher ? '24px 28px 28px' : '24px 32px 28px', gap: phone ? '12px' : '16px', h1: phone ? '20px' : '24px',
+      btnH: phone ? '44px' : '36px', smH: phone ? '40px' : '30px', iconBtn: phone ? '44px' : '34px', sendBtn: phone ? '40px' : '32px', fieldH: phone ? '44px' : '34px', tabH: phone ? '40px' : '30px', linkH: phone ? '40px' : '20px',
+      dlgLeft: '50%', dlgRight: 'auto', dlgTop: '50%', dlgBottom: 'auto', dlgMove: 'translate(-50%,-50%)', dlgW: '460px', dlgR: '14px',
+      pkTop: phone ? '7%' : '8%', pkW: phone ? 'calc(100% - 24px)' : '520px', pkH: phone ? '86%' : '600px', pkSelFlex: phone ? '1 1 100%' : '0 0 210px', pkRowPad: phone ? '10px 8px' : '8px'
+    });
+    const fr = [mk(1280, 900, Math.min(1, W / 1280), false, teacher ? 'the teacher’s shell, the page at most 1600 wide' : 'the page is at most 960 wide'), mk(360, 760, Math.min(1, W / 360), true, 'one pane at a time')];
+    const frames = s.width === '1280' ? [fr[0]] : s.width === '360' ? [fr[1]] : fr;
+
+    const ctl = [
+      { label: 'Screen', opts: this.seg(PARTS, part, v => this.setState({ part: v })) },
+      { label: 'State', opts: this.seg(STATES[part], pst, v => this.setState(x => ({ st: { ...x.st, [part]: v } }))) },
+      { label: 'Language', opts: this.seg([['vi', 'Tiếng Việt'], ['en', 'English']], s.lang, v => this.setState({ lang: v })) },
+      { label: 'Theme', opts: this.seg([['light', 'Light'], ['dark', 'Dark']], theme, v => this.setState({ theme: v })) },
+      { label: 'Width', opts: this.seg([['both', 'Both'], ['1280', '1280'], ['360', '360']], s.width, v => this.setState({ width: v })) }
+    ];
+
+    const tone = { New: 'var(--accent-ink)', Changed: 'var(--warning-ink)', R7: 'var(--muted-fg)' };
+    const order = { New: 0, Changed: 1, R7: 2 };
+    const stLabel = (STATES[part].find(x => x[0] === pst) || ['', ''])[1];
+    return {
+      theme, isLight: theme !== 'dark', isDark: theme === 'dark', tx, m, pin, nav, sNav, frames, ctl, stageRef: this.stageRef,
+      chips: ['F2 · v0.15.1, after R8', 'DG-233', 'Plan: docs/plan/77g-f2-messaging.md', 'Builds on R7 Messages', 'Vietnamese first', '13 questions, defaults drawn'],
+      decisions: DECISIONS.map(d => ({ kicker: d[0], head: d[1], items: d[2] })),
+      reset: () => this.setState({ lang: 'vi', theme: null, part: 'list', width: 'both', st: { ...START } }),
+      anno: s.anno, annoLabel: s.anno ? 'Hide annotations' : 'Show annotations', toggleAnno: () => this.setState(x => ({ anno: !x.anno })),
+      notesTitle: (isToday ? 'R7 today: “' : 'What is new on “') + partName + ' · ' + stLabel + '”', notes: noteList.map((x, i) => ({ n: String(i + 1), text: x[1] })),
+      adds: ADDS.map(r => ({ part: r[0], deck: r[1], page: r[2] })), whens: WHENS.map(r => ({ when: r[0], what: r[1], cause: r[2] })),
+      copyRows: STR.slice().sort((a, b) => order[a[4]] - order[b[4]]).map(r => ({ where: r[1], vi: r[2], en: r[3], status: r[4], tone: tone[r[4]] })),
+      qIntro: 'Thirteen questions, each with the default the frames draw. None is decided yet: the owner set the rules on 23 Nov 2026 (any staff member to any student, students to their own teachers, colleagues to each other), and these are the details under them. Bring them to him in one sitting, as #80 did for R8.',
+      questions: QUESTIONS.map(q => ({ id: q[0], q: q[1], why: q[2], def: q[3], decided: false, label: 'Drawn:' })),
+      handoff: HANDOFF.map(h => ({ what: h[0], takes: h[1] })), method: METHOD.map(x => ({ head: x[0], text: x[1] }))
+    };
+  }
+}
+</script>
+</body>
+</html>

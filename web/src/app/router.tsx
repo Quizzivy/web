@@ -124,6 +124,11 @@ const teacherTree: RouteObject = {
           lazy: page(() => import("@/features/tests/pages/teacher/TestBuilderPage")),
         },
         {
+          path: "calendar",
+          handle: { crumb: [{ key: "teacherShell.nav.calendar" }] },
+          lazy: page(() => import("@/features/calendar/pages/teacher/CalendarPage")),
+        },
+        {
           path: "messages",
           handle: { crumb: [{ key: "messages.title" }] },
           lazy: page(
@@ -365,6 +370,13 @@ const teacherTree: RouteObject = {
           lazy: page(() => import("@/features/students/pages/teacher/StudentsPage")),
         },
         {
+          path: "attendance",
+          handle: { crumb: [{ key: "teacherShell.nav.attendance" }] },
+          lazy: page(
+            () => import("@/features/attendance/pages/teacher/AttendancePage"),
+          ),
+        },
+        {
           path: "classes",
           handle: { crumb: [{ key: "teacherShell.nav.classes" }] },
           lazy: page(() => import("@/features/classes/pages/teacher/ClassesPage")),
@@ -530,6 +542,13 @@ const studentTree: RouteObject = {
         {
           path: "classes",
           lazy: page(() => import("@/features/classes/pages/StudentClassesPage")),
+        },
+        // This week is a detail route whose back arrow goes to Classes, where
+        // its button is (DG-81, T-R8.15).
+        {
+          path: "week",
+          handle: { detail: { titleKey: "student.week.title", back: "/classes" } },
+          lazy: page(() => import("@/features/calendar/pages/student/ThisWeekPage")),
         },
         {
           path: "assignments/:id",

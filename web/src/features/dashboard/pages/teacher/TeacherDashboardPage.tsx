@@ -31,9 +31,13 @@ import {
   listAssignments,
   type Assignment,
   type Dashboard,
+  type DashboardToday,
+  type DashboardTodayAssignment,
+  type DashboardTodaySession,
 } from "../../api";
 import { dashboardKeys } from "../../keys";
 import {
+  attendanceHref,
   dashboardActivities,
   dashboardBars,
   dashboardDestinations,
@@ -41,6 +45,7 @@ import {
   dashboardLongDate,
   dashboardRange,
   dashboardRangeLocation,
+  sessionStarted,
   type DashboardRange,
 } from "../../view";
 
@@ -194,7 +199,7 @@ export default function TeacherDashboardPage() {
             skeleton={<ListSkeleton rows={3} />}
             failed={t("dashboard.home.loadFailed")}
           >
-            {(data) => <Today data={data} />}
+            {(data) => <Today data={data} now={now} />}
           </QueryStates>
         </section>
       </div>
@@ -381,50 +386,106 @@ function Submissions({
   );
 }
 
-function Today({ data }: Readonly<{ data: Dashboard }>) {
+/**
+ * Today lists what happens today in the reader's zone, in time order: the
+ * class sessions, with their room, and the assignments that open or close.
+ * A session that has started, counting the attendance rule's 15 minutes of
+ * grace, opens its attendance for a reader who takes it (T-R8.14).
+ */
+function Today({ data, now }: Readonly<{ data: Dashboard; now: Date }>) {
   const { t } = useTranslation();
   const locale = useLocale();
   const zone = useDisplayTimeZone();
+  const attends = useCan("teaching.attendance");
   if (data.today.length === 0)
     return <EmptyState>{t("dashboard.home.noToday")}</EmptyState>;
+  const clock = new Intl.DateTimeFormat(locale, {
+    timeZone: zone,
+    hour: "2-digit",
+    minute: "2-digit",
+    hourCycle: "h23",
+  });
   return (
     <ul className="mt-3">
       {data.today.map((event) => (
         <li
-          key={`${event.assignmentId}:${event.kind}:${event.at}`}
+          key={todayKey(event)}
           className="flex gap-3 border-t py-2.5 first:border-t-0"
         >
           <time
             dateTime={event.at}
             className="text-muted-fg text-meta w-11 shrink-0 pt-px tabular-nums"
           >
-            {new Intl.DateTimeFormat(locale, {
-              timeZone: zone,
-              hour: "2-digit",
-              minute: "2-digit",
-              hourCycle: "h23",
-            }).format(new Date(event.at))}
+            {clock.format(new Date(event.at))}
           </time>
           <span
             aria-hidden="true"
             className={`w-0.75 shrink-0 rounded-sm ${event.kind === "closes" ? "bg-warning" : "bg-brand"}`}
           />
           <span className="min-w-0 flex-1">
-            <Link
-              to={`/teacher/assignments/${event.assignmentId}?tab=students`}
-              className="text-ui block font-medium break-words hover:underline"
-            >
-              {t(`dashboard.home.${event.kind}`, { title: event.title })}
-            </Link>
-            {event.kind === "closes" && (
-              <span className="text-muted-fg text-meta block">
-                {t("dashboard.home.notSubmitted", { count: event.notSubmitted })}
-              </span>
+            {event.kind === "session" ? (
+              <TodaySession
+                session={event}
+                link={attends && sessionStarted(event.at, now)}
+              />
+            ) : (
+              <TodayAssignment event={event} />
             )}
           </span>
         </li>
       ))}
     </ul>
+  );
+}
+
+function todayKey(event: DashboardToday): string {
+  return event.kind === "session"
+    ? `session:${event.sessionId}`
+    : `${event.assignmentId}:${event.kind}:${event.at}`;
+}
+
+function TodaySession({
+  session,
+  link,
+}: Readonly<{ session: DashboardTodaySession; link: boolean }>) {
+  const heading = "text-ui block font-medium break-words";
+  return (
+    <>
+      {link ? (
+        <Link
+          to={attendanceHref(session.classId, session.sessionId)}
+          className={`${heading} hover:underline`}
+        >
+          {session.className}
+        </Link>
+      ) : (
+        <span className={heading}>{session.className}</span>
+      )}
+      {session.room === null ? null : (
+        <span className="text-muted-fg text-meta block break-words">
+          {session.room}
+        </span>
+      )}
+    </>
+  );
+}
+
+function TodayAssignment({ event }: Readonly<{ event: DashboardTodayAssignment }>) {
+  const { t } = useTranslation();
+  return (
+    <>
+      <Link
+        to={`/teacher/assignments/${event.assignmentId}?tab=students`}
+        className="text-ui block font-medium break-words hover:underline"
+      >
+        {t(`dashboard.home.${event.kind}`, { title: event.title })}
+      </Link>
+      {event.kind === "closes" && (
+        <span className="text-muted-fg text-meta block">
+          {t("dashboard.home.notSubmitted", { count: event.notSubmitted })}
+        </span>
+      )}
+    </>
   );
 }
 

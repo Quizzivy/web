@@ -232,7 +232,9 @@ async function fillCopy({ copy, current, groups, sources, grouped, names }: Copy
       list,
       optionIds(source, duplicate),
     );
-    const saved = await updateQuestion(duplicate.id, values);
+    const saved = await updateQuestion(duplicate.id, values, {
+      expectedUpdatedAt: duplicate.updatedAt,
+    });
     swaps.set(questionId, saved.id);
   }
   const sections = toMixedOutline(copy).map((section) => ({

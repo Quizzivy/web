@@ -29,7 +29,13 @@ test("E2E 3: an anonymous visitor joins a class from a deep link", async ({ page
   await stubApi(page, {
     ...anonymous,
     "POST /join/preview": {
-      body: { classId: CLASS_ID, className: CLASS_NAME, teacherName: TEACHER },
+      body: {
+        classId: CLASS_ID,
+        className: CLASS_NAME,
+        teacherName: TEACHER,
+        schedule: null,
+        room: null,
+      },
     },
     "POST /auth/google": async (route) => {
       exchanged = route.request().postDataJSON();
@@ -58,7 +64,12 @@ test("E2E 3: an anonymous visitor joins a class from a deep link", async ({ page
             id: CLASS_ID,
             name: CLASS_NAME,
             description: null,
+            teacherId: null,
             teacherName: TEACHER,
+            teacherAvatarUrl: null,
+            scheduleLabel: null,
+            room: null,
+            schedule: { slots: [], label: null },
             joinedAt: "2026-09-26T01:00:00Z",
           },
         ],
@@ -171,7 +182,12 @@ test("a signed-in student joins from Classes with one lookup and one join", asyn
                   id: CLASS_ID,
                   name: CLASS_NAME,
                   description: null,
+                  teacherId: null,
                   teacherName: TEACHER,
+                  teacherAvatarUrl: null,
+                  scheduleLabel: null,
+                  room: null,
+                  schedule: { slots: [], label: null },
                   joinedAt: "2026-09-26T01:00:00Z",
                 },
               ]
@@ -180,7 +196,13 @@ test("a signed-in student joins from Classes with one lookup and one join", asyn
       ),
     "GET /app/assignments": { body: { dueNow: [], upcoming: [], completed: [] } },
     "POST /join/preview": {
-      body: { classId: CLASS_ID, className: CLASS_NAME, teacherName: TEACHER },
+      body: {
+        classId: CLASS_ID,
+        className: CLASS_NAME,
+        teacherName: TEACHER,
+        schedule: null,
+        room: null,
+      },
     },
     "POST /app/classes/join": (route) => {
       joined = true;

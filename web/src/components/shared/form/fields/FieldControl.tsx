@@ -15,6 +15,7 @@ import { ToggleField } from "./ToggleField";
 import { FileField } from "./FileField";
 import { InfoField } from "./InfoField";
 import { QrField } from "./QrField";
+import { DerivedField } from "./DerivedField";
 import type { FormField, FormValues, FormValue } from "./types";
 const TEXT = {
   text: TextField,
@@ -154,6 +155,17 @@ export function FieldControl<V extends FormValues>({
       return (
         <InfoField
           rows={typeof field.rows === "function" ? field.rows(values) : field.rows}
+        />
+      );
+    case "derived":
+      return (
+        <DerivedField
+          id={id}
+          label={label}
+          value={field.value}
+          icon={field.icon}
+          action={field.action}
+          describedBy={describedBy}
         />
       );
     case "qr":

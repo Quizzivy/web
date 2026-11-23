@@ -63,6 +63,8 @@ test("an anonymous class preview survives bootstrap refusal before its response"
             classId: CLASS_ID,
             className: CLASS_NAME,
             teacherName: TEACHER,
+            schedule: null,
+            room: null,
           }),
         });
         events.push("preview-returned");

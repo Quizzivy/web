@@ -97,6 +97,44 @@ export const ASSIGNMENT = {
   flexible: "01935000-0000-7000-8000-000000001201",
 };
 
+/**
+ * seed/08's Nguyễn Gia Bảo, the Student deck's student: in IELTS 6.5 Evening
+ * and IELTS Foundation A, which seed/13 gives five sessions this week, one of
+ * them in Room 3 with the note "Room 3 this week".
+ */
+export const GIA_BAO = {
+  email: "giabao.nguyen@quizzivy.com",
+  password: "quizzivy-dev",
+};
+
+/**
+ * seed/08's Trần Minh Anh, a student no other spec signs in: for a spec that
+ * enrols a student in a class of its own, which spares STUDENT's hourly
+ * sign-ins, the suite's most used.
+ */
+export const MINH_ANH = {
+  email: "minhanh.tran@quizzivy.com",
+  password: "quizzivy-dev",
+};
+
+/** seed/08's IELTS 6.5 Evening, Lan's Mon · Wed · Fri class in Room 3. */
+export const EVENING_CLASS = "01935000-0000-7000-8000-000000800301";
+
+/**
+ * centreDay is the day `days` after today in Ho Chi Minh City, the zone the
+ * seeded accounts read dates in: its `YYYY-MM-DD` and its ISO weekday, Monday 1.
+ */
+export function centreDay(days = 0): { date: string; weekday: number } {
+  const date = new Intl.DateTimeFormat("en-CA", {
+    timeZone: "Asia/Ho_Chi_Minh",
+    year: "numeric",
+    month: "2-digit",
+    day: "2-digit",
+  }).format(new Date(Date.now() + days * 86_400_000));
+  const day = new Date(`${date}T00:00:00Z`).getUTCDay();
+  return { date, weekday: day === 0 ? 7 : day };
+}
+
 /** STUDENT's user id in seed/01, for a spec that assigns to the student alone. */
 export const STUDENT_ID = "01935000-0000-7000-8000-0000000000a2";
 
@@ -240,8 +278,17 @@ export function spokenSpan(ms: number): string {
   return `${minutes} phút ${seconds} giây`;
 }
 
-export async function signIn(page: Page, who: typeof ADMIN, landing: RegExp) {
-  await page.goto("/login");
+/**
+ * signIn signs `who` in through the sign-in page and waits for `landing`: on
+ * the spec's own origin, or on `host` (tests/e2e/support/hosts.ts) when given.
+ */
+export async function signIn(
+  page: Page,
+  who: typeof ADMIN,
+  landing: RegExp,
+  host = "",
+) {
+  await page.goto(`${host}/login`);
   await page.getByLabel("Email").fill(who.email);
   await page.getByLabel("Mật khẩu", { exact: true }).fill(who.password);
   await page.getByRole("button", { name: "Đăng nhập" }).click();

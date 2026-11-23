@@ -1,5 +1,7 @@
 import {
   AudioLines,
+  CalendarCheck,
+  CalendarDays,
   ClipboardList,
   FileText,
   GraduationCap,
@@ -33,8 +35,7 @@ export interface TeacherNavGroup extends NavGroup {
 
 /**
  * TEACHER_NAV is the teacher sidebar in the deck's order. A module that has
- * not shipped is absent from it: Calendar joins the first group between
- * Dashboard and Messages in R8.
+ * not shipped is absent from it.
  */
 export const TEACHER_NAV: readonly TeacherNavGroup[] = [
   {
@@ -46,6 +47,14 @@ export const TEACHER_NAV: readonly TeacherNavGroup[] = [
         label: "teacherShell.nav.dashboard",
         icon: LayoutDashboard,
         operation: "getDashboard",
+        requires: "workspace.teacher",
+      },
+      {
+        id: "calendar",
+        to: "/teacher/calendar",
+        label: "teacherShell.nav.calendar",
+        icon: CalendarDays,
+        operation: "getCalendar",
         requires: "workspace.teacher",
       },
       {
@@ -108,6 +117,14 @@ export const TEACHER_NAV: readonly TeacherNavGroup[] = [
         icon: Users,
         operation: "listStudents",
         requires: "people.students.read",
+      },
+      {
+        id: "attendance",
+        to: "/teacher/attendance",
+        label: "teacherShell.nav.attendance",
+        icon: CalendarCheck,
+        operation: "listAttendanceSessions",
+        requires: "teaching.attendance",
       },
     ],
   },

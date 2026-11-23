@@ -57,6 +57,7 @@ const STUDENT_PAGES = [
   "layouts/StudentLayout",
   "features/assignments/pages/StudentHomePage",
   "features/classes/pages/StudentClassesPage",
+  "features/calendar/pages/student/ThisWeekPage",
   "features/assignments/pages/AssignmentIntroPage",
   "features/results/pages/ResultPage",
   "features/auth/pages/StudentSettingsPage",

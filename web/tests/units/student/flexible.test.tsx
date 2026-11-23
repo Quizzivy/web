@@ -196,7 +196,7 @@ describe("Home under flexible", () => {
   });
 
   it("keeps the minutes at all times under strict", async () => {
-    homeWith([liveCard({ mode: "strict", liveDeadlineAt: "2026-08-29T12:30:00Z" })]);
+    homeWith([liveCard({ mode: "strict", liveDeadlineAt: "2026-08-29T12:30:30Z" })]);
     expect(await screen.findByText("Đang làm · còn 150 phút")).toBeInTheDocument();
   });
 

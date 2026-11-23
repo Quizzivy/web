@@ -51,6 +51,12 @@ export type FormDialogProps<V extends FormValues> = Readonly<{
    * full). Required fields still wait for a submit.
    */
   liveErrors?: boolean;
+  /**
+   * Works out the values after a field changes, from the values the change
+   * made and the ones before it: for a field that follows another until the
+   * reader edits it (New session's Room follows its Class).
+   */
+  derive?: ((next: V, previous: V) => V) | undefined;
   submitLabel: string | ((values: V) => string);
   cancelLabel?: string | undefined;
   hideCancel?: boolean;
@@ -100,6 +106,7 @@ export function FormDialog<V extends FormValues>({
   fields,
   validate,
   liveErrors = false,
+  derive,
   submitLabel,
   cancelLabel,
   hideCancel = false,
@@ -249,10 +256,13 @@ export function FormDialog<V extends FormValues>({
                       locked={pending}
                       onChange={(next) => {
                         if (!acceptsChanges.current) return;
-                        setState((previous) => ({
-                          ...previous,
-                          values: { ...previous.values, [field.name]: next },
-                        }));
+                        setState((previous) => {
+                          const changed = { ...previous.values, [field.name]: next };
+                          return {
+                            ...previous,
+                            values: derive ? derive(changed, previous.values) : changed,
+                          };
+                        });
                       }}
                     />
                     {hint && (

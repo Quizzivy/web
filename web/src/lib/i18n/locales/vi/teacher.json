@@ -361,6 +361,7 @@
     },
     "nav": {
       "dashboard": "Tổng quan",
+      "calendar": "Lịch",
       "assignments": "Bài giao",
       "grading": "Chấm bài",
       "classes": "Lớp học",
@@ -4043,6 +4044,49 @@
       "dimensions": "Ảnh lớn hơn 10000 × 10000 điểm ảnh. Hãy chọn ảnh nhỏ hơn.",
       "limit": "Bạn đã tải lên quá nhiều tệp trong một giờ. Hãy thử lại sau.",
       "failed": "Chưa tải lên được tệp. Hãy thử lại."
+    }
+  },
+  "calendar": {
+    "title": "Lịch",
+    "weekNav": "Chọn tuần",
+    "previousWeek": "Tuần trước",
+    "nextWeek": "Tuần sau",
+    "today": "Hôm nay",
+    "addSession": "Buổi học",
+    "legend": {
+      "label": "Chú giải",
+      "session": "Buổi học",
+      "closes": "Bài giao đóng",
+      "opens": "Bài giao mở"
+    },
+    "event": {
+      "opens": "{{title}} mở",
+      "closes": "{{title}} đóng",
+      "cancelled": "Đã huỷ"
+    },
+    "testWindow": "Khung làm bài",
+    "agendaToday": "Hôm nay · {{day}}",
+    "empty": "Tuần này chưa có buổi học nào.",
+    "failed": "Không tải được lịch.",
+    "new": {
+      "title": "Buổi học mới",
+      "class": "Lớp",
+      "classPlaceholder": "Chọn lớp",
+      "date": "Ngày",
+      "starts": "Bắt đầu",
+      "length": "Thời lượng",
+      "minutes": "{{n}} phút",
+      "room": "Phòng",
+      "roomPlaceholder": "Phòng 2",
+      "repeat": "Lặp lại mỗi tuần",
+      "untilTerm": "Đến hết {{date}}",
+      "untilStopped": "Đến khi bạn dừng lặp lại",
+      "submit": "Thêm buổi học",
+      "added": "Đã thêm buổi học · {{class}}, {{time}}",
+      "failed": "Không thêm được buổi học. Vui lòng thử lại.",
+      "archived": "Lớp này đã được lưu trữ nên không nhận buổi học mới.",
+      "dateTooFar": "Chọn một ngày trong vòng hai năm tới.",
+      "noClasses": "Bạn chưa có lớp nào. Hãy tạo lớp trước khi thêm buổi học."
     }
   }
 }

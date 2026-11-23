@@ -22,6 +22,7 @@ import { toast } from "@/components/ui/sonner";
 import { termsQuery, useDeleteTerm, type Term } from "@/features/organization/api";
 import { TermDialog } from "@/features/organization/components/TermDialog";
 import { useMediaQuery } from "@/hooks/useMediaQuery";
+import { useWidthAtLeast } from "@/hooks/useWidthAtLeast";
 import { failureMessage } from "@/lib/api/errors";
 import { dayMonthYear } from "@/lib/i18n/datetime";
 import { useLocale } from "@/lib/i18n/useLocale";
@@ -40,6 +41,13 @@ const DATE_TRACK = "minmax(104px,1fr)";
 const STATE_TRACK = "112px";
 const MENU_TRACK = "34px";
 const SKELETON_WIDTHS = ["w-[46%]", "w-[38%]", "w-[42%]"] as const;
+
+/**
+ * TABLE_FROM is the card width the table needs: the tracks' minimums, the
+ * four 12px gaps and 18px either side. Narrower, as beside the section
+ * column below about 1120px of window, each term is two lines.
+ */
+const TABLE_FROM = 150 + 104 + 104 + 112 + 34 + 4 * 12 + 2 * 18;
 
 /** termDay is a term's `YYYY-MM-DD` day as the product writes a date with its year. */
 function termDay(day: string, locale: Locale) {
@@ -311,8 +319,9 @@ export function TermsHost({
  * "Terms" with the line that says what a term is for and Add term in its
  * header, holding the centre's terms newest first, each with its name, its
  * two days and a pill for current, upcoming or past, which the server works
- * out. A row's menu edits it or, once asked, deletes it. Below 768px each
- * term is two lines with its menu. Until the section has been shown, and
+ * out. A row's menu edits it or, once asked, deletes it. Below 768px, and
+ * wherever the card is narrower than the table's columns, each term is two
+ * lines with its menu. Until the section has been shown, and
  * while the list is read, three skeleton rows hold its place; a failed read
  * says so with Retry, and no term says what rates do without one. The
  * section saves itself, through its dialogs, and has no part in the page's
@@ -321,7 +330,9 @@ export function TermsHost({
 export function TermsSection() {
   const { t } = useTranslation();
   const locale = useLocale();
-  const wide = useMediaQuery("(min-width: 768px)");
+  const phone = !useMediaQuery("(min-width: 768px)");
+  const [fitsRef, fits] = useWidthAtLeast<HTMLDivElement>(TABLE_FROM);
+  const wide = !phone && fits;
   const host = useContext(TermsHostContext);
   if (host === null) throw new Error("TermsSection is drawn inside a TermsHost.");
   const { opened, addButton, add, edit, askDelete } = host;
@@ -375,7 +386,7 @@ export function TermsSection() {
           <Button
             type="button"
             variant="outline"
-            className="h-9"
+            className="h-11 min-[768px]:h-9"
             onClick={() => void terms.refetch()}
           >
             <RotateCw aria-hidden="true" />
@@ -433,7 +444,7 @@ export function TermsSection() {
           ref={addButton}
           type="button"
           variant="outline"
-          className="h-8.5"
+          className="h-10 min-[768px]:h-8.5"
           onClick={() => add(addButton)}
         >
           <Plus aria-hidden="true" />
@@ -441,7 +452,7 @@ export function TermsSection() {
         </Button>
       }
     >
-      {content}
+      <div ref={fitsRef}>{content}</div>
     </SettingsCard>
   );
 }
@@ -456,7 +467,7 @@ function EmptyAdd({
       ref={button}
       type="button"
       variant="outline"
-      className="h-9"
+      className="h-11 min-[768px]:h-9"
       onClick={() => onAdd(button)}
     >
       <Plus aria-hidden="true" />

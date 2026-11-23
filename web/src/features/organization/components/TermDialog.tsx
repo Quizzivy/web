@@ -310,7 +310,6 @@ export function TermDialog({
     <DialogShell
       open={open}
       onOpenChange={onOpenChange}
-      width={440}
       returnFocus={returnFocus}
       onOpenAutoFocus={(event) => {
         event.preventDefault();
@@ -349,7 +348,7 @@ export function TermDialog({
             />
             <Note id={`${nameId}-error`} tone="field" text={notes.name} />
           </div>
-          <div className="grid grid-cols-2 gap-3">
+          <div className="grid gap-3 sm:grid-cols-2">
             <DateBlock
               id={startId}
               label={t("systemSettings.terms.starts")}

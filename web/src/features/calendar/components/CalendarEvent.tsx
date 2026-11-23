@@ -25,19 +25,23 @@ function placement(box: Box, lane: Lane): CSSProperties {
 /**
  * CalendarEvent is one block of the week grid, as the deck draws it: a 6px
  * rounded tint, the title at 12/600 and the time at 11.5 under it, both cut
- * with an ellipsis. A session is a button that opens its popover; an
- * assignment's opening or closing is a link to the assignment.
+ * with an ellipsis. A session is a button that opens its popover, and carries
+ * a 2px ring while it is open; an assignment's opening or closing is a link to
+ * the assignment.
  */
 export function CalendarEvent({
   item,
   box,
   lane,
   onOpenSession,
+  open = false,
 }: Readonly<{
   item: CalendarItem;
   box: Box;
   lane: Lane;
   onOpenSession?: OpenSession | undefined;
+  /** The session's popover is open: the block carries the ring the proposal draws. */
+  open?: boolean;
 }>) {
   const { t } = useTranslation();
   const cancelled = item.kind === "session" && item.session.cancelled;
@@ -72,7 +76,10 @@ export function CalendarEvent({
     <button
       type="button"
       data-kind="session"
-      className={cn(className, "cursor-pointer border-0")}
+      data-session-id={item.kind === "session" ? item.session.id : undefined}
+      aria-haspopup="dialog"
+      aria-expanded={open}
+      className={cn(className, "cursor-pointer border-0", open && "ring-ring ring-2")}
       style={style}
       onClick={(event) => {
         if (item.kind === "session") onOpenSession?.(item.session, event.currentTarget);

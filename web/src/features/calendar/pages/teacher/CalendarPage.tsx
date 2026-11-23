@@ -18,6 +18,7 @@ import { Agenda, AgendaSkeleton } from "../../components/Agenda";
 import { agendaDays } from "../../items";
 import { Legend } from "../../components/Legend";
 import { NewSessionDialog } from "../../components/NewSessionDialog";
+import { SessionPopover, type OpenedSession } from "../../components/SessionPopover";
 import { WeekGrid } from "../../components/WeekGrid";
 import {
   addDays,
@@ -82,8 +83,8 @@ function Notice({
  * once and blocks stand where sessions will be; an empty week keeps its grid
  * with the sentence and "+ Buổi học" over it (DG-83); a week that cannot load
  * says so with "Thử lại". A test's opening or closing opens the assignment.
- * A session's popover is T-R8.11's: it passes `onOpenSession` to the grid and
- * the agenda, which call it with the session and the element pressed.
+ * A class session opens its popover beside it, or a sheet on a phone
+ * (`SessionPopover`, T-R8.11), whose changes read the week again.
  */
 export default function CalendarPage() {
   const { t } = useTranslation();
@@ -103,6 +104,9 @@ export default function CalendarPage() {
   const wide = useMediaQuery(GRID_WINDOW) && roomy;
   const week = useQuery(calendarQuery(from, to));
   const [adding, setAdding] = useState(false);
+  const [opened, setOpened] = useState<OpenedSession | null>(null);
+  const openSession = (session: ClassSession, anchor: HTMLElement) =>
+    setOpened({ session, anchor });
   const addButton = useRef<HTMLButtonElement>(null);
   const emptyAdd = useRef<HTMLButtonElement>(null);
   const [returnTo, setReturnTo] = useState<"header" | "empty">("header");
@@ -110,6 +114,7 @@ export default function CalendarPage() {
   const items = week.data ? itemsByDay(week.data, days, zone) : days.map(() => []);
 
   function showWeek(date: string) {
+    setOpened(null);
     setParams(
       (current) => {
         const next = new URLSearchParams(current);
@@ -178,6 +183,8 @@ export default function CalendarPage() {
         nowMinutes={now.minutes}
         items={items}
         loading={week.isPending}
+        onOpenSession={openSession}
+        openId={opened?.session.id}
         overlay={
           empty ? (
             <Notice tone="card" action={addAction("empty")}>
@@ -194,7 +201,15 @@ export default function CalendarPage() {
         {t("calendar.empty")}
       </Notice>
     );
-  else body = <Agenda days={agendaDays(days, items, today)} today={today} />;
+  else
+    body = (
+      <Agenda
+        days={agendaDays(days, items, today)}
+        today={today}
+        onOpenSession={openSession}
+        openId={opened?.session.id}
+      />
+    );
 
   return (
     <div className="flex w-full min-w-0 flex-col gap-3 min-[768px]:gap-4">
@@ -238,6 +253,7 @@ export default function CalendarPage() {
       />
       <Legend />
       {body}
+      <SessionPopover opened={opened} today={today} onClose={() => setOpened(null)} />
       {canWrite && (
         <NewSessionDialog
           open={adding}

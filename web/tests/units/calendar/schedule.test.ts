@@ -4,6 +4,7 @@ import {
   formatDateRange,
   formatDayLabel,
   formatDayMonth,
+  formatLongDate,
   formatSlots,
   formatTimeRange,
   minutesOf,
@@ -88,6 +89,9 @@ describe("lib/i18n/schedule: weeks and days", () => {
     expect(formatDayLabel("2025-09-24", "vi")).toBe("Th 4, 24 thg 9");
     expect(formatDayLabel("2025-09-24", "en")).toBe("Wed 24 Sep");
     expect(formatDayMonth("2026-12-19", "vi")).toBe("19 thg 12");
+    expect(formatLongDate("2025-09-26", "vi")).toBe("Thứ Sáu, 26 tháng 9");
+    expect(formatLongDate("2025-09-28", "vi")).toBe("Chủ nhật, 28 tháng 9");
+    expect(formatLongDate("2025-09-26", "en")).toBe("Friday, 26 September");
     expect(formatDayMonth("2026-12-19", "en", { year: true })).toBe("19 Dec 2026");
   });
 });

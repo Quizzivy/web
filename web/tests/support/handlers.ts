@@ -16,6 +16,10 @@ const BASE = "http://localhost:8080";
  * override per-case with `server.use(...)`.
  */
 export const handlers = [
+  // F2: the colleague threads Messages merges into All; none by default.
+  http.get(`${BASE}/teacher/messages/colleagues`, () =>
+    contractJson("/teacher/messages/colleagues", "get", 200, { threads: [] }),
+  ),
   http.get(`${BASE}/teacher/questions`, () =>
     contractJson("/teacher/questions", "get", 200, {
       items: [],

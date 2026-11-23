@@ -1018,6 +1018,7 @@
     "reload": "Reload",
     "sections": {
       "organization": "Organization",
+      "terms": "Terms",
       "signIn": "Sign-in",
       "data": "Data & privacy",
       "plan": "Plan & usage"
@@ -1037,6 +1038,35 @@
       "leadRecipientsHint": "They get an email without the phone number, and a link to the request.",
       "leadRecipientsAdd": "Add email…",
       "leadRecipientsRemove": "Remove {{email}}"
+    },
+    "terms": {
+      "title": "Terms",
+      "hint": "Used by attendance and the gradebook.",
+      "add": "Add term",
+      "name": "Name",
+      "starts": "Starts",
+      "ends": "Ends",
+      "state": {
+        "current": "Current",
+        "upcoming": "Upcoming",
+        "past": "Past"
+      },
+      "actions": "Actions for {{name}}",
+      "edit": "Edit",
+      "delete": "Delete",
+      "editTitle": "Edit term",
+      "namePlaceholder": "For example: Autumn 2026",
+      "overlaps": "Overlaps {{name}}",
+      "endBeforeStart": "The end date must be after the start date.",
+      "endHint": "Repeating sessions already made still stop at the old end date.",
+      "deleteTitle": "Delete “{{name}}”?",
+      "deleteBody": "Attendance rates in this term then cover all sessions.",
+      "deleteConfirm": "Delete term",
+      "empty": "No terms yet. Attendance rates cover all sessions until you add one.",
+      "loadFailed": "Could not load the terms.",
+      "added": "Term {{name}} added",
+      "saved": "Term {{name}} saved",
+      "deleted": "Term {{name}} deleted"
     },
     "logo": {
       "title": "Replace logo",

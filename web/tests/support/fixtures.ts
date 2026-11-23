@@ -165,3 +165,31 @@ export const notificationDefaults: components["schemas"]["NotificationPreference
   { event: "message.received", inApp: true, email: true },
   { event: "summary.weekly", inApp: false, email: true },
 ];
+
+/**
+ * sampleTerms are the centre's terms as the deck draws them on 24 September
+ * 2026, newest first, as `GET /admin/settings/terms` returns them.
+ */
+export const sampleTerms: components["schemas"]["Term"][] = [
+  {
+    id: "0196f7c0-0000-7000-8000-000000000003",
+    name: "Xuân 2027",
+    startsOn: "2027-01-04",
+    endsOn: "2027-04-25",
+    state: "upcoming",
+  },
+  {
+    id: "0196f7c0-0000-7000-8000-000000000002",
+    name: "Thu 2026",
+    startsOn: "2026-09-01",
+    endsOn: "2026-12-20",
+    state: "current",
+  },
+  {
+    id: "0196f7c0-0000-7000-8000-000000000001",
+    name: "Hè 2026",
+    startsOn: "2026-06-01",
+    endsOn: "2026-08-22",
+    state: "past",
+  },
+];

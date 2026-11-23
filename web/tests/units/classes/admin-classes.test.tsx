@@ -303,6 +303,30 @@ describe("the Admin Classes page", () => {
     ).toBeVisible();
   });
 
+  it("reads a class's schedule from its repeating sessions, its room after it (T-R8.14)", async () => {
+    serveClasses([
+      {
+        ...MORNING,
+        room: "Phòng 2",
+        schedule: {
+          slots: [
+            { weekday: 2, startTime: "17:30", durationMinutes: 90 },
+            { weekday: 4, startTime: "17:30", durationMinutes: 90 },
+          ],
+          label: "T2 · T4, 09:00",
+        },
+      },
+      { ...ORPHANED, room: "Phòng 5" },
+    ]);
+    renderPage("/admin/classes", 560);
+    const row = await rowOf(MORNING.name);
+    expect(within(row).getByText("Giàu Bùi · T3 · T5, 17:30 · Phòng 2")).toBeVisible();
+    const orphan = await rowOf(ORPHANED.name);
+    expect(
+      within(orphan).getByText("Vũ Thuỳ Dung (đã tắt) · Chưa có lịch học · Phòng 5"),
+    ).toBeVisible();
+  });
+
   it("shows a skeleton first, then an error with Retry", async () => {
     let healthy = false;
     server.use(

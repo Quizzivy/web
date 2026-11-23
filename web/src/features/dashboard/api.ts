@@ -6,13 +6,7 @@ export type Dashboard = components["schemas"]["Dashboard"];
 export type DashboardToday = components["schemas"]["DashboardToday"];
 export type DashboardTodayAssignment =
   components["schemas"]["DashboardTodayAssignment"];
-
-/** isAssignmentToday keeps an assignment's opens or closes; class sessions are drawn by T-R8.14. */
-export function isAssignmentToday(
-  event: DashboardToday,
-): event is DashboardTodayAssignment {
-  return event.kind === "opens" || event.kind === "closes";
-}
+export type DashboardTodaySession = components["schemas"]["DashboardTodaySession"];
 export type Assignment = components["schemas"]["Assignment"];
 export type AssignmentStatus = components["schemas"]["AssignmentStatus"];
 

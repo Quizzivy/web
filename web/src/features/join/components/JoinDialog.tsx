@@ -133,6 +133,8 @@ function JoinForm({ onClose }: Readonly<{ onClose: () => void }>) {
           variant="row"
           name={found.className}
           teacherName={found.teacherName}
+          schedule={found.schedule}
+          room={found.room}
         />
       )}
       {found && !student && (

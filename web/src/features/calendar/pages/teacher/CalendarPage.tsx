@@ -253,7 +253,12 @@ export default function CalendarPage() {
       />
       <Legend />
       {body}
-      <SessionPopover opened={opened} today={today} onClose={() => setOpened(null)} />
+      <SessionPopover
+        opened={opened}
+        today={today}
+        sheet={!wide}
+        onClose={() => setOpened(null)}
+      />
       {canWrite && (
         <NewSessionDialog
           open={adding}

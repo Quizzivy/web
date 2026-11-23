@@ -29,7 +29,6 @@ import {
 import { Popover, PopoverAnchor, PopoverContent } from "@/components/ui/popover";
 import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { useCan } from "@/features/auth/permissions";
-import { useMediaQuery } from "@/hooks/useMediaQuery";
 import { useMinute } from "@/hooks/useTick";
 import { ApiError } from "@/lib/api/errors";
 import { useDisplayTimeZone } from "@/lib/i18n/datetime";
@@ -55,6 +54,9 @@ import { EditSessionDialog } from "./EditSessionDialog";
 
 /** OpenedSession is the session whose popover is open, and the event pressed to open it. */
 export type OpenedSession = Readonly<{ session: ClassSession; anchor: HTMLElement }>;
+
+/** From 16:00 a popover rises from its session's foot rather than hanging from its head. */
+const EVENING = 16 * 60;
 
 type DialogKind = "editDate" | "cancel" | "editSeries" | "stop" | "delete";
 type Opened = Readonly<{ kind: DialogKind; session: ClassSession }>;
@@ -268,8 +270,8 @@ function failure(cause: unknown, t: ReturnType<typeof useTranslation>["t"]) {
 
 /**
  * SessionPopover is a class session's popover (T-R8.11, the Session Popover
- * proposal; DG-92): beside the session from 768px, a sheet from the bottom
- * below. It states the class, the date, the time range, the room, "Mỗi {thứ}"
+ * proposal; DG-92): beside the session on the week grid, and a sheet from
+ * the bottom wherever the week is the agenda. It states the class, the date, the time range, the room, "Mỗi {thứ}"
  * or "Không lặp lại", the note, and whether the date was cancelled or changed,
  * then the actions that apply (`sessionActions`).
  *
@@ -285,16 +287,20 @@ function failure(cause: unknown, t: ReturnType<typeof useTranslation>["t"]) {
 export function SessionPopover({
   opened,
   today,
+  sheet,
   onClose,
 }: Readonly<{
   opened: OpenedSession | null;
   today: string;
+  /** Opens as a sheet from the bottom: wherever the week is the agenda. */
+  sheet: boolean;
   onClose: () => void;
 }>) {
   const { t } = useTranslation();
   const locale = useLocale();
   const client = useQueryClient();
-  const wide = useMediaQuery("(min-width: 768px)");
+  const wide = !sheet;
+  const zone = useDisplayTimeZone();
   const minute = useMinute(opened !== null);
   const write = useCan("teaching.classes.write");
   const attend = useCan("teaching.attendance");
@@ -368,6 +374,9 @@ export function SessionPopover({
   }
 
   const session = opened?.session ?? null;
+  // An evening session's popover rises from its foot, as the proposal hangs it.
+  const evening =
+    session !== null && wallClock(session.startsAt, zone).minutes >= EVENING;
   const actions = session
     ? sessionActions(session, minute * 60_000, { write, attend })
     : [];
@@ -416,7 +425,7 @@ export function SessionPopover({
             role="dialog"
             aria-labelledby={titleId}
             side="right"
-            align="start"
+            align={evening ? "end" : "start"}
             sideOffset={6}
             collisionPadding={12}
             onOpenAutoFocus={focusFirst}

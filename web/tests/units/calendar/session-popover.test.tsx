@@ -447,6 +447,21 @@ describe("the session popover on a phone", () => {
   });
 });
 
+describe("the session popover beside the agenda", () => {
+  it("is a sheet wherever the week is the agenda, a 768px window with the sidebar open too", async () => {
+    viewport(768);
+    contentWidth(464);
+    renderPage();
+    const user = userEvent.setup();
+    const today = await screen.findByRole("heading", { level: 2, name: /Hôm nay/ });
+    const list = today.nextElementSibling as HTMLElement;
+    await user.click(within(list).getByRole("button", { name: /IELTS 6.5 Evening/ }));
+    expect(
+      await screen.findByRole("dialog", { name: "IELTS 6.5 Evening" }),
+    ).toHaveClass("bottom-0");
+  });
+});
+
 describe("the session popover's rules", () => {
   const session: ClassSession = deckSession(MONDAY, 4, 18, 1.5, "evening");
   const now = NOW.getTime();

@@ -269,6 +269,13 @@ function list() {
   return within(screen.getByRole("listbox", { name: "Tìm kiếm và lệnh" }));
 }
 
+/** pages are the names the palette's Pages group offers. */
+function pages() {
+  return within(list().getByRole("group", { name: "Trang" }))
+    .getAllByRole("option")
+    .map((option) => option.textContent);
+}
+
 function groupNames() {
   return list()
     .getAllByRole("group")
@@ -319,10 +326,6 @@ describe("the command palette as it opens", () => {
   it("offers Messages to every teacher, opening it, and Shared with me to none, as the deck has it", async () => {
     grant([]);
     const user = renderPalette();
-    const pages = () =>
-      within(list().getByRole("group", { name: "Trang" }))
-        .getAllByRole("option")
-        .map((option) => option.textContent);
     await waitFor(() => expect(pages()).toContain("Tin nhắn"));
     expect(pages()).not.toContain("Được chia sẻ với tôi");
 
@@ -335,10 +338,6 @@ describe("the command palette as it opens", () => {
   it("offers Calendar to every teacher, opening it", async () => {
     grant([]);
     const user = renderPalette();
-    const pages = () =>
-      within(list().getByRole("group", { name: "Trang" }))
-        .getAllByRole("option")
-        .map((option) => option.textContent);
     await user.type(screen.getByRole("combobox"), "lich");
     await waitFor(() => expect(pages()).toEqual(["Lịch"]));
     await user.keyboard("{Enter}");

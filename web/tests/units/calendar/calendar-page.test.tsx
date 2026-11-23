@@ -29,7 +29,6 @@ globalThis.ResizeObserver ??= class {
 };
 /** The deck's now: Wednesday 24 September 2025, 20:15 in Ho Chi Minh City. */
 const NOW = new Date("2025-09-24T13:15:00Z");
-const DECK_MONDAY = "2025-09-22";
 
 type Calendar = ReturnType<typeof deckWeek>;
 

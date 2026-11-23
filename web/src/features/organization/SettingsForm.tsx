@@ -28,6 +28,7 @@ import { DataPrivacySection } from "@/features/organization/sections/DataPrivacy
 import { OrganizationSection } from "@/features/organization/sections/Organization";
 import { PlanUsageSection } from "@/features/organization/sections/PlanUsage";
 import { SignInSection } from "@/features/organization/sections/SignIn";
+import { TermsSection } from "@/features/organization/sections/Terms";
 import {
   formValues,
   settingsFormSchema,
@@ -87,7 +88,8 @@ function controlOf(path: string): HTMLElement | null {
  * why. A rule the server refuses is shown on its field, and the section that
  * holds the first such field is opened. Once saved, the front door reads the
  * centre again, and whatever was typed while the save was in flight stays in
- * the form as an unsaved change.
+ * the form as an unsaved change. Terms is no part of the form: it saves
+ * itself, and the bar does not show on it.
  */
 export function SettingsForm({
   saved,
@@ -252,6 +254,7 @@ export function SettingsForm({
   }
 
   function sectionContent(id: string) {
+    if (id === "terms") return <TermsSection />;
     if (id === "sign-in") return <SignInSection verdict={verdict} saving={saving} />;
     if (id === "data") return <DataPrivacySection saving={saving} />;
     if (id === "plan")
@@ -284,24 +287,30 @@ export function SettingsForm({
           active={active}
           sections={sections}
           footer={
-            <DirtyBar
-              dirty={dirty}
-              saving={saving}
-              blocked={verdict.reason}
-              error={error}
-              errorAction={
-                stale
-                  ? { label: t("systemSettings.reload"), onAction: () => void reload() }
-                  : undefined
-              }
-              onDiscard={() => {
-                setError(null);
-                setStale(false);
-                setRefusal(null);
-                adopt(saved);
-              }}
-              returnFocus={() => controlOf(lastEdited.current)}
-            />
+            // Terms saves itself: the bar of the other sections' changes stays off it.
+            <div hidden={active === "terms"} className="contents">
+              <DirtyBar
+                dirty={dirty}
+                saving={saving}
+                blocked={verdict.reason}
+                error={error}
+                errorAction={
+                  stale
+                    ? {
+                        label: t("systemSettings.reload"),
+                        onAction: () => void reload(),
+                      }
+                    : undefined
+                }
+                onDiscard={() => {
+                  setError(null);
+                  setStale(false);
+                  setRefusal(null);
+                  adopt(saved);
+                }}
+                returnFocus={() => controlOf(lastEdited.current)}
+              />
+            </div>
           }
         />
       </form>

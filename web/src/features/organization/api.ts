@@ -205,3 +205,86 @@ export function useJoinCodesOff(): boolean {
   const { data } = useQuery(joinCodesQuery());
   return data === true;
 }
+
+/** Term is one of the centre's terms, with where today falls against it. */
+export type Term = components["schemas"]["Term"];
+
+/** TermCreate is what `POST /admin/settings/terms` adds. */
+export type TermCreate = components["schemas"]["TermCreate"];
+
+/** TermPatch is the fields `PATCH /admin/settings/terms/{id}` changes. */
+export type TermPatch = components["schemas"]["TermPatch"];
+
+/** TERMS_KEY is the query key of `GET /admin/settings/terms`. */
+export const TERMS_KEY = ["organization-terms"] as const;
+
+/** termsQuery reads `GET /admin/settings/terms`: every term, newest first. */
+export function termsQuery() {
+  return queryOptions({
+    queryKey: TERMS_KEY,
+    queryFn: ({ signal }) => api("get", "/admin/settings/terms", { signal }),
+  });
+}
+
+function newestFirst(terms: readonly Term[]): Term[] {
+  return [...terms].sort((a, b) => b.startsOn.localeCompare(a.startsOn));
+}
+
+/**
+ * keepTerm puts a stored term in the list the query holds, in place of the
+ * one with its id, newest first, and has the list read again, since the
+ * server says which term is current.
+ */
+function keepTerm(client: QueryClient, term: Term) {
+  client.setQueryData(TERMS_KEY, (list: { items: Term[] } | undefined) =>
+    list === undefined
+      ? list
+      : {
+          items: newestFirst([...list.items.filter(({ id }) => id !== term.id), term]),
+        },
+  );
+  void client.invalidateQueries({ queryKey: TERMS_KEY });
+}
+
+/**
+ * useCreateTerm adds a term. A range that shares a day with another term is
+ * refused with `TERM_OVERLAPS`, naming it. The write is tried whether or not
+ * the browser reports a connection, so one that cannot be made says so.
+ */
+export function useCreateTerm() {
+  const client = useQueryClient();
+  return useMutation({
+    networkMode: "always",
+    mutationFn: (body: TermCreate) => api("post", "/admin/settings/terms", { body }),
+    onSuccess: (term) => keepTerm(client, term),
+  });
+}
+
+/** useUpdateTerm changes a term's name or range, judged as a new one is. */
+export function useUpdateTerm() {
+  const client = useQueryClient();
+  return useMutation({
+    networkMode: "always",
+    mutationFn: ({ id, body }: { id: string; body: TermPatch }) =>
+      api("patch", "/admin/settings/terms/{id}", { path: { id }, body }),
+    onSuccess: (term) => keepTerm(client, term),
+  });
+}
+
+/** useDeleteTerm removes a term; attendance then counts its dates overall. */
+export function useDeleteTerm() {
+  const client = useQueryClient();
+  return useMutation({
+    networkMode: "always",
+    mutationFn: (id: string) =>
+      api("delete", "/admin/settings/terms/{id}", { path: { id } }),
+    onSuccess: (_, id) => {
+      client.setQueryData(TERMS_KEY, (list: { items: Term[] } | undefined) =>
+        list === undefined
+          ? list
+          : { items: list.items.filter((term) => term.id !== id) },
+      );
+      void client.invalidateQueries({ queryKey: TERMS_KEY });
+    },
+  });
+}

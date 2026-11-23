@@ -24,6 +24,7 @@ export const ADMIN_EXPORTS = "/admin/exports";
 /** SETTINGS_SECTIONS are the sections the System settings page takes after its path. */
 export const SETTINGS_SECTIONS: ReadonlySet<string> = new Set([
   "organization",
+  "terms",
   "sign-in",
   "data",
   "plan",

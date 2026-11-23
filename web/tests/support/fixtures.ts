@@ -134,6 +134,7 @@ export const myClass: components["schemas"]["MyClass"] = {
   teacherAvatarUrl: null,
   scheduleLabel: null,
   room: null,
+  schedule: { slots: [], label: null },
   joinedAt: "2026-06-12T01:00:00Z",
 };
 
@@ -141,6 +142,7 @@ export const sampleClass: components["schemas"]["Class"] = {
   id: "019535da-0000-7000-8000-000000000001",
   name: "Tiếng Anh giao tiếp - Lớp A",
   description: null,
+  schedule: { slots: [], label: null },
   studentCount: 12,
   openAssignmentCount: 0,
   archivedAt: null,

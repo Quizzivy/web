@@ -22,6 +22,7 @@ const A = {
   teacherAvatarUrl: null,
   scheduleLabel: null,
   room: null,
+  schedule: { slots: [], label: null },
   joinedAt: "2026-07-12T01:00:00Z",
 };
 const B = { ...A, id: "018f0000-0000-7000-8000-0000000000c2", name: "TOEIC 600" };
@@ -351,6 +352,8 @@ describe("joining from the page", () => {
           classId: B.id,
           className: B.name,
           teacherName: "Phan Minh Đức",
+          schedule: null,
+          room: null,
         });
       }),
       http.post(`${BASE}/app/classes/join`, async ({ request }) => {

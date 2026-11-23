@@ -23,6 +23,7 @@
       "attempt.reset": "Reset an attempt",
       "attempt.unflagged": "Cleared the flag on an attempt",
       "attempt.voided": "Voided an attempt",
+      "attendance.saved": "Saved the attendance of a class session",
       "audit.exported": "Exported the audit log",
       "class.archived": "Archived a class",
       "class.created": "Created a class",
@@ -78,8 +79,14 @@
       "role.created": "Created a role",
       "role.permissions_changed": "Changed a role's permissions",
       "role.updated": "Updated a role",
+      "session.cancelled": "Cancelled a class session",
+      "session.created": "Added a class session",
+      "session.deleted": "Deleted a class session",
       "session.revoked": "Revoked a sign-in session",
       "session.revoked_others": "Revoked the other sign-in sessions",
+      "session.updated": "Updated a class session",
+      "session_series.ended": "Stopped a weekly class session",
+      "session_series.updated": "Changed a weekly class session",
       "share.changed": "Changed a share's access",
       "share.copied": "Made a copy of shared content",
       "share.granted": "Shared content",
@@ -89,6 +96,9 @@
       "student.deleted": "Deleted a student account",
       "student.password_reset": "Reset a student's password",
       "student.updated": "Updated a student account",
+      "term.created": "Added a term",
+      "term.deleted": "Deleted a term",
+      "term.updated": "Updated a term",
       "test.created": "Created a test",
       "test.current_version_changed": "Changed a test's current version",
       "test.deleted": "Deleted a test",
@@ -1402,6 +1412,10 @@
       "teacher-classes": {
         "name": "Classes",
         "blurb": "Classes, members and join codes."
+      },
+      "teacher-schedule": {
+        "name": "Schedule",
+        "blurb": "Class sessions, the weekly calendar and attendance."
       },
       "teacher-ai": {
         "name": "AI assistant",

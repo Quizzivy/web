@@ -75,6 +75,7 @@ function klass(id: string, name: string, studentCount: number) {
     id,
     name,
     description: null,
+    schedule: { slots: [], label: null },
     studentCount,
     openAssignmentCount: 0,
     selfJoinEnabled: false,

@@ -26,6 +26,7 @@ const MORNING: AdminClass = {
   name: "IELTS 7.0 Sáng",
   scheduleLabel: "T2 · T4, 09:00",
   room: null,
+  schedule: { slots: [], label: "T2 · T4, 09:00" },
   teacher: { id: GIAU, name: "Giàu Bùi", avatarUrl: null, disabled: false },
   studentCount: 1240,
   joinCode: {
@@ -41,6 +42,7 @@ const ORPHANED: AdminClass = {
   id: "018f0000-0000-7000-8000-0000000000c2",
   name: "Kids Starters B",
   scheduleLabel: null,
+  schedule: { slots: [], label: null },
   teacher: { id: DUNG, name: "Vũ Thuỳ Dung", avatarUrl: null, disabled: true },
   studentCount: 12,
   joinCode: null,
@@ -132,6 +134,7 @@ function classBody(klass: AdminClass) {
     description: null,
     scheduleLabel: klass.scheduleLabel,
     room: null,
+    schedule: klass.schedule,
     studentCount: klass.studentCount,
     openAssignmentCount: 0,
     selfJoinEnabled: true,

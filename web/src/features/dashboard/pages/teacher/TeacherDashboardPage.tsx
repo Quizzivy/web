@@ -28,6 +28,7 @@ import { useDisplayTimeZone, formatRelative } from "@/lib/i18n/datetime";
 import { cn } from "@/lib/utils";
 import {
   getDashboard,
+  isAssignmentToday,
   listAssignments,
   type Assignment,
   type Dashboard,
@@ -385,11 +386,12 @@ function Today({ data }: Readonly<{ data: Dashboard }>) {
   const { t } = useTranslation();
   const locale = useLocale();
   const zone = useDisplayTimeZone();
-  if (data.today.length === 0)
+  const events = data.today.filter(isAssignmentToday);
+  if (events.length === 0)
     return <EmptyState>{t("dashboard.home.noToday")}</EmptyState>;
   return (
     <ul className="mt-3">
-      {data.today.map((event) => (
+      {events.map((event) => (
         <li
           key={`${event.assignmentId}:${event.kind}:${event.at}`}
           className="flex gap-3 border-t py-2.5 first:border-t-0"

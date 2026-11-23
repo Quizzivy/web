@@ -78,6 +78,7 @@ function classRow(klass: { id: string; name: string }) {
   return {
     id: klass.id,
     name: klass.name,
+    schedule: { slots: [], label: null },
     studentCount: 1,
     openAssignmentCount: 0,
     selfJoinEnabled: false,

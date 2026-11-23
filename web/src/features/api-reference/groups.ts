@@ -1,5 +1,6 @@
 import {
   BookOpenText,
+  CalendarDays,
   ClipboardList,
   Download,
   FileText,
@@ -49,6 +50,7 @@ export const API_GROUPS: Readonly<Record<string, ApiGroup>> = {
   "teacher-attempts": { icon: SquarePen, path: "/teacher/attempts/*" },
   "teacher-students": { icon: Users, path: "/teacher/students/*" },
   "teacher-classes": { icon: GraduationCap, path: "/teacher/classes/*" },
+  "teacher-schedule": { icon: CalendarDays, path: "/teacher/sessions/*" },
   "teacher-messages": { icon: MessageSquare, path: "/teacher/messages/*" },
   "teacher-ai": { icon: Sparkles, path: "/teacher/ai/*" },
   "admin-users": { icon: UserCog, path: "/admin/users/*" },

@@ -44,11 +44,11 @@ describe("bank metadata preservation", () => {
     expect(parsed.level).toBe("pre_a1");
     expect(parsed.skill).toBe("reading");
     expect(parsed.options).toHaveLength(8);
-    updateQuestion(question.id, parsed);
+    updateQuestion(question.id, parsed, { expectedUpdatedAt: question.updatedAt });
     expect(api).toHaveBeenLastCalledWith("patch", "/teacher/questions/{id}", {
       path: { id: question.id },
       query: {},
-      body: parsed,
+      body: { ...parsed, expectedUpdatedAt: question.updatedAt },
     });
   });
   it.each([
@@ -70,11 +70,11 @@ describe("bank metadata preservation", () => {
     };
     const parsed = questionSchema.parse(toFormValues(image));
     expect(parsed.mediaAlt).toBe(mediaAlt);
-    updateQuestion(image.id, parsed);
+    updateQuestion(image.id, parsed, { expectedUpdatedAt: image.updatedAt });
     expect(api).toHaveBeenLastCalledWith("patch", "/teacher/questions/{id}", {
       path: { id: image.id },
       query: {},
-      body: expect.objectContaining({ mediaAlt }),
+      body: expect.objectContaining({ mediaAlt, expectedUpdatedAt: image.updatedAt }),
     });
   });
   it("starts a new question, and reads a question stored without it, with no alt text", () => {
@@ -88,11 +88,16 @@ describe("bank metadata preservation", () => {
       level: undefined,
       skill: undefined,
     });
-    updateQuestion(question.id, unset);
+    updateQuestion(question.id, unset, { expectedUpdatedAt: question.updatedAt });
     expect(api).toHaveBeenLastCalledWith("patch", "/teacher/questions/{id}", {
       path: { id: question.id },
       query: {},
-      body: { ...unset, level: null, skill: null },
+      body: {
+        ...unset,
+        level: null,
+        skill: null,
+        expectedUpdatedAt: question.updatedAt,
+      },
     });
     for (const field of ["level", "skill"])
       expect(

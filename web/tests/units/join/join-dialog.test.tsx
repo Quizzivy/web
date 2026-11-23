@@ -76,6 +76,8 @@ function previewFinds(classId = CLASS_ID) {
         classId,
         className: CLASS_NAME,
         teacherName: TEACHER,
+        schedule: null,
+        room: null,
       });
     }),
   );
@@ -290,6 +292,8 @@ describe("the lookup", () => {
           classId: CLASS_ID,
           className: CLASS_NAME,
           teacherName: TEACHER,
+          schedule: null,
+          room: null,
         });
       }),
     );

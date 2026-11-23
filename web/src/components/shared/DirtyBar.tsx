@@ -17,7 +17,8 @@ const PAUSED_OUTLINE =
  * reads "You have unsaved changes." until `error` is set, which takes the
  * sentence's place as an alert, with `errorAction`, when given, as a button
  * beside Discard; a caller whose changes the sentence can count or qualify
- * gives its own as `message`. Discard is a plain button. Save changes submits
+ * gives its own as `message`, and one that saves something it can name gives
+ * the button's words as `saveLabel`. Discard is a plain button. Save changes submits
  * the form the bar sits in, unless `onSave` is given, which makes it a plain
  * button too. While `saving` both stay focusable but answer `aria-disabled`
  * and ignore a press. While `blocked` names a reason, Save changes alone does
@@ -36,6 +37,7 @@ export function DirtyBar({
   error = null,
   errorAction,
   message,
+  saveLabel,
   onDiscard,
   onSave,
   returnFocus,
@@ -46,6 +48,7 @@ export function DirtyBar({
   error?: string | null | undefined;
   errorAction?: Readonly<{ label: string; onAction: () => void }> | undefined;
   message?: ReactNode;
+  saveLabel?: string | undefined;
   onDiscard: () => void;
   onSave?: (() => void) | undefined;
   returnFocus: () => HTMLElement | null;
@@ -138,7 +141,7 @@ export function DirtyBar({
             onSave?.();
           }}
         >
-          {saving ? t("common.saving") : t("common.saveChanges")}
+          {saving ? t("common.saving") : (saveLabel ?? t("common.saveChanges"))}
         </Button>
       </div>
     </div>

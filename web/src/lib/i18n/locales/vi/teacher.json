@@ -366,6 +366,7 @@
       "grading": "Chấm bài",
       "classes": "Lớp học",
       "students": "Học viên",
+      "attendance": "Điểm danh",
       "tests": "Đề thi",
       "sharedWithMe": "Được chia sẻ với tôi",
       "questionBank": "Ngân hàng câu hỏi",
@@ -389,7 +390,113 @@
   "changePassword": {
     "hint": "Ít nhất 8 ký tự, có số hoặc ký hiệu."
   },
+  "attendance": {
+    "title": "Điểm danh",
+    "lead": "Điểm danh cho các lớp hôm nay, hoặc bổ sung cho những buổi bạn bỏ sót.",
+    "todayTitle": "Hôm nay · {{date}}",
+    "classes_other": "{{count}} lớp",
+    "owedTitle": "Cần điểm danh",
+    "owedSub": "Buổi đã qua mà chưa điểm danh",
+    "recentTitle": "Gần đây",
+    "recentSub": "7 ngày qua",
+    "today": "Hôm nay",
+    "students_other": "{{count}} học viên",
+    "savedCounts": "{{p}} có mặt · {{l}} muộn · {{a}} vắng",
+    "chip": {
+      "today": "Chưa điểm danh",
+      "missing": "Bỏ sót",
+      "saved": "Đã lưu",
+      "savedAt": "Đã lưu {{time}}",
+      "notStarted": "Chưa bắt đầu",
+      "cancelled": "Đã huỷ"
+    },
+    "take": "Điểm danh",
+    "takeFor": "Điểm danh {{name}}, {{time}}",
+    "open": "Mở",
+    "openFor": "Mở {{name}}, {{time}}",
+    "empty": {
+      "today": "Hôm nay chưa có lớp nào bắt đầu.",
+      "owed": "Đã điểm danh đủ.",
+      "recent": "Chưa có gì."
+    },
+    "pageFailed": "Không tải được danh sách buổi học.",
+    "picker": {
+      "button": "Chọn buổi học: {{label}}",
+      "title": "Buổi học",
+      "saved": "Đã lưu",
+      "missing": "Bỏ sót",
+      "more": "Tải thêm"
+    },
+    "search": "Tìm học viên",
+    "markAll": "Đánh dấu tất cả có mặt",
+    "markRest": "Đánh dấu còn lại có mặt",
+    "progress": "{{k}}/{{n}} đã đánh dấu",
+    "progressAll": "Đã đánh dấu đủ {{n}}",
+    "filterLabel": "Lọc theo trạng thái",
+    "status": {
+      "present": "Có mặt",
+      "late": "Muộn",
+      "absent": "Vắng",
+      "none": "Chưa đánh dấu"
+    },
+    "mark": {
+      "present": "Đánh dấu có mặt",
+      "late": "Đánh dấu muộn",
+      "absent": "Đánh dấu vắng"
+    },
+    "col": {
+      "student": "Học viên",
+      "term": "Học kỳ này",
+      "overall": "Toàn bộ",
+      "status": "Trạng thái",
+      "note": "Ghi chú"
+    },
+    "registerLabel": "Bảng điểm danh",
+    "rosterLabel": "Học viên",
+    "radioLabel": "Điểm danh",
+    "note": {
+      "add": "Ghi chú",
+      "addFor": "Ghi chú cho {{name}}",
+      "of": "Ghi chú cho {{name}}:",
+      "title": "Ghi chú cho {{name}}",
+      "description": "Chỉ bạn và giáo viên cùng lớp xem được.",
+      "label": "Ghi chú",
+      "placeholder": "VD: Về sớm vì có hẹn khám bệnh",
+      "save": "Lưu ghi chú"
+    },
+    "noMatch": "Không có học viên nào khớp “{{q}}”",
+    "nobody": "Lớp chưa có học viên nào.",
+    "footer": "Đi muộn vẫn tính là có mặt trong tỉ lệ điểm danh.",
+    "dirty_other": "{{count}} thay đổi chưa lưu",
+    "dirtyUnmarked_other": "{{count}} học viên chưa đánh dấu",
+    "save": "Lưu điểm danh",
+    "savedToast": "Đã lưu điểm danh · {{a}} vắng, {{l}} muộn",
+    "saveFailed": "Không lưu được điểm danh. Vui lòng thử lại.",
+    "unmarked": {
+      "title_other": "Lưu khi còn {{count}} học viên chưa đánh dấu?",
+      "body": "Học viên bạn chưa đánh dấu vẫn để trống và không được tính vào tỉ lệ điểm danh.",
+      "confirm": "Vẫn lưu"
+    },
+    "leave": {
+      "title": "Bỏ điểm danh chưa lưu?",
+      "body": "Những gì bạn đã đánh dấu ở buổi này mà chưa lưu sẽ mất.",
+      "confirm": "Bỏ thay đổi",
+      "stay": "Ở lại"
+    },
+    "noSessions": "Lớp này chưa có buổi học nào.",
+    "addInCalendar": "Thêm buổi học trong Lịch",
+    "notStarted": "Buổi học này chưa bắt đầu. Điểm danh mở trước giờ học 15 phút.",
+    "cancelled": "Buổi học này đã bị huỷ nên không điểm danh.",
+    "registerFailed": "Không tải được bảng điểm danh.",
+    "sessionMissing": "Không tìm thấy buổi học này trong lớp."
+  },
   "classDetail": {
+    "tabs": {
+      "label": "Các phần của lớp",
+      "overview": "Tổng quan",
+      "attendance": "Điểm danh",
+      "attendanceNotMarked_other": "Điểm danh, {{count}} buổi chưa điểm danh"
+    },
     "joinCode": "Mã tham gia",
     "codeCopied": "Đã sao chép mã",
     "copyCode": "Chép mã",

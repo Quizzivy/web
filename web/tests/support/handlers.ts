@@ -121,6 +121,16 @@ export const handlers = [
     contractJson("/admin/settings/terms", "get", 200, { items: sampleTerms }),
   ),
 
+  // A class's Attendance tab reads its latest session for the badge; no
+  // session has started unless a test says so.
+  http.get(`${BASE}/teacher/attendance/sessions`, () =>
+    contractJson("/teacher/attendance/sessions", "get", 200, {
+      items: [],
+      nextBefore: null,
+      notMarked: 0,
+    }),
+  ),
+
   http.get(`${BASE}/app/classes`, () =>
     contractJson("/app/classes", "get", 200, { items: [myClass] }),
   ),

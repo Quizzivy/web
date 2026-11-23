@@ -40,10 +40,14 @@ for (const width of [320, 360, 768, 1024, 1440, 1920]) {
     ).toBeVisible();
     await expect(page.getByText("Bài luyện tập 1 · đang làm")).toBeVisible();
     // A card is not a link; its one link is the message button beside the
-    // teacher (T-R7.21).
+    // teacher (T-R7.21). The page's other link is This week (T-R8.15).
     const links = page.getByRole("main").getByRole("link");
-    await expect(links).toHaveCount(1);
-    await expect(links).toHaveAccessibleName("Nhắn cho Cô Thương");
+    await expect(links).toHaveCount(2);
+    await expect(links.nth(0)).toHaveAccessibleName("Tuần này");
+    await expect(links.nth(0)).toHaveAttribute("href", "/week");
+    await expect(links.nth(1)).toHaveAccessibleName("Nhắn cho Cô Thương");
+    const week = await links.nth(0).boundingBox();
+    expect(week!.height).toBe(40);
     const join = await page.getByRole("button", { name: "Tham gia lớp" }).boundingBox();
     expect(join!.height).toBe(40);
     await fits(page);

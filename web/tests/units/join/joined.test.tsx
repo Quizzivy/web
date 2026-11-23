@@ -57,6 +57,8 @@ beforeEach(() => {
         classId: "019535d9-3df7-79fb-b466-fa907fa17f9e",
         className: CLASS_NAME,
         teacherName: TEACHER,
+        schedule: null,
+        room: null,
       }),
     ),
   );

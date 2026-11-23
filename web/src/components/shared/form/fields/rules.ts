@@ -23,7 +23,8 @@ export function fieldErrors<V extends FormValues>(
 ): Partial<Record<keyof V & string, string>> {
   const errors: Partial<Record<keyof V & string, string>> = {};
   for (const field of visibleFields(fields, values)) {
-    if (field.kind === "info" || field.kind === "qr") continue;
+    if (field.kind === "info" || field.kind === "qr" || field.kind === "derived")
+      continue;
     const message = extra?.[field.name];
     if (message) errors[field.name] = message;
     if (field.required && missingValue(values[field.name]!))

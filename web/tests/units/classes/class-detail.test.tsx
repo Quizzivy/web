@@ -1,4 +1,4 @@
-import { afterEach, beforeEach, describe, expect, it } from "vitest";
+import { afterEach, beforeEach, describe, expect, it, vi } from "vitest";
 import { render, screen, waitFor, within } from "@testing-library/react";
 import userEvent from "@testing-library/user-event";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
@@ -11,6 +11,7 @@ import { server } from "@tests/support/server";
 import { contractJson } from "@tests/support/contractResponse";
 import { assistantUser, teacherUser } from "@tests/support/fixtures";
 import i18n, { loadLocale } from "@/lib/i18n";
+import type { ClassSchedule } from "@/features/join/api";
 
 const BASE = "http://localhost:8080";
 const CLASS_ID = "018f0000-0000-7000-8000-0000000000c1";
@@ -23,7 +24,9 @@ const klass = {
   name: "IELTS Foundation — Lớp tối T3/T5",
   description: null,
   scheduleLabel: "Tue · Thu, 17:30",
-  room: "Room 2",
+  room: "Room 2" as string | null,
+  ownRoom: "Room 2" as string | null,
+  schedule: { slots: [], label: "Tue · Thu, 17:30" } as ClassSchedule,
   studentCount: 2,
   openAssignmentCount: 1,
   archivedAt: null,
@@ -108,7 +111,12 @@ beforeEach(() => {
     http.patch(`${BASE}/teacher/classes/${CLASS_ID}`, async ({ request }) => {
       const body = (await request.json()) as Record<string, unknown>;
       patches.push(body);
-      stored = { ...stored, ...body };
+      // The server keeps the class's own room, and derives `room` from it.
+      stored = {
+        ...stored,
+        ...body,
+        ...("room" in body ? { ownRoom: body["room"] as string | null } : {}),
+      };
       return contractJson("/teacher/classes/{id}", "patch", 200, stored);
     }),
     http.get(`${BASE}/teacher/classes/${CLASS_ID}`, () =>
@@ -714,5 +722,65 @@ describe("the class's assignments", () => {
       `/teacher/assignments?classId=${CLASS_ID}`,
     );
     expect(assignmentQueries).toEqual([CLASS_ID]);
+  });
+});
+
+describe("the class's schedule once it has repeating sessions (T-R8.14)", () => {
+  const SLOTS: ClassSchedule = {
+    slots: [
+      { weekday: 1, startTime: "18:00", durationMinutes: 90 },
+      { weekday: 3, startTime: "18:00", durationMinutes: 90 },
+      { weekday: 5, startTime: "18:00", durationMinutes: 90 },
+    ],
+    label: "Tue · Thu, 17:30",
+  };
+
+  afterEach(() => {
+    vi.useRealTimers();
+  });
+
+  it("reads the schedule from the sessions, read-only, with the calendar at the next session", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+    // Friday 25 September 2026, 20:00 in Ho Chi Minh City: Friday's class is over.
+    vi.setSystemTime(new Date("2026-09-25T13:00:00Z"));
+    stored = { ...klass, schedule: SLOTS, room: "Phòng 2", ownRoom: null };
+    const { user } = renderDetail();
+    const card = (await screen.findByRole("heading", { name: "Lớp" })).closest(
+      "section",
+    )!;
+    const schedule = within(card).getByLabelText("Lịch học");
+    expect(schedule).toHaveValue("T2 · T4 · T6, 18:00");
+    expect(schedule).toHaveAttribute("readonly");
+    expect(schedule).toHaveAccessibleDescription(
+      "Lịch này lấy từ các buổi học lặp lại của lớp.",
+    );
+    expect(within(card).getByRole("link", { name: "Đổi trong Lịch" })).toHaveAttribute(
+      "href",
+      "/teacher/calendar?week=2026-W40",
+    );
+    // The room field is the class's own room, never the one its sessions share.
+    const room = within(card).getByLabelText("Phòng");
+    expect(room).toHaveValue("");
+    expect(room).toHaveAccessibleDescription(
+      "Dùng cho buổi học mới. Phòng của buổi đã có được đổi trong Lịch.",
+    );
+    await user.type(room, "Phòng 5");
+    await user.click(within(card).getByRole("button", { name: "Lưu" }));
+    await waitFor(() =>
+      expect(patches).toEqual([{ name: klass.name, description: "", room: "Phòng 5" }]),
+    );
+  });
+
+  it("keeps the typed schedule for a class without sessions, and the room it typed", async () => {
+    stored = { ...klass, room: "Phòng 7", ownRoom: "Phòng 7" };
+    renderDetail();
+    const card = (await screen.findByRole("heading", { name: "Lớp" })).closest(
+      "section",
+    )!;
+    const schedule = within(card).getByLabelText("Lịch học");
+    expect(schedule).toHaveValue("Tue · Thu, 17:30");
+    expect(schedule).not.toHaveAttribute("readonly");
+    expect(within(card).queryByRole("link", { name: "Đổi trong Lịch" })).toBeNull();
+    expect(within(card).getByLabelText("Phòng")).toHaveValue("Phòng 7");
   });
 });

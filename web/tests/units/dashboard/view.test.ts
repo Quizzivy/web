@@ -1,5 +1,6 @@
 import { describe, expect, it } from "vitest";
 import {
+  attendanceHref,
   dashboardActivities,
   dashboardBars,
   dashboardDestinations,
@@ -7,6 +8,7 @@ import {
   dashboardLongDate,
   dashboardRange,
   dashboardRangeLocation,
+  sessionStarted,
 } from "@/features/dashboard/view";
 import { dashboardKeys } from "@/features/dashboard/keys";
 import { dashboard23, DASHBOARD23_IDS } from "@tests/support/dashboard23";
@@ -109,5 +111,20 @@ describe("dashboard public derivations", () => {
     const next = dashboardActivities([{ ...data.recentActivity[1]! }, ...rows]);
     expect(new Set(first.map((row) => row.key)).size).toBe(2);
     expect(next.slice(1).map((row) => row.key)).toEqual(first.map((row) => row.key));
+  });
+});
+
+describe("Today's class sessions (T-R8.14)", () => {
+  it("counts a session as started from 15 minutes before it starts, as attendance does", () => {
+    const now = new Date("2026-09-24T09:00:00Z");
+    expect(sessionStarted("2026-09-24T08:00:00Z", now)).toBe(true);
+    expect(sessionStarted("2026-09-24T09:15:00Z", now)).toBe(true);
+    expect(sessionStarted("2026-09-24T09:15:01Z", now)).toBe(false);
+  });
+
+  it("opens the class's Attendance tab on the session, whatever kind of id it has", () => {
+    expect(attendanceHref("c1", "s1.20260924")).toBe(
+      "/teacher/classes/c1?tab=attendance&session=s1.20260924",
+    );
   });
 });

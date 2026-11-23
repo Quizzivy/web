@@ -247,6 +247,117 @@ describe("actual Teacher dashboard readings and actions", () => {
     expect(screen.queryByText("Xem lại")).toBeNull();
     expect(screen.getByText("3")).toBeInTheDocument();
   });
+  it("lists Today's class sessions with their room, in time order among the assignments (T-R8.14)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+    vi.setSystemTime(new Date("2026-09-24T09:00:00Z"));
+    const session = {
+      kind: "session" as const,
+      at: "2026-09-24T12:00:00Z",
+      sessionId: "018f0000-0000-7000-8000-0000000000e1.20260924",
+      classId: "018f0000-0000-7000-8000-0000000000c1",
+      className: "IELTS Foundation",
+      room: "Phòng 2",
+    };
+    const data = dashboard23();
+    data.today = [data.today[0]!, session, data.today[1]!];
+    server.use(
+      http.get(`${BASE}/teacher/dashboard`, () =>
+        contractJson("/teacher/dashboard", "get", 200, data),
+      ),
+    );
+    board();
+    const today = within(await screen.findByRole("region", { name: "Hôm nay" }));
+    expect(await today.findByRole("link", { name: "IELTS Evening mở" })).toBeVisible();
+    expect(today.getByRole("link", { name: "Reading Mock đóng" })).toBeVisible();
+    const rows = today.getAllByRole("listitem");
+    expect(rows).toHaveLength(3);
+    expect(rows[1]).toHaveTextContent("19:00IELTS FoundationPhòng 2");
+    // 19:00 is hours away: the session has not started, so it opens nothing yet.
+    expect(within(rows[1]!).queryByRole("link")).toBeNull();
+  });
+  it("opens a started session's attendance, counting the 15 minutes of grace (T-R8.14)", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+    vi.setSystemTime(new Date("2026-09-24T09:00:00Z"));
+    const data = dashboard23();
+    data.today = [
+      {
+        kind: "session",
+        at: "2026-09-24T09:15:00Z",
+        sessionId: "018f0000-0000-7000-8000-0000000000e2.20260924",
+        classId: "018f0000-0000-7000-8000-0000000000c1",
+        className: "IELTS Foundation",
+        room: null,
+      },
+      {
+        kind: "session",
+        at: "2026-09-24T09:16:00Z",
+        sessionId: "018f0000-0000-7000-8000-0000000000e3",
+        classId: "018f0000-0000-7000-8000-0000000000c2",
+        className: "Kids Starters B",
+        room: "Phòng 4",
+      },
+    ];
+    server.use(
+      http.get(`${BASE}/teacher/dashboard`, () =>
+        contractJson("/teacher/dashboard", "get", 200, data),
+      ),
+    );
+    board();
+    const today = within(await screen.findByRole("region", { name: "Hôm nay" }));
+    expect(
+      await today.findByRole("link", { name: "IELTS Foundation" }),
+    ).toHaveAttribute(
+      "href",
+      "/teacher/classes/018f0000-0000-7000-8000-0000000000c1?tab=attendance&session=018f0000-0000-7000-8000-0000000000e2.20260924",
+    );
+    const rows = today.getAllByRole("listitem");
+    expect(rows[0]).toHaveTextContent(/^16:15IELTS Foundation$/);
+    expect(rows[1]).toHaveTextContent("16:16Kids Starters BPhòng 4");
+    expect(within(rows[1]!).queryByRole("link")).toBeNull();
+  });
+  it("leaves the attendance link out for a reader who does not take attendance", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+    vi.setSystemTime(new Date("2026-09-24T09:00:00Z"));
+    useAuthStore.getState().setSession("token", {
+      ...teacherUser,
+      permissions: teacherUser.permissions.filter((p) => p !== "teaching.attendance"),
+    });
+    const data = dashboard23();
+    data.today = [
+      {
+        kind: "session",
+        at: "2026-09-24T08:30:00Z",
+        sessionId: "018f0000-0000-7000-8000-0000000000e2",
+        classId: "018f0000-0000-7000-8000-0000000000c1",
+        className: "IELTS Foundation",
+        room: "Phòng 2",
+      },
+    ];
+    server.use(
+      http.get(`${BASE}/teacher/dashboard`, () =>
+        contractJson("/teacher/dashboard", "get", 200, data),
+      ),
+    );
+    board();
+    const today = within(await screen.findByRole("region", { name: "Hôm nay" }));
+    expect(await today.findByText("IELTS Foundation")).toBeVisible();
+    expect(today.queryByRole("link")).toBeNull();
+  });
+  it("says Today is empty when nothing meets, opens or closes", async () => {
+    const data = dashboard23();
+    data.today = [];
+    server.use(
+      http.get(`${BASE}/teacher/dashboard`, () =>
+        contractJson("/teacher/dashboard", "get", 200, data),
+      ),
+    );
+    board();
+    const today = within(await screen.findByRole("region", { name: "Hôm nay" }));
+    expect(
+      await today.findByText("Hôm nay không có buổi học, bài mở hay bài đóng nào."),
+    ).toBeVisible();
+    expect(today.queryByRole("listitem")).toBeNull();
+  });
   it("allows intervention-only flagged review and uses its exact destination URL", async () => {
     useAuthStore.getState().setSession("token", {
       ...teacherUser,

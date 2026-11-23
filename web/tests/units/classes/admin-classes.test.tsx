@@ -26,6 +26,7 @@ const MORNING: AdminClass = {
   name: "IELTS 7.0 Sáng",
   scheduleLabel: "T2 · T4, 09:00",
   room: null,
+  schedule: { slots: [], label: "T2 · T4, 09:00" },
   teacher: { id: GIAU, name: "Giàu Bùi", avatarUrl: null, disabled: false },
   studentCount: 1240,
   joinCode: {
@@ -41,6 +42,7 @@ const ORPHANED: AdminClass = {
   id: "018f0000-0000-7000-8000-0000000000c2",
   name: "Kids Starters B",
   scheduleLabel: null,
+  schedule: { slots: [], label: null },
   teacher: { id: DUNG, name: "Vũ Thuỳ Dung", avatarUrl: null, disabled: true },
   studentCount: 12,
   joinCode: null,
@@ -132,6 +134,7 @@ function classBody(klass: AdminClass) {
     description: null,
     scheduleLabel: klass.scheduleLabel,
     room: null,
+    schedule: klass.schedule,
     studentCount: klass.studentCount,
     openAssignmentCount: 0,
     selfJoinEnabled: true,
@@ -297,6 +300,30 @@ describe("the Admin Classes page", () => {
     const orphan = await rowOf(ORPHANED.name);
     expect(
       within(orphan).getByText("Vũ Thuỳ Dung (đã tắt) · Chưa có lịch học"),
+    ).toBeVisible();
+  });
+
+  it("reads a class's schedule from its repeating sessions, its room after it (T-R8.14)", async () => {
+    serveClasses([
+      {
+        ...MORNING,
+        room: "Phòng 2",
+        schedule: {
+          slots: [
+            { weekday: 2, startTime: "17:30", durationMinutes: 90 },
+            { weekday: 4, startTime: "17:30", durationMinutes: 90 },
+          ],
+          label: "T2 · T4, 09:00",
+        },
+      },
+      { ...ORPHANED, room: "Phòng 5" },
+    ]);
+    renderPage("/admin/classes", 560);
+    const row = await rowOf(MORNING.name);
+    expect(within(row).getByText("Giàu Bùi · T3 · T5, 17:30 · Phòng 2")).toBeVisible();
+    const orphan = await rowOf(ORPHANED.name);
+    expect(
+      within(orphan).getByText("Vũ Thuỳ Dung (đã tắt) · Chưa có lịch học · Phòng 5"),
     ).toBeVisible();
   });
 

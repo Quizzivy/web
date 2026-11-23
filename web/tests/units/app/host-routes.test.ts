@@ -13,6 +13,7 @@ function served(kind: HostKind, path: string): boolean {
 
 const STUDENT_PAGES = [
   "/classes",
+  "/week",
   `/assignments/${ID}`,
   "/settings",
   "/settings/notifications",

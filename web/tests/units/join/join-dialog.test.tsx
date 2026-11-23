@@ -67,7 +67,21 @@ function lists(classes: "load" | "fail" | "wait" = "load") {
   );
 }
 
-function previewFinds(classId = CLASS_ID) {
+const WEEKEND = {
+  slots: [
+    { weekday: 6, startTime: "09:00", durationMinutes: 120 },
+    { weekday: 7, startTime: "09:00", durationMinutes: 120 },
+  ],
+  label: null,
+};
+
+function previewFinds(
+  classId = CLASS_ID,
+  where: { schedule: typeof WEEKEND | null; room: string | null } = {
+    schedule: null,
+    room: null,
+  },
+) {
   server.use(
     http.post(`${BASE}/join/preview`, async ({ request }) => {
       const { joinCode } = (await request.json()) as { joinCode: string };
@@ -76,6 +90,7 @@ function previewFinds(classId = CLASS_ID) {
         classId,
         className: CLASS_NAME,
         teacherName: TEACHER,
+        ...where,
       });
     }),
   );
@@ -290,6 +305,8 @@ describe("the lookup", () => {
           classId: CLASS_ID,
           className: CLASS_NAME,
           teacherName: TEACHER,
+          schedule: null,
+          room: null,
         });
       }),
     );
@@ -389,6 +406,26 @@ describe("what a code comes to", () => {
     expect(dialog.queryByText(/học viên/)).toBeNull();
     expect(field()).toHaveClass("border-success");
     expect(submit()).not.toHaveAttribute("aria-disabled");
+  });
+
+  it('reads "{teacher} · {schedule}" with the room after it, and no count (T-R8.14, DG-02)', async () => {
+    lists();
+    previewFinds(CLASS_ID, { schedule: WEEKEND, room: "Phòng 4" });
+    const { user, in: dialog } = await opened();
+    await user.type(field(), CODE);
+    expect(
+      await dialog.findByText(`${TEACHER} · T7 · CN, 09:00 · Phòng 4`),
+    ).toBeInTheDocument();
+    expect(dialog.queryByText(/học viên/)).toBeNull();
+  });
+
+  it("reads the teacher alone when the class has no schedule and no room", async () => {
+    lists();
+    previewFinds(CLASS_ID, { schedule: null, room: null });
+    const { user, in: dialog } = await opened();
+    await user.type(field(), CODE);
+    expect(await dialog.findByText(TEACHER)).toBeInTheDocument();
+    expect(dialog.queryByText(/ · /)).toBeNull();
   });
 
   it("tells a member so, shows no class and joins nothing", async () => {

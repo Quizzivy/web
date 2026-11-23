@@ -3,6 +3,10 @@ import type { components } from "@/lib/api/schema";
 import type { DashboardRange } from "./view";
 
 export type Dashboard = components["schemas"]["Dashboard"];
+export type DashboardToday = components["schemas"]["DashboardToday"];
+export type DashboardTodayAssignment =
+  components["schemas"]["DashboardTodayAssignment"];
+export type DashboardTodaySession = components["schemas"]["DashboardTodaySession"];
 export type Assignment = components["schemas"]["Assignment"];
 export type AssignmentStatus = components["schemas"]["AssignmentStatus"];
 

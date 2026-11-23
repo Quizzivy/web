@@ -134,6 +134,7 @@ const CLASS = {
   description: "Lớp tối thứ Ba, thứ Năm.",
   scheduleLabel: "Thứ 3, 5 · 18:00",
   room: "Phòng 3",
+  schedule: { slots: [], label: "Thứ 3, 5 · 18:00" },
   studentCount: 3,
   openAssignmentCount: 0,
   selfJoinEnabled: true,

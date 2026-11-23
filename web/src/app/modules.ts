@@ -12,7 +12,7 @@ export type ModuleKey = "notifications" | "messages" | "schedule" | "grades" | "
 export const modules: Record<ModuleKey, boolean> = {
   notifications: true,
   messages: true,
-  schedule: false,
+  schedule: true,
   grades: false,
   learn: false,
 };

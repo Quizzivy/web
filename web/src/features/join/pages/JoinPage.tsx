@@ -9,7 +9,7 @@ import { AuthLayout } from "@/features/auth/AuthLayout";
 import { homePathFor } from "@/features/auth/home";
 import { learnsOnly } from "@/features/auth/permissions";
 import { myClassesQuery } from "@/features/classes/api";
-import { joinClass } from "@/features/join/api";
+import { joinClass, type JoinPreview } from "@/features/join/api";
 import { clean, normalize } from "@/features/join/code";
 import {
   clearJoinContext,
@@ -164,6 +164,8 @@ function CodeEntry({ initial }: Readonly<{ initial: string }>) {
               className: found.className,
               teacherName: found.teacherName,
             }}
+            schedule={found.schedule}
+            room={found.room}
           />
         )}
 
@@ -184,7 +186,15 @@ function CodeEntry({ initial }: Readonly<{ initial: string }>) {
   );
 }
 
-function FoundClass({ context }: Readonly<{ context: JoinContext }>) {
+function FoundClass({
+  context,
+  schedule,
+  room,
+}: Readonly<{
+  context: JoinContext;
+  schedule: JoinPreview["schedule"];
+  room: JoinPreview["room"];
+}>) {
   const { t } = useTranslation();
   const navigate = useNavigate();
   const user = useAuthStore((s) => s.user);
@@ -202,7 +212,12 @@ function FoundClass({ context }: Readonly<{ context: JoinContext }>) {
 
   return (
     <>
-      <ClassPreviewCard name={context.className} teacherName={context.teacherName} />
+      <ClassPreviewCard
+        name={context.className}
+        teacherName={context.teacherName}
+        schedule={schedule}
+        room={room}
+      />
       {user && !learnsOnly(user) ? (
         <div className="flex flex-col gap-3">
           <p className="text-muted-fg text-ui text-center">{t("join.studentsOnly")}</p>

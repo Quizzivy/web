@@ -23,6 +23,7 @@
       "attempt.reset": "Đã đặt lại lượt làm bài",
       "attempt.unflagged": "Đã bỏ cờ lượt làm bài",
       "attempt.voided": "Đã huỷ lượt làm bài",
+      "attendance.saved": "Đã lưu điểm danh buổi học",
       "audit.exported": "Đã xuất nhật ký hoạt động",
       "class.archived": "Đã lưu trữ lớp",
       "class.created": "Đã tạo lớp",
@@ -78,8 +79,14 @@
       "role.created": "Đã tạo vai trò",
       "role.permissions_changed": "Đã thay đổi quyền của vai trò",
       "role.updated": "Đã cập nhật vai trò",
+      "session.cancelled": "Đã huỷ buổi học",
+      "session.created": "Đã thêm buổi học",
+      "session.deleted": "Đã xoá buổi học",
       "session.revoked": "Đã thu hồi một phiên đăng nhập",
       "session.revoked_others": "Đã thu hồi các phiên đăng nhập khác",
+      "session.updated": "Đã cập nhật buổi học",
+      "session_series.ended": "Đã dừng lặp lại buổi học hằng tuần",
+      "session_series.updated": "Đã thay đổi buổi học hằng tuần",
       "share.changed": "Đã đổi quyền chia sẻ",
       "share.copied": "Đã tạo bản sao từ nội dung được chia sẻ",
       "share.granted": "Đã chia sẻ",
@@ -89,6 +96,9 @@
       "student.deleted": "Đã xoá tài khoản học viên",
       "student.password_reset": "Đã đặt lại mật khẩu của học viên",
       "student.updated": "Đã cập nhật tài khoản học viên",
+      "term.created": "Đã thêm học kỳ",
+      "term.deleted": "Đã xoá học kỳ",
+      "term.updated": "Đã cập nhật học kỳ",
       "test.created": "Đã tạo bài kiểm tra",
       "test.current_version_changed": "Đã đổi phiên bản hiện hành của bài kiểm tra",
       "test.deleted": "Đã xoá bài kiểm tra",
@@ -953,6 +963,7 @@
     "reload": "Tải lại",
     "sections": {
       "organization": "Tổ chức",
+      "terms": "Học kỳ",
       "signIn": "Đăng nhập",
       "data": "Dữ liệu và quyền riêng tư",
       "plan": "Gói và mức dùng"
@@ -972,6 +983,35 @@
       "leadRecipientsHint": "Họ nhận một email không có số điện thoại, kèm đường dẫn tới yêu cầu đó.",
       "leadRecipientsAdd": "Thêm email…",
       "leadRecipientsRemove": "Bỏ {{email}}"
+    },
+    "terms": {
+      "title": "Học kỳ",
+      "hint": "Dùng cho điểm danh và sổ điểm.",
+      "add": "Thêm học kỳ",
+      "name": "Tên",
+      "starts": "Bắt đầu",
+      "ends": "Kết thúc",
+      "state": {
+        "current": "Đang diễn ra",
+        "upcoming": "Sắp tới",
+        "past": "Đã qua"
+      },
+      "actions": "Thao tác với {{name}}",
+      "edit": "Sửa",
+      "delete": "Xoá",
+      "editTitle": "Sửa học kỳ",
+      "namePlaceholder": "Ví dụ: Thu 2026",
+      "overlaps": "Trùng với {{name}}",
+      "endBeforeStart": "Ngày kết thúc phải sau ngày bắt đầu.",
+      "endHint": "Buổi học lặp lại đã tạo vẫn dừng ở ngày kết thúc cũ.",
+      "deleteTitle": "Xoá học kỳ “{{name}}”?",
+      "deleteBody": "Khi đó, tỉ lệ điểm danh trong học kỳ này sẽ tính trên mọi buổi học.",
+      "deleteConfirm": "Xoá học kỳ",
+      "empty": "Chưa có học kỳ nào. Tỉ lệ điểm danh tính trên mọi buổi học cho đến khi bạn thêm học kỳ.",
+      "loadFailed": "Không tải được danh sách học kỳ.",
+      "added": "Đã thêm học kỳ {{name}}",
+      "saved": "Đã lưu học kỳ {{name}}",
+      "deleted": "Đã xoá học kỳ {{name}}"
     },
     "logo": {
       "title": "Thay logo",
@@ -1337,6 +1377,10 @@
       "teacher-classes": {
         "name": "Lớp học",
         "blurb": "Lớp, thành viên và mã tham gia."
+      },
+      "teacher-schedule": {
+        "name": "Lịch học",
+        "blurb": "Buổi học của lớp, lịch tuần và điểm danh."
       },
       "teacher-ai": {
         "name": "Trợ lý AI",

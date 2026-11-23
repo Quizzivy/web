@@ -71,6 +71,7 @@ const PAGE_ORDER = [
   "classes",
   "messages",
   "media",
+  "calendar",
 ] as const;
 
 type TestRow = Awaited<ReturnType<typeof listTests>>["items"][number];

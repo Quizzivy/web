@@ -385,10 +385,12 @@
     },
     "nav": {
       "dashboard": "Dashboard",
+      "calendar": "Calendar",
       "assignments": "Assignments",
       "grading": "Grading",
       "classes": "Classes",
       "students": "Students",
+      "attendance": "Attendance",
       "tests": "Tests",
       "sharedWithMe": "Shared with me",
       "questionBank": "Question bank",
@@ -416,7 +418,119 @@
   "changePassword": {
     "hint": "At least 8 characters, with a number or symbol."
   },
+  "attendance": {
+    "title": "Attendance",
+    "lead": "Take the register for today’s classes, or catch up on sessions you missed.",
+    "todayTitle": "Today · {{date}}",
+    "classes_one": "{{count}} class",
+    "classes_other": "{{count}} classes",
+    "owedTitle": "Needs a register",
+    "owedSub": "Past sessions with no attendance taken",
+    "recentTitle": "Recent",
+    "recentSub": "Last 7 days",
+    "today": "Today",
+    "students_one": "{{count}} student",
+    "students_other": "{{count}} students",
+    "savedCounts": "{{p}} present · {{l}} late · {{a}} absent",
+    "chip": {
+      "today": "Not taken yet",
+      "missing": "Not taken",
+      "saved": "Saved",
+      "savedAt": "Saved {{time}}",
+      "notStarted": "Not started",
+      "cancelled": "Cancelled"
+    },
+    "take": "Take attendance",
+    "takeFor": "Take attendance for {{name}}, {{time}}",
+    "open": "Open",
+    "openFor": "Open {{name}}, {{time}}",
+    "empty": {
+      "today": "No classes have started today.",
+      "owed": "All caught up.",
+      "recent": "Nothing yet."
+    },
+    "pageFailed": "Could not load the sessions.",
+    "picker": {
+      "button": "Choose a session: {{label}}",
+      "title": "Sessions",
+      "saved": "Saved",
+      "missing": "Not taken",
+      "more": "Load more"
+    },
+    "search": "Search students",
+    "markAll": "Mark all present",
+    "markRest": "Mark the rest present",
+    "progress": "{{k}} of {{n}} marked",
+    "progressAll": "All {{n}} marked",
+    "filterLabel": "Filter by status",
+    "status": {
+      "present": "Present",
+      "late": "Late",
+      "absent": "Absent",
+      "none": "Not marked"
+    },
+    "mark": {
+      "present": "Mark present",
+      "late": "Mark late",
+      "absent": "Mark absent"
+    },
+    "col": {
+      "student": "Student",
+      "term": "This term",
+      "overall": "Overall",
+      "status": "Status",
+      "note": "Note"
+    },
+    "registerLabel": "Register",
+    "rosterLabel": "Students",
+    "radioLabel": "Attendance",
+    "note": {
+      "add": "Note",
+      "addFor": "Note for {{name}}",
+      "of": "Note for {{name}}:",
+      "title": "Note for {{name}}",
+      "description": "Only you and co-teachers see it.",
+      "label": "Note",
+      "placeholder": "e.g. Left early for a doctor’s appointment",
+      "save": "Save note"
+    },
+    "noMatch": "No student matches “{{q}}”",
+    "nobody": "Nobody here yet.",
+    "footer": "Late counts as present in the attendance rate.",
+    "dirty_one": "{{count}} change not saved",
+    "dirty_other": "{{count}} changes not saved",
+    "dirtyUnmarked_one": "{{count}} not marked yet",
+    "dirtyUnmarked_other": "{{count}} not marked yet",
+    "save": "Save attendance",
+    "savedToast": "Attendance saved · {{a}} absent, {{l}} late",
+    "saveFailed": "Could not save the register. Please try again.",
+    "unmarked": {
+      "title_one": "Save with {{count}} not marked?",
+      "title_other": "Save with {{count}} not marked?",
+      "body": "Students you have not marked stay unmarked and are left out of the attendance rate.",
+      "confirm": "Save anyway"
+    },
+    "leave": {
+      "title": "Discard the unsaved register?",
+      "body": "The marks you have not saved on this session will be lost.",
+      "confirm": "Discard",
+      "stay": "Stay"
+    },
+    "noSessions": "No sessions yet.",
+    "addInCalendar": "Add one in Calendar",
+    "notStarted": "This session has not started. Attendance opens 15 minutes before it.",
+    "cancelled": "This session was cancelled, so no attendance is taken.",
+    "registerFailed": "Could not load the register.",
+    "sessionMissing": "This session is not one of this class’s."
+  },
   "classDetail": {
+    "tabs": {
+      "label": "Class sections",
+      "overview": "Overview",
+      "attendance": "Attendance",
+      "attendanceNotMarked_one": "Attendance, {{count}} session not taken",
+      "attendanceNotMarked_other": "Attendance, {{count}} sessions not taken"
+    },
     "joinCode": "Join code",
     "codeCopied": "Code copied",
     "copyCode": "Copy code",
@@ -577,13 +691,15 @@
     "schedulePlaceholder": "Mon · Wed, 09:00",
     "room": "Room",
     "roomPlaceholder": "Room 3",
+    "changeInCalendar": "Change in Calendar",
+    "fromSessions": "This comes from the class’s repeating sessions.",
+    "roomForNewSessions": "Used for new sessions. A session that exists changes its room in Calendar.",
     "createdWithCode": "Class created · join code {{code}}",
     "createdNoCode": "Class created, but its join code could not be made. Create one from the class's card.",
     "createdJoinOff": "Class created. Your centre has turned off joining with a code, so it has no code yet.",
     "edit": "Edit class",
     "updated": "Class updated",
     "updateFailed": "Could not save the class.",
-    "noSchedule": "No schedule yet",
     "stats": {
       "students": "Students",
       "live": "Live tests",
@@ -1718,7 +1834,7 @@
       "activityFlag": "Flagged",
       "empty": "No assignments yet.",
       "noLive": "No live assignments.",
-      "noToday": "No openings or closings today.",
+      "noToday": "No classes, openings or closings today.",
       "noActivity": "No activity yet.",
       "waitingHint_one": "{{count}} student · oldest {{age}}",
       "waitingHint_other": "{{count}} students · oldest {{age}}",
@@ -4261,6 +4377,115 @@
       "dimensions": "The image is larger than 10000 × 10000 pixels. Choose a smaller one.",
       "limit": "Too many uploads in an hour. Try again later.",
       "failed": "The file could not be uploaded. Try again."
+    }
+  },
+  "calendar": {
+    "title": "Calendar",
+    "weekNav": "Week",
+    "previousWeek": "Previous week",
+    "nextWeek": "Next week",
+    "today": "Today",
+    "addSession": "Session",
+    "legend": {
+      "label": "Legend",
+      "session": "Class session",
+      "closes": "Test closes",
+      "opens": "Test opens"
+    },
+    "event": {
+      "opens": "{{title}} opens",
+      "closes": "{{title}} closes",
+      "cancelled": "Cancelled"
+    },
+    "testWindow": "Test window",
+    "agendaToday": "Today · {{day}}",
+    "empty": "No sessions this week.",
+    "failed": "Could not load the calendar.",
+    "new": {
+      "title": "New session",
+      "class": "Class",
+      "classPlaceholder": "Choose a class",
+      "date": "Date",
+      "starts": "Starts",
+      "length": "Length",
+      "minutes": "{{n}} min",
+      "room": "Room",
+      "roomPlaceholder": "Room 2",
+      "repeat": "Repeat every week",
+      "untilTerm": "Until {{date}}",
+      "untilStopped": "Until you stop it",
+      "submit": "Add session",
+      "added": "Session added · {{class}}, {{time}}",
+      "failed": "Could not add the session. Please try again.",
+      "archived": "This class is archived, so it takes no new session.",
+      "dateTooFar": "Choose a date within the next two years.",
+      "noClasses": "You have no class yet. Create one before adding a session."
+    },
+    "session": {
+      "close": "Close",
+      "actions": "Session actions",
+      "every": "Every {{weekday}}",
+      "oneOff": "One-off",
+      "cancelled": "Cancelled",
+      "changed": "Changed from the repeating schedule",
+      "act": {
+        "attendance": "Take attendance",
+        "editDate": "Edit this date",
+        "cancel": "Cancel this date",
+        "restore": "Restore",
+        "editSeries": "Edit repeating session",
+        "stop": "Stop repeating",
+        "delete": "Delete"
+      },
+      "edit": {
+        "title": "Edit the session on {{date}}",
+        "desc": "Only this date changes. The repeating schedule stays.",
+        "date": "Date",
+        "start": "Starts",
+        "length": "Length",
+        "room": "Room",
+        "note": "Note",
+        "notePlaceholder": "For example: bring headphones",
+        "save": "Save"
+      },
+      "cancelConfirm": {
+        "title": "Cancel the session on {{date}}?",
+        "body": "Students see it as cancelled in This week.",
+        "keep": "Keep the session",
+        "confirm": "Cancel the session"
+      },
+      "series": {
+        "title": "Edit repeating session",
+        "from": "From",
+        "fromHint": "Sessions before {{date}} stay as they are.",
+        "fromTomorrow": "Today’s session has attendance, so the change starts tomorrow.",
+        "fromPast": "Choose today or a later date.",
+        "weekday": "Weekday",
+        "warn": "Sessions you changed or cancelled one by one from this date will follow the new schedule.",
+        "save": "Save changes"
+      },
+      "stop": {
+        "title": "Stop repeating",
+        "last": "Last date",
+        "lastHint": "Sessions after this date leave the calendar. Sessions with attendance are kept.",
+        "lastPast": "Choose yesterday or a later date.",
+        "hasAttendance": "A session after this date has attendance, so the series cannot stop before it."
+      },
+      "delete": {
+        "title": "Delete the session on {{date}}?",
+        "body": "It leaves your calendar and your students’.",
+        "confirm": "Delete session",
+        "hasAttendance": "This session has attendance, so it can only be cancelled."
+      },
+      "toast": {
+        "cancelled": "Session on {{date}} cancelled",
+        "restored": "Session on {{date}} restored",
+        "series": "Repeating session updated.",
+        "cleared_one": "Repeating session updated. 1 one-off change was cleared.",
+        "cleared_other": "Repeating session updated. {{count}} one-off changes were cleared.",
+        "stopped": "The repeating session ends after {{date}}"
+      },
+      "failed": "Could not save the change. Please try again."
     }
   }
 }

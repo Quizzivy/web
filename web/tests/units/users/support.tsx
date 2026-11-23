@@ -197,6 +197,7 @@ export function classRow(n: string, name: string, teacher: string): ClassRow {
     name,
     scheduleLabel: null,
     room: null,
+    schedule: { slots: [], label: null },
     teacher: {
       id: `018f0000-0000-7000-8000-d${n.padStart(11, "0")}`,
       name: teacher,

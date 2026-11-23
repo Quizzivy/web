@@ -142,6 +142,17 @@ export function formatDayLabel(date: string, locale: Locale): string {
   return locale === "vi" ? `${weekday}, ${day}` : `${weekday} ${day}`;
 }
 
+/**
+ * formatLongDate is a date in full, as a session's popover states it:
+ * "Thứ Sáu, 26 tháng 9", "Friday, 26 September".
+ */
+export function formatLongDate(date: string, locale: Locale): string {
+  const [, month, day] = parts(date);
+  const weekday = weekdayInSentence(weekdayOf(date), locale);
+  const named = weekday.charAt(0).toUpperCase() + weekday.slice(1);
+  return `${named}, ${day} ${monthLong(month, locale)}`;
+}
+
 /** minutesOf reads `HH:MM` as minutes after midnight; anything else is 0. */
 export function minutesOf(time: string): number {
   const match = /^(\d{1,2}):(\d{2})/.exec(time);

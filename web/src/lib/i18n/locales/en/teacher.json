@@ -4307,6 +4307,72 @@
       "archived": "This class is archived, so it takes no new session.",
       "dateTooFar": "Choose a date within the next two years.",
       "noClasses": "You have no class yet. Create one before adding a session."
+    },
+    "session": {
+      "close": "Close",
+      "actions": "Session actions",
+      "every": "Every {{weekday}}",
+      "oneOff": "One-off",
+      "cancelled": "Cancelled",
+      "changed": "Changed from the repeating schedule",
+      "act": {
+        "attendance": "Take attendance",
+        "editDate": "Edit this date",
+        "cancel": "Cancel this date",
+        "restore": "Restore",
+        "editSeries": "Edit repeating session",
+        "stop": "Stop repeating",
+        "delete": "Delete"
+      },
+      "edit": {
+        "title": "Edit the session on {{date}}",
+        "desc": "Only this date changes. The repeating schedule stays.",
+        "date": "Date",
+        "start": "Starts",
+        "length": "Length",
+        "room": "Room",
+        "note": "Note",
+        "notePlaceholder": "For example: bring headphones",
+        "save": "Save"
+      },
+      "cancelConfirm": {
+        "title": "Cancel the session on {{date}}?",
+        "body": "Students see it as cancelled in This week.",
+        "keep": "Keep the session",
+        "confirm": "Cancel the session"
+      },
+      "series": {
+        "title": "Edit repeating session",
+        "from": "From",
+        "fromHint": "Sessions before {{date}} stay as they are.",
+        "fromTomorrow": "Today’s session has attendance, so the change starts tomorrow.",
+        "fromPast": "Choose today or a later date.",
+        "weekday": "Weekday",
+        "warn": "Sessions you changed or cancelled one by one from this date will follow the new schedule.",
+        "save": "Save changes"
+      },
+      "stop": {
+        "title": "Stop repeating",
+        "last": "Last date",
+        "lastHint": "Sessions after this date leave the calendar. Sessions with attendance are kept.",
+        "lastPast": "Choose yesterday or a later date.",
+        "hasAttendance": "A session after this date has attendance, so the series cannot stop before it."
+      },
+      "delete": {
+        "title": "Delete the session on {{date}}?",
+        "body": "It leaves your calendar and your students’.",
+        "confirm": "Delete session",
+        "hasAttendance": "This session has attendance, so it can only be cancelled."
+      },
+      "toast": {
+        "cancelled": "Session on {{date}} cancelled",
+        "restored": "Session on {{date}} restored",
+        "series": "Repeating session updated.",
+        "cleared_one": "Repeating session updated. 1 one-off change was cleared.",
+        "cleared_other": "Repeating session updated. {{count}} one-off changes were cleared.",
+        "stopped": "The repeating session ends after {{date}}"
+      },
+      "failed": "Could not save the change. Please try again."
     }
   }
 }

@@ -693,6 +693,19 @@ To view one, start the server above and open, for example,
   dark, Vietnamese and English; 70 strings, seven of them the app's. Eight questions for
   Thuong. The handoff says what the notice promises of the build, and that the 12-month
   deletion's nightly run has not reached the database since it moved.
+- 2026-11-23 — Proposal page `proposals/F2 Messaging.dc.html`, for DG-233 (F2, the plan's
+  `docs/plan/77g-f2-messaging.md` in Quizzivy/docs). The owner decided that every teacher and admin
+  may write to any student, that a student still writes first only to a teacher of their own class,
+  and that teachers may write to each other. The page draws that on R7's Messages, each screen beside
+  its R7 frame ("As today (R7)"): a "Tin nhắn mới" button and its dialog with "Học viên | Đồng
+  nghiệp", a search and a filter by class; a fourth list tab, "Đồng nghiệp"; the list's search
+  finding any student and any colleague; a thread with a student the caller does not teach; a thread
+  between two colleagues with files both ways; and what the student reads, "Giáo viên của trung
+  tâm". The dialog is the product's DialogShell at 360 (12px from the edges, at most 86% high), as no
+  dialog in the web is a full-height sheet. Thirty-one states, at 1280 and 360, light and dark,
+  Vietnamese and English. Thirteen questions for Thuong with the default drawn; none is decided.
+- 2026-11-23 — Thuong approved `proposals/F2 Messaging.dc.html` as drawn, with the default of
+  each of its thirteen questions ("chấp thuận tất cả", Quizzivy/web#157). DG-233 says so.
 
 ## The brand
 

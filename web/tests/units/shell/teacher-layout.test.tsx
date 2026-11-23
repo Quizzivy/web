@@ -45,6 +45,7 @@ const NAMES = [
   TO_GRADE,
   /^Lớp học$/,
   /^Học viên$/,
+  /^Điểm danh$/,
   /^Đề thi$/,
   /^Được chia sẻ với tôi$/,
   /^Ngân hàng câu hỏi$/,
@@ -57,6 +58,7 @@ const LABELS = [
   "Chấm bài",
   "Lớp học",
   "Học viên",
+  "Điểm danh",
   "Đề thi",
   "Được chia sẻ với tôi",
   "Ngân hàng câu hỏi",
@@ -142,7 +144,7 @@ describe("the teacher shell from 768", () => {
     );
   });
 
-  it("lists the ten destinations under their groups, the current one lit", async () => {
+  it("lists the eleven destinations under their groups, the current one lit", async () => {
     serveSummary(QUIET);
     renderShell("/teacher/classes", [home(), { ...CLASSES, element: <p>các lớp</p> }]);
     await screen.findByText("các lớp");
@@ -156,6 +158,7 @@ describe("the teacher shell from 768", () => {
       ["Chấm bài", "/teacher/grading"],
       ["Lớp học", "/teacher/classes"],
       ["Học viên", "/teacher/students"],
+      ["Điểm danh", "/teacher/attendance"],
       ["Đề thi", "/teacher/tests"],
       ["Được chia sẻ với tôi", "/teacher/shared-with-me"],
       ["Ngân hàng câu hỏi", "/teacher/question-bank"],
@@ -165,7 +168,7 @@ describe("the teacher shell from 768", () => {
       within(nav())
         .getAllByRole("list")
         .map((list) => within(list).getAllByRole("link").length),
-    ).toEqual([2, 4, 4]);
+    ).toEqual([2, 5, 4]);
     expect(within(nav()).getByText("Giảng dạy")).toBeInTheDocument();
     expect(within(nav()).getByText("Nội dung")).toBeInTheDocument();
     expect(

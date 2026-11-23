@@ -71,6 +71,7 @@ const TEACHER_TREE = [
   ["/teacher/attempts/:id", "features/attempts/pages/teacher/AttemptReviewPage"],
   ["/teacher/grading", "features/attempts/pages/teacher/GradingPage"],
   ["/teacher/students", "features/students/pages/teacher/StudentsPage"],
+  ["/teacher/attendance", "features/attendance/pages/teacher/AttendancePage"],
   ["/teacher/classes", "features/classes/pages/teacher/ClassesPage"],
   ["/teacher/classes/:id", "features/classes/pages/teacher/ClassDetailPage"],
   [

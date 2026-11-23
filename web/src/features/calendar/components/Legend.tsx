@@ -24,7 +24,7 @@ export function Legend() {
         <li key={entry.key} className="flex items-center gap-1.5 whitespace-nowrap">
           <span
             aria-hidden="true"
-            className={cn("size-2.5 flex-none rounded-[3px]", entry.bar)}
+            className={cn("size-2.5 flex-none rounded-sm", entry.bar)}
           />
           {t(entry.key)}
         </li>

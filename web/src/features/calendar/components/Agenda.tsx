@@ -38,7 +38,7 @@ function Row({
     <>
       <span
         aria-hidden="true"
-        className={cn("w-[3px] flex-none rounded-[3px]", toneOf(item).bar)}
+        className={cn("w-0.75 flex-none rounded-sm", toneOf(item).bar)}
       />
       <span className="text-muted-fg text-meta w-11 flex-none tabular-nums">
         {formatClock(item.span.start)}

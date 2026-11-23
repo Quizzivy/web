@@ -27,10 +27,12 @@ function Row({
   item,
   first,
   onOpenSession,
+  open,
 }: Readonly<{
   item: CalendarItem;
   first: boolean;
   onOpenSession?: OpenSession | undefined;
+  open: boolean;
 }>) {
   const { t } = useTranslation();
   const cancelled = item.kind === "session" && item.session.cancelled;
@@ -61,7 +63,10 @@ function Row({
         <button
           type="button"
           data-kind="session"
-          className={cn(className, "cursor-pointer")}
+          data-session-id={item.kind === "session" ? item.session.id : undefined}
+          aria-haspopup="dialog"
+          aria-expanded={open}
+          className={cn(className, "cursor-pointer", open && "bg-muted")}
           onClick={(event) => {
             if (item.kind === "session")
               onOpenSession?.(item.session, event.currentTarget);
@@ -88,10 +93,13 @@ export function Agenda({
   days,
   today,
   onOpenSession,
+  openId,
 }: Readonly<{
   days: readonly AgendaDay[];
   today: string;
   onOpenSession?: OpenSession | undefined;
+  /** The session whose sheet is open, whose row is shaded. */
+  openId?: string | undefined;
 }>) {
   const { t } = useTranslation();
   const locale = useLocale();
@@ -117,6 +125,7 @@ export function Agenda({
                   item={item}
                   first={index === 0}
                   onOpenSession={onOpenSession}
+                  open={item.kind === "session" && item.session.id === openId}
                 />
               ))}
             </ul>

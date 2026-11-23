@@ -26,6 +26,7 @@ export type {
   FormIconOption,
   FormColorOption,
   FormInfoRow,
+  FormDerivedAction,
   FormValue,
   FormValues,
 } from "./fields/types";

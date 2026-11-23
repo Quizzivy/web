@@ -26,7 +26,20 @@ const REQUEST_ID = "019535d9-3df7-79fb-b466-fa907fa17f9e";
 
 let previews: string[] = [];
 
-function previewFinds() {
+const WEEKEND = {
+  slots: [
+    { weekday: 6, startTime: "09:00", durationMinutes: 120 },
+    { weekday: 7, startTime: "09:00", durationMinutes: 120 },
+  ],
+  label: null,
+};
+
+function previewFinds(
+  where: { schedule: typeof WEEKEND | null; room: string | null } = {
+    schedule: null,
+    room: null,
+  },
+) {
   server.use(
     http.post(`${BASE}/join/preview`, async ({ request }) => {
       const { joinCode } = (await request.json()) as { joinCode: string };
@@ -35,8 +48,7 @@ function previewFinds() {
         classId: "019535d9-3df7-79fb-b466-fa907fa17f9e",
         className: CLASS_NAME,
         teacherName: TEACHER,
-        schedule: null,
-        room: null,
+        ...where,
       });
     }),
   );
@@ -227,6 +239,21 @@ describe("/join", () => {
     expect(
       screen.getByText("Tiếp theo, bạn sẽ đăng nhập hoặc tạo tài khoản."),
     ).toBeVisible();
+  });
+
+  it("puts when and where the class meets under its name, and no count (T-R8.14, DG-02)", async () => {
+    previewFinds({ schedule: WEEKEND, room: "Phòng 4" });
+    renderJoin(`/join/${CODE}`);
+    expect(await screen.findByText("T7 · CN, 09:00 · Phòng 4")).toBeVisible();
+    expect(screen.getByText(TEACHER)).toBeVisible();
+    expect(screen.queryByText(/học viên/)).toBeNull();
+  });
+
+  it("reads the room alone for a class with no schedule, and no line with neither", async () => {
+    previewFinds({ schedule: { slots: [], label: null }, room: "Phòng 4" });
+    renderJoin(`/join/${CODE}`);
+    expect(await screen.findByText("Phòng 4")).toBeVisible();
+    expect(screen.queryByText("Chưa có lịch học")).toBeNull();
   });
 
   it.each([

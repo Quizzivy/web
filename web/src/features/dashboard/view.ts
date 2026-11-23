@@ -105,3 +105,23 @@ export function dashboardActivities(rows: Dashboard["recentActivity"]) {
     return { ...row, key: `${identity}:${occurrence}` };
   });
 }
+
+/**
+ * ATTENDANCE_GRACE_MS is how early a session's attendance may be taken: the
+ * server's 15 minutes of grace before it starts (78-r8, decisions).
+ */
+export const ATTENDANCE_GRACE_MS = 15 * 60_000;
+
+/**
+ * sessionStarted says whether a session starting `at` has started, as the
+ * attendance rule counts it: from 15 minutes before its start.
+ */
+export function sessionStarted(at: string, now: Date): boolean {
+  return Date.parse(at) <= now.getTime() + ATTENDANCE_GRACE_MS;
+}
+
+/** attendanceHref opens a session's attendance on its class's Attendance tab. */
+export function attendanceHref(classId: string, sessionId: string): string {
+  const query = new URLSearchParams({ tab: "attendance", session: sessionId });
+  return `/teacher/classes/${classId}?${query.toString()}`;
+}

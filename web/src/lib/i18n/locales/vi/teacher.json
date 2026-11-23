@@ -541,13 +541,15 @@
     "schedulePlaceholder": "T2 · T4, 09:00",
     "room": "Phòng",
     "roomPlaceholder": "Phòng 3",
+    "changeInCalendar": "Đổi trong Lịch",
+    "fromSessions": "Lịch này lấy từ các buổi học lặp lại của lớp.",
+    "roomForNewSessions": "Dùng cho buổi học mới. Phòng của buổi đã có được đổi trong Lịch.",
     "createdWithCode": "Đã tạo lớp · mã tham gia {{code}}",
     "createdNoCode": "Đã tạo lớp, nhưng chưa tạo được mã tham gia. Hãy tạo mã từ thẻ của lớp.",
     "createdJoinOff": "Đã tạo lớp. Trung tâm đang tắt tham gia bằng mã nên lớp chưa có mã.",
     "edit": "Sửa lớp",
     "updated": "Đã cập nhật lớp",
     "updateFailed": "Không lưu được thay đổi của lớp.",
-    "noSchedule": "Chưa có lịch học",
     "stats": {
       "students": "Học viên",
       "live": "Bài đang mở",
@@ -1642,7 +1644,7 @@
       "activityFlag": "Bị gắn cờ",
       "empty": "Chưa có bài giao nào.",
       "noLive": "Chưa có bài đang mở.",
-      "noToday": "Hôm nay chưa có lịch mở hoặc đóng bài.",
+      "noToday": "Hôm nay không có buổi học, bài mở hay bài đóng nào.",
       "noActivity": "Chưa có hoạt động nào.",
       "waitingHint_other": "{{count}} học viên · lâu nhất {{age}}",
       "across_other": "Trong {{count}} bài giao",
@@ -4087,6 +4089,71 @@
       "archived": "Lớp này đã được lưu trữ nên không nhận buổi học mới.",
       "dateTooFar": "Chọn một ngày trong vòng hai năm tới.",
       "noClasses": "Bạn chưa có lớp nào. Hãy tạo lớp trước khi thêm buổi học."
+    },
+    "session": {
+      "close": "Đóng",
+      "actions": "Thao tác với buổi học",
+      "every": "Mỗi {{weekday}}",
+      "oneOff": "Không lặp lại",
+      "cancelled": "Đã huỷ",
+      "changed": "Đã đổi so với lịch lặp lại",
+      "act": {
+        "attendance": "Điểm danh",
+        "editDate": "Sửa buổi này",
+        "cancel": "Huỷ buổi này",
+        "restore": "Khôi phục buổi này",
+        "editSeries": "Sửa lịch lặp lại",
+        "stop": "Dừng lặp lại",
+        "delete": "Xoá buổi này"
+      },
+      "edit": {
+        "title": "Sửa buổi ngày {{date}}",
+        "desc": "Chỉ buổi này thay đổi. Lịch lặp lại giữ nguyên.",
+        "date": "Ngày",
+        "start": "Bắt đầu",
+        "length": "Thời lượng",
+        "room": "Phòng",
+        "note": "Ghi chú",
+        "notePlaceholder": "Ví dụ: mang tai nghe",
+        "save": "Lưu"
+      },
+      "cancelConfirm": {
+        "title": "Huỷ buổi ngày {{date}}?",
+        "body": "Học viên sẽ thấy buổi này là đã huỷ trong Tuần này.",
+        "keep": "Giữ buổi này",
+        "confirm": "Huỷ buổi"
+      },
+      "series": {
+        "title": "Sửa lịch lặp lại",
+        "from": "Áp dụng từ",
+        "fromHint": "Các buổi trước ngày {{date}} giữ nguyên.",
+        "fromTomorrow": "Buổi hôm nay đã điểm danh, nên thay đổi bắt đầu từ ngày mai.",
+        "fromPast": "Chọn một ngày từ hôm nay trở đi.",
+        "weekday": "Thứ",
+        "warn": "Những buổi bạn đã sửa hoặc huỷ riêng từ ngày này sẽ theo lịch mới.",
+        "save": "Lưu thay đổi"
+      },
+      "stop": {
+        "title": "Dừng lặp lại",
+        "last": "Buổi cuối cùng",
+        "lastHint": "Các buổi sau ngày này sẽ không còn trên lịch. Buổi đã điểm danh vẫn được giữ.",
+        "lastPast": "Chọn một ngày từ hôm qua trở đi.",
+        "hasAttendance": "Một buổi sau ngày này đã điểm danh, nên lịch không thể dừng trước buổi đó."
+      },
+      "delete": {
+        "title": "Xoá buổi ngày {{date}}?",
+        "body": "Buổi này sẽ không còn trên lịch của bạn và của học viên.",
+        "confirm": "Xoá buổi",
+        "hasAttendance": "Buổi này đã điểm danh nên chỉ có thể huỷ."
+      },
+      "toast": {
+        "cancelled": "Đã huỷ buổi ngày {{date}}",
+        "restored": "Đã khôi phục buổi ngày {{date}}",
+        "series": "Đã cập nhật lịch lặp lại.",
+        "cleared_other": "Đã cập nhật lịch lặp lại. {{count}} thay đổi riêng lẻ đã bị xoá.",
+        "stopped": "Lịch lặp lại kết thúc sau ngày {{date}}"
+      },
+      "failed": "Không lưu được thay đổi. Vui lòng thử lại."
     }
   }
 }

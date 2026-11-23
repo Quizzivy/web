@@ -1,12 +1,17 @@
 import { api } from "@/lib/api/client";
 import { ApiError } from "@/lib/api/errors";
-import type { components } from "@/lib/api/schema";
+import type { components, operations } from "@/lib/api/schema";
 
-export type JoinPreview = {
-  classId: string;
-  className: string;
-  teacherName: string;
-};
+/**
+ * JoinPreview is what a valid code shows before anything is joined: the
+ * class, its teacher, its weekly schedule and its room, and nothing else
+ * (§6.5, DG-02: no count of any kind).
+ */
+export type JoinPreview =
+  operations["previewJoinCode"]["responses"][200]["content"]["application/json"];
+
+/** ClassSchedule is a class's weekly slots and free-text label. */
+export type ClassSchedule = components["schemas"]["ClassSchedule"];
 
 export type Class = components["schemas"]["Class"];
 

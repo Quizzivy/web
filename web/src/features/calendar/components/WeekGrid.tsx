@@ -56,6 +56,7 @@ export function WeekGrid({
   loading = false,
   overlay,
   onOpenSession,
+  openId,
   label,
 }: Readonly<{
   days: readonly string[];
@@ -65,6 +66,8 @@ export function WeekGrid({
   loading?: boolean;
   overlay?: ReactNode;
   onOpenSession?: OpenSession | undefined;
+  /** The session whose popover is open, which its block marks. */
+  openId?: string | undefined;
   label: string;
 }>) {
   const { t } = useTranslation();
@@ -171,6 +174,7 @@ export function WeekGrid({
                         box={eventBox(item.span, range.first)}
                         lane={placed[position]!}
                         onOpenSession={onOpenSession}
+                        open={item.kind === "session" && item.session.id === openId}
                       />
                     ))}
                 {day === today && line !== null && (

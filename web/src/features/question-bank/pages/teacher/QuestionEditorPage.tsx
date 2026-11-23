@@ -247,7 +247,7 @@ function Editor({
       question === null
         ? createQuestion(body)
         : updateQuestion(question.id, body, {
-            expectedUpdatedAt: base,
+            expectedUpdatedAt: base ?? question.updatedAt,
             setId: access === "edit" && setId !== null ? setId : undefined,
           }),
     onSuccess: async (saved, body) => {

@@ -41,6 +41,7 @@ const KLASS: Class = {
   description: null,
   scheduleLabel: null,
   room: null,
+  schedule: { slots: [], label: null },
   studentCount: 24,
   openAssignmentCount: 1,
   selfJoinEnabled: true,

@@ -111,6 +111,8 @@ export const handlers = [
       classId: sampleClass.id,
       className: sampleClass.name,
       teacherName: "Thuong",
+      schedule: null,
+      room: null,
     }),
   ),
 

@@ -35,6 +35,8 @@ function previewFinds() {
         classId: "019535d9-3df7-79fb-b466-fa907fa17f9e",
         className: CLASS_NAME,
         teacherName: TEACHER,
+        schedule: null,
+        room: null,
       });
     }),
   );
@@ -196,6 +198,8 @@ describe("/join", () => {
           classId: REQUEST_ID,
           className: CLASS_NAME,
           teacherName: TEACHER,
+          schedule: null,
+          room: null,
         });
       }),
     );

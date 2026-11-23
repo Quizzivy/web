@@ -40,6 +40,7 @@ const CLASS = {
   teacherAvatarUrl: null,
   scheduleLabel: null,
   room: null,
+  schedule: { slots: [], label: null },
   joinedAt: "2026-06-01T00:00:00Z",
 };
 

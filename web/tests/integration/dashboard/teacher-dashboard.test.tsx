@@ -247,6 +247,57 @@ describe("actual Teacher dashboard readings and actions", () => {
     expect(screen.queryByText("Xem lại")).toBeNull();
     expect(screen.getByText("3")).toBeInTheDocument();
   });
+  it("lists only the assignment items of Today and leaves a class session out", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+    vi.setSystemTime(new Date("2026-09-24T09:00:00Z"));
+    const session = {
+      kind: "session" as const,
+      at: "2026-09-24T12:00:00Z",
+      sessionId: "018f0000-0000-7000-8000-0000000000e1.20260924",
+      classId: "018f0000-0000-7000-8000-0000000000c1",
+      className: "IELTS Foundation",
+      room: "Phòng 2",
+    };
+    const data = dashboard23();
+    data.today = [data.today[0]!, session, data.today[1]!];
+    server.use(
+      http.get(`${BASE}/teacher/dashboard`, () =>
+        contractJson("/teacher/dashboard", "get", 200, data),
+      ),
+    );
+    board();
+    const today = within(await screen.findByRole("region", { name: "Hôm nay" }));
+    expect(await today.findByRole("link", { name: "IELTS Evening mở" })).toBeVisible();
+    expect(today.getByRole("link", { name: "Reading Mock đóng" })).toBeVisible();
+    expect(today.getAllByRole("listitem")).toHaveLength(2);
+    expect(today.queryByText(/IELTS Foundation|Phòng 2/)).toBeNull();
+  });
+  it("shows Today as empty when it holds class sessions only", async () => {
+    vi.useFakeTimers({ toFake: ["Date"], shouldAdvanceTime: true });
+    vi.setSystemTime(new Date("2026-09-24T09:00:00Z"));
+    const data = dashboard23();
+    data.today = [
+      {
+        kind: "session",
+        at: "2026-09-24T12:00:00Z",
+        sessionId: "018f0000-0000-7000-8000-0000000000e2",
+        classId: "018f0000-0000-7000-8000-0000000000c1",
+        className: "IELTS Foundation",
+        room: null,
+      },
+    ];
+    server.use(
+      http.get(`${BASE}/teacher/dashboard`, () =>
+        contractJson("/teacher/dashboard", "get", 200, data),
+      ),
+    );
+    board();
+    const today = within(await screen.findByRole("region", { name: "Hôm nay" }));
+    expect(
+      await today.findByText("Hôm nay chưa có lịch mở hoặc đóng bài."),
+    ).toBeVisible();
+    expect(today.queryByRole("listitem")).toBeNull();
+  });
   it("allows intervention-only flagged review and uses its exact destination URL", async () => {
     useAuthStore.getState().setSession("token", {
       ...teacherUser,

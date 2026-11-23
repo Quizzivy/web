@@ -49,6 +49,7 @@ const SAMPLE_CLASS = {
   teacherAvatarUrl: null,
   scheduleLabel: null,
   room: null,
+  schedule: { slots: [], label: null },
   joinedAt: "2026-06-01T00:00:00Z",
 };
 
@@ -949,6 +950,8 @@ describe("the states the deck does not draw", () => {
           classId: SAMPLE_CLASS.id,
           className: SAMPLE_CLASS.name,
           teacherName: "Cô Thương",
+          schedule: null,
+          room: null,
         }),
       ),
       http.post(`${BASE}/app/classes/join`, async ({ request }) => {

@@ -83,6 +83,7 @@ function klass(id: string, name: string) {
     joinCode: null,
     scheduleLabel: null,
     room: null,
+    schedule: { slots: [], label: null },
     averageScore: null,
     createdAt: "2026-06-01T00:00:00Z",
   };

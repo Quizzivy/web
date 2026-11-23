@@ -24,6 +24,7 @@ const klass = {
   description: null,
   scheduleLabel: "Tue · Thu, 17:30",
   room: "Room 2",
+  schedule: { slots: [], label: "Tue · Thu, 17:30" },
   studentCount: 2,
   openAssignmentCount: 1,
   archivedAt: null,

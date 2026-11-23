@@ -698,7 +698,7 @@ function Builder({ test, access }: Readonly<{ test: Test; access: TestAccess }>)
     if (!fixFits(values, finding)) throw new AiWriteError(t("ai.check.fixGone"));
     const fixed = withFix(values, finding);
     const saved = access.mine
-      ? await updateQuestion(questionId, fixed)
+      ? await updateQuestion(questionId, fixed, { expectedUpdatedAt: fresh.updatedAt })
       : (await editShared(questionId, fixed, fresh.updatedAt)).question;
     queryClient.setQueryData(["teacher-question", saved.id], saved);
     void queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
@@ -2105,9 +2105,10 @@ function QuestionForm({
 
   const storedReads = useRef(aiReadsOf(values));
   const lastSave = useRef<{ sent: QuestionValues; saved: QuestionValues } | null>(null);
-  // For a caller who is not the owner: the question this pane now saves to
-  // (a fork's once there is one), the `updatedAt` it last read, and the
-  // original's row ids mapped to the fork's.
+  // The `updatedAt` this pane last read, which every save sends (T-R8.1). For
+  // a caller who is not the owner, also the question this pane now saves to
+  // (a fork's once there is one) and the original's row ids mapped to the
+  // fork's.
   const target = useRef(questionId);
   const base = useRef(initial.updatedAt);
   const rowIds = useRef(new Map<string, string>());
@@ -2143,7 +2144,10 @@ function QuestionForm({
         void queryClient.invalidateQueries({ queryKey: ["teacher-questions"] });
         return;
       }
-      const saved = await updateQuestion(questionId, body);
+      const saved = await updateQuestion(questionId, body, {
+        expectedUpdatedAt: base.current,
+      });
+      base.current = saved.updatedAt;
       lastSave.current = { sent: next, saved: toFormValues(saved) };
       storedReads.current = aiReadsOf(next);
       queryClient.setQueryData(["teacher-question", questionId], saved);

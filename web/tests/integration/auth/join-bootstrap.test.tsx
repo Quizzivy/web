@@ -108,6 +108,8 @@ function controlledReplies(status: 401 | 403) {
           classId: REQUEST_ID,
           className: CLASS_NAME,
           teacherName: TEACHER,
+          schedule: null,
+          room: null,
         });
       } finally {
         previewReturned.open();

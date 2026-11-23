@@ -21,7 +21,7 @@ import {
   formatTime,
   useDisplayTimeZone,
 } from "@/lib/i18n/datetime";
-import { formatSlots } from "@/lib/i18n/schedule";
+import { formatScheduleLine } from "@/lib/i18n/schedule";
 import { myClassesQuery, type MyClass } from "../api";
 
 const CARD = "bg-card shadow-card flex flex-col overflow-hidden rounded-2xl border";
@@ -43,18 +43,6 @@ function nextLine(next: ComingUpRow, now: Date, locale: Locale, t: TFunction): s
   return today
     ? t("student.classes.nextClosesToday", { title, time })
     : t("student.classes.nextDue", { title, date });
-}
-
-/**
- * timetableLine is the line under a class's name (T-R8.15), as the deck
- * writes it: the weekly pattern, else the teacher's own wording, then the
- * room, "T2 · T4 · T6, 18:00 · Phòng 2". A class with neither pattern nor
- * room has no line. It moves to T-R8.14's whole-line helper in
- * `lib/i18n/schedule.ts` once that lands.
- */
-function timetableLine(c: MyClass, locale: Locale): string {
-  const pattern = formatSlots(c.schedule.slots, locale) || (c.schedule.label ?? "");
-  return [pattern, c.room ?? ""].filter((part) => part !== "").join(" · ");
 }
 
 /**
@@ -170,8 +158,12 @@ export default function StudentClassesPage() {
 
 function ClassCard({ klass: c, next }: Readonly<{ klass: MyClass; next: Next }>) {
   const { t, i18n } = useTranslation();
+  // The shared line (T-R8.14) without its "Chưa có lịch học": a student
+  // has nothing to do about a class with no schedule, so it has no line.
   const line = modules.schedule
-    ? timetableLine(c, i18n.language as Locale)
+    ? formatScheduleLine(c.schedule, c.room, i18n.language as Locale, {
+        fallback: false,
+      })
     : (c.description ?? "");
   return (
     <article className={CARD}>

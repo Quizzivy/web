@@ -17,6 +17,7 @@ import { DropdownMenuItem, DropdownMenuSeparator } from "@/components/ui/dropdow
 import { ADMIN_CLASS_PAGE_SIZES, type AdminClass } from "@/features/classes/adminApi";
 import type { Locale } from "@/lib/i18n";
 import { monthYear } from "@/lib/i18n/datetime";
+import { formatScheduleLine } from "@/lib/i18n/schedule";
 import { cn } from "@/lib/utils";
 
 /**
@@ -37,8 +38,8 @@ type Row = AdminClass & { readonly tab: "active" | "archived" };
 const INLINE_BUTTON =
   "text-muted-fg hover:bg-hover hover:text-foreground grid size-6.5 flex-none cursor-pointer place-items-center rounded-md aria-disabled:cursor-not-allowed aria-disabled:text-muted-fg/50 aria-disabled:hover:bg-transparent";
 
-function scheduleOf(klass: AdminClass, t: TFunction): string {
-  return klass.scheduleLabel ?? t("classes.noSchedule");
+function scheduleOf(klass: AdminClass, locale: Locale): string {
+  return formatScheduleLine(klass.schedule, klass.room, locale);
 }
 
 function teacherText(klass: AdminClass, t: TFunction): string {
@@ -177,8 +178,8 @@ function columns(
           <span className="block truncate font-medium">{klass.name}</span>
           <span className="text-muted-fg block truncate text-xs">
             {shown.has("teacher")
-              ? scheduleOf(klass, t)
-              : `${teacherText(klass, t)} · ${scheduleOf(klass, t)}`}
+              ? scheduleOf(klass, locale)
+              : `${teacherText(klass, t)} · ${scheduleOf(klass, locale)}`}
           </span>
         </span>
       ),

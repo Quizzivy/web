@@ -1,12 +1,21 @@
-import { useId, useState } from "react";
+import { useId, useMemo, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { CalendarDays, Repeat } from "lucide-react";
+import { DerivedField } from "@/components/shared/form/fields/DerivedField";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { updateClass, type Class } from "@/features/classes/api";
-import { blankAsNull, saveError } from "@/features/classes/classFields";
+import {
+  blankAsNull,
+  derivedSchedule,
+  saveError,
+} from "@/features/classes/classFields";
 import { invalidateClass } from "@/features/classes/invalidate";
+import { useDisplayTimeZone } from "@/lib/i18n/datetime";
+import { useLocale } from "@/lib/i18n/useLocale";
+import { cn } from "@/lib/utils";
 
 type Words = { name: string; description: string; schedule: string; room: string };
 
@@ -15,7 +24,7 @@ function wordsOf(klass: Class): Words {
     name: klass.name,
     description: klass.description ?? "",
     schedule: klass.scheduleLabel ?? "",
-    room: klass.room ?? "",
+    room: klass.ownRoom ?? "",
   };
 }
 
@@ -33,7 +42,10 @@ function same(a: Words, b: Words): boolean {
  * draws them, with the schedule and room T-R4.18 added: Name, Description,
  * Schedule and Room, and Save, active while something changed and the name
  * is not blank. A save says "Saved. Students see the new name." Without
- * `canWrite` the fields only read.
+ * `canWrite` the fields only read. The room is the class's own (`ownRoom`),
+ * never the derived one. Once the class has repeating sessions its Schedule
+ * is read from them, read-only, with "Đổi trong Lịch" opening the calendar at
+ * its next session, and Room says it is for new sessions (T-R8.14).
  */
 export function ClassSettingsCard({
   klass,
@@ -42,6 +54,12 @@ export function ClassSettingsCard({
   const { t } = useTranslation();
   const queryClient = useQueryClient();
   const prefix = useId();
+  const locale = useLocale();
+  const zone = useDisplayTimeZone();
+  const derived = useMemo(
+    () => derivedSchedule(klass.schedule, locale, zone, new Date()),
+    [klass.schedule, locale, zone],
+  );
   const [words, setWords] = useState<Words>(() => wordsOf(klass));
   const [saved, setSaved] = useState(false);
   const stored = wordsOf(klass);
@@ -53,7 +71,7 @@ export function ClassSettingsCard({
       updateClass(klass.id, {
         name: next.name.trim(),
         description: next.description,
-        scheduleLabel: blankAsNull(next.schedule),
+        ...(derived ? {} : { scheduleLabel: blankAsNull(next.schedule) }),
         room: blankAsNull(next.room),
       }),
     onSuccess: async () => {
@@ -109,15 +127,37 @@ export function ClassSettingsCard({
           onChange={(event) => edit("description")(event.target.value)}
         />
         <Label htmlFor={field("schedule")}>{t("classes.schedule")}</Label>
-        <Input
-          id={field("schedule")}
-          value={words.schedule}
-          maxLength={120}
-          readOnly={!canWrite}
-          placeholder={t("classes.schedulePlaceholder")}
-          className="-mt-1.5"
-          onChange={(event) => edit("schedule")(event.target.value)}
-        />
+        {derived ? (
+          <div className="-mt-1.5 flex flex-col gap-1.5">
+            <DerivedField
+              id={field("schedule")}
+              label={t("classes.schedule")}
+              value={derived.line}
+              icon={Repeat}
+              describedBy={`${field("schedule")}-hint`}
+              action={
+                canWrite
+                  ? {
+                      label: t("classes.changeInCalendar"),
+                      icon: CalendarDays,
+                      to: derived.calendar,
+                    }
+                  : undefined
+              }
+            />
+            <Hint id={`${field("schedule")}-hint`}>{t("classes.fromSessions")}</Hint>
+          </div>
+        ) : (
+          <Input
+            id={field("schedule")}
+            value={words.schedule}
+            maxLength={120}
+            readOnly={!canWrite}
+            placeholder={t("classes.schedulePlaceholder")}
+            className="-mt-1.5"
+            onChange={(event) => edit("schedule")(event.target.value)}
+          />
+        )}
         <Label htmlFor={field("room")}>{t("classes.room")}</Label>
         <Input
           id={field("room")}
@@ -125,9 +165,15 @@ export function ClassSettingsCard({
           maxLength={60}
           readOnly={!canWrite}
           placeholder={t("classes.roomPlaceholder")}
+          aria-describedby={derived ? `${field("room")}-hint` : undefined}
           className="-mt-1.5"
           onChange={(event) => edit("room")(event.target.value)}
         />
+        {derived ? (
+          <Hint id={`${field("room")}-hint`} className="-mt-1.5">
+            {t("classes.roomForNewSessions")}
+          </Hint>
+        ) : null}
         {save.isError ? (
           <p role="alert" className="text-danger-ink text-xs">
             {saveError(save.error, t("classDetail.saveFailed"))}
@@ -151,6 +197,18 @@ export function ClassSettingsCard({
         ) : null}
       </form>
     </section>
+  );
+}
+
+function Hint({
+  id,
+  className,
+  children,
+}: Readonly<{ id: string; className?: string; children: string }>) {
+  return (
+    <p id={id} className={cn("text-muted-fg text-xs leading-[1.45]", className)}>
+      {children}
+    </p>
   );
 }
 

@@ -70,6 +70,12 @@ export type FormInfoRow = Readonly<{
     controls?: string;
   };
 }>;
+/** FormDerivedAction is where a derived field's value is changed: a link, with its icon. */
+export type FormDerivedAction = Readonly<{
+  label: string;
+  icon: LucideIcon;
+  to: string;
+}>;
 /**
  * FormField ties each field kind to a compatible key of the form's values. A
  * field's hint, and a list's or chips' options, may be a function of the
@@ -94,6 +100,13 @@ export type FormField<V extends FormValues> =
       kind: "info";
       name: keyof V & string;
       rows: readonly FormInfoRow[] | ((values: V) => readonly FormInfoRow[]);
+    })
+  | (Common<V> & {
+      kind: "derived";
+      name: keyof V & string;
+      icon: LucideIcon;
+      value: string;
+      action?: FormDerivedAction;
     })
   | (Common<V> & {
       kind: "qr";

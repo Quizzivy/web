@@ -27,6 +27,19 @@ const A = {
 };
 const B = { ...A, id: "018f0000-0000-7000-8000-0000000000c2", name: "TOEIC 600" };
 
+/** The deck's IELTS 6.5 Evening: Monday, Wednesday and Friday at 18:00, in room 2. */
+const EVENING_SCHEDULE = {
+  room: "Phòng 2",
+  schedule: {
+    slots: [1, 3, 5].map((weekday) => ({
+      weekday,
+      startTime: "18:00",
+      durationMinutes: 90,
+    })),
+    label: null,
+  },
+};
+
 type Lists = { dueNow?: unknown[]; upcoming?: unknown[]; completed?: unknown[] };
 
 let enrolled: unknown[] = [];
@@ -127,6 +140,21 @@ describe("the page", () => {
     );
   });
 
+  it("offers the week beside joining, as the secondary button", async () => {
+    page([A]);
+    await screen.findByRole("heading", { level: 2, name: A.name });
+    const week = screen.getByRole("link", { name: "Tuần này" });
+    expect(week).toHaveAttribute("href", "/week");
+    expect(week).toHaveAttribute("data-variant", "outline");
+    expect(week).toHaveClass("h-10", "min-h-0");
+    expect(week.querySelector("svg.lucide-calendar-days")).not.toBeNull();
+    const join = screen.getByRole("button", { name: "Tham gia lớp" });
+    expect(week.parentElement).toBe(join.parentElement);
+    expect(
+      week.compareDocumentPosition(join) & Node.DOCUMENT_POSITION_FOLLOWING,
+    ).toBeTruthy();
+  });
+
   it("draws a class with its teacher and a way to message them, and no way to open or leave it", async () => {
     page([A]);
     const card = cardOf((await screen.findByRole("heading", { level: 2 })).textContent);
@@ -139,17 +167,55 @@ describe("the page", () => {
     ]);
     expect(links[0]).toHaveAttribute("href", `/messages/teacher/${A.teacherId}`);
     expect(card.queryAllByRole("button")).toEqual([]);
-    expect(screen.queryByText(/Tuần này/)).toBeNull();
+    expect(card.queryByText(/Tuần này/)).toBeNull();
     expect(screen.queryByText(/tham gia 12\/07/)).toBeNull();
   });
 
-  it("puts a class's description under its name until the timetable ships", async () => {
-    page([{ ...A, description: "Thứ 3 và thứ 5, 19:30–21:00." }, B]);
+  it("puts the class's timetable under its name: the weekly pattern, then the room", async () => {
+    page([{ ...A, ...EVENING_SCHEDULE }, B]);
     await screen.findByRole("heading", { level: 2, name: B.name });
-    expect(cardOf(A.name).getByText("Thứ 3 và thứ 5, 19:30–21:00.")).toHaveClass(
+    expect(cardOf(A.name).getByText("T2 · T4 · T6, 18:00 · Phòng 2")).toHaveClass(
       "text-muted-fg",
+      "text-sm",
     );
-    expect(cardOf(B.name).queryByText(/Thứ 3/)).toBeNull();
+  });
+
+  it("falls back to the teacher's own wording, and draws no line with nothing to say", async () => {
+    page([
+      {
+        ...A,
+        description: "Lớp buổi tối.",
+        scheduleLabel: "Thứ 3 và thứ 5, 19:30",
+        schedule: { slots: [], label: "Thứ 3 và thứ 5, 19:30" },
+      },
+      { ...B, description: "Lớp cuối tuần." },
+    ]);
+    await screen.findByRole("heading", { level: 2, name: B.name });
+    expect(cardOf(A.name).getByText("Thứ 3 và thứ 5, 19:30")).toBeInTheDocument();
+    expect(cardOf(A.name).queryByText("Lớp buổi tối.")).toBeNull();
+    const heading = cardOf(B.name).getByRole("heading", { level: 2 });
+    expect(heading.nextElementSibling).toBeNull();
+    expect(cardOf(B.name).queryByText("Lớp cuối tuần.")).toBeNull();
+  });
+
+  it("names several meeting times, and a room with no pattern", async () => {
+    page([
+      {
+        ...A,
+        schedule: {
+          slots: [
+            { weekday: 2, startTime: "18:00", durationMinutes: 90 },
+            { weekday: 4, startTime: "18:00", durationMinutes: 90 },
+            { weekday: 6, startTime: "09:00", durationMinutes: 120 },
+          ],
+          label: null,
+        },
+      },
+      { ...B, room: "Phòng 4" },
+    ]);
+    await screen.findByRole("heading", { level: 2, name: B.name });
+    expect(cardOf(A.name).getByText("T3 · T5, 18:00; T7, 09:00")).toBeInTheDocument();
+    expect(cardOf(B.name).getByText("Phòng 4")).toBeInTheDocument();
   });
 
   it("offers no message button for a class with no teacher", async () => {
@@ -415,6 +481,19 @@ describe("in English", () => {
     expect(
       cardOf(B.name).getByText("Listening practice 03 · opens Tue 1 Sep"),
     ).toBeInTheDocument();
+  });
+
+  it("writes the timetable and the week's button in English", async () => {
+    await i18n.changeLanguage("en");
+    page([{ ...A, ...EVENING_SCHEDULE }]);
+    await screen.findByRole("heading", { level: 2, name: A.name });
+    expect(
+      cardOf(A.name).getByText("Mon · Wed · Fri, 18:00 · Phòng 2"),
+    ).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: "This week" })).toHaveAttribute(
+      "href",
+      "/week",
+    );
   });
 
   it("says a class has nothing assigned", async () => {

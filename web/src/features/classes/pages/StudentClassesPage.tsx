@@ -3,7 +3,7 @@ import type { TFunction } from "i18next";
 import { useTranslation } from "react-i18next";
 import { useQuery } from "@tanstack/react-query";
 import { Link } from "react-router";
-import { MessageSquare, Plus } from "lucide-react";
+import { CalendarDays, MessageSquare, Plus } from "lucide-react";
 import { modules } from "@/app/modules";
 import { EmptyState, LoadError } from "@/components/shared/ListState";
 import { Avatar } from "@/components/ui/avatar";
@@ -21,6 +21,7 @@ import {
   formatTime,
   useDisplayTimeZone,
 } from "@/lib/i18n/datetime";
+import { formatScheduleLine } from "@/lib/i18n/schedule";
 import { myClassesQuery, type MyClass } from "../api";
 
 const CARD = "bg-card shadow-card flex flex-col overflow-hidden rounded-2xl border";
@@ -51,9 +52,10 @@ function nextLine(next: ComingUpRow, now: Date, locale: Locale, t: TFunction): s
  * not a link, and nothing here leaves a class; its one link is the message
  * button beside the teacher, which opens their thread once Messages has
  * shipped (T-R7.21). "Next" follows Home's order and
- * repaints each minute. Until the timetable ships, the line under a class's
- * name is its description. A list that has loaded stays on screen when a
- * later refetch fails.
+ * repaints each minute. "Tuần này" opens the student's week (T-R8.15), and
+ * the line under a class's name is when and where it meets; until the
+ * schedule module ships it was the class's description. A list that has
+ * loaded stays on screen when a later refetch fails.
  */
 export default function StudentClassesPage() {
   useDisplayTimeZone();
@@ -89,14 +91,29 @@ export default function StudentClassesPage() {
             {t("student.classes.subtitle")}
           </p>
         </div>
-        <Button
-          size="md"
-          className="h-10 min-h-0 gap-1.5 px-4 text-base"
-          onClick={() => setJoining(true)}
-        >
-          <Plus aria-hidden="true" className="size-4" />
-          {t("student.joinClass")}
-        </Button>
+        <div className="flex gap-2">
+          {modules.schedule && (
+            <Button
+              asChild
+              variant="outline"
+              size="md"
+              className="h-10 min-h-0 gap-1.5 px-3.5 text-base whitespace-nowrap"
+            >
+              <Link to="/week">
+                <CalendarDays aria-hidden="true" className="size-4" />
+                {t("student.week.title")}
+              </Link>
+            </Button>
+          )}
+          <Button
+            size="md"
+            className="h-10 min-h-0 gap-1.5 px-4 text-base whitespace-nowrap"
+            onClick={() => setJoining(true)}
+          >
+            <Plus aria-hidden="true" className="size-4" />
+            {t("student.joinClass")}
+          </Button>
+        </div>
       </div>
       {classes.data === undefined && classes.isPending && (
         <div role="status" aria-live="polite" aria-label={t("common.loading")}>
@@ -140,7 +157,14 @@ export default function StudentClassesPage() {
 }
 
 function ClassCard({ klass: c, next }: Readonly<{ klass: MyClass; next: Next }>) {
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
+  // The shared line (T-R8.14) without its "Chưa có lịch học": a student
+  // has nothing to do about a class with no schedule, so it has no line.
+  const line = modules.schedule
+    ? formatScheduleLine(c.schedule, c.room, i18n.language as Locale, {
+        fallback: false,
+      })
+    : (c.description ?? "");
   return (
     <article className={CARD}>
       <div className="flex flex-col gap-3.5 p-4.5">
@@ -148,9 +172,7 @@ function ClassCard({ klass: c, next }: Readonly<{ klass: MyClass; next: Next }>)
           <h2 className="text-title leading-normal font-semibold break-words">
             {c.name}
           </h2>
-          {c.description !== null && c.description !== "" && (
-            <p className="text-muted-fg text-sm break-words">{c.description}</p>
-          )}
+          {line !== "" && <p className="text-muted-fg text-sm break-words">{line}</p>}
         </div>
         {c.teacherName !== null && (
           <div className="flex items-center gap-2.5">

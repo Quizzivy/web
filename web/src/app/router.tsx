@@ -543,6 +543,13 @@ const studentTree: RouteObject = {
           path: "classes",
           lazy: page(() => import("@/features/classes/pages/StudentClassesPage")),
         },
+        // This week is a detail route whose back arrow goes to Classes, where
+        // its button is (DG-81, T-R8.15).
+        {
+          path: "week",
+          handle: { detail: { titleKey: "student.week.title", back: "/classes" } },
+          lazy: page(() => import("@/features/calendar/pages/student/ThisWeekPage")),
+        },
         {
           path: "assignments/:id",
           handle: { detail: { titleKey: "student.shell.test", back: "/" } },

@@ -704,6 +704,8 @@ To view one, start the server above and open, for example,
   tâm". The dialog is the product's DialogShell at 360 (12px from the edges, at most 86% high), as no
   dialog in the web is a full-height sheet. Thirty-one states, at 1280 and 360, light and dark,
   Vietnamese and English. Thirteen questions for Thuong with the default drawn; none is decided.
+- 2026-11-23 — Thuong approved `proposals/F2 Messaging.dc.html` as drawn, with the default of
+  each of its thirteen questions ("chấp thuận tất cả", Quizzivy/web#157). DG-233 says so.
 
 ## The brand
 

@@ -1,4 +1,4 @@
-import type { Ref } from "react";
+import type { ComponentProps, Ref } from "react";
 import { Search } from "lucide-react";
 import { Input } from "@/components/ui/input";
 import { cn } from "@/lib/utils";
@@ -15,7 +15,9 @@ export const TOOLBAR_SEARCH =
  * density. `inputRef` reaches the field, for a page that returns focus to it,
  * `maxLength` is the most the field takes in UTF-16 units, and
  * `maxCharacters` in characters (code points), which also cuts a longer
- * `value` the field is given, such as one from a link.
+ * `value` the field is given, such as one from a link. `field` passes the
+ * rest to the input, for a field that drives a list (a combobox's role,
+ * `aria-activedescendant` and its keys).
  */
 export function SearchInput({
   value,
@@ -26,6 +28,7 @@ export function SearchInput({
   inputRef,
   maxLength,
   maxCharacters,
+  field,
 }: Readonly<{
   value: string;
   onChange: (value: string) => void;
@@ -35,6 +38,17 @@ export function SearchInput({
   inputRef?: Ref<HTMLInputElement>;
   maxLength?: number;
   maxCharacters?: number;
+  field?: Omit<
+    ComponentProps<"input">,
+    | "type"
+    | "value"
+    | "onChange"
+    | "placeholder"
+    | "ref"
+    | "maxLength"
+    | "className"
+    | "size"
+  >;
 }>) {
   const fit = (text: string) => {
     if (maxCharacters === undefined) return text;
@@ -53,6 +67,7 @@ export function SearchInput({
         aria-hidden="true"
       />
       <Input
+        {...field}
         type="search"
         className={cn("pl-9", dense && "h-8 pl-8 text-xs")}
         ref={inputRef}

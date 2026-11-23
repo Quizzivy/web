@@ -10,6 +10,7 @@ import { Button } from "@/components/ui/button";
 import { Skeleton } from "@/components/ui/skeleton";
 import { organizationSettingsQuery } from "@/features/organization/api";
 import { SettingsForm } from "@/features/organization/SettingsForm";
+import { TermsHost, TermsSection } from "@/features/organization/sections/Terms";
 import { SYSTEM_SECTIONS } from "@/features/organization/systemSections";
 import { UnsavedChangesGuard } from "@/features/settings/UnsavedChangesGuard";
 import { PageHead } from "@/layouts/shell/PageHead";
@@ -59,11 +60,12 @@ function SettingsLoadError({ onRetry }: Readonly<{ onRetry: () => void }>) {
 /**
  * SystemSettingsPage is the Admin console's System settings, at the
  * `settings/:section` route of the console: "Applies to everyone in {organization}." over
- * a navigation of its sections, Organization (also the bare address), Sign-in,
- * Data & privacy and Plan & usage. All four share one form and one unsaved-changes
- * bar, and leaving with unsaved changes asks first. While the document is
- * read the sections hold a skeleton, and when it cannot be they hold the
- * failure and Retry. Plan & usage also reads what is in use itself. An
+ * a navigation of its sections, Organization (also the bare address), Terms,
+ * Sign-in, Data & privacy and Plan & usage. All but Terms share one form and
+ * one unsaved-changes bar, and leaving with unsaved changes asks first; Terms
+ * reads and saves the centre's terms itself, whether or not the document has
+ * been read. While the document is read the other sections hold a skeleton,
+ * and when it cannot be they hold the failure and Retry. Plan & usage also reads what is in use itself. An
  * address with an unknown section is not the console's (`consolePath`) and is sent where an
  * old teacher address goes.
  */
@@ -85,7 +87,13 @@ export default function SystemSettingsPage() {
     <SettingsSkeleton />
   );
   const placeholder: SettingsSection[] = SYSTEM_SECTIONS.map(
-    ({ id, label, icon, to }) => ({ id, label: t(label), icon, to, content: state }),
+    ({ id, label, icon, to }) => ({
+      id,
+      label: t(label),
+      icon,
+      to,
+      content: id === "terms" ? <TermsSection /> : state,
+    }),
   );
 
   return (
@@ -95,15 +103,17 @@ export default function SystemSettingsPage() {
         description={t("systemSettings.hint", { organization: name })}
       />
       <UnsavedChangesGuard base={ADMIN_PATHS.settings}>
-        {settings.data === undefined ? (
-          <SettingsLayout
-            label={t("systemSettings.navigation")}
-            active={active}
-            sections={placeholder}
-          />
-        ) : (
-          <SettingsForm saved={settings.data} active={active} />
-        )}
+        <TermsHost shown={active === "terms"}>
+          {settings.data === undefined ? (
+            <SettingsLayout
+              label={t("systemSettings.navigation")}
+              active={active}
+              sections={placeholder}
+            />
+          ) : (
+            <SettingsForm saved={settings.data} active={active} />
+          )}
+        </TermsHost>
       </UnsavedChangesGuard>
     </div>
   );

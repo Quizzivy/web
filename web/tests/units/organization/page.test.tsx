@@ -39,7 +39,7 @@ const nav = () =>
 const name = () => screen.findByRole("textbox", { name: "Tên tổ chức" });
 
 describe("System settings", () => {
-  it("heads the page as the plan words it and lists its four sections", async () => {
+  it("heads the page as the plan words it and lists its five sections", async () => {
     servesSettings();
     renderSettings();
 
@@ -53,7 +53,13 @@ describe("System settings", () => {
       nav()
         .getAllByRole("link")
         .map((link) => link.textContent),
-    ).toEqual(["Tổ chức", "Đăng nhập", "Dữ liệu và quyền riêng tư", "Gói và mức dùng"]);
+    ).toEqual([
+      "Tổ chức",
+      "Học kỳ",
+      "Đăng nhập",
+      "Dữ liệu và quyền riêng tư",
+      "Gói và mức dùng",
+    ]);
     expect(nav().getByRole("link", { name: "Tổ chức" })).toHaveAttribute(
       "aria-current",
       "page",

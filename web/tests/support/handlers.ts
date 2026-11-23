@@ -5,6 +5,7 @@ import {
   myClass,
   notificationDefaults,
   sampleClass,
+  sampleTerms,
   studentUser,
 } from "./fixtures";
 
@@ -114,6 +115,10 @@ export const handlers = [
       schedule: null,
       room: null,
     }),
+  ),
+
+  http.get(`${BASE}/admin/settings/terms`, () =>
+    contractJson("/admin/settings/terms", "get", 200, { items: sampleTerms }),
   ),
 
   http.get(`${BASE}/app/classes`, () =>

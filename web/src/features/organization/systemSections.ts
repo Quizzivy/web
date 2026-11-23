@@ -1,10 +1,18 @@
-import { Building2, Gauge, LogIn, ShieldCheck, type LucideIcon } from "lucide-react";
+import {
+  Building2,
+  CalendarRange,
+  Gauge,
+  LogIn,
+  ShieldCheck,
+  type LucideIcon,
+} from "lucide-react";
 import { ADMIN_PATHS } from "@/app/adminPaths";
 
 /**
  * SystemSection is one section of System settings: its id, which is also the
  * last segment of its address, the label and icon of its link, and the
- * first segments of the form paths it edits.
+ * first segments of the form paths it edits. A section that edits none, as
+ * Terms, saves itself and takes no part in the unsaved-changes bar.
  */
 export type SystemSection = Readonly<{
   id: string;
@@ -26,6 +34,13 @@ export const SYSTEM_SECTIONS: readonly SystemSection[] = [
     icon: Building2,
     to: `${ADMIN_PATHS.settings}/organization`,
     owns: ["organization", "leadRecipients"],
+  },
+  {
+    id: "terms",
+    label: "systemSettings.sections.terms",
+    icon: CalendarRange,
+    to: `${ADMIN_PATHS.settings}/terms`,
+    owns: [],
   },
   {
     id: "sign-in",

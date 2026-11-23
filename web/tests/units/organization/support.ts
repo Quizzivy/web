@@ -1,9 +1,9 @@
-import { http } from "msw";
+import { http, HttpResponse } from "msw";
 import { vi } from "vitest";
 import type { components } from "@/lib/api/schema";
 import { useAuthStore } from "@/stores/auth";
 import { assertContractRequest, contractJson } from "@tests/support/contractResponse";
-import { adminUser } from "@tests/support/fixtures";
+import { adminUser, sampleTerms } from "@tests/support/fixtures";
 import { server } from "@tests/support/server";
 
 type Settings = components["schemas"]["OrganizationSettings"];
@@ -279,4 +279,80 @@ export function servesRetentionImpact(answer: RetentionImpact = IMPACT) {
     }),
   );
   return asked;
+}
+
+type Term = components["schemas"]["Term"];
+type TermCreate = components["schemas"]["TermCreate"];
+type TermPatch = components["schemas"]["TermPatch"];
+
+/** NEW_TERM_ID is the id `POST /admin/settings/terms` gives the term it adds. */
+export const NEW_TERM_ID = "0196f7c0-0000-7000-8000-000000000009";
+
+/**
+ * servesTerms answers the four terms operations from `items`, newest first,
+ * as the server does: an add takes NEW_TERM_ID and is upcoming, a change keeps
+ * the term's state, and a delete removes it. It records every write's body.
+ * `refuse` answers a write instead, for the ones it returns a response for.
+ */
+export function servesTerms(
+  items: readonly Term[] = sampleTerms,
+  refuse?: (write: TermCreate | TermPatch) => Response | undefined,
+) {
+  const seen = {
+    reads: 0,
+    items: [...items],
+    posts: [] as TermCreate[],
+    patches: [] as { id: string; body: TermPatch }[],
+    deletes: [] as string[],
+  };
+  const sorted = () =>
+    [...seen.items].sort((a, b) => b.startsOn.localeCompare(a.startsOn));
+  server.use(
+    http.get(`${BASE}/admin/settings/terms`, () => {
+      seen.reads += 1;
+      return contractJson("/admin/settings/terms", "get", 200, { items: sorted() });
+    }),
+    http.post(`${BASE}/admin/settings/terms`, async ({ request }) => {
+      const body = (await request.json()) as TermCreate;
+      assertContractRequest("/admin/settings/terms", "post", body);
+      seen.posts.push(body);
+      const refused = refuse?.(body);
+      if (refused) return refused;
+      const term: Term = { id: NEW_TERM_ID, ...body, state: "upcoming" };
+      seen.items.push(term);
+      return contractJson("/admin/settings/terms", "post", 201, term);
+    }),
+    http.patch(`${BASE}/admin/settings/terms/:id`, async ({ request, params }) => {
+      const body = (await request.json()) as TermPatch;
+      assertContractRequest("/admin/settings/terms/{id}", "patch", body);
+      const id = String(params["id"]);
+      seen.patches.push({ id, body });
+      const refused = refuse?.(body);
+      if (refused) return refused;
+      const index = seen.items.findIndex((term) => term.id === id);
+      const term: Term = { ...seen.items[index]!, ...body };
+      seen.items[index] = term;
+      return contractJson("/admin/settings/terms/{id}", "patch", 200, term);
+    }),
+    http.delete(`${BASE}/admin/settings/terms/:id`, ({ params }) => {
+      const id = String(params["id"]);
+      seen.deletes.push(id);
+      seen.items = seen.items.filter((term) => term.id !== id);
+      return new HttpResponse(null, { status: 204 });
+    }),
+  );
+  return seen;
+}
+
+/** overlaps is the 409 a write meets when its range shares a day with `term`. */
+export function overlaps(term: Term) {
+  return contractJson(
+    "/admin/settings/terms",
+    "post",
+    409,
+    failure("TERM_OVERLAPS", `Trùng với học kỳ ${term.name}.`, {
+      termId: term.id,
+      name: term.name,
+    }),
+  );
 }

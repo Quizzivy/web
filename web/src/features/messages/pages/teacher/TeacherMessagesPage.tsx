@@ -10,6 +10,7 @@ import {
   Lock,
   Megaphone,
   MessageSquare,
+  MessageSquarePlus,
   Users,
 } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
@@ -58,6 +59,7 @@ import { DayPill } from "../../components/DayPill";
 import { MessageBubble } from "../../components/MessageBubble";
 import { staffAttach } from "../../components/StaffAttach";
 import { ThreadDetails } from "../../components/ThreadDetails";
+import { RecipientPicker, type Picked } from "../../components/RecipientPicker";
 import { ThreadList, type ListRow } from "../../components/ThreadList";
 import { ThreadNotice } from "../../components/ThreadNotice";
 import { ThreadView } from "../../components/ThreadView";
@@ -73,6 +75,9 @@ const SEARCH_DELAY_MS = 300;
 const STAFF_ATTACH = staffAttach(uploadMessageAttachment);
 
 type Tab = "all" | "direct" | "classes";
+
+/** Whom New message offers. Colleagues join with their threads (T-F2.7). */
+const PICKER_AUDIENCES = ["students"] as const;
 type Head =
   | Readonly<{ kind: "direct"; student: StaffDirectThread["student"] }>
   | Readonly<{ kind: "class"; room: StaffClassThread["class"] }>;
@@ -126,12 +131,28 @@ function previewLine(preview: StaffThread["preview"], t: TFunction): string | nu
   return you + said;
 }
 
-/** rowSub is a row's sub-line when it shows no message: its size, "Former student", or the student's classes. */
+/**
+ * studentLine is what names a student under their name: "Former student",
+ * else the caller's classes they are in, else their other classes (a student
+ * the caller does not teach, F2), else "In no class".
+ */
+function studentLine(
+  former: boolean,
+  classNames: readonly string[],
+  otherClassNames: readonly string[],
+  t: TFunction,
+): string {
+  if (former) return t("messages.former");
+  if (classNames.length > 0) return classNames.join(", ");
+  if (otherClassNames.length > 0) return otherClassNames.join(", ");
+  return t("messages.noClass");
+}
+
+/** rowSub is a row's sub-line when it shows no message: its size, or the student's line. */
 function rowSub(row: StaffThread, t: TFunction): string {
   if (row.thread.kind === "class")
     return t("messages.list.classSub", { count: row.studentCount ?? 0 });
-  if (row.former) return t("messages.former");
-  return row.classNames.join(", ");
+  return studentLine(row.former, row.classNames, row.otherClassNames, t);
 }
 
 /** stateOf is what a pane shows for a read: loading until its first answer, then the error or the content. */
@@ -183,6 +204,7 @@ export default function TeacherMessagesPage() {
   const [tab, setTab] = useState<Tab>(() => tabFrom(location.state));
   const reasonId = useId();
   const [typed, setTyped] = useState("");
+  const [picking, setPicking] = useState(false);
   const q = useDebounced(typed.trim(), SEARCH_DELAY_MS);
 
   const base = useQuery({
@@ -277,6 +299,16 @@ export default function TeacherMessagesPage() {
     void navigate(threadPath(classRef), { state: { compose: true } });
   };
 
+  // New message opens the thread it picked with the composer focused, the
+  // existing one or an empty one that the first post makes (DG-233).
+  const openPicked = (picked: Picked) => {
+    setPicking(false);
+    if (tab === "classes") setTab("all");
+    void navigate(threadPath({ kind: "direct", id: picked.id }), {
+      state: { compose: true },
+    });
+  };
+
   const showList = !single || open === null;
   const showThread = !single || open !== null;
 
@@ -292,6 +324,16 @@ export default function TeacherMessagesPage() {
                 {offReason}
               </span>
             )}
+            <Button
+              type="button"
+              variant="outline"
+              className="max-[767px]:h-11"
+              aria-haspopup="dialog"
+              onClick={() => setPicking(true)}
+            >
+              <MessageSquarePlus />
+              {t("messages.newMessage")}
+            </Button>
             <Button
               type="button"
               className="max-[767px]:h-11"
@@ -364,6 +406,12 @@ export default function TeacherMessagesPage() {
           />
         )}
       </div>
+      <RecipientPicker
+        open={picking}
+        onOpenChange={setPicking}
+        audiences={PICKER_AUDIENCES}
+        onPick={openPicked}
+      />
     </div>
   );
 }
@@ -507,6 +555,10 @@ type PaneView = Readonly<{
   former: boolean;
   count: number;
   classes: readonly Readonly<{ id: string; name: string }>[];
+  /** A student's current classes that the caller does not teach, by name. */
+  otherClassNames: readonly string[];
+  /** The caller teaches the student now: Details lists the classes and opens Students. */
+  taught: boolean;
   canPost: boolean;
   archived: boolean;
 }>;
@@ -528,6 +580,8 @@ function paneView(
       former: false,
       count,
       classes: [],
+      otherClassNames: [],
+      taught: false,
       canPost: true,
       archived: room?.archived === true,
     };
@@ -535,14 +589,17 @@ function paneView(
   const student = head?.kind === "direct" ? head.student : null;
   const former = student?.former ?? row?.former ?? false;
   const classNames = student?.classes.map((c) => c.name) ?? row?.classNames ?? [];
+  const otherClassNames = student?.otherClassNames ?? row?.otherClassNames ?? [];
   return {
     ref,
     title: student?.name ?? row?.title ?? "",
-    sub: former ? t("messages.former") : classNames.join(", "),
+    sub: studentLine(former, classNames, otherClassNames, t),
     avatarUrl: student?.avatarUrl ?? row?.avatarUrl ?? null,
     former,
     count: 0,
     classes: student?.classes ?? [],
+    otherClassNames,
+    taught: classNames.length > 0,
     canPost: student?.canPost !== false,
     archived: false,
   };
@@ -653,6 +710,27 @@ function StaffDetails({
         title={view.title}
         role={t("messages.former")}
         note={t("messages.about.former")}
+      />
+    );
+  // A student the caller does not teach (F2): their classes, by name, and one
+  // sentence; no link, since Students and the class pages are the caller's own.
+  if (!view.taught)
+    return (
+      <ThreadDetails
+        avatar={avatar}
+        title={view.title}
+        role={t("messages.about.student")}
+        label={t("messages.about.theirClasses")}
+        rows={view.otherClassNames.map((name, index) => ({
+          key: `${index}:${name}`,
+          icon: GraduationCap,
+          text: name,
+        }))}
+        note={
+          view.otherClassNames.length > 0
+            ? t("messages.about.notTaught")
+            : t("messages.about.noClass")
+        }
       />
     );
   return (

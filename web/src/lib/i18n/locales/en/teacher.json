@@ -4320,7 +4320,9 @@
     "lead": "Announcements to classes and direct messages with students.",
     "newAnnouncement": "New announcement",
     "newAnnouncementOff": "You teach no class yet.",
+    "newMessage": "New message",
     "former": "Former student",
+    "noClass": "In no class",
     "details": "Details",
     "seenBy": "Seen by {{seen}} of {{of}}",
     "attemptEvent_one": "{{title}} · left the test {{count}} time",
@@ -4346,6 +4348,21 @@
       "noMatch": "No person or class matches “{{q}}”.",
       "candidates": "Students not messaged yet"
     },
+    "picker": {
+      "description": "Choose a student or a colleague. Only the two of you can read the conversation.",
+      "students": "Students",
+      "colleagues": "Colleagues",
+      "search": "Search by name",
+      "filter": "Filter students",
+      "all": "All students",
+      "mine": "Students in my classes",
+      "hasThread": "Already talking",
+      "noStudentMatch": "No student matches “{{q}}”.",
+      "noColleagueMatch": "No colleague matches “{{q}}”.",
+      "noStudents": "No students here.",
+      "noColleagues": "No colleagues to message yet.",
+      "error": "The list could not be loaded."
+    },
     "thread": {
       "classSub_one": "{{count}} student · announcements",
       "classSub_other": "{{count}} students · announcements"
@@ -4359,7 +4376,10 @@
       "count_one": "{{count}} student",
       "count_other": "{{count}} students",
       "former": "No longer in any of your classes.",
-      "openClass": "Open the class"
+      "openClass": "Open the class",
+      "theirClasses": "Classes",
+      "notTaught": "Not in any of your classes.",
+      "noClass": "Not in any class at the centre."
     },
     "chip": {
       "remove": "Remove {{name}}"

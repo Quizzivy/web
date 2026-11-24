@@ -136,6 +136,69 @@ export function postStaffMessage(ref: ThreadRef, body: StaffMessagePost) {
       });
 }
 
+export type MessageRecipient = components["schemas"]["MessageRecipient"];
+
+/** RecipientAudience is which of New message's lists to read: students or colleagues. */
+export type RecipientAudience = "students" | "colleagues";
+
+/**
+ * RecipientFilter is the students' filter of New message: every enabled
+ * student, the students of the caller's classes (`mine`), one class of the
+ * caller's, or the students in no class. Colleagues take none.
+ */
+export type RecipientFilter =
+  | Readonly<{ kind: "all" }>
+  | Readonly<{ kind: "mine" }>
+  | Readonly<{ kind: "class"; classId: string }>
+  | Readonly<{ kind: "none" }>;
+
+/** RECIPIENT_PAGE is how many rows one read of New message's list brings. */
+export const RECIPIENT_PAGE = 30;
+
+/** recipientsKey is the query key of New message's list for one audience, filter and search. */
+export function recipientsKey(
+  audience: RecipientAudience,
+  filter: RecipientFilter,
+  q: string,
+) {
+  return [...STAFF_MESSAGES_KEY, "recipients", audience, filter, q] as const;
+}
+
+/**
+ * listMessageRecipients reads one page of the people New message offers:
+ * every enabled student (narrowed by `filter`: at most one of `mine`,
+ * `classId` and `inNoClass`, as the contract allows) or every colleague, by
+ * name, matched by `q`, from `cursor`.
+ */
+export function listMessageRecipients(
+  audience: RecipientAudience,
+  filter: RecipientFilter,
+  q: string,
+  cursor: string | null,
+  signal?: AbortSignal,
+) {
+  const narrow =
+    audience === "colleagues"
+      ? {}
+      : {
+          ...(filter.kind === "mine" ? { mine: true } : {}),
+          ...(filter.kind === "class" ? { classId: filter.classId } : {}),
+          ...(filter.kind === "none" ? { inNoClass: true } : {}),
+        };
+  const query = {
+    audience,
+    limit: RECIPIENT_PAGE,
+    ...narrow,
+    ...(q === "" ? {} : { q }),
+    ...(cursor === null ? {} : { cursor }),
+  };
+  return api(
+    "get",
+    "/teacher/messages/recipients",
+    signal ? { query, signal } : { query },
+  );
+}
+
 /** markStaffThreadRead moves the caller's read pointer of `ref` to `messageId`. */
 export function markStaffThreadRead(ref: ThreadRef, messageId: string) {
   const body = { lastReadMessageId: messageId };

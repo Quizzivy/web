@@ -4101,7 +4101,9 @@
     "lead": "Thông báo tới lớp và tin nhắn riêng với học viên.",
     "newAnnouncement": "Thông báo mới",
     "newAnnouncementOff": "Bạn chưa dạy lớp nào.",
+    "newMessage": "Tin nhắn mới",
     "former": "Học viên cũ",
+    "noClass": "Chưa vào lớp nào",
     "details": "Chi tiết",
     "seenBy": "{{seen}}/{{of}} học viên đã xem",
     "attemptEvent_other": "{{title}} · rời khỏi bài thi {{count}} lần",
@@ -4124,6 +4126,21 @@
       "noMatch": "Không có người hay lớp nào khớp với “{{q}}”.",
       "candidates": "Học viên chưa nhắn tin"
     },
+    "picker": {
+      "description": "Chọn một học viên hoặc một đồng nghiệp. Chỉ hai người trong cuộc trò chuyện đọc được tin nhắn.",
+      "students": "Học viên",
+      "colleagues": "Đồng nghiệp",
+      "search": "Tìm theo tên",
+      "filter": "Lọc học viên",
+      "all": "Tất cả học viên",
+      "mine": "Học viên lớp của tôi",
+      "hasThread": "Đã có cuộc trò chuyện",
+      "noStudentMatch": "Không có học viên nào khớp với “{{q}}”.",
+      "noColleagueMatch": "Không có đồng nghiệp nào khớp với “{{q}}”.",
+      "noStudents": "Không có học viên nào ở đây.",
+      "noColleagues": "Chưa có đồng nghiệp nào để nhắn tin.",
+      "error": "Không tải được danh sách."
+    },
     "thread": {
       "classSub_other": "{{count}} học viên · thông báo lớp"
     },
@@ -4135,7 +4152,10 @@
       "members": "Thành viên",
       "count_other": "{{count}} học viên",
       "former": "Không còn học lớp nào của bạn.",
-      "openClass": "Mở trang lớp"
+      "openClass": "Mở trang lớp",
+      "theirClasses": "Lớp đang học",
+      "notTaught": "Không học lớp nào của bạn.",
+      "noClass": "Chưa vào lớp nào của trung tâm."
     },
     "chip": {
       "remove": "Bỏ tệp {{name}}"

@@ -1,25 +1,10 @@
 import type { ReactNode } from "react";
 import { useTranslation } from "react-i18next";
-import {
-  Download,
-  FileAudio,
-  FileImage,
-  FileText,
-  FileType,
-  X,
-  type LucideIcon,
-} from "lucide-react";
+import { Download, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { IconTile } from "@/components/shared/IconTile";
 import { cn } from "@/lib/utils";
-import { KIND_OF, useAttachmentMeta, type ChipFile, type Kind } from "../attachments";
-
-const ICON: Record<Kind, LucideIcon> = {
-  pdf: FileText,
-  word: FileType,
-  image: FileImage,
-  audio: FileAudio,
-};
+import { KIND_ICON, KIND_OF, useAttachmentMeta, type ChipFile } from "../attachments";
 
 /**
  * AttachmentChip is a file in a message (the R7 Messages proposal): a tile of
@@ -62,7 +47,7 @@ export function AttachmentChip({
     >
       <div className="flex min-w-0 items-center gap-3">
         <IconTile
-          icon={ICON[kind]}
+          icon={KIND_ICON[kind]}
           size={32}
           className={inverse ? "bg-primary-fg/15 text-primary-fg" : undefined}
         />

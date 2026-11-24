@@ -1,4 +1,4 @@
-import { useId, type ReactNode } from "react";
+import { Fragment, useId, type ReactNode } from "react";
 import { useTranslation } from "react-i18next";
 import { Link } from "react-router";
 import {
@@ -32,6 +32,17 @@ export type ListRow = Readonly<{
   time: string | null;
   unread: number;
   active: boolean;
+}>;
+
+/**
+ * CandidateGroup is one labelled group of people with no thread yet, listed
+ * under the rows while a search is typed: the students, and the colleagues
+ * (F2), each under its own label.
+ */
+export type CandidateGroup = Readonly<{
+  key: string;
+  label: string;
+  rows: readonly ListRow[];
 }>;
 
 /** ListState is what the list pane shows: its rows, or the first read loading or failed. */
@@ -135,12 +146,13 @@ function Message({
 
 /**
  * ThreadList is the list pane of Messages: `tools` on top (the staff search
- * and tabs), then the rows, then, while a search is typed, `candidates` under
- * their own label ("Students not messaged yet"), whose rows open a thread
- * that exists from its first message. Its other states are the proposal's:
- * skeleton rows of its own shape (six, or the kinds `skeleton` names: the
- * student's three), one sentence with Retry, the empty
- * sentence, and the no-match sentence. It fills the pane below 760px of
+ * and tabs), then the rows, then, while a search is typed, each group of
+ * `candidates` under its own label ("Students not messaged yet", F2's
+ * "Colleagues not messaged yet"), whose rows open a thread that exists from
+ * its first message. Its other states are the proposal's: skeleton rows of
+ * its own shape (six, or the kinds `skeleton` names: the student's three),
+ * one sentence with Retry, the empty sentence (with `emptyIcon`, the
+ * caller's), and the no-match sentence. It fills the pane below 760px of
  * content (`single`), and is 320px (`width`) beside the thread above it.
  */
 export function ThreadList({
@@ -148,10 +160,10 @@ export function ThreadList({
   tools,
   rows,
   candidates = [],
-  candidatesLabel,
   state,
   onRetry,
   emptyText,
+  emptyIcon = MessageSquare,
   noMatchText,
   single,
   width = "w-80",
@@ -160,11 +172,11 @@ export function ThreadList({
   label: string;
   tools?: ReactNode;
   rows: readonly ListRow[];
-  candidates?: readonly ListRow[];
-  candidatesLabel?: string | undefined;
+  candidates?: readonly CandidateGroup[];
   state: ListState;
   onRetry: () => void;
   emptyText: string;
+  emptyIcon?: LucideIcon;
   noMatchText?: string | null | undefined;
   single: boolean;
   width?: string;
@@ -172,7 +184,8 @@ export function ThreadList({
 }>) {
   const { t } = useTranslation();
   const candidatesId = useId();
-  const nothing = rows.length === 0 && candidates.length === 0;
+  const groups = candidates.filter((group) => group.rows.length > 0);
+  const nothing = rows.length === 0 && groups.length === 0;
   return (
     <aside
       aria-label={label}
@@ -220,7 +233,7 @@ export function ThreadList({
         )}
         {state === "ready" && nothing && (
           <Message
-            icon={noMatchText ? SearchX : MessageSquare}
+            icon={noMatchText ? SearchX : emptyIcon}
             text={noMatchText ?? emptyText}
           />
         )}
@@ -231,21 +244,21 @@ export function ThreadList({
                 <Row key={row.key} row={row} />
               ))}
             </ul>
-            {candidates.length > 0 && (
-              <>
+            {groups.map((group) => (
+              <Fragment key={group.key}>
                 <h3
-                  id={candidatesId}
+                  id={`${candidatesId}-${group.key}`}
                   className="text-muted-fg text-caption border-b px-3 pt-4 pb-2 font-semibold tracking-wide uppercase"
                 >
-                  {candidatesLabel}
+                  {group.label}
                 </h3>
-                <ul aria-labelledby={candidatesId}>
-                  {candidates.map((row) => (
+                <ul aria-labelledby={`${candidatesId}-${group.key}`}>
+                  {group.rows.map((row) => (
                     <Row key={row.key} row={row} />
                   ))}
                 </ul>
-              </>
-            )}
+              </Fragment>
+            ))}
           </>
         )}
       </div>

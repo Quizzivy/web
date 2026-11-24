@@ -5,7 +5,7 @@ import { ADMIN, API, apiAuth, apiResponse, signIn, TEACHER_2 } from "./support/l
  * Messages between staff and students (D17, T-R7.24): an announcement a
  * student reads shows the teacher "Seen by 1 of 1"; a student writes to the
  * teacher and the teacher answers; and a direct thread is its two
- * participants' alone, so the Admin's token finds nothing there.
+ * participants' alone, so the Admin's token reads only the Admin's own.
  *
  * Lê Văn Minh and Đào Minh Khang, the only member of Minh's class (seed/11),
  * so "of 1" is the whole class. The seed's own announcement there already
@@ -76,7 +76,7 @@ test("an announcement the student reads shows the teacher Seen by 1 of 1", async
   }
 });
 
-test("a student writes to the teacher, the teacher replies, and the Admin's token finds no such thread", async ({
+test("a student writes to the teacher, the teacher replies, and the Admin's token reads only its own thread", async ({
   browser,
   playwright,
 }) => {
@@ -124,15 +124,17 @@ test("a student writes to the teacher, the teacher replies, and the Admin's toke
     await expect(stream.getByText(question, { exact: true })).toBeVisible();
     await expect(stream.getByText(reply, { exact: true })).toBeVisible();
 
-    // scope.all never opens a direct message (D17): not even its existence.
+    // scope.all never opens another's direct message (D17). Since F2 any
+    // staff member may write to any student, so the Admin naming Khang reads
+    // the Admin's own thread with him: never Minh's, whose messages it lacks.
     const admin = await apiAuth(api, ADMIN);
     const peeked = await api.get(`${API}/teacher/messages/students/${KHANG.id}`, {
       headers: admin,
     });
-    expect(peeked.status()).toBe(404);
-    expect(((await peeked.json()) as { error: { code: string } }).error.code).toBe(
-      "NOT_FOUND",
-    );
+    expect(peeked.status()).toBe(200);
+    const own = (await peeked.json()) as { messages: { body: string | null }[] };
+    expect(own.messages.map((message) => message.body)).not.toContain(question);
+    expect(own.messages.map((message) => message.body)).not.toContain(reply);
   } finally {
     await minhContext.close();
     await khangContext.close();

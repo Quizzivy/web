@@ -1,4 +1,11 @@
 import { useTranslation } from "react-i18next";
+import {
+  FileAudio,
+  FileImage,
+  FileText,
+  FileType,
+  type LucideIcon,
+} from "lucide-react";
 import { formatBytes } from "@/lib/bytes";
 import type { MessageAttachment } from "./api";
 
@@ -12,6 +19,14 @@ export const KIND_OF: Record<MessageAttachment["mimeType"], Kind> = {
   "image/jpeg": "image",
   "audio/mpeg": "audio",
   "audio/mp4": "audio",
+};
+
+/** KIND_ICON is the icon of each kind of file, in a chip and in a colleague's Details. */
+export const KIND_ICON: Record<Kind, LucideIcon> = {
+  pdf: FileText,
+  word: FileType,
+  image: FileImage,
+  audio: FileAudio,
 };
 
 /** ChipFile is what a chip names: a stored attachment, or a file still on its way up. */

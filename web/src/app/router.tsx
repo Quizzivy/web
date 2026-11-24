@@ -150,6 +150,13 @@ const teacherTree: RouteObject = {
           ),
         },
         {
+          path: "messages/colleagues/:colleagueId",
+          handle: { crumb: [{ key: "messages.title" }] },
+          lazy: page(
+            () => import("@/features/messages/pages/teacher/TeacherMessagesPage"),
+          ),
+        },
+        {
           path: "shared-with-me",
           handle: { crumb: [{ key: "teacherShell.nav.sharedWithMe" }] },
           lazy: page(() => import("@/features/sharing/pages/teacher/SharedWithMePage")),

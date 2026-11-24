@@ -4,8 +4,8 @@ import type { TFunction } from "i18next";
 import { useQueryClient } from "@tanstack/react-query";
 import { X } from "lucide-react";
 import { Avatar } from "@/components/ui/avatar";
+import { PersonOption } from "@/components/shared/PersonOption";
 import { useDebounced } from "@/lib/useDebounced";
-import { cn } from "@/lib/utils";
 import { DIRECTORY_KEY, useTeacherLookup, type ShareTeacher } from "../api";
 
 /** LOOKUP_DELAY is how long the picker waits after the last keystroke before it asks. */
@@ -49,37 +49,23 @@ function Suggestion({
 }>) {
   const { t } = useTranslation();
   return (
-    <li role="presentation">
-      <button
-        type="button"
-        id={id}
-        role="option"
-        tabIndex={-1}
-        aria-selected={active}
-        aria-disabled={teacher.disabled || undefined}
-        data-teacher={teacher.id}
-        className={cn(
-          "flex w-full items-center gap-2 rounded-md px-2 py-2 text-left",
-          teacher.disabled
-            ? "text-fg/50 [&_[data-slot=avatar]]:text-fg/50 cursor-default"
-            : "hover:bg-hover cursor-pointer",
-          active && "bg-hover",
-        )}
-        onMouseDown={(event) => event.preventDefault()}
-        onClick={() => onPick(teacher)}
-      >
-        <Avatar name={teacher.fullName} src={teacher.avatarUrl} size="28" />
-        <span className="min-w-0 flex-1">
-          <span className="block text-sm font-medium">{teacher.fullName}</span>
-          <span className="text-muted-fg block truncate text-xs">{teacher.email}</span>
-        </span>
-        {teacher.disabled ? (
+    <PersonOption
+      id={id}
+      name={teacher.fullName}
+      avatarUrl={teacher.avatarUrl}
+      sub={teacher.email}
+      active={active}
+      disabled={teacher.disabled}
+      data-teacher={teacher.id}
+      onPick={() => onPick(teacher)}
+      end={
+        teacher.disabled ? (
           <span className="text-muted-fg text-caption whitespace-nowrap">
             {t("sharing.accountDisabled")}
           </span>
-        ) : null}
-      </button>
-    </li>
+        ) : null
+      }
+    />
   );
 }
 

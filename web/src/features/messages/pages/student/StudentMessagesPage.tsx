@@ -72,15 +72,16 @@ function sameRef(a: StudentRef | null, b: StudentRef | null): boolean {
 
 /**
  * teacherLine is a teacher's sub-line: the classes they teach the student, or "Former teacher".
- * A staff member who never taught the student (no class, not former: the one who created the
- * account and wrote first) reads "Your teacher" alone (the owner, 2026-11-17).
+ * A staff member who never taught the student (no class, not former: since F2 any teacher or
+ * admin may write first) reads "Teacher at the centre", with no role (F2 Q2, the owner,
+ * 2026-11-23). R7 wrote "Your teacher" alone there.
  */
 function teacherLine(
   teacher: Readonly<{ classNames: readonly string[]; former: boolean }>,
   t: TFunction,
 ): string {
   if (teacher.former) return t("messages.student.former");
-  if (teacher.classNames.length === 0) return t("messages.student.teacher");
+  if (teacher.classNames.length === 0) return t("messages.student.centre");
   return t("messages.student.teacherSub", { classes: teacher.classNames.join(", ") });
 }
 

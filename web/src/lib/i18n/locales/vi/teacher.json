@@ -820,7 +820,7 @@
         "flagged": "Một lượt làm bài bị gắn cờ",
         "flaggedHint": "Rời khỏi bài quá số lần cho phép",
         "message": "Tin nhắn mới",
-        "messageHint": "Tin nhắn riêng từ học viên",
+        "messageHint": "Tin nhắn riêng từ học viên và đồng nghiệp",
         "closing": "Bài giao sắp đóng",
         "closingHint": "Trước 1 giờ, kèm những ai chưa nộp",
         "weekly": "Tổng kết tuần",
@@ -4098,10 +4098,12 @@
     }
   },
   "messages": {
-    "lead": "Thông báo tới lớp và tin nhắn riêng với học viên.",
+    "lead": "Thông báo tới lớp và tin nhắn riêng với học viên và đồng nghiệp.",
     "newAnnouncement": "Thông báo mới",
     "newAnnouncementOff": "Bạn chưa dạy lớp nào.",
+    "newMessage": "Tin nhắn mới",
     "former": "Học viên cũ",
+    "noClass": "Chưa vào lớp nào",
     "details": "Chi tiết",
     "seenBy": "{{seen}}/{{of}} học viên đã xem",
     "attemptEvent_other": "{{title}} · rời khỏi bài thi {{count}} lần",
@@ -4117,15 +4119,34 @@
       "tabAll": "Tất cả",
       "tabDirect": "Riêng",
       "tabClasses": "Lớp",
+      "tabColleagues": "Đồng nghiệp",
       "you": "Bạn: ",
       "attachment": "Tệp đính kèm · {{name}}",
       "classSub_other": "{{count}} học viên",
       "empty": "Chưa có tin nhắn. Nhắn cho một học viên từ trang Học viên, hoặc đăng thông báo tới một lớp.",
+      "colleagueEmpty": "Chưa có tin nhắn với đồng nghiệp. Bấm “Tin nhắn mới” để nhắn cho một đồng nghiệp.",
       "noMatch": "Không có người hay lớp nào khớp với “{{q}}”.",
-      "candidates": "Học viên chưa nhắn tin"
+      "candidates": "Học viên chưa nhắn tin",
+      "colleagueCandidates": "Đồng nghiệp chưa nhắn tin"
+    },
+    "picker": {
+      "description": "Chọn một học viên hoặc một đồng nghiệp. Chỉ hai người trong cuộc trò chuyện đọc được tin nhắn.",
+      "students": "Học viên",
+      "colleagues": "Đồng nghiệp",
+      "search": "Tìm theo tên",
+      "filter": "Lọc học viên",
+      "all": "Tất cả học viên",
+      "mine": "Học viên lớp của tôi",
+      "hasThread": "Đã có cuộc trò chuyện",
+      "noStudentMatch": "Không có học viên nào khớp với “{{q}}”.",
+      "noColleagueMatch": "Không có đồng nghiệp nào khớp với “{{q}}”.",
+      "noStudents": "Không có học viên nào ở đây.",
+      "noColleagues": "Chưa có đồng nghiệp nào để nhắn tin.",
+      "error": "Không tải được danh sách."
     },
     "thread": {
-      "classSub_other": "{{count}} học viên · thông báo lớp"
+      "classSub_other": "{{count}} học viên · thông báo lớp",
+      "colleagueEmpty": "Chưa có tin nhắn. Chỉ bạn và {{name}} đọc được cuộc trò chuyện này."
     },
     "about": {
       "student": "Học viên",
@@ -4135,7 +4156,11 @@
       "members": "Thành viên",
       "count_other": "{{count}} học viên",
       "former": "Không còn học lớp nào của bạn.",
-      "openClass": "Mở trang lớp"
+      "openClass": "Mở trang lớp",
+      "theirClasses": "Lớp đang học",
+      "notTaught": "Không học lớp nào của bạn.",
+      "noClass": "Chưa vào lớp nào của trung tâm.",
+      "files": "Tệp đã chia sẻ"
     },
     "chip": {
       "remove": "Bỏ tệp {{name}}"

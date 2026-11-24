@@ -27,6 +27,10 @@ const TEACHER_TREE = [
     "/teacher/messages/student/:studentId",
     "features/messages/pages/teacher/TeacherMessagesPage",
   ],
+  [
+    "/teacher/messages/colleagues/:colleagueId",
+    "features/messages/pages/teacher/TeacherMessagesPage",
+  ],
   ["/teacher/shared-with-me", "features/sharing/pages/teacher/SharedWithMePage"],
   ["/teacher/imports", "features/imports/pages/teacher/ImportsGate"],
   ["/teacher/imports (index)", "features/imports/pages/teacher/ImportsListPage"],

@@ -10,14 +10,20 @@ export type MessageAttachment = components["schemas"]["MessageAttachment"];
 export type MessagePreview = components["schemas"]["MessagePreview"];
 export type ContextEvent = components["schemas"]["ContextEvent"];
 export type SeenBy = components["schemas"]["SeenBy"];
+export type ColleagueThread = components["schemas"]["ColleagueThread"];
+export type ColleagueDirectThread = components["schemas"]["ColleagueDirectThread"];
 
 /**
  * ThreadRef names one conversation of the staff side: a class's channel by its
- * class, a direct thread by its student. A direct thread is addressed by its
- * counterpart and exists from its first message, so a ref can name a thread
- * nobody has written in yet.
+ * class, a direct thread by its student, a colleague thread (F2) by the other
+ * staff member. A direct or colleague thread is addressed by its counterpart
+ * and exists from its first message, so a ref can name a thread nobody has
+ * written in yet.
  */
-export type ThreadRef = Readonly<{ kind: "class" | "direct"; id: string }>;
+export type ThreadRef = Readonly<{
+  kind: "class" | "direct" | "colleague";
+  id: string;
+}>;
 
 /** ThreadPage is one read of a thread: its messages, oldest first, and its cursors. */
 export type ThreadPage<M> = Readonly<{
@@ -37,6 +43,17 @@ export function staffThreadsKey(q: string) {
   return [...STAFF_MESSAGES_KEY, "threads", q] as const;
 }
 
+/** colleagueThreadsKey is the query key of the colleague threads, for a search or none. */
+export function colleagueThreadsKey(q: string) {
+  return [...STAFF_MESSAGES_KEY, "colleagues", q] as const;
+}
+
+/** LIST_KEYS head the two lists Messages merges: the threads and the colleague threads. */
+export const LIST_KEYS = [
+  [...STAFF_MESSAGES_KEY, "threads"],
+  [...STAFF_MESSAGES_KEY, "colleagues"],
+] as const;
+
 /** staffThreadKey is the query key of one open thread. */
 export function staffThreadKey(ref: ThreadRef) {
   return [...STAFF_MESSAGES_KEY, "thread", ref.kind, ref.id] as const;
@@ -44,7 +61,9 @@ export function staffThreadKey(ref: ThreadRef) {
 
 /** threadPath is the address that opens `ref` on the staff Messages page. */
 export function threadPath(ref: ThreadRef): string {
-  const segment = ref.kind === "class" ? "class" : "student";
+  const segment = { class: "class", direct: "student", colleague: "colleagues" }[
+    ref.kind
+  ];
   return `/teacher/messages/${segment}/${encodeURIComponent(ref.id)}`;
 }
 
@@ -54,7 +73,9 @@ export function threadPath(ref: ThreadRef): string {
  * conversation open, as the Students page's bulk Message opens Direct for
  * several students.
  */
-export type MessagesOpening = Readonly<{ tab?: "all" | "direct" | "classes" }>;
+export type MessagesOpening = Readonly<{
+  tab?: "all" | "direct" | "classes" | "colleagues";
+}>;
 
 /** MESSAGES_PATH is Messages with no thread open. */
 export const MESSAGES_PATH = "/teacher/messages";
@@ -64,6 +85,11 @@ export function refOf(thread: StaffThread): ThreadRef | null {
   const { kind, classId, studentId } = thread.thread;
   const id = kind === "class" ? classId : studentId;
   return id === null ? null : { kind, id };
+}
+
+/** colleagueRef is the ref a colleague row opens. */
+export function colleagueRef(row: ColleagueThread): ThreadRef {
+  return { kind: "colleague", id: row.colleagueId };
 }
 
 /** sameRef tells whether two refs name the same thread. */
@@ -123,8 +149,40 @@ export function getStaffClassThread(
   );
 }
 
-/** postStaffMessage posts to a direct thread or announces to a class. */
+/**
+ * listColleagueThreads reads the caller's threads with colleagues (F2), newest
+ * first, and with `q` the matching ones followed by the colleagues the caller
+ * has no thread with (`candidate`).
+ */
+export function listColleagueThreads(q: string, signal?: AbortSignal) {
+  const query = q === "" ? {} : { q };
+  return api(
+    "get",
+    "/teacher/messages/colleagues",
+    signal ? { query, signal } : { query },
+  );
+}
+
+export function getColleagueThread(
+  colleagueId: string,
+  cursor: Cursor = {},
+  signal?: AbortSignal,
+) {
+  const options = { path: { colleagueId }, query: cursorQuery(cursor) };
+  return api(
+    "get",
+    "/teacher/messages/colleagues/{colleagueId}",
+    signal ? { ...options, signal } : options,
+  );
+}
+
+/** postStaffMessage posts to a direct or colleague thread, or announces to a class. */
 export function postStaffMessage(ref: ThreadRef, body: StaffMessagePost) {
+  if (ref.kind === "colleague")
+    return api("post", "/teacher/messages/colleagues/{colleagueId}", {
+      path: { colleagueId: ref.id },
+      body,
+    });
   return ref.kind === "class"
     ? api("post", "/teacher/messages/classes/{classId}", {
         path: { classId: ref.id },
@@ -202,6 +260,11 @@ export function listMessageRecipients(
 /** markStaffThreadRead moves the caller's read pointer of `ref` to `messageId`. */
 export function markStaffThreadRead(ref: ThreadRef, messageId: string) {
   const body = { lastReadMessageId: messageId };
+  if (ref.kind === "colleague")
+    return api("post", "/teacher/messages/colleagues/{colleagueId}/read", {
+      path: { colleagueId: ref.id },
+      body,
+    });
   return ref.kind === "class"
     ? api("post", "/teacher/messages/classes/{classId}/read", {
         path: { classId: ref.id },

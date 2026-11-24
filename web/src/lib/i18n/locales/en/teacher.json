@@ -863,7 +863,7 @@
         "flagged": "An attempt is flagged",
         "flaggedHint": "Focus lost more than allowed",
         "message": "New message",
-        "messageHint": "Direct messages from students",
+        "messageHint": "Direct messages from students and colleagues",
         "closing": "An assignment is about to close",
         "closingHint": "1 hour before, with who has not submitted",
         "weekly": "Weekly summary",
@@ -4317,7 +4317,7 @@
     }
   },
   "messages": {
-    "lead": "Announcements to classes and direct messages with students.",
+    "lead": "Announcements to classes, and direct messages with students and colleagues.",
     "newAnnouncement": "New announcement",
     "newAnnouncementOff": "You teach no class yet.",
     "newMessage": "New message",
@@ -4340,13 +4340,16 @@
       "tabAll": "All",
       "tabDirect": "Direct",
       "tabClasses": "Classes",
+      "tabColleagues": "Colleagues",
       "you": "You: ",
       "attachment": "Attachment · {{name}}",
       "classSub_one": "{{count}} student",
       "classSub_other": "{{count}} students",
       "empty": "No messages yet. Message a student from Students or post to a class.",
+      "colleagueEmpty": "No messages with colleagues yet. Press “New message” to write to one.",
       "noMatch": "No person or class matches “{{q}}”.",
-      "candidates": "Students not messaged yet"
+      "candidates": "Students not messaged yet",
+      "colleagueCandidates": "Colleagues not messaged yet"
     },
     "picker": {
       "description": "Choose a student or a colleague. Only the two of you can read the conversation.",
@@ -4365,7 +4368,8 @@
     },
     "thread": {
       "classSub_one": "{{count}} student · announcements",
-      "classSub_other": "{{count}} students · announcements"
+      "classSub_other": "{{count}} students · announcements",
+      "colleagueEmpty": "No messages yet. Only you and {{name}} can read this conversation."
     },
     "about": {
       "student": "Student",
@@ -4379,7 +4383,8 @@
       "openClass": "Open the class",
       "theirClasses": "Classes",
       "notTaught": "Not in any of your classes.",
-      "noClass": "Not in any class at the centre."
+      "noClass": "Not in any class at the centre.",
+      "files": "Shared files"
     },
     "chip": {
       "remove": "Remove {{name}}"

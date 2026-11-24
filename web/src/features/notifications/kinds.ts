@@ -138,7 +138,7 @@ export function notificationPath(target: NotificationTarget | null): string | nu
     case "dashboard":
       return "/teacher";
     case "messages":
-      return messagesPath(target.studentId);
+      return messagesPath(target);
     case "studentMessages":
       return studentMessagesPath(target);
     default:
@@ -146,8 +146,16 @@ export function notificationPath(target: NotificationTarget | null): string | nu
   }
 }
 
-/** messagesPath is the staff thread with a student, or Messages when the target names none. */
-function messagesPath(studentId: string | undefined) {
+/**
+ * messagesPath is the staff thread a target names: with a student, with a
+ * colleague (F2's `colleagueId`), or Messages when it names neither.
+ */
+function messagesPath(target: NotificationTarget) {
+  const { studentId, colleagueId } = target;
+  if (colleagueId !== undefined)
+    return uuid.test(colleagueId)
+      ? threadPath({ kind: "colleague", id: colleagueId })
+      : null;
   if (studentId === undefined) return "/teacher/messages";
   return uuid.test(studentId) ? threadPath({ kind: "direct", id: studentId }) : null;
 }

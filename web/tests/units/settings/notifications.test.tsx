@@ -63,7 +63,7 @@ const byEmail = (update: string) =>
 const ROWS = [
   ["Học viên nộp bài", "Gộp lại mỗi 15 phút"],
   ["Một lượt làm bài bị gắn cờ", "Rời khỏi bài quá số lần cho phép"],
-  ["Tin nhắn mới", "Tin nhắn riêng từ học viên"],
+  ["Tin nhắn mới", "Tin nhắn riêng từ học viên và đồng nghiệp"],
   ["Bài giao sắp đóng", "Trước 1 giờ, kèm những ai chưa nộp"],
   ["Tổng kết tuần", "Sáng thứ Hai, theo từng lớp"],
 ] as const;
